@@ -1,0 +1,99 @@
+<html>
+<head>
+<META HTTP-EQUIV="Content-Type" content="text/html; charset=Windows-1252">
+</head>
+<body>
+<pre>
+<table width=100% bgcolor=#CFCFE5><tr> <td> <font face=arial size=+3>
+Build Log
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
+<h3>------- Build started: Project: IlmCtlMath, Configuration: Release|Win32 -------
+</h3>
+</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+Command Lines
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\RSP000010.rsp" with contents
+[
+/O2 /I "..\..\..\..\IlmCtlMath" /I "..\..\..\..\..\..\Deploy\include" /D "OPENEXR_DLL" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ILMCTLMATH_EXPORTS" /D "_WINDLL" /D "_MBCS" /FD /EHsc /MD /GS /arch:SSE2 /Zc:forScope /GR /Fo"Release/" /Fd"Release/vc70.pdb" /W3 /c /Wp64 /Zi /TP
+\src12\ctl\Ctl\IlmCtlMath\CtlRbfInterpolator.cpp
+\src12\ctl\Ctl\IlmCtlMath\CtlLookupTable.cpp
+\src12\ctl\Ctl\IlmCtlMath\CtlColorSpace.cpp
+]
+Creating command line "cl.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\RSP000010.rsp /nologo"
+Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\RSP000011.rsp" with contents
+[
+/OUT:"..\..\..\..\..\..\Deploy\vc7\lib\Release/IlmCtlMath.dll" /INCREMENTAL:NO /NOLOGO /DLL /DEBUG /PDB:"..\..\..\..\..\..\Deploy\vc7\lib\Release/IlmCtlMath.pdb" /MAP /MAPINFO:EXPORTS /SUBSYSTEM:WINDOWS /OPT:NOREF /OPT:ICF /IMPLIB:"..\..\..\..\..\..\Deploy\vc7\lib\Release/IlmCtlMath.lib" /MACHINE:X86 ..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmThread.lib ..\..\..\..\..\..\Deploy\vc7\lib\Release\Imath.lib ..\..\..\..\..\..\Deploy\vc7\lib\Release\Iex.lib ..\..\..\..\..\..\Deploy\vc7\lib\Release\Half.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib \src12\Deploy\vc7\lib\Release\IlmCtl.lib
+.\Release\CtlColorSpace.obj
+.\Release\CtlLookupTable.obj
+.\Release\CtlRbfInterpolator.obj
+]
+Creating command line "link.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\RSP000011.rsp"
+Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\BAT000012.bat" with contents
+[
+@echo off
+..\..\..\..\..\..\Deploy\vc7\bin\createDLL -n..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtlMath.map -lRelease -i..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtlMath.lib && ..\..\..\installIlmCtlMath.cmd
+if errorlevel 1 goto VCReportError
+goto VCEnd
+:VCReportError
+echo Project : error PRJ0019: A tool returned an error code from "Performing Post-Build Event..."
+exit 1
+:VCEnd
+]
+Creating command line "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\BAT000012.bat"
+</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+Output Window
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Compiling...
+CtlRbfInterpolator.cpp
+..\..\..\..\IlmCtlMath\CtlPointTree.h(147) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(147) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(324) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(339) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(339) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(355) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(355) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(414) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(419) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(419) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(439) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(439) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(506) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(506) : warning C4244: '=' : conversion from 'const double' to 'float', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(509) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(509) : warning C4244: '=' : conversion from 'const double' to 'float', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(573) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(573) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(574) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+..\..\..\..\IlmCtlMath\CtlPointTree.h(574) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+\src12\ctl\CTL\IlmCtlMath\CtlRbfInterpolator.cpp(285) : warning C4267: '=' : conversion from 'size_t' to 'unsigned int', possible loss of data
+\src12\ctl\CTL\IlmCtlMath\CtlRbfInterpolator.cpp(362) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+\src12\ctl\CTL\IlmCtlMath\CtlRbfInterpolator.cpp(362) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+\src12\ctl\CTL\IlmCtlMath\CtlRbfInterpolator.cpp(362) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+\src12\ctl\CTL\IlmCtlMath\CtlRbfInterpolator.cpp(388) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+\src12\ctl\CTL\IlmCtlMath\CtlRbfInterpolator.cpp(388) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+\src12\ctl\CTL\IlmCtlMath\CtlRbfInterpolator.cpp(388) : warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+CtlLookupTable.cpp
+CtlColorSpace.cpp
+Generating Code...
+Linking...
+Performing Post-Build Event...
+Setting string: name of map file to generate=..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtlMath.map
+Setting string vector: semi-colon separated lib dirs=Release
+Setting string: the import lib to go with the DLL=..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtlMath.lib
+CreateDLL v1.1
+CreateDLL found 439 symbols
+Exporting DLL
+   Creating library ..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtlMath.lib and object ..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtlMath.exp
+createDLL: linking success
+A subdirectory or file ..\..\..\Deploy\include already exists.
+CtlRbfInterpolator.h
+CtlLinearSolver.h
+CtlColorSpace.h
+CtlLookupTable.h
+CtlPointTree.h
+CtlSparseMatrix.h
+        6 file(s) copied.
+</pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
+Results
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
+Build log was saved at "file://h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\BuildLog.htm"
+IlmCtlMath - 0 error(s), 27 warning(s)</pre></table><table   width=100% height=20 bgcolor=#CFCFE5><tr><td><font face=arial size=+2>
+</font></table></body></html>
