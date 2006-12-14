@@ -166,8 +166,12 @@ findModule (const string& moduleName)
             it++)
         {
             string fileName = *it  + '/' + moduleName + ".ctl";
-            
+
+#ifdef WIN32            
+            if (!access (fileName.c_str(), 0))
+#else
             if (!access (fileName.c_str(), F_OK))
+#endif
                 return fileName;
         }
     }
