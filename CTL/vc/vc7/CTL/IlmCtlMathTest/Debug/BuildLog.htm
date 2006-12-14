@@ -11,19 +11,27 @@ Build Log
 </h3>
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Command Lines
-</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Debug\RSP00003A.rsp" with contents
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Debug\RSP000021.rsp" with contents
 [
-/OUT:"..\Debug/IlmCtlMathTest.exe" /INCREMENTAL /NOLOGO /DEBUG /PDB:"..\Debug/IlmCtlMathTest.pdb" /SUBSYSTEM:CONSOLE /MACHINE:X86 ..\..\..\..\..\..\Deploy\vc7\lib\Debug\IlmThread.lib ..\..\..\..\..\..\Deploy\vc7\lib\Debug\Imath.lib ..\..\..\..\..\..\Deploy\vc7\lib\Debug\Iex.lib ..\..\..\..\..\..\Deploy\vc7\lib\Debug\Half.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib \src12\Deploy\vc7\lib\Debug\IlmCtl.lib \src12\Deploy\vc7\lib\Debug\IlmCtlMath.lib
+/Od /I "..\..\..\..\IlmCtlMathTest" /I "..\..\..\..\..\..\Deploy\include" /D "OPENEXR_DLL" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Gm /EHsc /RTC1 /MDd /arch:SSE2 /Zc:forScope /GR /Fo"Debug/" /Fd"Debug/vc70.pdb" /W3 /c /Wp64 /ZI /TP
+\src12\ctl\Ctl\IlmCtlMathTest\testGaussRec.cpp
+\src12\ctl\Ctl\IlmCtlMathTest\testAffineRec.cpp
+]
+Creating command line "cl.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Debug\RSP000021.rsp /nologo"
+Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Debug\RSP000022.rsp" with contents
+[
+/OUT:"..\Debug/IlmCtlMathTest.exe" /INCREMENTAL /NOLOGO /DEBUG /PDB:"..\Debug/IlmCtlMathTest.pdb" /SUBSYSTEM:CONSOLE /MACHINE:X86 ..\..\..\..\..\..\Deploy\lib\Debug\IlmThread.lib ..\..\..\..\..\..\Deploy\lib\Debug\Imath.lib ..\..\..\..\..\..\Deploy\lib\Debug\Iex.lib ..\..\..\..\..\..\Deploy\lib\Debug\Half.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib \src12\ctl\Ctl\vc\vc7\Ctl\Debug\IlmCtl.lib \src12\ctl\Ctl\vc\vc7\Ctl\Debug\IlmCtlMath.lib
 .\Debug\main.obj
 .\Debug\testAffineRec.obj
 .\Debug\testGaussRec.obj
 ]
-Creating command line "link.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Debug\RSP00003A.rsp"
-Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Debug\BAT00003B.bat" with contents
+Creating command line "link.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Debug\RSP000022.rsp"
+Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Debug\BAT000023.bat" with contents
 [
 @echo off
-cd ..\..\..\..\..\..\Deploy\vc7\lib\Debug
-h:\src12\ctl\ctl\vc\vc7\ctl\debug\IlmCtlMathTest.exe
+copy h:\src12\ctl\Ctl\vc\vc7\Ctl\debug\IlmCtlMathTest.exe ..\..\..\..\..\..\Deploy\bin\Debug
+..\..\..\..\..\..\Deploy\bin\Debug\IlmCtlMathTest.exe
+del ..\..\..\..\..\..\Deploy\bin\Debug\IlmCtlMathTest.exe
 
 if errorlevel 1 goto VCReportError
 goto VCEnd
@@ -32,11 +40,25 @@ echo Project : error PRJ0019: A tool returned an error code from "Running IlmCtl
 exit 1
 :VCEnd
 ]
-Creating command line "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Debug\BAT00003B.bat"
+Creating command line "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Debug\BAT000023.bat"
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Output Window
-</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Linking...
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Compiling...
+testGaussRec.cpp
+h:\src12\ctl\CTL\IlmCtlMathTest\testGaussRec.cpp(72) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+h:\src12\ctl\CTL\IlmCtlMathTest\testGaussRec.cpp(73) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+h:\src12\ctl\CTL\IlmCtlMathTest\testGaussRec.cpp(74) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+testAffineRec.cpp
+h:\src12\ctl\CTL\IlmCtlMathTest\testAffineRec.cpp(81) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+h:\src12\ctl\CTL\IlmCtlMathTest\testAffineRec.cpp(82) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+h:\src12\ctl\CTL\IlmCtlMathTest\testAffineRec.cpp(83) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+h:\src12\ctl\CTL\IlmCtlMathTest\testAffineRec.cpp(119) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+h:\src12\ctl\CTL\IlmCtlMathTest\testAffineRec.cpp(120) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+h:\src12\ctl\CTL\IlmCtlMathTest\testAffineRec.cpp(121) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+Generating Code...
+Linking...
 Running IlmCtlMath unit tests...
+        1 file(s) copied.
 Testing the reconstruction of a Gaussian function. f(x) = exp(-x^2).
 With 10 samples.
 Testing interpolation
@@ -59,5 +81,5 @@ ok
 Results
 </font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>
 Build log was saved at "file://h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Debug\BuildLog.htm"
-IlmCtlMathTest - 0 error(s), 0 warning(s)</pre></table><table   width=100% height=20 bgcolor=#CFCFE5><tr><td><font face=arial size=+2>
+IlmCtlMathTest - 0 error(s), 9 warning(s)</pre></table><table   width=100% height=20 bgcolor=#CFCFE5><tr><td><font face=arial size=+2>
 </font></table></body></html>

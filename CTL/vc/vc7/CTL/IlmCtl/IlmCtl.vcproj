@@ -13,14 +13,14 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\..\..\..\..\Deploy\vc7\lib\Debug"
+			OutputDirectory="..\Debug"
 			IntermediateDirectory="Debug"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\..\..\..\Deploy\include;..\..\..\..\IlmCtl"
+				AdditionalIncludeDirectories="..\..\..\..\IlmCtl;..\..\..\..\..\..\Deploy\include"
 				PreprocessorDefinitions="OPENEXR_DLL;WIN32;_DEBUG;_WINDOWS;_USRDLL;ILMCTL_EXPORTS"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -36,7 +36,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\IlmThread.lib ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\Imath.lib ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\Iex.lib ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\Half.lib"
+				AdditionalDependencies="..\..\..\..\..\..\Deploy\lib\$(IntDir)\IlmThread.lib ..\..\..\..\..\..\Deploy\lib\$(IntDir)\Imath.lib ..\..\..\..\..\..\Deploy\lib\$(IntDir)\Iex.lib ..\..\..\..\..\..\Deploy\lib\$(IntDir)\Half.lib"
 				OutputFile="$(OutDir)/IlmCtl.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
@@ -50,7 +50,7 @@
 				Name="VCMIDLTool"/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\..\..\..\..\..\Deploy\vc7\bin\createDLL -n$(OutDir)\IlmCtl.map -l$(IntDir) -i$(OutDir)\IlmCtl.lib &amp;&amp; ..\..\..\installIlmCtl.cmd"/>
+				CommandLine="..\..\..\..\..\..\Deploy\bin\$(IntDir)\createDLL -n$(OutDir)\IlmCtl.map -l$(IntDir);..\..\..\..\..\..\Deploy\lib\$(IntDir) -i$(OutDir)\IlmCtl.lib &amp;&amp; ..\..\..\installIlmCtl.cmd $(IntDir)"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -70,13 +70,13 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\..\..\..\..\Deploy\vc7\lib\Release"
+			OutputDirectory="..\Release"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\..\..\..\..\Deploy\include;..\..\..\..\IlmCtl"
+				AdditionalIncludeDirectories="..\..\..\..\IlmCtl;..\..\..\..\..\..\Deploy\include"
 				PreprocessorDefinitions="OPENEXR_DLL;WIN32;NDEBUG;_WINDOWS;_USRDLL;ILMCTL_EXPORTS"
 				RuntimeLibrary="2"
 				EnableEnhancedInstructionSet="2"
@@ -90,7 +90,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\IlmThread.lib ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\Imath.lib ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\Iex.lib ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\Half.lib"
+				AdditionalDependencies="..\..\..\..\..\..\Deploy\lib\$(IntDir)\IlmThread.lib ..\..\..\..\..\..\Deploy\lib\$(IntDir)\Imath.lib ..\..\..\..\..\..\Deploy\lib\$(IntDir)\Iex.lib ..\..\..\..\..\..\Deploy\lib\$(IntDir)\Half.lib"
 				OutputFile="$(OutDir)/IlmCtl.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
@@ -105,7 +105,7 @@
 				Name="VCMIDLTool"/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="..\..\..\..\..\..\Deploy\vc7\bin\createDLL -n$(OutDir)\IlmCtl.map -l$(IntDir) -i$(OutDir)\IlmCtl.lib &amp;&amp; ..\..\..\installIlmCtl.cmd"/>
+				CommandLine="..\..\..\..\..\..\Deploy\bin\$(IntDir)\createDLL -n$(OutDir)\IlmCtl.map -l$(IntDir);..\..\..\..\..\..\Deploy\lib\$(IntDir) -i$(OutDir)\IlmCtl.lib &amp;&amp; ..\..\..\installIlmCtl.cmd $(IntDir)"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool

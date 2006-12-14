@@ -36,7 +36,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\IlmThread.lib ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\Imath.lib ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\Iex.lib ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\Half.lib"
+				AdditionalDependencies="..\..\..\..\..\..\Deploy\lib\$(IntDir)\IlmThread.lib ..\..\..\..\..\..\Deploy\lib\$(IntDir)\Imath.lib ..\..\..\..\..\..\Deploy\lib\$(IntDir)\Iex.lib ..\..\..\..\..\..\Deploy\lib\$(IntDir)\Half.lib"
 				OutputFile="$(OutDir)/IlmCtlTest.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
@@ -48,9 +48,10 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Running IlmCtl unit tests..."
-				CommandLine="cd ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)
+				CommandLine="copy $(TargetPath) ..\..\..\..\..\..\Deploy\bin\$(IntDir)
 set CTL_MODULE_PATH=$(ProjectDir)..\..\..\..\IlmCtlTest:.
-$(TargetPath)
+..\..\..\..\..\..\Deploy\bin\$(IntDir)\$(TargetFileName)
+del ..\..\..\..\..\..\Deploy\bin\$(IntDir)\$(TargetFileName)
 "/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
@@ -91,7 +92,7 @@ $(TargetPath)
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\IlmThread.lib ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\Imath.lib ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\Iex.lib ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)\Half.lib"
+				AdditionalDependencies="..\..\..\..\..\..\Deploy\lib\$(IntDir)\IlmThread.lib ..\..\..\..\..\..\Deploy\lib\$(IntDir)\Imath.lib ..\..\..\..\..\..\Deploy\lib\$(IntDir)\Iex.lib ..\..\..\..\..\..\Deploy\lib\$(IntDir)\Half.lib"
 				OutputFile="$(OutDir)/IlmCtlTest.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
@@ -104,9 +105,10 @@ $(TargetPath)
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Running IlmCtl unit tests..."
-				CommandLine="cd ..\..\..\..\..\..\Deploy\vc7\lib\$(IntDir)
+				CommandLine="copy $(TargetPath) ..\..\..\..\..\..\Deploy\bin\$(IntDir)
 set CTL_MODULE_PATH=$(ProjectDir)..\..\..\..\IlmCtlTest:.
-$(TargetPath)
+..\..\..\..\..\..\Deploy\bin\$(IntDir)\$(TargetFileName)
+del ..\..\..\..\..\..\Deploy\bin\$(IntDir)\$(TargetFileName)
 "/>
 			<Tool
 				Name="VCPreBuildEventTool"/>

@@ -11,7 +11,7 @@ Build Log
 </h3>
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Command Lines
-</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\RSP00000A.rsp" with contents
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\RSP00001E.rsp" with contents
 [
 /Od /I "..\..\..\..\IlmCtlTest" /I "..\..\..\..\..\..\Deploy\include" /D "OPENEXR_DLL" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /Gm /EHsc /RTC1 /MDd /arch:SSE2 /Zc:forScope /GR /Fo"Debug/" /Fd"Debug/vc70.pdb" /W3 /c /Wp64 /ZI /TP
 \src12\ctl\Ctl\IlmCtlTest\testVaryingReturn.cpp
@@ -24,10 +24,10 @@ Command Lines
 \src12\ctl\Ctl\IlmCtlTest\testCppCall.cpp
 \src12\ctl\Ctl\IlmCtlTest\main.cpp
 ]
-Creating command line "cl.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\RSP00000A.rsp /nologo"
-Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\RSP00000B.rsp" with contents
+Creating command line "cl.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\RSP00001E.rsp /nologo"
+Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\RSP00001F.rsp" with contents
 [
-/OUT:"..\Debug/IlmCtlTest.exe" /INCREMENTAL /NOLOGO /DEBUG /PDB:"..\Debug/IlmCtlTest.pdb" /SUBSYSTEM:CONSOLE /MACHINE:X86 ..\..\..\..\..\..\Deploy\vc7\lib\Debug\IlmThread.lib ..\..\..\..\..\..\Deploy\vc7\lib\Debug\Imath.lib ..\..\..\..\..\..\Deploy\vc7\lib\Debug\Iex.lib ..\..\..\..\..\..\Deploy\vc7\lib\Debug\Half.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib \src12\Deploy\vc7\lib\Debug\IlmCtl.lib \src12\Deploy\vc7\lib\Debug\IlmCtlSimd.lib \src12\Deploy\vc7\lib\Debug\IlmCtlMath.lib
+/OUT:"..\Debug/IlmCtlTest.exe" /INCREMENTAL /NOLOGO /DEBUG /PDB:"..\Debug/IlmCtlTest.pdb" /SUBSYSTEM:CONSOLE /MACHINE:X86 ..\..\..\..\..\..\Deploy\lib\Debug\IlmThread.lib ..\..\..\..\..\..\Deploy\lib\Debug\Imath.lib ..\..\..\..\..\..\Deploy\lib\Debug\Iex.lib ..\..\..\..\..\..\Deploy\lib\Debug\Half.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib \src12\ctl\Ctl\vc\vc7\Ctl\Debug\IlmCtl.lib \src12\ctl\Ctl\vc\vc7\Ctl\Debug\IlmCtlSimd.lib \src12\ctl\Ctl\vc\vc7\Ctl\Debug\IlmCtlMath.lib
 .\Debug\main.obj
 .\Debug\testCppCall.obj
 .\Debug\testEndOfLine.obj
@@ -38,13 +38,14 @@ Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\RSP00000B.
 .\Debug\testVaryingLookup.obj
 .\Debug\testVaryingReturn.obj
 ]
-Creating command line "link.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\RSP00000B.rsp"
-Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\BAT00000C.bat" with contents
+Creating command line "link.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\RSP00001F.rsp"
+Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\BAT000020.bat" with contents
 [
 @echo off
-cd ..\..\..\..\..\..\Deploy\vc7\lib\Debug
+copy h:\src12\ctl\Ctl\vc\vc7\Ctl\debug\IlmCtlTest.exe ..\..\..\..\..\..\Deploy\bin\Debug
 set CTL_MODULE_PATH=h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\..\..\..\..\IlmCtlTest:.
-h:\src12\ctl\Ctl\vc\vc7\Ctl\debug\IlmCtlTest.exe
+..\..\..\..\..\..\Deploy\bin\Debug\IlmCtlTest.exe
+del ..\..\..\..\..\..\Deploy\bin\Debug\IlmCtlTest.exe
 
 if errorlevel 1 goto VCReportError
 goto VCEnd
@@ -53,7 +54,7 @@ echo Project : error PRJ0019: A tool returned an error code from "Running IlmCtl
 exit 1
 :VCEnd
 ]
-Creating command line "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\BAT00000C.bat"
+Creating command line "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlTest\Debug\BAT000020.bat"
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Output Window
 </font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Compiling...
@@ -121,8 +122,8 @@ h:\src12\ctl\CTL\IlmCtlTest\testCppCall.cpp(205) : warning C4244: '=' : conversi
 main.cpp
 Generating Code...
 Linking...
-LINK : LNK6004: ..\Debug/IlmCtlTest.exe not found or not built by the last incremental link; performing full link
 Running IlmCtl unit tests...
+        1 file(s) copied.
 Testing end-of-line conventions
 Dos source file
 Unix source file

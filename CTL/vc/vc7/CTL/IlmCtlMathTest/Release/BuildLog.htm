@@ -11,27 +11,28 @@ Build Log
 </h3>
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Command Lines
-</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Release\RSP000019.rsp" with contents
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Release\RSP000030.rsp" with contents
 [
 /O2 /I "..\..\..\..\IlmCtlMathTest" /I "..\..\..\..\..\..\Deploy\include" /D "OPENEXR_DLL" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /FD /EHsc /MD /GS /arch:SSE2 /Zc:forScope /GR /Fo"Release/" /Fd"Release/vc70.pdb" /W3 /c /Wp64 /Zi /TP
 \src12\ctl\Ctl\IlmCtlMathTest\testGaussRec.cpp
 \src12\ctl\Ctl\IlmCtlMathTest\testAffineRec.cpp
 \src12\ctl\Ctl\IlmCtlMathTest\main.cpp
 ]
-Creating command line "cl.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Release\RSP000019.rsp /nologo"
-Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Release\RSP00001A.rsp" with contents
+Creating command line "cl.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Release\RSP000030.rsp /nologo"
+Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Release\RSP000031.rsp" with contents
 [
-/OUT:"..\Release/IlmCtlMathTest.exe" /INCREMENTAL:NO /NOLOGO /DEBUG /PDB:"..\Release/IlmCtlMathTest.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /MACHINE:X86 ..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmThread.lib ..\..\..\..\..\..\Deploy\vc7\lib\Release\Imath.lib ..\..\..\..\..\..\Deploy\vc7\lib\Release\Iex.lib ..\..\..\..\..\..\Deploy\vc7\lib\Release\Half.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib \src12\Deploy\vc7\lib\Release\IlmCtl.lib \src12\Deploy\vc7\lib\Release\IlmCtlMath.lib
+/OUT:"..\Release/IlmCtlMathTest.exe" /INCREMENTAL:NO /NOLOGO /DEBUG /PDB:"..\Release/IlmCtlMathTest.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /MACHINE:X86 ..\..\..\..\..\..\Deploy\lib\Release\IlmThread.lib ..\..\..\..\..\..\Deploy\lib\Release\Imath.lib ..\..\..\..\..\..\Deploy\lib\Release\Iex.lib ..\..\..\..\..\..\Deploy\lib\Release\Half.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib \src12\ctl\Ctl\vc\vc7\Ctl\Release\IlmCtl.lib \src12\ctl\Ctl\vc\vc7\Ctl\Release\IlmCtlMath.lib
 .\Release\main.obj
 .\Release\testAffineRec.obj
 .\Release\testGaussRec.obj
 ]
-Creating command line "link.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Release\RSP00001A.rsp"
-Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Release\BAT00001B.bat" with contents
+Creating command line "link.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Release\RSP000031.rsp"
+Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Release\BAT000032.bat" with contents
 [
 @echo off
-cd ..\..\..\..\..\..\Deploy\vc7\lib\Release
-h:\src12\ctl\Ctl\vc\vc7\Ctl\release\IlmCtlMathTest.exe
+copy h:\src12\ctl\Ctl\vc\vc7\Ctl\release\IlmCtlMathTest.exe ..\..\..\..\..\..\Deploy\bin\Release
+..\..\..\..\..\..\Deploy\bin\Release\IlmCtlMathTest.exe
+del ..\..\..\..\..\..\Deploy\bin\Release\IlmCtlMathTest.exe
 
 if errorlevel 1 goto VCReportError
 goto VCEnd
@@ -40,7 +41,7 @@ echo Project : error PRJ0019: A tool returned an error code from "Running IlmCtl
 exit 1
 :VCEnd
 ]
-Creating command line "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Release\BAT00001B.bat"
+Creating command line "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMathTest\Release\BAT000032.bat"
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Output Window
 </font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Compiling...
@@ -59,6 +60,7 @@ main.cpp
 Generating Code...
 Linking...
 Running IlmCtlMath unit tests...
+        1 file(s) copied.
 Testing the reconstruction of a Gaussian function. f(x) = exp(-x^2).
 With 10 samples.
 Testing interpolation

@@ -11,9 +11,9 @@ Build Log
 </h3>
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Command Lines
-</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\RSP00000D.rsp" with contents
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\RSP000024.rsp" with contents
 [
-/O2 /I "..\..\..\..\..\..\Deploy\include" /I "..\..\..\..\IlmCtl" /D "OPENEXR_DLL" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ILMCTL_EXPORTS" /D "_WINDLL" /D "_MBCS" /FD /EHsc /MD /GS /arch:SSE2 /Zc:forScope /GR /Fo"Release/" /Fd"Release/vc70.pdb" /W3 /c /Wp64 /Zi /TP
+/O2 /I "..\..\..\..\IlmCtl" /I "..\..\..\..\..\..\Deploy\include" /D "OPENEXR_DLL" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ILMCTL_EXPORTS" /D "_WINDLL" /D "_MBCS" /FD /EHsc /MD /GS /arch:SSE2 /Zc:forScope /GR /Fo"Release/" /Fd"Release/vc70.pdb" /W3 /c /Wp64 /Zi /TP
 \src12\ctl\Ctl\IlmCtl\CtlType.cpp
 \src12\ctl\Ctl\IlmCtl\CtlTokens.cpp
 \src12\ctl\Ctl\IlmCtl\CtlSyntaxTree.cpp
@@ -30,10 +30,10 @@ Command Lines
 \src12\ctl\Ctl\IlmCtl\CtlAlign.cpp
 \src12\ctl\Ctl\IlmCtl\CtlAddr.cpp
 ]
-Creating command line "cl.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\RSP00000D.rsp /nologo"
-Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\RSP00000E.rsp" with contents
+Creating command line "cl.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\RSP000024.rsp /nologo"
+Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\RSP000025.rsp" with contents
 [
-/OUT:"..\..\..\..\..\..\Deploy\vc7\lib\Release/IlmCtl.dll" /INCREMENTAL:NO /NOLOGO /DLL /DEBUG /PDB:"..\..\..\..\..\..\Deploy\vc7\lib\Release/IlmCtl.pdb" /MAP /MAPINFO:EXPORTS /SUBSYSTEM:WINDOWS /OPT:NOREF /OPT:ICF /IMPLIB:"..\..\..\..\..\..\Deploy\vc7\lib\Release/IlmCtl.lib" /MACHINE:X86 ..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmThread.lib ..\..\..\..\..\..\Deploy\vc7\lib\Release\Imath.lib ..\..\..\..\..\..\Deploy\vc7\lib\Release\Iex.lib ..\..\..\..\..\..\Deploy\vc7\lib\Release\Half.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib
+/OUT:"..\Release/IlmCtl.dll" /INCREMENTAL:NO /NOLOGO /DLL /DEBUG /PDB:"..\Release/IlmCtl.pdb" /MAP /MAPINFO:EXPORTS /SUBSYSTEM:WINDOWS /OPT:NOREF /OPT:ICF /IMPLIB:"..\Release/IlmCtl.lib" /MACHINE:X86 ..\..\..\..\..\..\Deploy\lib\Release\IlmThread.lib ..\..\..\..\..\..\Deploy\lib\Release\Imath.lib ..\..\..\..\..\..\Deploy\lib\Release\Iex.lib ..\..\..\..\..\..\Deploy\lib\Release\Half.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib
 .\Release\CtlAddr.obj
 .\Release\CtlAlign.obj
 .\Release\CtlFunctionCall.obj
@@ -50,11 +50,11 @@ Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\RSP00000E.rs
 .\Release\CtlTokens.obj
 .\Release\CtlType.obj
 ]
-Creating command line "link.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\RSP00000E.rsp"
-Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\BAT00000F.bat" with contents
+Creating command line "link.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\RSP000025.rsp"
+Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\BAT000026.bat" with contents
 [
 @echo off
-..\..\..\..\..\..\Deploy\vc7\bin\createDLL -n..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtl.map -lRelease -i..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtl.lib && ..\..\..\installIlmCtl.cmd
+..\..\..\..\..\..\Deploy\bin\Release\createDLL -n..\Release\IlmCtl.map -lRelease;..\..\..\..\..\..\Deploy\lib\Release -i..\Release\IlmCtl.lib && ..\..\..\installIlmCtl.cmd Release
 if errorlevel 1 goto VCReportError
 goto VCEnd
 :VCReportError
@@ -62,7 +62,7 @@ echo Project : error PRJ0019: A tool returned an error code from "Performing Pos
 exit 1
 :VCEnd
 ]
-Creating command line "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\BAT00000F.bat"
+Creating command line "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtl\Release\BAT000026.bat"
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Output Window
 </font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Compiling...
@@ -116,23 +116,26 @@ CtlLContext.cpp
 \src12\ctl\CTL\IlmCtl\CtlLContext.cpp(159) : warning C4267: 'initializing' : conversion from 'size_t' to 'int', possible loss of data
 \src12\ctl\CTL\IlmCtl\CtlLContext.cpp(161) : warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
 CtlInterpreter.cpp
-\src12\ctl\CTL\IlmCtl\CtlInterpreter.cpp(317) : warning C4267: 'initializing' : conversion from 'size_t' to 'int', possible loss of data
-\src12\ctl\CTL\IlmCtl\CtlInterpreter.cpp(327) : warning C4018: '<' : signed/unsigned mismatch
+\src12\ctl\CTL\IlmCtl\CtlInterpreter.cpp(379) : warning C4267: 'initializing' : conversion from 'size_t' to 'int', possible loss of data
+\src12\ctl\CTL\IlmCtl\CtlInterpreter.cpp(389) : warning C4018: '<' : signed/unsigned mismatch
 CtlFunctionCall.cpp
 CtlAlign.cpp
 CtlAddr.cpp
 Generating Code...
 Linking...
 Performing Post-Build Event...
-Setting string: name of map file to generate=..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtl.map
-Setting string vector: semi-colon separated lib dirs=Release
-Setting string: the import lib to go with the DLL=..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtl.lib
+Setting string: name of map file to generate=..\Release\IlmCtl.map
+Setting string vector: semi-colon separated lib dirs=Release;..\..\..\..\..\..\Deploy\lib\Release
+Setting string: the import lib to go with the DLL=..\Release\IlmCtl.lib
 CreateDLL v1.1
-CreateDLL found 1457 symbols
+CreateDLL found 1476 symbols
 Exporting DLL
-   Creating library ..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtl.lib and object ..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtl.exp
+   Creating library ..\Release\IlmCtl.lib and object ..\Release\IlmCtl.exp
 createDLL: linking success
-A subdirectory or file ..\..\..\Deploy\include already exists.
+Installing into Release
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
 CtlAddr.h
 CtlAlign.h
 CtlErrors.h

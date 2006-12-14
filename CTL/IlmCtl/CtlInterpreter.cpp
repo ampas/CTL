@@ -62,6 +62,7 @@
 #include <IlmThreadMutex.h>
 #include <Iex.h>
 #include <fstream>
+#include <algorithm>
 #include <cassert>
 
 #ifdef WIN32

@@ -11,26 +11,26 @@ Build Log
 </h3>
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Command Lines
-</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\RSP000010.rsp" with contents
+</font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\RSP000027.rsp" with contents
 [
 /O2 /I "..\..\..\..\IlmCtlMath" /I "..\..\..\..\..\..\Deploy\include" /D "OPENEXR_DLL" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_USRDLL" /D "ILMCTLMATH_EXPORTS" /D "_WINDLL" /D "_MBCS" /FD /EHsc /MD /GS /arch:SSE2 /Zc:forScope /GR /Fo"Release/" /Fd"Release/vc70.pdb" /W3 /c /Wp64 /Zi /TP
 \src12\ctl\Ctl\IlmCtlMath\CtlRbfInterpolator.cpp
 \src12\ctl\Ctl\IlmCtlMath\CtlLookupTable.cpp
 \src12\ctl\Ctl\IlmCtlMath\CtlColorSpace.cpp
 ]
-Creating command line "cl.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\RSP000010.rsp /nologo"
-Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\RSP000011.rsp" with contents
+Creating command line "cl.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\RSP000027.rsp /nologo"
+Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\RSP000028.rsp" with contents
 [
-/OUT:"..\..\..\..\..\..\Deploy\vc7\lib\Release/IlmCtlMath.dll" /INCREMENTAL:NO /NOLOGO /DLL /DEBUG /PDB:"..\..\..\..\..\..\Deploy\vc7\lib\Release/IlmCtlMath.pdb" /MAP /MAPINFO:EXPORTS /SUBSYSTEM:WINDOWS /OPT:NOREF /OPT:ICF /IMPLIB:"..\..\..\..\..\..\Deploy\vc7\lib\Release/IlmCtlMath.lib" /MACHINE:X86 ..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmThread.lib ..\..\..\..\..\..\Deploy\vc7\lib\Release\Imath.lib ..\..\..\..\..\..\Deploy\vc7\lib\Release\Iex.lib ..\..\..\..\..\..\Deploy\vc7\lib\Release\Half.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib \src12\Deploy\vc7\lib\Release\IlmCtl.lib
+/OUT:"..\Release/IlmCtlMath.dll" /INCREMENTAL:NO /NOLOGO /DLL /DEBUG /PDB:"..\Release/IlmCtlMath.pdb" /MAP /MAPINFO:EXPORTS /SUBSYSTEM:WINDOWS /OPT:NOREF /OPT:ICF /IMPLIB:"..\Release/IlmCtlMath.lib" /MACHINE:X86 ..\..\..\..\..\..\Deploy\lib\Release\IlmThread.lib ..\..\..\..\..\..\Deploy\lib\Release\Imath.lib ..\..\..\..\..\..\Deploy\lib\Release\Iex.lib ..\..\..\..\..\..\Deploy\lib\Release\Half.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib \src12\ctl\Ctl\vc\vc7\Ctl\Release\IlmCtl.lib
 .\Release\CtlColorSpace.obj
 .\Release\CtlLookupTable.obj
 .\Release\CtlRbfInterpolator.obj
 ]
-Creating command line "link.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\RSP000011.rsp"
-Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\BAT000012.bat" with contents
+Creating command line "link.exe @h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\RSP000028.rsp"
+Creating temporary file "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\BAT000029.bat" with contents
 [
 @echo off
-..\..\..\..\..\..\Deploy\vc7\bin\createDLL -n..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtlMath.map -lRelease -i..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtlMath.lib && ..\..\..\installIlmCtlMath.cmd
+..\..\..\..\..\..\Deploy\bin\Release\createDLL -n..\Release\IlmCtlMath.map -lRelease;..\..\..\..\..\..\Deploy\lib\Release -i..\Release\IlmCtlMath.lib && ..\..\..\installIlmCtlMath.cmd Release
 if errorlevel 1 goto VCReportError
 goto VCEnd
 :VCReportError
@@ -38,7 +38,7 @@ echo Project : error PRJ0019: A tool returned an error code from "Performing Pos
 exit 1
 :VCEnd
 ]
-Creating command line "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\BAT000012.bat"
+Creating command line "h:\src12\ctl\Ctl\vc\vc7\Ctl\IlmCtlMath\Release\BAT000029.bat"
 </pre></table><table width=100% bgcolor=#DFDFE5><tr><td><font face=arial size=+2>
 Output Window
 </font></table><table width=* cellspacing=0 cellpadding=0><tr><td width=0 bgcolor=#EDEDF5>&nbsp;</td><td width=0 bgcolor=#FFFFFF>&nbsp;</td><td width=*><pre>Compiling...
@@ -75,15 +75,18 @@ CtlColorSpace.cpp
 Generating Code...
 Linking...
 Performing Post-Build Event...
-Setting string: name of map file to generate=..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtlMath.map
-Setting string vector: semi-colon separated lib dirs=Release
-Setting string: the import lib to go with the DLL=..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtlMath.lib
+Setting string: name of map file to generate=..\Release\IlmCtlMath.map
+Setting string vector: semi-colon separated lib dirs=Release;..\..\..\..\..\..\Deploy\lib\Release
+Setting string: the import lib to go with the DLL=..\Release\IlmCtlMath.lib
 CreateDLL v1.1
 CreateDLL found 439 symbols
 Exporting DLL
-   Creating library ..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtlMath.lib and object ..\..\..\..\..\..\Deploy\vc7\lib\Release\IlmCtlMath.exp
+   Creating library ..\Release\IlmCtlMath.lib and object ..\Release\IlmCtlMath.exp
 createDLL: linking success
-A subdirectory or file ..\..\..\Deploy\include already exists.
+Installing into Release
+        1 file(s) copied.
+        1 file(s) copied.
+        1 file(s) copied.
 CtlRbfInterpolator.h
 CtlLinearSolver.h
 CtlColorSpace.h
