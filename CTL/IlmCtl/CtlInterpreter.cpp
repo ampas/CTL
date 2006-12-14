@@ -63,10 +63,11 @@
 #include <Iex.h>
 #include <fstream>
 #include <cassert>
+
 #ifdef WIN32
-#include  <io.h>
-#include  <stdio.h>
-#include  <stdlib.h>
+    #include <io.h>
+    #include <stdio.h>
+    #include <stdlib.h>
 #endif
 
 using namespace std;
