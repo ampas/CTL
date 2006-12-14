@@ -83,6 +83,59 @@ using namespace IlmThread;
 namespace Ctl {
 namespace {
 
+
+struct ModulePathsData
+{
+    Mutex           mutex;
+    vector<string>  paths;
+};
+
+
+ModulePathsData&
+modulePathsInternal()
+{
+    static ModulePathsData mpd;
+    static bool firstTime = true;
+
+
+    Lock lock(mpd.mutex);
+    // on the first attempt, load all paths from the environment variable
+    if(firstTime)
+    {
+        firstTime = false;
+        vector<string>& modPaths = mpd.paths;
+
+        string path;
+
+        const char *env = getenv ("CTL_MODULE_PATH");
+        if (env)
+            path = env;
+        
+        if (path == "")
+            path = ".";
+
+        size_t pos = 0;
+        while (pos < path.size())
+        {
+            size_t end = path.find (':', pos);
+            
+            if (end == string::npos)
+                end = path.size();
+            
+            string pathItem = path.substr (pos, end - pos);
+
+            if(find(modPaths.begin(), modPaths.end(), pathItem ) 
+               == modPaths.end())
+                modPaths.push_back(pathItem);
+
+            pos = end + 1;
+        }
+    }
+    return mpd;
+}
+
+
+
 string
 findModule (const string& moduleName)
 {
@@ -97,45 +150,26 @@ findModule (const string& moduleName)
     // be used to build absolute or relative file paths.
     //
 
-    static string path;
-
-    if (path == "")
-    {
-	const char *env = getenv ("CTL_MODULE_PATH");
-
-	if (env)
-	    path = env;
-
-	if (path == "")
-	    path = ".";
-    }
-
     if (moduleName.find_first_of ("/:\\") != string::npos)
     {
 	THROW (ArgExc, "CTL module name \"" << moduleName << "\" is invalid. "
 		       "Module names cannot contain /, : or \\ characters.");
     }
 
-    size_t pos = 0;
 
-    while (pos < path.size())
     {
-	size_t end = path.find (':', pos);
+        ModulePathsData &mpd = modulePathsInternal();
+        Lock lock(mpd.mutex);
 
-	if (end == string::npos)
-	    end = path.size();
-
-	string fileName =
-	    path.substr (pos, end - pos) + '/' + moduleName + ".ctl";
-
-#ifdef WIN32
-	if (!_access (fileName.c_str(), 0))
-#else
-	if (!access (fileName.c_str(), F_OK))
-#endif
-		return fileName;
-
-	pos = end + 1;
+        for(vector<string>::iterator it = mpd.paths.begin();
+            it != mpd.paths.end();
+            it++)
+        {
+            string fileName = *it  + '/' + moduleName + ".ctl";
+            
+            if (!access (fileName.c_str(), F_OK))
+                return fileName;
+        }
     }
 
     THROW (ArgExc, "Cannot find CTL module \"" << moduleName << "\".");
@@ -169,6 +203,28 @@ SymbolTable &
 Interpreter::symtab ()
 {
     return _data->symtab;
+}
+
+
+vector<string>
+Interpreter::modulePaths()
+{
+    vector<string> retPaths;
+    {
+        ModulePathsData &mpd = modulePathsInternal();
+        Lock lock(mpd.mutex);
+        retPaths = mpd.paths;
+    }
+    return retPaths;
+}
+
+void
+Interpreter::setModulePaths(const vector<string>& newModPaths)
+{
+
+    ModulePathsData &mpd = modulePathsInternal();
+    Lock lock(mpd.mutex);
+    mpd.paths = newModPaths;
 }
 
 
