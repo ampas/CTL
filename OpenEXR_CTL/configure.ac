@@ -137,6 +137,7 @@ Makefile
 OpenEXR_CTL.pc
 IlmImfCtl/Makefile
 IlmImfCtlTest/Makefile
+vc/Makefile
 ])
 
 if test "x$build_osxuniversal" = xyes; then
