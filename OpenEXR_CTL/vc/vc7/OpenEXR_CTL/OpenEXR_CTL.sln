@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IlmImfCtl", "IlmImfCtl\IlmImfCtl.vcproj", "{1B8EB586-31E6-4FBB-9CD2-C22F92614C3C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IlmImfCtlTest", "IlmImfCtlTest\IlmImfCtlTest.vcproj", "{EDDE60EA-AFD9-49DA-9BCC-B4CC1A05A407}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1B8EB586-31E6-4FBB-9CD2-C22F92614C3C} = {1B8EB586-31E6-4FBB-9CD2-C22F92614C3C}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{1B8EB586-31E6-4FBB-9CD2-C22F92614C3C}.Debug.ActiveCfg = Debug|Win32
+		{1B8EB586-31E6-4FBB-9CD2-C22F92614C3C}.Debug.Build.0 = Debug|Win32
+		{1B8EB586-31E6-4FBB-9CD2-C22F92614C3C}.Release.ActiveCfg = Release|Win32
+		{1B8EB586-31E6-4FBB-9CD2-C22F92614C3C}.Release.Build.0 = Release|Win32
+		{EDDE60EA-AFD9-49DA-9BCC-B4CC1A05A407}.Debug.ActiveCfg = Debug|Win32
+		{EDDE60EA-AFD9-49DA-9BCC-B4CC1A05A407}.Debug.Build.0 = Debug|Win32
+		{EDDE60EA-AFD9-49DA-9BCC-B4CC1A05A407}.Release.ActiveCfg = Release|Win32
+		{EDDE60EA-AFD9-49DA-9BCC-B4CC1A05A407}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
