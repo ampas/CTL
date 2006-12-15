@@ -128,6 +128,7 @@ IlmCtlMathTest/Makefile
 IlmCtlSimd/Makefile
 IlmCtlTest/Makefile
 doc/Makefile
+vc/Makefile
 ])
 
 if test "x$build_osxuniversal" = xyes; then

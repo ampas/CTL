@@ -4,6 +4,9 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = IlmCtl IlmCtlMath IlmCtlMathTest IlmCtlSimd IlmCtlTest doc
 
+DIST_SUBDIRS = \
+	$(SUBDIRS) \
+	vc
 
 EXTRA_DIST = \
 	AUTHORS COPYING ChangeLog INSTALL LICENSE NEWS \
