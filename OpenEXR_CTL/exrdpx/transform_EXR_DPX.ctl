@@ -106,7 +106,7 @@ transform_EXR_DPX
     {
 	negGamma[0] * log10_h (linear[0] / 0.18),
 	negGamma[1] * log10_h (linear[1] / 0.18),
-	negGamma[2] * log10_h (linear[2] / 0.18),
+	negGamma[2] * log10_h (linear[2] / 0.18)
     };
 
     //

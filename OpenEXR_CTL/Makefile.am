@@ -4,7 +4,7 @@
 # (an alternative to the acinclude.m4 mechanism)
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = IlmImfCtl IlmImfCtlTest
+SUBDIRS = IlmImfCtl IlmImfCtlTest exrdpx
 
 DIST_SUBDIRS = \
 	$(SUBDIRS) \

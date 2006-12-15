@@ -137,6 +137,7 @@ Makefile
 OpenEXR_CTL.pc
 IlmImfCtl/Makefile
 IlmImfCtlTest/Makefile
+exrdpx/Makefile
 vc/Makefile
 ])
 
