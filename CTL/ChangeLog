@@ -1,43 +1,35 @@
 Version 1.2.0:
-    * Reorganized libraries for general release
-
-    * Bug fix: parsing of expressions with commas is stricter
+	* Reorganized libraries for general release
+	* Bug fix: parsing of expressions with commas is stricter
+	  (Andrew Kunz)
+	* New build scripts for Linux/Unix
+	  (Andrew Kunz)
+	* New Windows project files and build scripts
+	  (Kimball Thurston)
 
 Version 1.1.0:
-
-    * Added new playexr program.
-
-    * Bug fix: Scattered-data interpolation did not interpolate
-      smoothly between the given data points.
-
-    * Bug fix: file IlmCtlSimd/CtlSimdReg.cpp did not compile on Windows.
+	* Added new playexr program.
+	* Bug fix: Scattered-data interpolation did not interpolate
+	  smoothly between the given data points.
+	* Bug fix: file IlmCtlSimd/CtlSimdReg.cpp did not compile on Windows.
 
 Version 1.0.2:
+	* Bug fix: FunctionArg::setDefaultValue() had unexpected side-effects.
+	* Bug fix: log_h(+infinity) returned NaN instead of +infinity
+	* Some operations on varying operands are faster.
+	* Added new built-in functions:
+	    float log10_h (half x)	a faster version of log10(x)
+	    float pow10 (float x)	returns pow(10,x)
+	    half pow10_h (float x)	a faster version of pow10(x)
+	  The sample transforms in directory exrdisplay_ctl now
+	  call log10_h() and pow10_h().
 
-    * Bug fix: FunctionArg::setDefaultValue() had unexpected side-effects.
-    
-    * Bug fix: log_h(+infinity) returned NaN instead of +infinity
-
-    * Some operations on varying operands are faster.
-
-    * Added new built-in functions:
-
-	float log10_h (half x)	a faster version of log10(x)
-	float pow10 (float x)	returns pow(10,x)
-	half pow10_h (float x)	a faster version of pow10(x)
-
-      The sample transforms in directory exrdisplay_ctl now
-      call log10_h() and pow10_h().
-
-    * Added missing IlmCtlMathTest directory.
+	* Added missing IlmCtlMathTest directory.
 
 Version 1.0.1:
-
-    * Fixed code that compiled with gcc 3.x but not with gcc 4.x.
-
-    * Bug fix: the size operator for a variable-size arrays
-      sometimes incorrectly returned zero.
+	* Fixed code that compiled with gcc 3.x but not with gcc 4.x.
+	* Bug fix: the size operator for a variable-size arrays
+	  sometimes incorrectly returned zero.
 
 Version 1.0.0:
-
-    * Initial release
+	* Initial release (only to AMPAS File Format Committee)

@@ -3,6 +3,17 @@ ABOUT THE OPENEXR_CTL LIBRARIES
 
 IlmImfCtl provides a simplified OpenEXR interface to CTL
 
+exrdpx is an initial version CTL-driven file converter that
+translates DPX files into OpenEXR files and vice versa.
+The conversion between the DPX and OpenEXR color spaces is
+handled by CTL transforms.
+
+WARNING: the exrdpx file converter is still under development.
+It is good enough for experimentation, but it is not yet ready
+for production use.  The converter is slow, and its DPX file
+I/O capabilities are minimal; most DPX header fields and OpenEXR
+attributes are lost during file conversion.
+
 
 LICENSE
 -------

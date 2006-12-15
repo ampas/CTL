@@ -5,14 +5,6 @@ Building CTL on MacOS X is just like building it on GNU/Linux.
 Follow the instructions in the README file under BUILDLING OPENEXR,
 but see below re: shared libraries.
 
-XXX todo: has CTL been tested on mac?
-
-This release of CTL has only been tested on OS X 10.4 (Tiger), but
-it should also work on 10.3 (Panther).  Versions of OS X earlier than
-10.3 are no longer supported.
-
-
-
 Known bugs
 ----------
 
@@ -22,11 +14,8 @@ None.
 Shared libraries
 ----------------
 
-XXX todo: I don't understand why this comment is included:
-
-OpenEXR requires the "flat namespace" option when built as a shared
-library.  You may have problems trying to use OpenEXR shared libraries
+CTL requires the "flat namespace" option when built as a shared
+library.  You may have problems trying to use CTL shared libraries
 with applications that expect OS X's two-level namespace.  We have not
 tested the shared libs extensively, though they appear to work with
-exrdisplay and exrheader, but use them at your own risk.  We will
-support two-level namespace shared libs in a future release.
+exrdisplay and exrheader, but use them at your own risk.

@@ -1,2 +1,6 @@
 Version 0.9.0:
-	* intial limited release
+	* initial release
+	* New build scripts for Linux/Unix
+	  (Andrew Kunz)
+	* New Windows project files and build scripts
+	  (Kimball Thurston)
