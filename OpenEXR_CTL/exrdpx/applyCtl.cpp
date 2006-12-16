@@ -62,6 +62,8 @@
 #include <ImfFrameBuffer.h>
 #include <cassert>
 #include <iostream>
+#include <vector>
+#include <string>
 
 using namespace std;
 using namespace Ctl;
@@ -156,8 +158,21 @@ applyCtlExrToDpx (const vector<string> &transformNames,
     Box2i transformWindow (V2i (0, 0), V2i (w - 1, h - 1));
 
     SimdInterpreter interpreter;
-    Header outHeader;
 
+    #ifdef CTL_MODULE_BASE_PATH
+	//
+	// The configuration scripts has defined a default
+	// location for CTL modules.  Include this location
+	// in the CTL module search path.
+	//
+
+	vector<string> paths = interpreter.modulePaths();
+	paths.push_back (CTL_MODULE_BASE_PATH);
+	interpreter.setModulePaths (paths);
+
+    #endif
+
+    Header outHeader;
     ImfCtl::applyTransforms (interpreter,
 			     transformNames,
 			     transformWindow,
@@ -206,6 +221,20 @@ applyCtlDpxToExr (const vector<string> &transformNames,
     Box2i transformWindow (V2i (0, 0), V2i (w - 1, h - 1));
 
     SimdInterpreter interpreter;
+
+    #ifdef CTL_MODULE_BASE_PATH
+	//
+	// The configuration scripts has defined a default
+	// location for CTL modules.  Include this location
+	// in the CTL module search path.
+	//
+
+	vector<string> paths = interpreter.modulePaths();
+	paths.push_back (CTL_MODULE_BASE_PATH);
+	interpreter.setModulePaths (paths);
+
+    #endif
+
     Header outHeader;
 
     ImfCtl::applyTransforms (interpreter,

@@ -55,6 +55,7 @@ AM_COMPILELINKRUN(
    AC_MSG_ERROR([Could not compile OpenEXR test program.]))
 
 
+
 dnl
 dnl get ccflags and libs from ctl packages, then check 
 dnl whether test programs compile
@@ -130,6 +131,23 @@ AM_CXXFLAGS="$EXTRA_OPT_CFLAGS"
 
 AC_SUBST(AM_CFLAGS)
 AC_SUBST(AM_CXXFLAGS)
+
+
+dnl
+dnl if some autoconf expert knows how to get the actual prefix used, please 
+dnl tell us.  Until then...
+dnl 
+if test "x$prefix" != "xNONE"; then
+   ACTUAL_PREFIX=$prefix
+else
+   ACTUAL_PREFIX=/usr/local
+fi
+
+OPENEXR_CXXFLAGS="$OPENEXR_CTL_CXXFLAGS  -DCTL_MODULE_BASE_PATH=\\\"$ACTUAL_PREFIX/lib/CTL\\\""
+
+
+AC_SUBST(OPENEXR_CXXFLAGS)
+AC_SUBST(OPENEXR_LDFLAGS)
 
 
 AC_OUTPUT([
