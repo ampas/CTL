@@ -1,3 +1,6 @@
+Version 0.9.1:
+        * corrected version number on dso's (libtool) - now 1.0
+
 Version 0.9.0:
 	* initial release
 	* New build scripts for Linux/Unix

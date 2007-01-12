@@ -1,3 +1,6 @@
+Version 1.2.1:
+        * corrected version number on dso's  - now 1.0
+
 Version 1.2.0:
 	* Reorganized libraries for general release
 	* Bug fix: parsing of expressions with commas is stricter
@@ -33,3 +36,4 @@ Version 1.0.1:
 
 Version 1.0.0:
 	* Initial release (only to AMPAS File Format Committee)
+
