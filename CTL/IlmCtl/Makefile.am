@@ -39,7 +39,7 @@ libIlmCtl_la_SOURCES = \
 
 libIlmCtl_la_LDFLAGS = -version-info @LIBTOOL_VERSION@ @ILMBASE_LDFLAGS@ \
 			-no-undefined
-libIlmCtl_la_LIBADD =  -lHalf -lIlmThread -lIex
+libIlmCtl_la_LIBADD =  @ILMBASE_LIBS@ -lHalf -lIlmThread -lIex
 
 libIlmCtlincludedir = $(includedir)/CTL
 

@@ -28,7 +28,7 @@ INCLUDES = @ILMBASE_CXXFLAGS@ \
 	-I$(top_srcdir)/IlmCtl \
 	-I$(top_srcdir)/IlmCtlSimd
 
-AM_LDFLAGS = @ILMBASE_LDFLAGS@ 
+AM_LDFLAGS = @ILMBASE_LDFLAGS@ @ILMBASE_LIBS@
 
 LDADD =	-L$(top_builddir)/IlmCtlSimd \
 	-L$(top_builddir)/IlmCtlMath \

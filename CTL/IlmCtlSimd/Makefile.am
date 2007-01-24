@@ -50,7 +50,8 @@ libIlmCtlSimd_la_SOURCES = \
 libIlmCtlSimd_la_LDFLAGS = -version-info @LIBTOOL_VERSION@ @ILMBASE_LDFLAGS@ \
 			   -no-undefined
 
-libIlmCtlSimd_la_LIBADD = ../IlmCtl/libIlmCtl.la ../IlmCtlMath/libIlmCtlMath.la
+libIlmCtlSimd_la_LIBADD = @ILMBASE_LIBS@ \
+			  ../IlmCtl/libIlmCtl.la ../IlmCtlMath/libIlmCtlMath.la
 
 libIlmCtlSimdincludedir = $(includedir)/CTL
 
@@ -93,7 +94,7 @@ CLEANFILES = halfExpLogTable halfExpLogTable.h
 halfExpLogTable_SOURCES = halfExpLogTable.cpp
 
 halfExpLogTable_LDFLAGS = -version-info @LIBTOOL_VERSION@ @ILMBASE_LDFLAGS@ \
-			   -no-undefined
+			  @ILMBASE_LIBS@ -no-undefined
 
 halfExpLog.h halfExpLogTable.h:	halfExpLogTable
 	./halfExpLogTable  halfExpLogTable.h halfExpLog.h

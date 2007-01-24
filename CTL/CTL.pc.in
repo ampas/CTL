@@ -7,5 +7,5 @@ CTL_includedir=@includedir@/CTL
 Name: CTL
 Description: CTL interpreter library
 Version: @CTL_VERSION@
-Libs: -L${libdir} -lIlmCtlSimd -lIlmCtlMath -lIlmCtl @ILMBASE_LDFLAGS@
+Libs: -L${libdir} @ILMBASE_LDFLAGS@ -lIlmCtlSimd -lIlmCtlMath -lIlmCtl @ILMBASE_LIBS@
 Cflags: @ILMBASE_CXXFLAGS@ -I${CTL_includedir}

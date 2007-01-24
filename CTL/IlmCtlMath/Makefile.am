@@ -16,7 +16,7 @@ libIlmCtlMath_la_SOURCES = \
 libIlmCtlMath_la_LDFLAGS = -version-info @LIBTOOL_VERSION@ @ILMBASE_LDFLAGS@ \
 			   -no-undefined
 
-libIlmCtlMath_la_LIBADD = -lImath -lIex
+libIlmCtlMath_la_LIBADD = @ILMBASE_LIBS@ -lImath -lIex
 
 libIlmCtlMathincludedir = $(includedir)/CTL
 

@@ -17,7 +17,7 @@ INCLUDES = @ILMBASE_CXXFLAGS@ \
 
 AM_LDFLAGS = @ILMBASE_LDFLAGS@
 
-LDADD =	-L$(top_builddir)/IlmCtlMath \
+LDADD =	@ILMBASE_LIBS@ -L$(top_builddir)/IlmCtlMath \
 	-lIlmCtlMath -lImath -lIex -lHalf -lpthread -lm
 
 TESTS = IlmCtlMathTest

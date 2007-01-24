@@ -69,6 +69,12 @@ runTestAffine(int numSamples, int numTests)
 {
     srand(113131);
 
+#ifdef HAVE_DARWIN
+    //  gcc on mac requires V3f to be used before it is used below
+    //  (tested on g++-4.0.1)
+    Imath::V3f q;
+#endif
+
     typedef Imath::V3f V3fPair[2];
     V3fPair *p = new V3fPair[numSamples];
 
