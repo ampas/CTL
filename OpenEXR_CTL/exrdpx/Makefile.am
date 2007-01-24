@@ -10,6 +10,7 @@ INCLUDES = \
 	-I$(top_srcdir)/IlmImfCtl
 
 LDADD =	\
+	@CTL_LIBS@ @OPENEXR_LIBS@ \
 	@OPENEXR_LDFLAGS@ \
 	@CTL_LDFLAGS@ \
 	-L$(top_builddir)/IlmImfCtl -lIlmImfCtl

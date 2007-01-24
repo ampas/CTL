@@ -8,4 +8,4 @@ Name: OpenEXR_CTL
 Description: Simplified OpenEXR interface to CTL
 Version: @OPENEXR_CTL_VERSION@
 Libs: -L${libdir} -lIlmImfCtl @OPENEXR_LDFLAGS@ @CTL_LDFLAGS@
-Cflags: @CTL_CXXFLAGS@ @OPENEXR_CXXFLAGS@ -I${OpenEXR_includedir}
+Cflags: @CTL_CXXFLAGS_PC@ @OPENEXR_CXXFLAGS@ -I${OpenEXR_includedir}

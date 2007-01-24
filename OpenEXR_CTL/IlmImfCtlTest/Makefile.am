@@ -22,6 +22,7 @@ AM_LDFLAGS = \
 	@OPENEXR_LDFLAGS@
 
 LDADD =	\
+	@CTL_LIBS@ @OPENEXR_LIBS@ \
 	-L$(top_builddir)/IlmImfCtl \
 	-lIlmImfCtl
 

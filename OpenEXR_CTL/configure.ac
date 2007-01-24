@@ -30,6 +30,10 @@ fi
 
 export PKG_CONFIG_PATH
 
+LIB64_IF_EXISTS=""
+if [[ -e /usr/lib64 ]]; then
+   LIB64_IF_EXISTS="-L/usr/lib64"
+fi         
 
 dnl
 dnl get ccflags and libs from openexr packages, then check 
@@ -37,16 +41,55 @@ dnl whether test programs compile
 AM_PATH_PKGCONFIG(
    [OPENEXR_CXXFLAGS],
    [OPENEXR_LDFLAGS],
+   [OPENEXR_LIBS],
    [OpenEXR],
    [OpenEXR],
+   [$LIB64_IF_EXISTS -L/usr/local/lib],
    [-lIlmImf -lImath -lIex -lHalf -lz],
    [openexr-prefix])
+
+dnl
+dnl get ccflags and libs from ctl packages, then check 
+dnl whether test programs compile
+AM_PATH_PKGCONFIG(
+   [CTL_CXXFLAGS],
+   [CTL_LDFLAGS],
+   [CTL_LIBS],
+   [CTL],
+   [CTL OpenEXR],
+   [$LIB64_IF_EXISTS -L/usr/local/lib],
+   [-lIlmCtlSimd -lIlmCtlMath -lIlmCtl -lImath -lHalf -lIex -lIlmThread -lpthread],
+   [ctl-prefix])
+
+dnl --enable-threading
+AC_ARG_ENABLE(threading,
+              AC_HELP_STRING([--enable-threading],
+                             [enable multi-threading [[default=yes]]]),
+              [multithread="${enableval}"], [multithread=yes])
+
+if test x$PKG_CONFIG == xno && test "x${multithread}" != xno ; then
+    ACX_PTHREAD(
+    [
+	AC_DEFINE(HAVE_PTHREAD)
+	ILMBASE_LIBS="$PTHREAD_LIBS $ILMBASE_LIBS"
+	ILMBASE_CXXFLAGS="$ILMBASE_CXXFLAGS $PTHREAD_CFLAGS"
+	CTL_LIBS="$PTHREAD_LIBS $CTL_LIBS"
+	CTL_CXXFLAGS="$CTL_CXXFLAGS $PTHREAD_CFLAGS"
+	CC="$PTHREAD_CC"
+	
+	AM_POSIX_SEM()
+    ],
+    [AC_MSG_ERROR([POSIX thread support required])])
+    AC_MSG_NOTICE([multithread true, LIBS = $LIBS, CC = $CC, CXXFLAGS = $CXXFLAGS])
+fi
+
 
 AM_COMPILELINKRUN(
    [OpenEXR],
    [openexrtest],
    [$OPENEXR_CXXFLAGS],
-   [$OPENEXR_LDFLAGS],[[
+   [$OPENEXR_LDFLAGS],
+   [$OPENEXR_LIBS],[[
 #include <stdlib.h>
 #include <ImfTestFile.h>
 ]],
@@ -56,22 +99,13 @@ AM_COMPILELINKRUN(
 
 
 
-dnl
-dnl get ccflags and libs from ctl packages, then check 
-dnl whether test programs compile
-AM_PATH_PKGCONFIG(
-   [CTL_CXXFLAGS],
-   [CTL_LDFLAGS],
-   [CTL],
-   [CTL OpenEXR],
-   [-lIlmCtlSimd -lIlmCtlMath -lIlmCtl -L/usr/local/lib -lImath -lHalf -lIex -lIlmThread -lpthread],
-   [ctl-prefix])
 
 AM_COMPILELINKRUN(
    [CTL],
    [ctltest],
    [$CTL_CXXFLAGS],
-   [$CTL_LDFLAGS],[[
+   [$CTL_LDFLAGS],
+   [$CTL_LIBS],[[
 #include <CtlSimdInterpreter.h>
 #include <Iex.h>
 ]],
@@ -143,11 +177,22 @@ else
    ACTUAL_PREFIX=/usr/local
 fi
 
-OPENEXR_CXXFLAGS="$OPENEXR_CTL_CXXFLAGS  -DCTL_MODULE_BASE_PATH=\\\"$ACTUAL_PREFIX/lib/CTL\\\""
+dnl
+dnl The -DCTLMODULE_BASE_PATH does not need to be passed to the .pc file, plus
+dnl the quotes don't get passed through pkg-config properly
+dnl
+CTL_CXXFLAGS_PC="$CTL_CXXFLAGS"
+CTL_CXXFLAGS="$CTL_CXXFLAGS -DCTL_MODULE_BASE_PATH=\\\"$ACTUAL_PREFIX/lib/CTL\\\""
+
 
 
 AC_SUBST(OPENEXR_CXXFLAGS)
 AC_SUBST(OPENEXR_LDFLAGS)
+AC_SUBST(OPENEXR_LIBS)
+AC_SUBST(CTL_CXXFLAGS)
+AC_SUBST(CTL_CXXFLAGS_PC)
+AC_SUBST(CTL_LDFLAGS)
+AC_SUBST(CTL_LIBS)
 
 
 AC_OUTPUT([
