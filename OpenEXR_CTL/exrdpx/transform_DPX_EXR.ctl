@@ -70,9 +70,9 @@ transform_DPX_EXR
      input varying half dpxB,
      input uniform Chromaticities exrChromaticities,
      input uniform float maxAimDensity[3] = {1.890, 2.046, 2.046},
-     							// ARRI "carlos" aims
-     input uniform float negGamma[3] = {0.55, 0.60, 0.60})
-     							// gamma of negative
+    					// ARRI "carlos" aims
+     input uniform float negGamma[3] = {0.49, 0.57, 0.60})
+     					// gamma of negative (Kodak 5201)
 {
     //
     // Convert DPX code values to density
