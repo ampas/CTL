@@ -96,7 +96,7 @@ usageMessage (const char argv0[], bool verbose = false)
 		"-yc    the pixels in the OpenEXR output file will be\n"
 		"       in luminance/chroma instead of RGB format\n"
 		"\n"
-		"-h     verbose mode\n"
+		"-v     verbose mode\n"
 		"\n"
 		"-h     prints this message\n"
 		"\n"

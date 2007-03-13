@@ -122,9 +122,11 @@ readHeader
     if (imageInfo.imageElements[0].descriptor != 50)
 	THROW (NoImplExc, "Cannot read DPX files with data other than RGB.");
 
-    if (imageInfo.imageElements[0].transferCharacteristic != 3)
+    if (imageInfo.imageElements[0].transferCharacteristic != 1 &&
+	imageInfo.imageElements[0].transferCharacteristic != 3)
 	THROW (NoImplExc, "Cannot read DPX files with transfer "
-	                  "characteristic other than logarithmic.");
+	                  "characteristic other than 'printing "
+			  "density' or 'logarithmic.'");
 
     if (imageInfo.imageElements[0].colorimetricSpecification != 1)
 	THROW (NoImplExc, "Cannot read DPX files with colorimetric "
