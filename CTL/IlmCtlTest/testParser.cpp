@@ -87,6 +87,7 @@ testParser ()
        	interp.loadModule ("testEmpty");
        	interp.loadModule ("testExpr");
         interp.loadModule ("testInterpolator");
+        interp.loadModule ("testCtlVersion");
         interp.loadModule ("testExamples");
 
 	cout << "ok\n" << endl;

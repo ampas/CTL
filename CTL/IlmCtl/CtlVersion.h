@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 //
-// Copyright (c) 2006 Academy of Motion Picture Arts and Sciences
+// Copyright (c) 2007 Academy of Motion Picture Arts and Sciences
 // ("A.M.P.A.S."). Portions contributed by others as indicated.
 // All rights reserved.
 // 
@@ -46,90 +46,20 @@
 ///////////////////////////////////////////////////////////////////////////
 
 
-#ifndef INCLUDED_CTL_TOKENS_H
-#define INCLUDED_CTL_TOKENS_H
+#ifndef INCLUDED_CTL_VERSION_H
+#define INCLUDED_CTL_VERSION_H
 
 //-----------------------------------------------------------------------------
 //
-//	Syntactic tokens for the color transformation language.
+//	CURRENT_CTL_VERSION -- a version number that indicates
+//	which version of the Color Transformation Language is
+//	implemented in the interpreter.  Future versions of the
+//	interpreter may implement an extended or modified Color
+//	Transformation Languague; in this case the version number
+//	will be increased.
 //
 //-----------------------------------------------------------------------------
 
-namespace Ctl {
-
-enum Token
-{
-    TK_AND,		// "&&"
-    TK_ASSIGN,		// "="
-    TK_AT,              // "@error##" where ## is an integer
-    TK_BITAND,		// "&"
-    TK_BITNOT,		// "~"
-    TK_BITOR,		// "|"
-    TK_BITXOR,		// "^"
-    TK_BOOL,		// "bool"
-    TK_BREAK,		// "break"
-    TK_CLOSEBRACE,	// "}"
-    TK_CLOSEBRACKET,	// "]"
-    TK_CLOSEPAREN,	// ")"
-    TK_COMMA,		// ","
-    TK_CONST,		// "const"
-    TK_CONTINUE,	// "continue"
-    TK_CTLVERSION,	// "ctlversion"
-    TK_DIV,		// "/"
-    TK_DOT,             // "." not followed by digits
-    TK_ELSE,		// "else"
-    TK_END,		// end of input
-    TK_EQUAL,		// "=="
-    TK_FALSE,		// "false"
-    TK_FLOAT,		// "float"
-    TK_FLOATLITERAL,	// 32-bit floating point literal, e.g. "123.45"
-    TK_FOR,		// "for"
-    TK_GREATER,		// ">"
-    TK_GREATEREQUAL,	// ">="
-    TK_HALF,		// "half"
-    TK_HALFLITERAL,	// 16-bit floating-point literal, e.g. "123.4h"
-    TK_IF,		// "if"
-    TK_IMPORT,		// "import"
-    TK_INPUT,		// "input"
-    TK_INT,		// "int"
-    TK_INTLITERAL,	// integer literal, e.g. "123"
-    TK_LEFTSHIFT,	// "<<"
-    TK_LESS,		// "<"
-    TK_LESSEQUAL,	// "<="
-    TK_MINUS,		// "-"
-    TK_MOD,		// "%"
-    TK_NAME,		// name, e.g. "x"
-    TK_NAMESPACE,	// "namespace"
-    TK_NOT,		// "!"
-    TK_NOTEQUAL,	// "!="
-    TK_OPENBRACE,	// "{"
-    TK_OPENBRACKET,	// "["
-    TK_OPENPAREN,	// "("
-    TK_OR,		// "||"
-    TK_OUTPUT,		// "output"
-    TK_PLUS,		// "+"
-    TK_PRINT,		// "print"
-    TK_RETURN,		// "return"
-    TK_RIGHTSHIFT,	// ">>"
-    TK_SCOPE,		// "::"
-    TK_SEMICOLON,	// ";"
-    TK_STRINGLITERAL,	// string literal
-    TK_STRING,		// "string"
-    TK_STRUCT,		// "struct"
-    TK_TIMES,		// "*"
-    TK_TRUE,		// "true"
-    TK_UNDEFINED,	// undefined token / undefined value
-    TK_UNIFORM,		// "uniform"
-    TK_UNSIGNED,	// "unigned"
-    TK_VARYING,		// "varying"
-    TK_VOID,		// "void"
-    TK_WHILE,		// "while"
-};
-
-
-const char *		tokenAsString (Token token);
-
-
-} // namespace Ctl
+#define CURRENT_CTL_VERSION	1
 
 #endif

@@ -3,6 +3,8 @@
 // specifiers.  (And that variables can not be redefined.)
 
 
+ctlversion 1;
+
 import "testName";
 
 namespace testName

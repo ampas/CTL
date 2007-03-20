@@ -652,6 +652,8 @@ Lex::getNameOrKeyword ()
 	_token = TK_CONST;
     else if (_tokenStringValue == "continue")
 	_token = TK_CONTINUE;
+    else if (_tokenStringValue == "ctlversion")
+	_token = TK_CTLVERSION;
     else if (_tokenStringValue == "else")
 	_token = TK_ELSE;
     else if (_tokenStringValue == "false")

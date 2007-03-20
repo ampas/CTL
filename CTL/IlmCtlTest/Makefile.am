@@ -45,6 +45,7 @@ EXTRA_DIST = \
 	testCast.ctl \
 	testComments.ctl \
 	testCppCall.ctl \
+	testCtlVersion.ctl \
 	test.ctl \
 	testDefaults.ctl \
 	testEmpty.ctl \

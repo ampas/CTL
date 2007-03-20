@@ -1,5 +1,7 @@
+	* Added new ctlversion statement (Florian Kainz)
+
 Version 1.2.1:
-	Installation Tuning 
+	Installation Tuning
         * corrected version number on dso's  - now 1.0
 	* Separated package's LDFLAGS and LIBS flags so that test programs
 	can link with static libraries properly
@@ -16,7 +18,6 @@ Version 1.2.0:
 	  (Kimball Thurston)
 
 Version 1.1.0:
-	* Added new playexr program.
 	* Bug fix: Scattered-data interpolation did not interpolate
 	  smoothly between the given data points.
 	* Bug fix: file IlmCtlSimd/CtlSimdReg.cpp did not compile on Windows.

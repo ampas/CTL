@@ -57,6 +57,7 @@
 #include <CtlLContext.h>
 #include <CtlSymbolTable.h>
 #include <CtlMessage.h>
+#include <CtlVersion.h>
 #include <Iex.h>
 #include <cassert>
 
@@ -163,6 +164,7 @@ Parser::parseInput ()
 
     try
     {
+	parseCtlVersion();
 	parseImportList();
 	SyntaxNodePtr syntaxTree = parseModuleBody();
 
@@ -175,6 +177,37 @@ Parser::parseInput ()
     {
 	outputMessage (e.what());
 	return 0;
+    }
+}
+
+
+void
+Parser::parseCtlVersion ()
+{
+    debugSyntax ("ctlVersion");
+
+    if (token() == TK_CTLVERSION)
+    {
+	next();
+
+	match (TK_INTLITERAL);
+	int ctlVersion = tokenIntValue();
+
+	debugSyntax1 ("ctlversion " << ctlVersion);
+
+	if (ctlVersion > CURRENT_CTL_VERSION)
+	{
+	    MESSAGE_LW (_lcontext, ERR_CTL_VERSION, currentLineNumber(),
+			"Module requires CTL "
+			"version " << ctlVersion << ", "
+			"interpreter implements "
+			"version " << CURRENT_CTL_VERSION << ".");
+	}
+
+	next();
+
+	match (TK_SEMICOLON);
+	next();
     }
 }
 

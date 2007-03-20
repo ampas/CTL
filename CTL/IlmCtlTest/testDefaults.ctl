@@ -316,10 +316,6 @@ defaultComplex6(Hodgepodge i1 = {-1, -1, -1, {-1, -1}, -1},
     assert( op2.ab[0] == b);
     assert( op2.ab[1] == b);
     assert( equalWithAbsErr(op2.h, h, .0001));
-
-
-    //    h = (false*36)/false;  //XXX this should be caught
-
 }
 
 

@@ -1,8 +1,8 @@
 namespace testHugeInit
 {
 //
-//  to be loaded by testHugeInit.C, this file assumes that 
-//  a ctl file has been created...XXX
+//  to be loaded by testHugeInit.cpp, this file assumes that 
+//  a ctl file has been created...
 //
 
 

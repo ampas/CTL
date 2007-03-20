@@ -78,7 +78,7 @@ testCall2(output int i)
 int 
 testScope()
 {
-    print ("Testing variable scope.");
+    print ("Testing variable scope\n");
     testScope2();
     testScope3();
 

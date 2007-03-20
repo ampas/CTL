@@ -35,7 +35,8 @@ libIlmCtl_la_SOURCES = \
 	CtlTokens.cpp \
 	CtlTokens.h \
 	CtlType.cpp \
-	CtlType.h
+	CtlType.h \
+	CtlVersion.h
 
 libIlmCtl_la_LDFLAGS = -version-info @LIBTOOL_VERSION@ @ILMBASE_LDFLAGS@ \
 			-no-undefined
@@ -58,7 +59,8 @@ libIlmCtlinclude_HEADERS = \
 	CtlSymbolTable.h \
 	CtlSyntaxTree.h \
 	CtlTokens.h \
-	CtlType.h
+	CtlType.h \
+	CtlVersion.h
 
 noinst_HEADERS = \
 	CtlLex.h \

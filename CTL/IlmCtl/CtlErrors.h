@@ -120,6 +120,8 @@ enum Error
 
     ERR_DIV_ZERO      = 43,	// division by zero
 
+    ERR_CTL_VERSION   = 44,	// unsupported CTL version
+
     ERR_MAX             ,
 };
 

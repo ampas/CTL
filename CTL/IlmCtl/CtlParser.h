@@ -89,6 +89,7 @@ class Parser
 	AM_AUTO
     };
 
+    void		parseCtlVersion ();
     void		parseImportList ();
     void		parseImportStatement ();
     SyntaxNodePtr	parseModuleBody ();

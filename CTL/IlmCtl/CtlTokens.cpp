@@ -92,6 +92,8 @@ tokenAsString (Token token)
 	return "const";
       case TK_CONTINUE:
 	return "continue";
+      case TK_CTLVERSION:
+	return "ctlversion";
       case TK_DIV:
 	return "/";
       case TK_DOT:
@@ -128,8 +130,6 @@ tokenAsString (Token token)
 	return "int";
       case TK_INTLITERAL:
 	return "int literal";
-      case TK_UNDEFINED:
-	return "undefined";
       case TK_LEFTSHIFT:
 	return "<<";
       case TK_LESS:
@@ -180,6 +180,8 @@ tokenAsString (Token token)
 	return "*";
       case TK_TRUE:
 	return "true";
+      case TK_UNDEFINED:
+	return "undefined";
       case TK_UNIFORM:
 	return "uniform";
       case TK_UNSIGNED:

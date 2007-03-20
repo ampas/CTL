@@ -33,7 +33,7 @@ testScope1()
 int
 testScope()
 {
-    print ("Testing more variable scope.");
+    print ("Testing more variable scope\n");
     testScope1();
 
     print ("ok\n");
