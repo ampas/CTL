@@ -68,6 +68,7 @@ void dpxToExr (const char dpxFileName[],
 	       bool outputXyz,
 	       bool outputYc,
 	       Imf::Compression compression,
+	       bool strict,
 	       bool verbose);
 
 

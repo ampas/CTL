@@ -79,7 +79,8 @@ readHeader
      ByteOrder &byteOrder,
      unsigned int &width,
      unsigned int &height,
-     unsigned int &pixelOffset)
+     unsigned int &pixelOffset,
+     bool strict)
 {
     FileInformation fileInfo;
 
@@ -122,13 +123,15 @@ readHeader
     if (imageInfo.imageElements[0].descriptor != 50)
 	THROW (NoImplExc, "Cannot read DPX files with data other than RGB.");
 
-    if (imageInfo.imageElements[0].transferCharacteristic != 1 &&
+    if (strict &&
+	imageInfo.imageElements[0].transferCharacteristic != 1 &&
 	imageInfo.imageElements[0].transferCharacteristic != 3)
 	THROW (NoImplExc, "Cannot read DPX files with transfer "
 	                  "characteristic other than 'printing "
 			  "density' or 'logarithmic.'");
 
-    if (imageInfo.imageElements[0].colorimetricSpecification != 1)
+    if (strict &&
+	imageInfo.imageElements[0].colorimetricSpecification != 1)
 	THROW (NoImplExc, "Cannot read DPX files with colorimetric "
 	                  "specification other than printing density.");
 
@@ -192,6 +195,7 @@ dpxToExr (const char dpxFileName[],
 	  bool outputXyz,
 	  bool outputYc,
 	  Compression compression,
+	  bool strict,
 	  bool verbose)
 {
     //
@@ -214,7 +218,7 @@ dpxToExr (const char dpxFileName[],
     unsigned int height;
     unsigned int pixelOffset;
 
-    readHeader (in, dpxFileName, byteOrder, width, height, pixelOffset);
+    readHeader (in, dpxFileName, byteOrder, width, height, pixelOffset, strict);
 
     Array2D<Rgba> pixels (height, width);
 

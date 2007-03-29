@@ -96,6 +96,10 @@ usageMessage (const char argv0[], bool verbose = false)
 		"-yc    the pixels in the OpenEXR output file will be\n"
 		"       in luminance/chroma instead of RGB format\n"
 		"\n"
+		"-s     the header of the DPX input file is checked less\n"
+		"       strictly; some fields are ignored even though they\n"
+		"       are part of the core set.\n"
+		"\n"
 		"-v     verbose mode\n"
 		"\n"
 		"-h     prints this message\n"
@@ -168,6 +172,7 @@ main(int argc, char **argv)
     vector<string> transformNames;
     bool outputXyz = false;
     bool outputYc = false;
+    bool strict = true;
     Compression compression = PIZ_COMPRESSION;
     bool verbose = false;
     
@@ -234,6 +239,15 @@ main(int argc, char **argv)
 	    verbose = true;
 	    i += 1;
 	}
+	else if (!strcmp (argv[i], "-s"))
+	{
+	    //
+	    // Less strict DPX header checking
+	    //
+
+	    strict = false;
+	    i += 1;
+	}
 	else if (!strcmp (argv[i], "-h"))
 	{
 	    //
@@ -292,6 +306,7 @@ main(int argc, char **argv)
 		      outputXyz,
 		      outputYc,
 		      compression,
+		      strict,
 		      verbose);
 	}
     }
