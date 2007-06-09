@@ -89,6 +89,8 @@ class SimdStdTypes
 
     DataTypePtr		type_f3 ();		// float[3]
 
+    DataTypePtr		type_f33 ();		// float[3][3]
+
     DataTypePtr		type_f44 ();		// float[4][4]
 
     DataTypePtr		type_box2i ();		// struct Box2i
@@ -137,12 +139,23 @@ class SimdStdTypes
 
     FunctionTypePtr	funcType_h_h_f ();	// half func (half, float)
 
+    FunctionTypePtr	funcType_f33_f33 ();	// float[3][3] func
+						//	(float[3][3])
+
     FunctionTypePtr	funcType_f44_f44 ();	// float[4][4] func
 						//	(float[4][4])
+
+    FunctionTypePtr	funcType_f33_f33_f33 ();// float[3][3] func
+    						//	(float[3][3],
+						//	 float[3][3])
 
     FunctionTypePtr	funcType_f44_f44_f44 ();// float[4][4] func
     						//	(float[4][4],
 						//	 float[4][4])
+
+    FunctionTypePtr	funcType_f33_f_f33 ();	// float[3][3] func
+    						//	(float,
+						//	 float[3][3])
 
     FunctionTypePtr	funcType_f44_f_f44 ();	// float[4][4] func
     						//	(float,
@@ -151,6 +164,10 @@ class SimdStdTypes
     FunctionTypePtr	funcType_f3_f3_f44 ();	// float[3] func
     						//	(float[3],
 						//	 float[4][4])
+
+    FunctionTypePtr	funcType_f3_f3_f33 ();	// float[3] func
+    						//	(float[3],
+						//	 float[3][3])
 
     FunctionTypePtr	funcType_f3_f3_f3 ();	// float[3] func
     						//	(float[3],
@@ -220,6 +237,7 @@ class SimdStdTypes
     DataTypePtr		_type_i2;
     DataTypePtr		_type_f2;
     DataTypePtr		_type_f3;
+    DataTypePtr		_type_f33;
     DataTypePtr		_type_f44;
     DataTypePtr		_type_box2i;
     DataTypePtr		_type_box2f;
@@ -237,9 +255,13 @@ class SimdStdTypes
     FunctionTypePtr	_funcType_f_h;
     FunctionTypePtr	_funcType_f_f_f;
     FunctionTypePtr	_funcType_h_h_f;
+    FunctionTypePtr	_funcType_f33_f33;
     FunctionTypePtr	_funcType_f44_f44;
+    FunctionTypePtr	_funcType_f33_f33_f33;
     FunctionTypePtr	_funcType_f44_f44_f44;
+    FunctionTypePtr	_funcType_f33_f_f33;
     FunctionTypePtr	_funcType_f44_f_f44;
+    FunctionTypePtr	_funcType_f3_f3_f33;
     FunctionTypePtr	_funcType_f3_f3_f44;
     FunctionTypePtr	_funcType_f3_f3_f3;
     FunctionTypePtr	_funcType_f3_f_f3;

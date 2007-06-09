@@ -173,6 +173,19 @@ SimdStdTypes::type_f3 ()
 
 
 DataTypePtr
+SimdStdTypes::type_f33 ()
+{
+    // float[3][3]
+
+    if (!_type_f33)
+	_type_f33 =
+	    _lcontext.newArrayType (_lcontext.newArrayType (type_f(), 3), 3);
+
+    return _type_f33;
+}
+
+
+DataTypePtr
 SimdStdTypes::type_f44 ()
 {
     // float[4][4]
@@ -481,6 +494,22 @@ SimdStdTypes::funcType_h_h_f ()
 
 
 FunctionTypePtr
+SimdStdTypes::funcType_f33_f33 ()
+{
+    // float[3][3] func (float[3][3])
+
+    if (!_funcType_f33_f33)
+    {
+	ParamVector p;
+	p.push_back (Param ("a1", type_f33(), 0, RWA_READ, false));
+	_funcType_f33_f33 = _lcontext.newFunctionType (type_f33(), false, p);
+    }
+
+    return _funcType_f33_f33;
+}
+
+
+FunctionTypePtr
 SimdStdTypes::funcType_f44_f44 ()
 {
     // float[4][4] func (float[4][4])
@@ -493,6 +522,25 @@ SimdStdTypes::funcType_f44_f44 ()
     }
 
     return _funcType_f44_f44;
+}
+
+
+FunctionTypePtr
+SimdStdTypes::funcType_f33_f33_f33 ()
+{
+    // float[3][3] func (float[3][3], float[3][3])
+
+    if (!_funcType_f33_f33_f33)
+    {
+	ParamVector p;
+	p.push_back (Param ("a1", type_f33(), 0, RWA_READ, false));
+	p.push_back (Param ("a2", type_f33(), 0, RWA_READ, false));
+	
+	_funcType_f33_f33_f33 =
+	    _lcontext.newFunctionType (type_f33(), false, p);
+    }
+
+    return _funcType_f33_f33_f33;
 }
 
 
@@ -516,6 +564,25 @@ SimdStdTypes::funcType_f44_f44_f44 ()
 
 
 FunctionTypePtr
+SimdStdTypes::funcType_f33_f_f33 ()
+{
+    // float[3][3] func (float, float[3][3])
+
+    if (!_funcType_f33_f_f33)
+    {
+	ParamVector p;
+	p.push_back (Param ("a1", type_f(), 0, RWA_READ, false));
+	p.push_back (Param ("a2", type_f33(), 0, RWA_READ, false));
+
+	_funcType_f33_f_f33 =
+	    _lcontext.newFunctionType (type_f33(), false, p);
+    }
+
+    return _funcType_f33_f_f33;
+}
+
+
+FunctionTypePtr
 SimdStdTypes::funcType_f44_f_f44 ()
 {
     // float[4][4] func (float, float[4][4])
@@ -531,6 +598,25 @@ SimdStdTypes::funcType_f44_f_f44 ()
     }
 
     return _funcType_f44_f_f44;
+}
+
+
+FunctionTypePtr
+SimdStdTypes::funcType_f3_f3_f33 ()
+{
+    // float[3] func (float[3], float[3][3])
+
+    if (!_funcType_f3_f3_f33)
+    {
+	ParamVector p;
+	p.push_back (Param ("a1", type_f3(), 0, RWA_READ, false));
+	p.push_back (Param ("a2", type_f33(), 0, RWA_READ, false));
+
+	_funcType_f3_f3_f33 =
+	    _lcontext.newFunctionType (type_f3(), false, p);
+    }
+
+    return _funcType_f3_f3_f33;
 }
 
 

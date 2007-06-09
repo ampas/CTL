@@ -94,10 +94,17 @@ DEFINE_SIMD_FUNC_1_ARG (Fabs, fabs (a1), float, float);
 DEFINE_SIMD_FUNC_1_ARG (Floor, floor (a1), float, float);
 DEFINE_SIMD_FUNC_2_ARG (Fmod, fmod (a1, a2), float, float, float);
 DEFINE_SIMD_FUNC_2_ARG (Hypot, hypot (a1, a2), float, float, float);
+DEFINE_SIMD_FUNC_2_ARG (Mult_f33_f33, a1 * a2, M33f, M33f, M33f);
 DEFINE_SIMD_FUNC_2_ARG (Mult_f44_f44, a1 * a2, M44f, M44f, M44f);
+DEFINE_SIMD_FUNC_2_ARG (Mult_f_f33, a1 * a2, M33f, float, M33f);
 DEFINE_SIMD_FUNC_2_ARG (Mult_f_f44, a1 * a2, M44f, float, M44f);
+DEFINE_SIMD_FUNC_2_ARG (Add_f33_f33, a1 + a2, M33f, M33f, M33f);
 DEFINE_SIMD_FUNC_2_ARG (Add_f44_f44, a1 + a2, M44f, M44f, M44f);
+DEFINE_SIMD_FUNC_1_ARG (Invert_f33, a1.inverse(), M33f, M33f);
 DEFINE_SIMD_FUNC_1_ARG (Invert_f44, a1.inverse(), M44f, M44f);
+DEFINE_SIMD_FUNC_1_ARG (Transpose_f33, a1.transposed(), M33f, M33f);
+DEFINE_SIMD_FUNC_1_ARG (Transpose_f44, a1.transposed(), M44f, M44f);
+DEFINE_SIMD_FUNC_2_ARG (Mult_f3_f33, a1 * a2, V3f, V3f, M33f);
 DEFINE_SIMD_FUNC_2_ARG (Mult_f3_f44, a1 * a2, V3f, V3f, M44f);
 DEFINE_SIMD_FUNC_2_ARG (Mult_f_f3, a1 * a2, V3f, float, V3f);
 DEFINE_SIMD_FUNC_2_ARG (Add_f3_f3, a1 + a2, V3f, V3f, V3f);
@@ -187,17 +194,38 @@ declareSimdStdLibMath (SymbolTable &symtab, SimdStdTypes &types)
     declareSimdCFunc (symtab, simdFunc2Arg <Hypot>,
 		      types.funcType_f_f_f(), "hypot");
 
+    declareSimdCFunc (symtab, simdFunc2Arg <Mult_f33_f33>,
+		      types.funcType_f33_f33_f33(), "mult_f33_f33");
+
     declareSimdCFunc (symtab, simdFunc2Arg <Mult_f44_f44>,
 		      types.funcType_f44_f44_f44(), "mult_f44_f44");
+		  
+    declareSimdCFunc (symtab, simdFunc2Arg <Mult_f_f33>,
+		      types.funcType_f33_f_f33(), "mult_f_f33");
 		  
     declareSimdCFunc (symtab, simdFunc2Arg <Mult_f_f44>,
 		      types.funcType_f44_f_f44(), "mult_f_f44");
 
+    declareSimdCFunc (symtab, simdFunc2Arg <Add_f33_f33>,
+		      types.funcType_f33_f33_f33(), "add_f33_f33");
+
     declareSimdCFunc (symtab, simdFunc2Arg <Add_f44_f44>,
 		      types.funcType_f44_f44_f44(), "add_f44_f44");
 
+    declareSimdCFunc (symtab, simdFunc1Arg <Invert_f33>,
+		      types.funcType_f33_f33(), "invert_f33");
+
     declareSimdCFunc (symtab, simdFunc1Arg <Invert_f44>,
 		      types.funcType_f44_f44(), "invert_f44");
+
+    declareSimdCFunc (symtab, simdFunc1Arg <Transpose_f33>,
+		      types.funcType_f33_f33(), "transpose_f33");
+
+    declareSimdCFunc (symtab, simdFunc1Arg <Transpose_f44>,
+		      types.funcType_f44_f44(), "transpose_f44");
+
+    declareSimdCFunc (symtab, simdFunc2Arg <Mult_f3_f33>,
+		      types.funcType_f3_f3_f33(), "mult_f3_f33");
 
     declareSimdCFunc (symtab, simdFunc2Arg <Mult_f3_f44>,
 		      types.funcType_f3_f3_f44(), "mult_f3_f44");

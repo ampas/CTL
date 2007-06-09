@@ -25,6 +25,30 @@ equalWithAbsErr_f3 (float a[3], float b[3], float e)
 
 
 bool
+equalWithAbsErr_f33 (float a[3][3], float b[3][3], float e)
+{
+    int i = 0;
+
+    while (i < 3)
+    {
+	int j = 0;
+
+	while (j < 3)
+	{
+	    if (!equalWithAbsErr (a[i][j], b[i][j], e))
+		return false;
+
+	    j = j + 1;
+	}
+
+	i = i + 1;
+    }
+
+    return true;
+}
+
+
+bool
 equalWithAbsErr_f44 (float a[4][4], float b[4][4], float e)
 {
     int i = 0;
@@ -56,29 +80,48 @@ testEqualWithAbsErr()
     assert (!equalWithAbsErr (1.0, 0.985, 0.01));
     assert (!equalWithAbsErr (1.0, 1.015, 0.01));
 
-    float M1[4][4] = {{1, 0, 0, 0},
-		      {0, 1, 0, 0},
-		      {0, 0, 1, 0},
-		      {0, 0, 0, 1}};
+    {
+	float M1[3][3] = {{1, 0, 0},
+			  {0, 1, 0},
+			  {0, 0, 1}};
 
-    float M2[4][4] = {{1, 0, 0, 0},
-		      {0, 1, 0, 0},
-		      {0, 0, 1, 0},
-		      {0, 0, 0, 1.01}};
+	float M2[3][3] = {{1, 0, 0},
+			  {0, 1, 0},
+			  {0, 0, 1.01}};
 
-    assert (equalWithAbsErr_f44 (M1, M1, 0));
-    assert (equalWithAbsErr_f44 (M2, M2, 0));
-    assert (!equalWithAbsErr_f44 (M1, M2, 0));
-    assert (equalWithAbsErr_f44 (M1, M2, 0.1));
+	assert (equalWithAbsErr_f33 (M1, M1, 0));
+	assert (equalWithAbsErr_f33 (M2, M2, 0));
+	assert (!equalWithAbsErr_f33 (M1, M2, 0));
+	assert (equalWithAbsErr_f33 (M1, M2, 0.1));
+    }
 
-    float v1[3] = {1, 2, 3};
-    float v2[3] = {1, 2, 3.01};
+    {
+	float M1[4][4] = {{1, 0, 0, 0},
+			  {0, 1, 0, 0},
+			  {0, 0, 1, 0},
+			  {0, 0, 0, 1}};
 
-    assert (equalWithAbsErr_f3 (v1, v1, 0));
-    assert (equalWithAbsErr_f3 (v2, v2, 0));
+	float M2[4][4] = {{1, 0, 0, 0},
+			  {0, 1, 0, 0},
+			  {0, 0, 1, 0},
+			  {0, 0, 0, 1.01}};
 
-    assert (!equalWithAbsErr_f3 (v1, v2, 0));
-    assert (equalWithAbsErr_f3 (v1, v2, 0.1));
+	assert (equalWithAbsErr_f44 (M1, M1, 0));
+	assert (equalWithAbsErr_f44 (M2, M2, 0));
+	assert (!equalWithAbsErr_f44 (M1, M2, 0));
+	assert (equalWithAbsErr_f44 (M1, M2, 0.1));
+    }
+
+    {
+	float v1[3] = {1, 2, 3};
+	float v2[3] = {1, 2, 3.01};
+
+	assert (equalWithAbsErr_f3 (v1, v1, 0));
+	assert (equalWithAbsErr_f3 (v2, v2, 0));
+
+	assert (!equalWithAbsErr_f3 (v1, v2, 0));
+	assert (equalWithAbsErr_f3 (v1, v2, 0.1));
+    }
 }
 
 
@@ -302,160 +345,283 @@ testMathFunctions ()
 void
 testVecMatrixFunctions ()
 {
-    print ("Testing operations on 4x4 matrices and 3D vectors\n");
-
-    const float M1[4][4] = {{1, 0, 0, 0},
-			    {0, 1, 0, 0},
-			    {0, 0, 1, 0},
-			    {0, 0, 0, 1}};
-
-    const float M2[4][4] = {{2, 0, 0, 0},
-			    {0, 2, 0, 0},
-			    {0, 0, 2, 0},
-			    {0, 0, 0, 2}};
-
-    const float M3[4][4] = {{1, 2, 3, 4},
-			    {1, 2, 3, 4},
-			    {1, 2, 3, 4},
-			    {1, 2, 3, 2}};
+    print ("Testing operations on 3x3 and 4x4 matrices and 3D vectors\n");
 
     {
-	float A[4][4] = mult_f44_f44 (M1, M1);
-	assert (equalWithAbsErr_f44 (A, M1, 0));
+	const float M1[3][3] = {{1, 0, 0},
+				{0, 1, 0},
+				{0, 0, 1}};
+
+	const float M2[3][3] = {{2, 0, 0},
+				{0, 2, 0},
+				{0, 0, 2}};
+
+	const float M3[3][3] = {{1, 2, 3},
+				{1, 2, 3},
+				{1, 2, 1}};
+
+	{
+	    float A[3][3] = mult_f33_f33 (M1, M1);
+	    assert (equalWithAbsErr_f33 (A, M1, 0));
+	}
+
+	{
+	    const float B[3][3] = {{2, 4, 6},
+				   {2, 4, 6},
+				   {2, 4, 2}};
+
+	    float A[3][3] = mult_f33_f33 (M2, M3);
+	    assert (equalWithAbsErr_f33 (A, B, 0));
+	}
+
+	{
+	    float A[3][3] = mult_f_f33 (2, M1);
+	    assert (equalWithAbsErr_f33 (A, M2, 0));
+	}
+
+	{
+	    const float B[3][3] = {{3, 6, 9},
+				   {3, 6, 9},
+				   {3, 6, 3}};
+
+	    float A[3][3] = mult_f_f33 (3, M3);
+	    assert (equalWithAbsErr_f33 (A, B, 0));
+	}
+
+	{
+	    float A[3][3] = add_f33_f33 (M1, M1);
+	    assert (equalWithAbsErr_f33 (A, M2, 0));
+	}
+
+	{
+	    const float B[3][3] = {{3, 2, 3},
+				   {1, 4, 3},
+				   {1, 2, 3}};
+
+	    float A[3][3] = add_f33_f33 (M2, M3);
+	    assert (equalWithAbsErr_f33 (A, B, 0));
+	}
+
+	{
+	    float A[3][3] = invert_f33 (M1);
+	    assert (equalWithAbsErr_f33 (A, M1, 0));
+	}
+
+	{
+	    const float B[3][3] = {{0.5, 0.0, 0.0},
+				   {0.0, 0.5, 0.0},
+				   {0.0, 0.0, 0.5}};
+
+	    float A[3][3] = invert_f33 (M2);
+	    assert (equalWithAbsErr_f33 (A, B, 0));
+	}
+
+	{
+	    float A[3][3] = transpose_f33 (M1);
+	    assert (equalWithAbsErr_f33 (A, M1, 0));
+	}
+
+	{
+	    const float B[3][3] = {{1, 1, 1},
+				   {2, 2, 2},
+				   {3, 3, 1}};
+
+	    float A[3][3] = transpose_f33 (M3);
+	    assert (equalWithAbsErr_f33 (A, B, 0));
+	}
+
+	const float v[3] = {1, 2, 3};
+
+	{
+	    float a[3] = mult_f3_f33 (v, M1);
+	    assert (equalWithAbsErr_f3 (a, v, 0));
+	}
+
+	{
+	    const float b[3] = {6, 12, 12};
+	    float a[3] = mult_f3_f33 (v, M3);
+	    assert (equalWithAbsErr_f3 (a, b, 0.00001));
+	}
     }
 
     {
-	const float B[4][4] = {{2, 4, 6, 8},
-			       {2, 4, 6, 8},
-			       {2, 4, 6, 8},
-			       {2, 4, 6, 4}};
+	const float M1[4][4] = {{1, 0, 0, 0},
+				{0, 1, 0, 0},
+				{0, 0, 1, 0},
+				{0, 0, 0, 1}};
 
-	float A[4][4] = mult_f44_f44 (M2, M3);
-	assert (equalWithAbsErr_f44 (A, B, 0));
+	const float M2[4][4] = {{2, 0, 0, 0},
+				{0, 2, 0, 0},
+				{0, 0, 2, 0},
+				{0, 0, 0, 2}};
+
+	const float M3[4][4] = {{1, 2, 3, 4},
+				{1, 2, 3, 4},
+				{1, 2, 3, 4},
+				{1, 2, 3, 2}};
+
+	{
+	    float A[4][4] = mult_f44_f44 (M1, M1);
+	    assert (equalWithAbsErr_f44 (A, M1, 0));
+	}
+
+	{
+	    const float B[4][4] = {{2, 4, 6, 8},
+				   {2, 4, 6, 8},
+				   {2, 4, 6, 8},
+				   {2, 4, 6, 4}};
+
+	    float A[4][4] = mult_f44_f44 (M2, M3);
+	    assert (equalWithAbsErr_f44 (A, B, 0));
+	}
+
+	{
+	    float A[4][4] = mult_f_f44 (2, M1);
+	    assert (equalWithAbsErr_f44 (A, M2, 0));
+	}
+
+	{
+	    const float B[4][4] = {{3, 6, 9, 12},
+				   {3, 6, 9, 12},
+				   {3, 6, 9, 12},
+				   {3, 6, 9,  6}};
+
+	    float A[4][4] = mult_f_f44 (3, M3);
+	    assert (equalWithAbsErr_f44 (A, B, 0));
+	}
+
+	{
+	    float A[4][4] = add_f44_f44 (M1, M1);
+	    assert (equalWithAbsErr_f44 (A, M2, 0));
+	}
+
+	{
+	    const float B[4][4] = {{3, 2, 3, 4},
+				   {1, 4, 3, 4},
+				   {1, 2, 5, 4},
+				   {1, 2, 3, 4}};
+
+	    float A[4][4] = add_f44_f44 (M2, M3);
+	    assert (equalWithAbsErr_f44 (A, B, 0));
+	}
+
+	{
+	    float A[4][4] = invert_f44 (M1);
+	    assert (equalWithAbsErr_f44 (A, M1, 0));
+	}
+
+	{
+	    const float B[4][4] = {{0.5, 0.0, 0.0, 0.0},
+				   {0.0, 0.5, 0.0, 0.0},
+				   {0.0, 0.0, 0.5, 0.0},
+				   {0.0, 0.0, 0.0, 0.5}};
+
+	    float A[4][4] = invert_f44 (M2);
+	    assert (equalWithAbsErr_f44 (A, B, 0));
+	}
+
+	{
+	    float A[4][4] = transpose_f44 (M1);
+	    assert (equalWithAbsErr_f44 (A, M1, 0));
+	}
+
+	{
+	    const float B[4][4] = {{1, 1, 1, 1},
+				   {2, 2, 2, 2},
+				   {3, 3, 3, 3},
+				   {4, 4, 4, 2}};
+
+	    float A[4][4] = transpose_f44 (M3);
+	    assert (equalWithAbsErr_f44 (A, B, 0));
+	}
+
+	const float v[3] = {1, 2, 3};
+
+	{
+	    float a[3] = mult_f3_f44 (v, M1);
+	    assert (equalWithAbsErr_f3 (a, v, 0));
+	}
+
+	{
+	    float a[3] = mult_f3_f44 (v, M2);
+	    assert (equalWithAbsErr_f3 (a, v, 0.00001));
+	}
+
+	{
+	    const float b[3] = {0.269231, 0.538462, 0.807692};
+	    float a[3] = mult_f3_f44 (v, M3);
+	    assert (equalWithAbsErr_f3 (a, b, 0.00001));
+	}
     }
 
     {
-	float A[4][4] = mult_f_f44 (2, M1);
-	assert (equalWithAbsErr_f44 (A, M2, 0));
-    }
+	const float v1[3] = {0, 0, 0};
+	const float v2[3] = {1, 2, 3};
+	const float v3[3] = {7, 8, 9};
 
-    {
-	const float B[4][4] = {{3, 6, 9, 12},
-			       {3, 6, 9, 12},
-			       {3, 6, 9, 12},
-			       {3, 6, 9,  6}};
+	{
+	    float a[3] = mult_f_f3 (3, v1);
+	    assert (equalWithAbsErr_f3 (a, v1, 0));
+	}
 
-	float A[4][4] = mult_f_f44 (3, M3);
-	assert (equalWithAbsErr_f44 (A, B, 0));
-    }
+	{
+	    float a[3] = mult_f_f3 (3, v2);
+	    float b[3] = {3, 6, 9};
+	    assert (equalWithAbsErr_f3 (a, b, 0));
+	}
 
-    {
-	float A[4][4] = add_f44_f44 (M1, M1);
-	assert (equalWithAbsErr_f44 (A, M2, 0));
-    }
+	{
+	    float a[3] = add_f3_f3 (v1, v2);
+	    assert (equalWithAbsErr_f3 (a, v2, 0));
+	}
 
-    {
-	const float B[4][4] = {{3, 2, 3, 4},
-			       {1, 4, 3, 4},
-			       {1, 2, 5, 4},
-			       {1, 2, 3, 4}};
+	{
+	    float a[3] = add_f3_f3 (v2, v3);
+	    float b[3] = {8, 10, 12};
+	    assert (equalWithAbsErr_f3 (a, b, 0));
+	}
 
-	float A[4][4] = add_f44_f44 (M2, M3);
-	assert (equalWithAbsErr_f44 (A, B, 0));
-    }
+	{
+	    float a[3] = sub_f3_f3 (v2, v1);
+	    assert (equalWithAbsErr_f3 (a, v2, 0));
+	}
 
-    {
-	float A[4][4] = invert_f44 (M1);
-	assert (equalWithAbsErr_f44 (A, M1, 0));
-    }
+	{
+	    float a[3] = sub_f3_f3 (v2, v3);
+	    float b[3] = {-6, -6, -6};
+	    assert (equalWithAbsErr_f3 (a, b, 0));
+	}
 
-    {
-	const float B[4][4] = {{0.5, 0.0, 0.0, 0.0},
-			       {0.0, 0.5, 0.0, 0.0},
-			       {0.0, 0.0, 0.5, 0.0},
-			       {0.0, 0.0, 0.0, 0.5}};
+	{
+	    float a[3] = cross_f3_f3 (v2, v2);
+	    assert (equalWithAbsErr_f3 (a, v1, 0));
+	}
 
-	float A[4][4] = invert_f44 (M2);
-	assert (equalWithAbsErr_f44 (A, B, 0));
-    }
+	{
+	    float a[3] = cross_f3_f3 (v2, v3);
+	    float b[3] = {-6, 12, -6};
+	    assert (equalWithAbsErr_f3 (a, b, 0));
+	}
 
-    const float v1[3] = {0, 0, 0};
-    const float v2[3] = {1, 2, 3};
-    const float v3[3] = {7, 8, 9};
+	{
+	    float a = dot_f3_f3 (v2, v2);
+	    assert (equalWithAbsErr (a, 14, 0));
+	}
 
-    {
-	float a[3] = mult_f3_f44 (v2, M1);
-	assert (equalWithAbsErr_f3 (a, v2, 0));
-    }
+	{
+	    float a = dot_f3_f3 (v2, v3);
+	    assert (equalWithAbsErr (a, 50, 0));
+	}
 
-    {
-	float a[3] = mult_f3_f44 (v2, M2);
-	float b[3] = {0.269231, 0.538462, 0.807692};
-	assert (equalWithAbsErr_f3 (a, v2, 0.00001));
-    }
+	{
+	    float a = length_f3 (v2);
+	    assert (equalWithAbsErr (a, 3.74166, 0.0001));
+	}
 
-    {
-	float a[3] = mult_f_f3 (3, v1);
-	assert (equalWithAbsErr_f3 (a, v1, 0));
-    }
-
-    {
-	float a[3] = mult_f_f3 (3, v2);
-	float b[3] = {3, 6, 9};
-	assert (equalWithAbsErr_f3 (a, b, 0));
-    }
-
-    {
-	float a[3] = add_f3_f3 (v1, v2);
-	assert (equalWithAbsErr_f3 (a, v2, 0));
-    }
-
-    {
-	float a[3] = add_f3_f3 (v2, v3);
-	float b[3] = {8, 10, 12};
-	assert (equalWithAbsErr_f3 (a, b, 0));
-    }
-
-    {
-	float a[3] = sub_f3_f3 (v2, v1);
-	assert (equalWithAbsErr_f3 (a, v2, 0));
-    }
-
-    {
-	float a[3] = sub_f3_f3 (v2, v3);
-	float b[3] = {-6, -6, -6};
-	assert (equalWithAbsErr_f3 (a, b, 0));
-    }
-
-    {
-	float a[3] = cross_f3_f3 (v2, v2);
-	assert (equalWithAbsErr_f3 (a, v1, 0));
-    }
-
-    {
-	float a[3] = cross_f3_f3 (v2, v3);
-	float b[3] = {-6, 12, -6};
-	assert (equalWithAbsErr_f3 (a, b, 0));
-    }
-
-    {
-	float a = dot_f3_f3 (v2, v2);
-	assert (equalWithAbsErr (a, 14, 0));
-    }
-
-    {
-	float a = dot_f3_f3 (v2, v3);
-	assert (equalWithAbsErr (a, 50, 0));
-    }
-
-    {
-	float a = length_f3 (v2);
-	assert (equalWithAbsErr (a, 3.74166, 0.0001));
-    }
-
-    {
-	float a = length_f3 (v3);
-	assert (equalWithAbsErr (a, 13.9284, 0.001));
+	{
+	    float a = length_f3 (v3);
+	    assert (equalWithAbsErr (a, 13.9284, 0.001));
+	}
     }
 
     print ("ok\n");
