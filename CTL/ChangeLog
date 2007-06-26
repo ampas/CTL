@@ -1,3 +1,5 @@
+	* Added support for 3x3 matices to the standard library,
+	  added matrix transposition functions (Florian Kainz)
 	* Added new ctlversion statement (Florian Kainz)
 
 Version 1.2.1:
