@@ -205,11 +205,8 @@ interpolateCubic1D
      int size,
      float p)
 {
-    if (size < 1)
-	return 0;
-
-    if (size < 2)
-	return table[0][1];
+    if (size < 3)
+	return interpolateLinear1D (table, size, p);
 
     if (p < table[0][0])
 	return table[0][1];
@@ -232,31 +229,32 @@ interpolateCubic1D
 	    j = k;
     }
 
+    float dx = (table[i+1][0] - table[i][0]);
+    float dy = (table[i+1][1] - table[i][1]);
     float m0, m1;
 
     if (i > 0)
     {
-	m0 = 0.5f *
-	    ((table[i][1] - table[i-1][1]) / (table[i][0] - table[i-1][0]) +
-	     (table[i+1][1] - table[i][1]) / (table[i+1][0] - table[i][0]));
-    }
-    else
-    {
-	m0 = (table[i+1][1] - table[i][1]) / (table[i+1][0] - table[i][0]);
+	m0 = 0.5f * (dy + dx * (table[i][1] - table[i-1][1]) /
+			       (table[i][0] - table[i-1][0]));
     }
 
     if (i < size - 2)
     {
-	m1 = 0.5f *
-	    ((table[i+1][1] - table[i][1]) / (table[i+1][0] - table[i][0]) +
-	     (table[i+2][1] - table[i+1][1]) / (table[i+2][0] - table[i+1][0]));
+	m1 = 0.5f * (dy + dx * (table[i+2][1] - table[i+1][1]) /
+			       (table[i+2][0] - table[i+1][0]));
     }
-    else
+    if (i <= 0)
     {
-	m1 = (table[i+1][1] - table[i][1]) / (table[i+1][0] - table[i][0]);
+	m0 = (3 * dy - m1) * 0.5f;
     }
 
-    float t = (p - table[i][0]) / (table[i+1][0] - table[i][0]);
+    if (i >= size - 2)
+    {
+	m1 = (3 * dy - m0) * 0.5f;
+    }
+
+    float t = (p - table[i][0]) / dx;
     float t2 = t * t;
     float t3 = t2 * t;
 

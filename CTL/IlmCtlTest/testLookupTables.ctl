@@ -197,7 +197,7 @@ testInterpolateLinear1D ()
     assert (interpolateLinear1D (g, 3.0) == 4.0);
     assert (interpolateLinear1D (g, 4.0) == 4.0);
 
-    float h[][2] = {{1, 2}, {3, 4}, {4, 5}, {4, 5}, {8, 7}};
+    float h[][2] = {{1, 2}, {3, 4}, {4, 5}, {4, 5}, {8, 7}, {9, 1}};
 
     assert (interpolateLinear1D (h, 0.0) == 2.0);
     assert (interpolateLinear1D (h, 1.0) == 2.0);
@@ -210,7 +210,8 @@ testInterpolateLinear1D ()
     assert (interpolateLinear1D (h, 6.0) == 6.0);
     assert (interpolateLinear1D (h, 7.0) == 6.5);
     assert (interpolateLinear1D (h, 8.0) == 7.0);
-    assert (interpolateLinear1D (h, 9.0) == 7.0);
+    assert (interpolateLinear1D (h, 9.0) == 1.0);
+    assert (interpolateLinear1D (h, 10.0) == 1.0);
 
     print ("ok\n");
 }
@@ -235,20 +236,21 @@ testInterpolateCubic1D ()
     assert (interpolateCubic1D (g, 3.0) == 4.0);
     assert (interpolateCubic1D (g, 4.0) == 4.0);
 
-    float h[][2] = {{1, 2}, {3, 4}, {4, 5}, {8, 7}};
+    float h[][2] = {{1, 2}, {3, 4}, {4, 5}, {8, 7}, {9, 1}};
 
     assert (interpolateCubic1D (h, 0.0) == 2.0);
     assert (interpolateCubic1D (h, 1.0) == 2.0);
-    assert (equalWithAbsErr (interpolateCubic1D (h, 1.5), 2.40625, 0.00001));
+    assert (equalWithAbsErr (interpolateCubic1D (h, 1.5), 2.50000, 0.00001));
     assert (equalWithAbsErr (interpolateCubic1D (h, 2.0), 3.00000, 0.00001));
-    assert (equalWithAbsErr (interpolateCubic1D (h, 2.5), 3.59375, 0.00001));
+    assert (equalWithAbsErr (interpolateCubic1D (h, 2.5), 3.50000, 0.00001));
     assert (interpolateCubic1D (h, 3.0) == 4.0);
     assert (interpolateCubic1D (h, 4.0) == 5.0);
-    assert (equalWithAbsErr (interpolateCubic1D (h, 5.0), 5.39453, 0.00001));
-    assert (equalWithAbsErr (interpolateCubic1D (h, 6.0), 6.03125, 0.00001));
-    assert (equalWithAbsErr (interpolateCubic1D (h, 7.0), 6.65234, 0.00001));
+    assert (equalWithAbsErr (interpolateCubic1D (h, 5.0), 6.25000, 0.00001));
+    assert (equalWithAbsErr (interpolateCubic1D (h, 6.0), 7.75000, 0.00001));
+    assert (equalWithAbsErr (interpolateCubic1D (h, 7.0), 8.37500, 0.00001));
     assert (interpolateCubic1D (h, 8.0) == 7.0);
-    assert (interpolateCubic1D (h, 9.0) == 7.0);
+    assert (interpolateCubic1D (h, 9.0) == 1.0);
+    assert (interpolateCubic1D (h, 10.0) == 1.0);
 
     print ("ok\n");
 }
