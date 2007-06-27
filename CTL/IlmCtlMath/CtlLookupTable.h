@@ -50,7 +50,8 @@
 
 //-----------------------------------------------------------------------------
 //
-//	1D and 3D table lookups with linear and trilinear interpolation.
+//	1D and 3D table lookups with linear, trilinear and
+//	cubic interpolation.
 //
 //	lookup1D(t,s,pMin,pMax,p)
 //
@@ -60,15 +61,6 @@
 //		and f(pMax) == t(s-1).
 //
 //		lookup1D(t,s,pMin,pMax,p) returns f(clamp(p,pMin,pMax)).
-//
-//	lookupPairs1D(t,s,p)
-//
-//		Lookup table t, which contains s entries of type float[2].
-//		The table defines a piecewise function, f, with s-1
-//		segments, such that f(x) interpolates linearly between
-//		t[i][1] and t[i+1][1] for t[i][0]< x < t[i+1][0].
-//
-//		lookupPairs1D(t,s,p) returns f(clamp(p,t[0][0],t[s-1][0])).
 //
 //	lookup3D(t,s,pMin,pMax,p)
 //
@@ -88,6 +80,28 @@
 //		to lookup3D as a 1D array, with table entry t[i][j][k]
 //		at location t[(i * s.y + j) * s.z + k];
 //
+//	interpolateLinear1D(t,s,p)
+//
+//		Lookup table with linear interpolation between entries
+//              of type float[2]: the table, t, defines a piecewise
+//		linear function, f, with s-1 segments, such that f(x)
+//		interpolates between t[i][1] and t[i+1][1] for
+//		t[i][0]< x < t[i+1][0].
+//
+//		interpolateLinear1D(t,s,p) returns
+//		f(clamp(p,t[0][0],t[s-1][0])).
+//
+//	interpolateCubic1D(t,s,p)
+//
+//		Lookup table with cubic interpolation between entries
+//              of type float[2]: the table, t, defines a piecewise
+//		cubic function, f, with s-1 segments, such that f(x)
+//		interpolates between t[i][1] and t[i+1][1] for
+//		t[i][0]< x < t[i+1][0].
+//
+//		interpolateCubic1D(t,s,p) returns
+//		f(clamp(p,t[0][0],t[s-1][0])).
+//
 //-----------------------------------------------------------------------------
 
 #include <ImathVec.h>
@@ -100,15 +114,19 @@ float	 	lookup1D (const float table[],
 			  float pMax,
 			  float p);
 
-float		lookupPairs1D (const float table[][2],
-			       int size,
-			       float p);
-
 Imath::V3f	lookup3D (const Imath::V3f table[],
 			  const Imath::V3i &size,
 			  const Imath::V3f &pMin,
 			  const Imath::V3f &pMax,
 			  const Imath::V3f &p);
+
+float		interpolateLinear1D (const float table[][2],
+				     int size,
+			             float p);
+
+float		interpolateCubic1D (const float table[][2],
+				    int size,
+				    float p);
 
 } // namespace Ctl
 

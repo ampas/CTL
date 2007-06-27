@@ -1,7 +1,8 @@
 	* Added new functions to the standard library:
 	    3x3 matrix multiplication, addition and inversion
 	    3x3 and 4x4 matrix transposition
-	    1D lookup table with explicit x,y pairs
+	    1D lookup table with explicit x,y pairs and linear interpolation
+	    1D lookup table with explicit x,y pairs and cubic interpolation
 	  (Florian Kainz)
 	* Added new ctlversion statement (Florian Kainz)
 

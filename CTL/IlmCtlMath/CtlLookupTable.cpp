@@ -119,43 +119,6 @@ lookup1D
 }
 
 
-float	
-lookupPairs1D
-    (const float table[][2],
-     int size,
-     float p)
-{
-    if (size < 1)
-	return 0;
-
-    if (p < table[0][0])
-	return table[0][1];
-
-    if (p >= table[size-1][0])
-	return table[size-1][1];
-
-    int i = 0;
-    int j = size;
-
-    while (i < j - 1)
-    {
-	int k = (i + j) / 2;
-
-	if (table[k][0] == p)
-	    return table[k][1];
-	else if (table[k][0] < p)
-	    i = k;
-	else
-	    j = k;
-    }
-
-    float t = (p - table[i][0]) / (table[i+1][0] - table[i][0]);
-    float s = 1 - t;
-
-    return s * table[i][1] + t * table[i+1][1];
-}
-
-
 V3f
 lookup3D
     (const V3f table[],
@@ -196,6 +159,111 @@ lookup3D
 
     return w1 * (v1 * (u1 * a + u * b) + v * (u1 * c + u * d)) +
 	   w  * (v1 * (u1 * e + u * f) + v * (u1 * g + u * h));
+}
+
+
+float	
+interpolateLinear1D
+    (const float table[][2],
+     int size,
+     float p)
+{
+    if (size < 1)
+	return 0;
+
+    if (p < table[0][0])
+	return table[0][1];
+
+    if (p >= table[size-1][0])
+	return table[size-1][1];
+
+    int i = 0;
+    int j = size;
+
+    while (i < j - 1)
+    {
+	int k = (i + j) / 2;
+
+	if (table[k][0] == p)
+	    return table[k][1];
+	else if (table[k][0] < p)
+	    i = k;
+	else
+	    j = k;
+    }
+
+    float t = (p - table[i][0]) / (table[i+1][0] - table[i][0]);
+    float s = 1 - t;
+
+    return s * table[i][1] + t * table[i+1][1];
+}
+
+
+float	
+interpolateCubic1D
+    (const float table[][2],
+     int size,
+     float p)
+{
+    if (size < 1)
+	return 0;
+
+    if (size < 2)
+	return table[0][1];
+
+    if (p < table[0][0])
+	return table[0][1];
+
+    if (p >= table[size-1][0])
+	return table[size-1][1];
+
+    size_t i = 0;
+    size_t j = size;
+
+    while (i < j - 1)
+    {
+	size_t k = (i + j) / 2;
+
+	if (table[k][0] == p)
+	    return table[k][1];
+	else if (table[k][0] < p)
+	    i = k;
+	else
+	    j = k;
+    }
+
+    float m0, m1;
+
+    if (i > 0)
+    {
+	m0 = 0.5f *
+	    ((table[i][1] - table[i-1][1]) / (table[i][0] - table[i-1][0]) +
+	     (table[i+1][1] - table[i][1]) / (table[i+1][0] - table[i][0]));
+    }
+    else
+    {
+	m0 = (table[i+1][1] - table[i][1]) / (table[i+1][0] - table[i][0]);
+    }
+
+    if (i < size - 2)
+    {
+	m1 = 0.5f *
+	    ((table[i+1][1] - table[i][1]) / (table[i+1][0] - table[i][0]) +
+	     (table[i+2][1] - table[i+1][1]) / (table[i+2][0] - table[i+1][0]));
+    }
+    else
+    {
+	m1 = (table[i+1][1] - table[i][1]) / (table[i+1][0] - table[i][0]);
+    }
+
+    float t = (p - table[i][0]) / (table[i+1][0] - table[i][0]);
+    float t2 = t * t;
+    float t3 = t2 * t;
+
+    return table[i][1] * (2 * t3 - 3 * t2 + 1) +
+           m0 * (t3 - 2 * t2 + t) +
+	   table[i+1][1] * (-2 * t3 + 3 * t2) +
+	   m1 * (t3 - t2);
 }
 
 } // namespace Ctl

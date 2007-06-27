@@ -53,3 +53,22 @@ varyingLookup3D
     lookup3D_h (g, pMin, pMax, p30, p31, p32, q30, q31, q32);
 }
 
+
+void
+varyingInterpolateLinear1D
+    (input varying float p,
+     output varying float q)
+{
+    float h[][2] = {{1, 2}, {3, 4}};
+    q = interpolateLinear1D (h, p);
+}
+
+
+void
+varyingInterpolateCubic1D
+    (input varying float p,
+     output varying float q)
+{
+    float h[][2] = {{1, 3}, {3, 5}};
+    q = interpolateCubic1D (h, p);
+}

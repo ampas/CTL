@@ -337,6 +337,94 @@ testLookup3D (Interpreter &interp)
 
 
 void
+testInterpolateLinear1D (Interpreter &interp)
+{
+    cout << "1D, linear" << endl;
+
+    FunctionCallPtr func =
+	interp.newFunctionCall ("varyingInterpolateLinear1D");
+
+    assert (func);
+
+    FunctionArgPtr p = func->findInputArg ("p");
+    assert (p);
+    assert (p->type().cast<FloatType>());
+    assert (p->isVarying());
+    char *pData = p->data();
+    size_t pSize = p->type()->alignedObjectSize();
+
+    assert (interp.maxSamples() >= 6);
+
+    *(float *)(pData + pSize * 0) = -1.0;
+    *(float *)(pData + pSize * 1) = 0.0;
+    *(float *)(pData + pSize * 2) = 1;
+    *(float *)(pData + pSize * 3) = 2;
+    *(float *)(pData + pSize * 4) = 3;
+    *(float *)(pData + pSize * 5) = 4;
+
+    func->callFunction (6);
+
+    FunctionArgPtr q = func->findOutputArg ("q");
+    assert (q);
+    assert (q->type().cast<FloatType>());
+    assert (q->isVarying());
+    char *qData = q->data();
+    size_t qSize = q->type()->alignedObjectSize();
+
+    assert (*(float *)(qData + qSize * 0) == 2);
+    assert (*(float *)(qData + qSize * 1) == 2);
+    assert (*(float *)(qData + qSize * 2) == 2);
+    assert (*(float *)(qData + qSize * 3) == 3);
+    assert (*(float *)(qData + qSize * 4) == 4);
+    assert (*(float *)(qData + qSize * 5) == 4);
+}
+
+
+void
+testInterpolateCubic1D (Interpreter &interp)
+{
+    cout << "1D, cubic" << endl;
+
+    FunctionCallPtr func =
+	interp.newFunctionCall ("varyingInterpolateCubic1D");
+
+    assert (func);
+
+    FunctionArgPtr p = func->findInputArg ("p");
+    assert (p);
+    assert (p->type().cast<FloatType>());
+    assert (p->isVarying());
+    char *pData = p->data();
+    size_t pSize = p->type()->alignedObjectSize();
+
+    assert (interp.maxSamples() >= 6);
+
+    *(float *)(pData + pSize * 0) = -1.0;
+    *(float *)(pData + pSize * 1) = 0.0;
+    *(float *)(pData + pSize * 2) = 1;
+    *(float *)(pData + pSize * 3) = 2;
+    *(float *)(pData + pSize * 4) = 3;
+    *(float *)(pData + pSize * 5) = 4;
+
+    func->callFunction (6);
+
+    FunctionArgPtr q = func->findOutputArg ("q");
+    assert (q);
+    assert (q->type().cast<FloatType>());
+    assert (q->isVarying());
+    char *qData = q->data();
+    size_t qSize = q->type()->alignedObjectSize();
+
+    assert (*(float *)(qData + qSize * 0) == 3);
+    assert (*(float *)(qData + qSize * 1) == 3);
+    assert (*(float *)(qData + qSize * 2) == 3);
+    assert (*(float *)(qData + qSize * 3) == 4);
+    assert (*(float *)(qData + qSize * 4) == 5);
+    assert (*(float *)(qData + qSize * 5) == 5);
+}
+
+
+void
 testVaryingLookup ()
 {
     try
@@ -348,6 +436,8 @@ testVaryingLookup ()
 
 	testLookup1D (interp);
 	testLookup3D (interp);
+	testInterpolateLinear1D (interp);
+	testInterpolateCubic1D (interp);
 
 	cout << "ok\n" << endl;
     }
