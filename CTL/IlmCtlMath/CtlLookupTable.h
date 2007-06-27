@@ -54,12 +54,21 @@
 //
 //	lookup1D(t,s,pMin,pMax,p)
 //
-//		Lookup table t, which contains s entries, defines a
-//		piecewise linear function, f, with s-1 segments, such
-//		that f(pMin) == t[0] and f(pMax) == t(s-1).
+//		Lookup table, t, with s entries of type float. 
+//		The table defines a piecewise linear function, f, with
+//		s-1 segments of equal length, such that f(pMin) == t[0]
+//		and f(pMax) == t(s-1).
 //
 //		lookup1D(t,s,pMin,pMax,p) returns f(clamp(p,pMin,pMax)).
 //
+//	lookupPairs1D(t,s,p)
+//
+//		Lookup table t, which contains s entries of type float[2].
+//		The table defines a piecewise function, f, with s-1
+//		segments, such that f(x) interpolates linearly between
+//		t[i][1] and t[i+1][1] for t[i][0]< x < t[i+1][0].
+//
+//		lookupPairs1D(t,s,p) returns f(clamp(p,t[0][0],t[s-1][0])).
 //
 //	lookup3D(t,s,pMin,pMax,p)
 //
@@ -86,10 +95,14 @@
 namespace Ctl {
 
 float	 	lookup1D (const float table[],
-			  const int size,
+			  int size,
 			  float pMin,
 			  float pMax,
 			  float p);
+
+float		lookupPairs1D (const float table[][2],
+			       int size,
+			       float p);
 
 Imath::V3f	lookup3D (const Imath::V3f table[],
 			  const Imath::V3i &size,

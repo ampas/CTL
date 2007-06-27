@@ -103,7 +103,7 @@ indicesAndWeights (float r, int iMax, int &i, int &i1, float &u, float &u1)
 float
 lookup1D
     (const float table[],
-     const int size,
+     int size,
      float pMin,
      float pMax,
      float p)
@@ -116,6 +116,43 @@ lookup1D
     indicesAndWeights (r, iMax, i, i1, u, u1);
 
     return table[i] * u1 + table[i1] * u;
+}
+
+
+float	
+lookupPairs1D
+    (const float table[][2],
+     int size,
+     float p)
+{
+    if (size < 1)
+	return 0;
+
+    if (p < table[0][0])
+	return table[0][1];
+
+    if (p >= table[size-1][0])
+	return table[size-1][1];
+
+    int i = 0;
+    int j = size;
+
+    while (i < j - 1)
+    {
+	int k = (i + j) / 2;
+
+	if (table[k][0] == p)
+	    return table[k][1];
+	else if (table[k][0] < p)
+	    i = k;
+	else
+	    j = k;
+    }
+
+    float t = (p - table[i][0]) / (table[i+1][0] - table[i][0]);
+    float s = 1 - t;
+
+    return s * table[i][1] + t * table[i+1][1];
 }
 
 

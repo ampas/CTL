@@ -144,6 +144,68 @@ simdLookup1D (const SimdBoolMask &mask, SimdXContext &xcontext)
 
 
 void
+simdLookupPairs1D (const SimdBoolMask &mask, SimdXContext &xcontext)
+{
+    //
+    // float lookupPairs1D (float table[][2], float p)
+    //
+
+    const SimdReg &size  = xcontext.stack().regFpRelative (-1);
+    const SimdReg &table = xcontext.stack().regFpRelative (-2);
+    const SimdReg &p     = xcontext.stack().regFpRelative (-3);
+    SimdReg &returnValue = xcontext.stack().regFpRelative (-4);
+
+    assert (!size.isVarying());
+    int s = *(int *)(size[0]);
+
+    if (table.isVarying() ||
+	p.isVarying())
+    {
+	returnValue.setVarying (true);
+
+	if (!mask.isVarying() &&
+	    !table.isVarying())
+	{
+	    //
+	    // Fast path -- only p is varying, everything else is uniform.
+	    //
+
+	    float (*table0)[2] = (float (*)[2])(table[0]);
+
+	    for (int i = xcontext.regSize(); --i >= 0;)
+	    {
+		*(float *)(returnValue[i]) = lookupPairs1D
+						    (table0,
+						     s,
+						     *(float *)(p[i]));
+	    }
+	}
+	else
+	{
+	    for (int i = xcontext.regSize(); --i >= 0;)
+	    {
+		if (mask[i])
+		{
+		    *(float *)(returnValue[i]) = lookupPairs1D
+						    ((float (*)[2])(table[i]),
+						     s,
+						     *(float *)(p[i]));
+		}
+	    }
+	}
+    }
+    else
+    {
+	returnValue.setVarying (false);
+
+	*(float *)(returnValue[0]) = lookupPairs1D ((float (*)[2])(table[0]), 
+						    s,
+						    *(float *)(p[0]));
+    }
+}
+
+
+void
 simdLookup3D_f3 (const SimdBoolMask &mask, SimdXContext &xcontext)
 {
     //
@@ -364,6 +426,9 @@ declareSimdStdLibLookupTable (SymbolTable &symtab, SimdStdTypes &types)
 {
     declareSimdCFunc (symtab, simdLookup1D,
 		      types.funcType_f_f0_f_f_f(), "lookup1D");
+
+    declareSimdCFunc (symtab, simdLookupPairs1D,
+		      types.funcType_f_f02_f(), "lookupPairs1D");
 
     declareSimdCFunc (symtab, simdLookup3D_f3,
 		      types.funcType_f3_f0003_f3_f3_f3(), "lookup3D_f3");

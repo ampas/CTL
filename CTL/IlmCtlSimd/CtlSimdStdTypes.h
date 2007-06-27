@@ -193,6 +193,10 @@ class SimdStdTypes
 						//	 float,
 						//	 float)
 
+    FunctionTypePtr	funcType_f_f02_f ();	// float func
+    						//	(float[][2],
+						//	 float)
+
     FunctionTypePtr	funcType_f3_f0003_f3_f3_f3 ();
 						// float[3] func
 						//	(float[][][][3],
@@ -269,6 +273,7 @@ class SimdStdTypes
     FunctionTypePtr	_funcType_f_f3;
     FunctionTypePtr	_funcType_f44_chr_f;
     FunctionTypePtr	_funcType_f_f0_f_f_f;
+    FunctionTypePtr	_funcType_f_f02_f;
     FunctionTypePtr	_funcType_f3_f0003_f3_f3_f3;
     FunctionTypePtr	_funcType_v_f0003_f3_f3_fff_offf;
     FunctionTypePtr	_funcType_v_f0003_f3_f3_hhh_ohhh;

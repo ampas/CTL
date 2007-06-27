@@ -733,7 +733,7 @@ SimdStdTypes::funcType_f44_chr_f ()
 }
 
 
-FunctionTypePtr
+FunctionTypePtr	
 SimdStdTypes::funcType_f_f0_f_f_f ()
 {
     // float func (float[], float, float, float)
@@ -757,6 +757,32 @@ SimdStdTypes::funcType_f_f0_f_f_f ()
     }
 
     return _funcType_f_f0_f_f_f;
+}
+
+
+FunctionTypePtr
+SimdStdTypes::funcType_f_f02_f ()
+{
+    // float func (float[][2], float)
+
+    if (!_funcType_f_f02_f)
+    {
+	SizeVector sizes;
+	sizes.push_back (0);
+	sizes.push_back (2);
+
+	DataTypePtr type_f02 =
+	    _lcontext.newArrayType (type_f(), sizes, LContext::PARAMETER);
+
+	ParamVector p;
+	p.push_back (Param ("a1", type_f02,  0, RWA_READ, false));
+	p.push_back (Param ("a2", type_f(), 0, RWA_READ, false));
+
+	_funcType_f_f02_f =
+	    _lcontext.newFunctionType (type_f(), false, p);
+    }
+
+    return _funcType_f_f02_f;
 }
 
 
