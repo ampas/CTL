@@ -163,7 +163,7 @@ lookup3D
 
 
 float	
-interpolateLinear1D
+interpolate1D
     (const float table[][2],
      int size,
      float p)
@@ -206,7 +206,7 @@ interpolateCubic1D
      float p)
 {
     if (size < 3)
-	return interpolateLinear1D (table, size, p);
+	return interpolate1D (table, size, p);
 
     if (p < table[0][0])
 	return table[0][1];

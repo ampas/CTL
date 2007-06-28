@@ -80,7 +80,7 @@
 //		to lookup3D as a 1D array, with table entry t[i][j][k]
 //		at location t[(i * s.y + j) * s.z + k];
 //
-//	interpolateLinear1D(t,s,p)
+//	interpolate1D(t,s,p)
 //
 //		Lookup table with linear interpolation between entries
 //              of type float[2]: the table, t, defines a piecewise
@@ -88,19 +88,12 @@
 //		interpolates between t[i][1] and t[i+1][1] for
 //		t[i][0]< x < t[i+1][0].
 //
-//		interpolateLinear1D(t,s,p) returns
-//		f(clamp(p,t[0][0],t[s-1][0])).
+//		interpolate1D(t,s,p) returns f(clamp(p,t[0][0],t[s-1][0])).
 //
 //	interpolateCubic1D(t,s,p)
 //
-//		Lookup table with cubic interpolation between entries
-//              of type float[2]: the table, t, defines a piecewise
-//		cubic function, f, with s-1 segments, such that f(x)
-//		interpolates between t[i][1] and t[i+1][1] for
-//		t[i][0]< x < t[i+1][0].
-//
-//		interpolateCubic1D(t,s,p) returns
-//		f(clamp(p,t[0][0],t[s-1][0])).
+//		Like interpolate1D(t,s,p), except with piecewise cubic
+//		rather than linear interpolation of the table entries.
 //
 //-----------------------------------------------------------------------------
 
@@ -120,7 +113,7 @@ Imath::V3f	lookup3D (const Imath::V3f table[],
 			  const Imath::V3f &pMax,
 			  const Imath::V3f &p);
 
-float		interpolateLinear1D (const float table[][2],
+float		interpolate1D (const float table[][2],
 				     int size,
 			             float p);
 

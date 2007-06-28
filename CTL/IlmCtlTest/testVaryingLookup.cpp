@@ -337,12 +337,12 @@ testLookup3D (Interpreter &interp)
 
 
 void
-testInterpolateLinear1D (Interpreter &interp)
+testInterpolate1D (Interpreter &interp)
 {
     cout << "1D, linear" << endl;
 
     FunctionCallPtr func =
-	interp.newFunctionCall ("varyingInterpolateLinear1D");
+	interp.newFunctionCall ("varyingInterpolate1D");
 
     assert (func);
 
@@ -436,7 +436,7 @@ testVaryingLookup ()
 
 	testLookup1D (interp);
 	testLookup3D (interp);
-	testInterpolateLinear1D (interp);
+	testInterpolate1D (interp);
 	testInterpolateCubic1D (interp);
 
 	cout << "ok\n" << endl;

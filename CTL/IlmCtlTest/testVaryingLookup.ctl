@@ -55,12 +55,12 @@ varyingLookup3D
 
 
 void
-varyingInterpolateLinear1D
+varyingInterpolate1D
     (input varying float p,
      output varying float q)
 {
     float h[][2] = {{1, 2}, {3, 4}};
-    q = interpolateLinear1D (h, p);
+    q = interpolate1D (h, p);
 }
 
 

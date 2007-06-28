@@ -179,39 +179,39 @@ testLookup3D ()
 
 
 void
-testInterpolateLinear1D ()
+testInterpolate1D ()
 {
     print ("Testing 1D table with linear interpolation\n");
 
     float f[][2] = {{1, 2}};
 
-    assert (interpolateLinear1D (f, 0.0) == 2.0);
-    assert (interpolateLinear1D (f, 1.0) == 2.0);
-    assert (interpolateLinear1D (f, 2.0) == 2.0);
+    assert (interpolate1D (f, 0.0) == 2.0);
+    assert (interpolate1D (f, 1.0) == 2.0);
+    assert (interpolate1D (f, 2.0) == 2.0);
 
     float g[][2] = {{1, 2}, {3, 4}};
 
-    assert (interpolateLinear1D (g, 0.0) == 2.0);
-    assert (interpolateLinear1D (g, 1.0) == 2.0);
-    assert (interpolateLinear1D (g, 2.0) == 3.0);
-    assert (interpolateLinear1D (g, 3.0) == 4.0);
-    assert (interpolateLinear1D (g, 4.0) == 4.0);
+    assert (interpolate1D (g, 0.0) == 2.0);
+    assert (interpolate1D (g, 1.0) == 2.0);
+    assert (interpolate1D (g, 2.0) == 3.0);
+    assert (interpolate1D (g, 3.0) == 4.0);
+    assert (interpolate1D (g, 4.0) == 4.0);
 
     float h[][2] = {{1, 2}, {3, 4}, {4, 5}, {4, 5}, {8, 7}, {9, 1}};
 
-    assert (interpolateLinear1D (h, 0.0) == 2.0);
-    assert (interpolateLinear1D (h, 1.0) == 2.0);
-    assert (interpolateLinear1D (h, 1.5) == 2.5);
-    assert (interpolateLinear1D (h, 2.0) == 3.0);
-    assert (interpolateLinear1D (h, 2.5) == 3.5);
-    assert (interpolateLinear1D (h, 3.0) == 4.0);
-    assert (interpolateLinear1D (h, 4.0) == 5.0);
-    assert (interpolateLinear1D (h, 5.0) == 5.5);
-    assert (interpolateLinear1D (h, 6.0) == 6.0);
-    assert (interpolateLinear1D (h, 7.0) == 6.5);
-    assert (interpolateLinear1D (h, 8.0) == 7.0);
-    assert (interpolateLinear1D (h, 9.0) == 1.0);
-    assert (interpolateLinear1D (h, 10.0) == 1.0);
+    assert (interpolate1D (h, 0.0) == 2.0);
+    assert (interpolate1D (h, 1.0) == 2.0);
+    assert (interpolate1D (h, 1.5) == 2.5);
+    assert (interpolate1D (h, 2.0) == 3.0);
+    assert (interpolate1D (h, 2.5) == 3.5);
+    assert (interpolate1D (h, 3.0) == 4.0);
+    assert (interpolate1D (h, 4.0) == 5.0);
+    assert (interpolate1D (h, 5.0) == 5.5);
+    assert (interpolate1D (h, 6.0) == 6.0);
+    assert (interpolate1D (h, 7.0) == 6.5);
+    assert (interpolate1D (h, 8.0) == 7.0);
+    assert (interpolate1D (h, 9.0) == 1.0);
+    assert (interpolate1D (h, 10.0) == 1.0);
 
     print ("ok\n");
 }
@@ -261,7 +261,7 @@ testLookupTables ()
 {
     testLookup1D();
     testLookup3D();
-    testInterpolateLinear1D();
+    testInterpolate1D();
     testInterpolateCubic1D();
     return 0;
 }

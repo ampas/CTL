@@ -358,10 +358,10 @@ simdLookup3D_h (const SimdBoolMask &mask, SimdXContext &xcontext)
 
 
 void
-simdInterpolateLinear1D (const SimdBoolMask &mask, SimdXContext &xcontext)
+simdInterpolate1D (const SimdBoolMask &mask, SimdXContext &xcontext)
 {
     //
-    // float interpolateLinear1D (float table[][2], float p)
+    // float interpolate1D (float table[][2], float p)
     //
 
     const SimdReg &size  = xcontext.stack().regFpRelative (-1);
@@ -388,7 +388,7 @@ simdInterpolateLinear1D (const SimdBoolMask &mask, SimdXContext &xcontext)
 
 	    for (int i = xcontext.regSize(); --i >= 0;)
 	    {
-		*(float *)(returnValue[i]) = interpolateLinear1D
+		*(float *)(returnValue[i]) = interpolate1D
 						    (table0,
 						     s,
 						     *(float *)(p[i]));
@@ -400,7 +400,7 @@ simdInterpolateLinear1D (const SimdBoolMask &mask, SimdXContext &xcontext)
 	    {
 		if (mask[i])
 		{
-		    *(float *)(returnValue[i]) = interpolateLinear1D
+		    *(float *)(returnValue[i]) = interpolate1D
 						    ((float (*)[2])(table[i]),
 						     s,
 						     *(float *)(p[i]));
@@ -412,10 +412,9 @@ simdInterpolateLinear1D (const SimdBoolMask &mask, SimdXContext &xcontext)
     {
 	returnValue.setVarying (false);
 
-	*(float *)(returnValue[0]) = interpolateLinear1D
-						    ((float (*)[2])(table[0]), 
-						     s,
-						     *(float *)(p[0]));
+	*(float *)(returnValue[0]) = interpolate1D ((float (*)[2])(table[0]), 
+						    s,
+						    *(float *)(p[0]));
     }
 }
 
@@ -500,8 +499,8 @@ declareSimdStdLibLookupTable (SymbolTable &symtab, SimdStdTypes &types)
     declareSimdCFunc (symtab, simdLookup3D_h,
 		      types.funcType_v_f0003_f3_f3_hhh_ohhh(), "lookup3D_h");
 
-    declareSimdCFunc (symtab, simdInterpolateLinear1D,
-		      types.funcType_f_f02_f(), "interpolateLinear1D");
+    declareSimdCFunc (symtab, simdInterpolate1D,
+		      types.funcType_f_f02_f(), "interpolate1D");
 
     declareSimdCFunc (symtab, simdInterpolateCubic1D,
 		      types.funcType_f_f02_f(), "interpolateCubic1D");
