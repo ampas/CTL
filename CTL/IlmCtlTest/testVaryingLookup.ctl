@@ -15,6 +15,18 @@ varyingLookup1D
 
 
 void
+varyingLookupCubic1D
+    (input varying float pMin,
+     input varying float pMax,
+     input varying float p,
+     output varying float q)
+{
+    float h[2] = {2, 4};
+    q = lookupCubic1D (h, pMin, pMax, p);
+}
+
+
+void
 varyingLookup3D
     (input varying float pMin[3],
      input varying float pMax[3],

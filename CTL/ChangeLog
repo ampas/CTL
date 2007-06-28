@@ -3,6 +3,8 @@
 	    3x3 and 4x4 matrix transposition
 	    1D lookup table with explicit x,y pairs and linear interpolation
 	    1D lookup table with explicit x,y pairs and cubic interpolation
+	    1D lookup table with regularly-spaced entries and cubic
+	    interpolation
 	  (Florian Kainz)
 	* Added new ctlversion statement (Florian Kainz)
 

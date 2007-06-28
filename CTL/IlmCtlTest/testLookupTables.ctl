@@ -22,7 +22,7 @@ equal (float x[3], float y[3])
 void
 testLookup1D ()
 {
-    print ("Testing 1D table lookups\n");
+    print ("Testing 1D table lookups: linear, regular spacіng\n");
 
     float f[1] = {1};
 
@@ -58,9 +58,49 @@ testLookup1D ()
 
 
 void
+testLookupCubic1D ()
+{
+    print ("Testing 1D table lookups: cubic, regular spacing\n");
+
+    float f[1] = {1};
+
+    assert (lookupCubic1D (f, 2.0, 4.0, 0.0) == 1.0);
+    assert (lookupCubic1D (f, 2.0, 4.0, 2.0) == 1.0);
+    assert (lookupCubic1D (f, 2.0, 4.0, 3.0) == 1.0);
+    assert (lookupCubic1D (f, 2.0, 4.0, 4.0) == 1.0);
+    assert (lookupCubic1D (f, 2.0, 4.0, 5.0) == 1.0);
+
+    float g[2] = {1, 2};
+
+    assert (lookupCubic1D (g, 2.0, 4.0, 0.0) == 1.0);
+    assert (lookupCubic1D (g, 2.0, 4.0, 2.0) == 1.0);
+    assert (lookupCubic1D (g, 2.0, 4.0, 3.0) == 1.5);
+    assert (lookupCubic1D (g, 2.0, 4.0, 4.0) == 2.0);
+    assert (lookupCubic1D (g, 2.0, 4.0, 5.0) == 2.0);
+
+    float h[7] = {2, 6, 1, 1, 7, 1, 1};
+
+    assert (equalWithAbsErr (lookupCubic1D (h, 10, 40,  0), 2.00000, 0.00002));
+    assert (equalWithAbsErr (lookupCubic1D (h, 10, 40, 10), 2.00000, 0.00002));
+    assert (equalWithAbsErr (lookupCubic1D (h, 10, 40, 11), 3.23200, 0.00002));
+    assert (equalWithAbsErr (lookupCubic1D (h, 10, 40, 15), 6.00000, 0.00002));
+    assert (equalWithAbsErr (lookupCubic1D (h, 10, 40, 16), 5.49600, 0.00002));
+    assert (equalWithAbsErr (lookupCubic1D (h, 10, 40, 25), 1.00000, 0.00002));
+    assert (equalWithAbsErr (lookupCubic1D (h, 10, 40, 30), 7.00000, 0.00002));
+    assert (equalWithAbsErr (lookupCubic1D (h, 10, 40, 31), 6.47200, 0.00002));
+    assert (equalWithAbsErr (lookupCubic1D (h, 10, 40, 35), 1.00000, 0.00002));
+    assert (equalWithAbsErr (lookupCubic1D (h, 10, 40, 39), 0.71200, 0.00002));
+    assert (equalWithAbsErr (lookupCubic1D (h, 10, 40, 40), 1.00000, 0.00002));
+    assert (equalWithAbsErr (lookupCubic1D (h, 10, 40, 41), 1.00000, 0.00002));
+
+    print ("ok\n");
+}
+
+
+void
 testLookup3D ()
 {
-    print ("Testing 3D table lookups\n");
+    print ("Testing 3D table lookups, trilinear, regular spacing\n");
 
     assert ( equal (f3 (1, 2, 3), f3 (1, 2, 3)));
     assert (!equal (f3 (0, 2, 3), f3 (1, 2, 3)));
@@ -181,7 +221,7 @@ testLookup3D ()
 void
 testInterpolate1D ()
 {
-    print ("Testing 1D table with linear interpolation\n");
+    print ("Testing 1D table lookups: linear, random spacing\n");
 
     float f[][2] = {{1, 2}};
 
@@ -220,7 +260,7 @@ testInterpolate1D ()
 void
 testInterpolateCubic1D ()
 {
-    print ("Testing 1D table with cubic interpolation\n");
+    print ("Testing 1D table lookups: cubic, random spacing\n");
 
     float f[][2] = {{1, 2}};
 
@@ -232,7 +272,7 @@ testInterpolateCubic1D ()
 
     assert (interpolateCubic1D (g, 0.0) == 2.0);
     assert (interpolateCubic1D (g, 1.0) == 2.0);
-    assert (equalWithAbsErr (interpolateCubic1D (g, 2.0), 3.00000, 0.00001));
+    assert (equalWithAbsErr (interpolateCubic1D (g, 2.0), 3.00000, 0.00002));
     assert (interpolateCubic1D (g, 3.0) == 4.0);
     assert (interpolateCubic1D (g, 4.0) == 4.0);
 
@@ -240,14 +280,14 @@ testInterpolateCubic1D ()
 
     assert (interpolateCubic1D (h, 0.0) == 2.0);
     assert (interpolateCubic1D (h, 1.0) == 2.0);
-    assert (equalWithAbsErr (interpolateCubic1D (h, 1.5), 2.50000, 0.00001));
-    assert (equalWithAbsErr (interpolateCubic1D (h, 2.0), 3.00000, 0.00001));
-    assert (equalWithAbsErr (interpolateCubic1D (h, 2.5), 3.50000, 0.00001));
+    assert (equalWithAbsErr (interpolateCubic1D (h, 1.5), 2.50000, 0.00002));
+    assert (equalWithAbsErr (interpolateCubic1D (h, 2.0), 3.00000, 0.00002));
+    assert (equalWithAbsErr (interpolateCubic1D (h, 2.5), 3.50000, 0.00002));
     assert (interpolateCubic1D (h, 3.0) == 4.0);
     assert (interpolateCubic1D (h, 4.0) == 5.0);
-    assert (equalWithAbsErr (interpolateCubic1D (h, 5.0), 6.25000, 0.00001));
-    assert (equalWithAbsErr (interpolateCubic1D (h, 6.0), 7.75000, 0.00001));
-    assert (equalWithAbsErr (interpolateCubic1D (h, 7.0), 8.37500, 0.00001));
+    assert (equalWithAbsErr (interpolateCubic1D (h, 5.0), 6.25000, 0.00002));
+    assert (equalWithAbsErr (interpolateCubic1D (h, 6.0), 7.75000, 0.00002));
+    assert (equalWithAbsErr (interpolateCubic1D (h, 7.0), 8.37500, 0.00002));
     assert (interpolateCubic1D (h, 8.0) == 7.0);
     assert (interpolateCubic1D (h, 9.0) == 1.0);
     assert (interpolateCubic1D (h, 10.0) == 1.0);
@@ -260,6 +300,7 @@ int
 testLookupTables ()
 {
     testLookup1D();
+    testLookupCubic1D();
     testLookup3D();
     testInterpolate1D();
     testInterpolateCubic1D();

@@ -69,11 +69,17 @@ using namespace std;
 namespace Ctl {
 namespace {
 
+typedef float (*Lookup1DFunc) (const float[], int, float, float, float);
+
+
 void
-simdLookup1D (const SimdBoolMask &mask, SimdXContext &xcontext)
+simdDoLookup1D
+    (const SimdBoolMask &mask,
+     SimdXContext &xcontext,
+     Lookup1DFunc func)
 {
     //
-    // float lookup1D (float table[], float pMin, float pMax, float p)
+    // float func (float table[], float pMin, float pMax, float p)
     //
 
     const SimdReg &size  = xcontext.stack().regFpRelative (-1);
@@ -108,11 +114,11 @@ simdLookup1D (const SimdBoolMask &mask, SimdXContext &xcontext)
 
 	    for (int i = xcontext.regSize(); --i >= 0;)
 	    {
-		*(float *)(returnValue[i]) = lookup1D (table0,
-						       s,
-						       pMin0,
-						       pMax0,
-						       *(float *)(p[i]));
+		*(float *)(returnValue[i]) = func (table0,
+						   s,
+						   pMin0,
+						   pMax0,
+						   *(float *)(p[i]));
 	    }
 	}
 	else
@@ -121,11 +127,11 @@ simdLookup1D (const SimdBoolMask &mask, SimdXContext &xcontext)
 	    {
 		if (mask[i])
 		{
-		    *(float *)(returnValue[i]) = lookup1D ((float *)(table[i]), 
-							   s,
-							   *(float *)(pMin[i]),
-							   *(float *)(pMax[i]),
-							   *(float *)(p[i]));
+		    *(float *)(returnValue[i]) = func ((float *)(table[i]), 
+						       s,
+						       *(float *)(pMin[i]),
+						       *(float *)(pMax[i]),
+						       *(float *)(p[i]));
 		}
 	    }
 	}
@@ -134,12 +140,34 @@ simdLookup1D (const SimdBoolMask &mask, SimdXContext &xcontext)
     {
 	returnValue.setVarying (false);
 
-	*(float *)(returnValue[0]) = lookup1D ((float *)(table[0]), 
-					       s,
-					       *(float *)(pMin[0]),
-					       *(float *)(pMax[0]),
-					       *(float *)(p[0]));
+	*(float *)(returnValue[0]) = func ((float *)(table[0]), 
+					   s,
+					   *(float *)(pMin[0]),
+					   *(float *)(pMax[0]),
+					   *(float *)(p[0]));
     }
+}
+
+
+void
+simdLookup1D (const SimdBoolMask &mask, SimdXContext &xcontext)
+{
+    //
+    // float lookup1D (float table[], float pMin, float pMax, float p)
+    //
+
+    simdDoLookup1D (mask, xcontext, lookup1D);
+}
+
+
+void
+simdLookupCubic1D (const SimdBoolMask &mask, SimdXContext &xcontext)
+{
+    //
+    // float lookupCubic1D (float table[], float pMin, float pMax, float p)
+    //
+
+    simdDoLookup1D (mask, xcontext, lookupCubic1D);
 }
 
 
@@ -357,11 +385,17 @@ simdLookup3D_h (const SimdBoolMask &mask, SimdXContext &xcontext)
 }
 
 
+typedef float (*Interpolate1DFunc) (const float[][2], int, float);
+
+
 void
-simdInterpolate1D (const SimdBoolMask &mask, SimdXContext &xcontext)
+simdDoInterpolate1D
+    (const SimdBoolMask &mask,
+     SimdXContext &xcontext,
+     Interpolate1DFunc func)
 {
     //
-    // float interpolate1D (float table[][2], float p)
+    // float func (float table[][2], float p)
     //
 
     const SimdReg &size  = xcontext.stack().regFpRelative (-1);
@@ -388,10 +422,9 @@ simdInterpolate1D (const SimdBoolMask &mask, SimdXContext &xcontext)
 
 	    for (int i = xcontext.regSize(); --i >= 0;)
 	    {
-		*(float *)(returnValue[i]) = interpolate1D
-						    (table0,
-						     s,
-						     *(float *)(p[i]));
+		*(float *)(returnValue[i]) = func (table0,
+						   s,
+						   *(float *)(p[i]));
 	    }
 	}
 	else
@@ -400,10 +433,9 @@ simdInterpolate1D (const SimdBoolMask &mask, SimdXContext &xcontext)
 	    {
 		if (mask[i])
 		{
-		    *(float *)(returnValue[i]) = interpolate1D
-						    ((float (*)[2])(table[i]),
-						     s,
-						     *(float *)(p[i]));
+		    *(float *)(returnValue[i]) = func ((float (*)[2])(table[i]),
+						       s,
+						       *(float *)(p[i]));
 		}
 	    }
 	}
@@ -412,10 +444,21 @@ simdInterpolate1D (const SimdBoolMask &mask, SimdXContext &xcontext)
     {
 	returnValue.setVarying (false);
 
-	*(float *)(returnValue[0]) = interpolate1D ((float (*)[2])(table[0]), 
-						    s,
-						    *(float *)(p[0]));
+	*(float *)(returnValue[0]) = func ((float (*)[2])(table[0]), 
+					   s,
+					   *(float *)(p[0]));
     }
+}
+
+
+void
+simdInterpolate1D (const SimdBoolMask &mask, SimdXContext &xcontext)
+{
+    //
+    // float interpolate1D (float table[][2], float p)
+    //
+
+    simdDoInterpolate1D (mask, xcontext, interpolate1D);
 }
 
 
@@ -426,59 +469,7 @@ simdInterpolateCubic1D (const SimdBoolMask &mask, SimdXContext &xcontext)
     // float interpolateCubic1D (float table[][2], float p)
     //
 
-    const SimdReg &size  = xcontext.stack().regFpRelative (-1);
-    const SimdReg &table = xcontext.stack().regFpRelative (-2);
-    const SimdReg &p     = xcontext.stack().regFpRelative (-3);
-    SimdReg &returnValue = xcontext.stack().regFpRelative (-4);
-
-    assert (!size.isVarying());
-    int s = *(int *)(size[0]);
-
-    if (table.isVarying() ||
-	p.isVarying())
-    {
-	returnValue.setVarying (true);
-
-	if (!mask.isVarying() &&
-	    !table.isVarying())
-	{
-	    //
-	    // Fast path -- only p is varying, everything else is uniform.
-	    //
-
-	    float (*table0)[2] = (float (*)[2])(table[0]);
-
-	    for (int i = xcontext.regSize(); --i >= 0;)
-	    {
-		*(float *)(returnValue[i]) = interpolateCubic1D
-						    (table0,
-						     s,
-						     *(float *)(p[i]));
-	    }
-	}
-	else
-	{
-	    for (int i = xcontext.regSize(); --i >= 0;)
-	    {
-		if (mask[i])
-		{
-		    *(float *)(returnValue[i]) = interpolateCubic1D
-						    ((float (*)[2])(table[i]),
-						     s,
-						     *(float *)(p[i]));
-		}
-	    }
-	}
-    }
-    else
-    {
-	returnValue.setVarying (false);
-
-	*(float *)(returnValue[0]) = interpolateCubic1D
-						    ((float (*)[2])(table[0]), 
-						     s,
-						     *(float *)(p[0]));
-    }
+    simdDoInterpolate1D (mask, xcontext, interpolateCubic1D);
 }
 
 } // namespace
@@ -489,6 +480,9 @@ declareSimdStdLibLookupTable (SymbolTable &symtab, SimdStdTypes &types)
 {
     declareSimdCFunc (symtab, simdLookup1D,
 		      types.funcType_f_f0_f_f_f(), "lookup1D");
+
+    declareSimdCFunc (symtab, simdLookupCubic1D,
+		      types.funcType_f_f0_f_f_f(), "lookupCubic1D");
 
     declareSimdCFunc (symtab, simdLookup3D_f3,
 		      types.funcType_f3_f0003_f3_f3_f3(), "lookup3D_f3");

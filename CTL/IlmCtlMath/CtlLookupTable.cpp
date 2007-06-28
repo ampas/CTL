@@ -119,6 +119,73 @@ lookup1D
 }
 
 
+float
+lookupCubic1D
+    (const float table[],
+     int size,
+     float pMin,
+     float pMax,
+     float p)
+{
+    if (size < 3)
+	return lookup1D (table, size, pMin, pMax, p);
+
+    int iMax = size - 1;
+    float r = (clamp (p, pMin, pMax) - pMin) / (pMax - pMin) * iMax;
+    int i;
+
+    if (r >= 0 && r < iMax)
+    {
+	//
+	// r is finite and in the interval [0, iMax[
+	//
+
+	i = int (r);
+    }
+    else if (r >= iMax)
+    {
+	//
+	// r is greater than or equal to iMax
+	//
+
+	return table[iMax];
+    }
+    else
+    {
+	//
+	// r is either NaN or less than 0
+	//
+
+	return table[0];
+    }
+
+    float dx = (pMax - pMin) / iMax;
+    float dy = (table[i+1] - table[i]);
+    float m0, m1;
+
+    if (i > 0)
+	m0 = (dy + (table[i] - table[i-1])) * 0.5f;
+
+    if (i < size - 2)
+	m1 = (dy + (table[i+2] - table[i+1])) * 0.5f;
+
+    if (i <= 0)
+	m0 = (3 * dy - m1) * 0.5f;
+
+    if (i >= size - 2)
+	m1 = (3 * dy - m0) * 0.5f;
+
+    float t = r - i;
+    float t2 = t * t;
+    float t3 = t2 * t;
+
+    return table[i] * (2 * t3 - 3 * t2 + 1) +
+           m0 * (t3 - 2 * t2 + t) +
+	   table[i+1] * (-2 * t3 + 3 * t2) +
+	   m1 * (t3 - t2);
+}
+
+
 V3f
 lookup3D
     (const V3f table[],
@@ -244,6 +311,7 @@ interpolateCubic1D
 	m1 = 0.5f * (dy + dx * (table[i+2][1] - table[i+1][1]) /
 			       (table[i+2][0] - table[i+1][0]));
     }
+
     if (i <= 0)
     {
 	m0 = (3 * dy - m1) * 0.5f;

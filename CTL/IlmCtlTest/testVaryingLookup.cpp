@@ -61,7 +61,7 @@ using namespace std;
 void
 testLookup1D (Interpreter &interp)
 {
-    cout << "1D" << endl;
+    cout << "1D, linear, regular spacing" << endl;
 
     FunctionCallPtr func = interp.newFunctionCall ("varyingLookup1D");
     assert (func);
@@ -144,10 +144,93 @@ testLookup1D (Interpreter &interp)
 }
 
 
+
+void
+testLookupCubic1D (Interpreter &interp)
+{
+    cout << "1D, cubic, regular spacing" << endl;
+
+    FunctionCallPtr func = interp.newFunctionCall ("varyingLookupCubic1D");
+    assert (func);
+
+    FunctionArgPtr pMin = func->findInputArg ("pMin");
+    assert (pMin);
+    assert (pMin->type().cast<FloatType>());
+    assert (pMin->isVarying());
+    char *pMinData = pMin->data();
+    size_t pMinSize = pMin->type()->alignedObjectSize();
+
+    FunctionArgPtr pMax = func->findInputArg ("pMax");
+    assert (pMax);
+    assert (pMax->type().cast<FloatType>());
+    assert (pMax->isVarying());
+    char *pMaxData = pMax->data();
+    size_t pMaxSize = pMax->type()->alignedObjectSize();
+
+    FunctionArgPtr p = func->findInputArg ("p");
+    assert (p);
+    assert (p->type().cast<FloatType>());
+    assert (p->isVarying());
+    char *pData = p->data();
+    size_t pSize = p->type()->alignedObjectSize();
+
+    assert (interp.maxSamples() >= 9);
+
+    *(float *)(pMinData + pMinSize * 0) = 10.0;
+    *(float *)(pMinData + pMinSize * 1) = 10.0;
+    *(float *)(pMinData + pMinSize * 2) = 1.0;
+    *(float *)(pMinData + pMinSize * 3) = 1.0;
+    *(float *)(pMinData + pMinSize * 4) = 1.0;
+    *(float *)(pMinData + pMinSize * 5) = 1.0;
+    *(float *)(pMinData + pMinSize * 6) = 10.0;
+    *(float *)(pMinData + pMinSize * 7) = 10.0;
+    *(float *)(pMinData + pMinSize * 8) = 10.0;
+
+    *(float *)(pMaxData + pMaxSize * 0) = 40.0;
+    *(float *)(pMaxData + pMaxSize * 1) = 40.0;
+    *(float *)(pMaxData + pMaxSize * 2) = 3.0;
+    *(float *)(pMaxData + pMaxSize * 3) = 3.0;
+    *(float *)(pMaxData + pMaxSize * 4) = 3.0;
+    *(float *)(pMaxData + pMaxSize * 5) = 3.0;
+    *(float *)(pMaxData + pMaxSize * 6) = 40.0;
+    *(float *)(pMaxData + pMaxSize * 7) = 40.0;
+    *(float *)(pMaxData + pMaxSize * 8) = 40.0;
+
+    *(float *)(pData + pSize * 0) = 0.0;
+    *(float *)(pData + pSize * 1) = 10.0;
+    *(float *)(pData + pSize * 2) = 0.0;
+    *(float *)(pData + pSize * 3) = 1.0;
+    *(float *)(pData + pSize * 4) = 2.0;
+    *(float *)(pData + pSize * 5) = 3.0;
+    *(float *)(pData + pSize * 6) = 40.0;
+    *(float *)(pData + pSize * 7) = 50.0;
+    *(float *)(pData + pSize * 8) = 25.0;
+
+    func->callFunction (10);
+
+    FunctionArgPtr q = func->findOutputArg ("q");
+    assert (q);
+    assert (q->type().cast<FloatType>());
+    assert (q->isVarying());
+    char *qData = q->data();
+    size_t qSize = q->type()->alignedObjectSize();
+
+    assert (*(float *)(qData + qSize * 0) == 2);
+    assert (*(float *)(qData + qSize * 1) == 2);
+    assert (*(float *)(qData + qSize * 2) == 2);
+    assert (*(float *)(qData + qSize * 3) == 2);
+    assert (*(float *)(qData + qSize * 4) == 3);
+    assert (*(float *)(qData + qSize * 5) == 4);
+    assert (*(float *)(qData + qSize * 6) == 4);
+    assert (*(float *)(qData + qSize * 7) == 4);
+    assert (*(float *)(qData + qSize * 8) == 3);
+}
+
+
 void
 testLookup3D (Interpreter &interp)
 {
-    cout << "3D" << endl;
+    cout << "3D, linear, regular spacing" << endl;
 
     FunctionCallPtr func = interp.newFunctionCall ("varyingLookup3D");
     assert (func);
@@ -339,7 +422,7 @@ testLookup3D (Interpreter &interp)
 void
 testInterpolate1D (Interpreter &interp)
 {
-    cout << "1D, linear" << endl;
+    cout << "1D, linear, random spacing" << endl;
 
     FunctionCallPtr func =
 	interp.newFunctionCall ("varyingInterpolate1D");
@@ -383,7 +466,7 @@ testInterpolate1D (Interpreter &interp)
 void
 testInterpolateCubic1D (Interpreter &interp)
 {
-    cout << "1D, cubic" << endl;
+    cout << "1D, cubic, random spacing" << endl;
 
     FunctionCallPtr func =
 	interp.newFunctionCall ("varyingInterpolateCubic1D");
@@ -435,6 +518,7 @@ testVaryingLookup ()
 	cout << "Testing table lookups with varying data" << endl;
 
 	testLookup1D (interp);
+	testLookupCubic1D (interp);
 	testLookup3D (interp);
 	testInterpolate1D (interp);
 	testInterpolateCubic1D (interp);

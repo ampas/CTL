@@ -107,6 +107,13 @@ float	 	lookup1D (const float table[],
 			  float pMax,
 			  float p);
 
+
+float	 	lookupCubic1D (const float table[],
+			       int size,
+			       float pMin,
+			       float pMax,
+			       float p);
+
 Imath::V3f	lookup3D (const Imath::V3f table[],
 			  const Imath::V3i &size,
 			  const Imath::V3f &pMin,
@@ -114,8 +121,8 @@ Imath::V3f	lookup3D (const Imath::V3f table[],
 			  const Imath::V3f &p);
 
 float		interpolate1D (const float table[][2],
-				     int size,
-			             float p);
+			       int size,
+			       float p);
 
 float		interpolateCubic1D (const float table[][2],
 				    int size,
