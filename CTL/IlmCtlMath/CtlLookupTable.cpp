@@ -159,7 +159,6 @@ lookupCubic1D
 	return table[0];
     }
 
-    float dx = (pMax - pMin) / iMax;
     float dy = (table[i+1] - table[i]);
     float m0, m1;
 
