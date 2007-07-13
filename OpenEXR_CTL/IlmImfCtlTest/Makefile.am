@@ -13,18 +13,17 @@ IlmImfCtlTest_SOURCES = \
 IlmImfCTLTest_CPPFLAGS =
 
 INCLUDES = \
+	-I$(top_srcdir)/IlmImfCtl \
 	@CTL_CXXFLAGS@ \
-	@OPENEXR_CXXFLAGS@ \
-	-I$(top_srcdir)/IlmImfCtl
+	@OPENEXR_CXXFLAGS@
 
 AM_LDFLAGS = \
 	@CTL_LDFLAGS@ \
 	@OPENEXR_LDFLAGS@
 
 LDADD =	\
-	@CTL_LIBS@ @OPENEXR_LIBS@ \
-	-L$(top_builddir)/IlmImfCtl \
-	-lIlmImfCtl
+	-L$(top_builddir)/IlmImfCtl -lIlmImfCtl \
+	@CTL_LIBS@ @OPENEXR_LIBS@
 
 TESTS = IlmImfCtlTest
 TESTS_ENVIRONMENT = export CTL_MODULE_PATH=$(top_srcdir)/IlmImfCtlTest:.;
