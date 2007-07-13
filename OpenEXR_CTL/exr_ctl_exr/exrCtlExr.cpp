@@ -115,7 +115,16 @@ exrCtlExr (const char inFileName[],
 		      extraAttrs);
 
     //
-    // Copy the A channel verbatim
+    // Just in case one of the CTL transforms decided to mess
+    // with the data window in the output header, avoid a crash
+    // by resetting the data window to its original value.
+    //
+
+    outHeader.dataWindow() = in.header().dataWindow();
+
+    //
+    // If the input pixels have an A channel, copy it into
+    // the output pixels.
     //
 
     if (in.channels() & WRITE_A)
@@ -135,7 +144,7 @@ exrCtlExr (const char inFileName[],
     if (verbose)
 	cout << "writing file " << outFileName << endl;
 
-    RgbaOutputFile out (outFileName, in.header(), in.channels());
+    RgbaOutputFile out (outFileName, outHeader, in.channels());
     out.setFrameBuffer (&outPixels[0][0] - dw.min.x - dw.min.y * w, 1, w);
     out.writePixels (h);
 }
