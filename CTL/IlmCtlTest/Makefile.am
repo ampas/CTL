@@ -23,16 +23,15 @@ IlmCtlTest_SOURCES = \
 
 IlmCtlTest_CPPFLAGS =
 
-INCLUDES = @ILMBASE_CXXFLAGS@ \
-	-I$(top_builddir) \
+INCLUDES = -I$(top_builddir) \
 	-I$(top_srcdir)/IlmCtl \
-	-I$(top_srcdir)/IlmCtlSimd
-
-AM_LDFLAGS = @ILMBASE_LDFLAGS@ @ILMBASE_LIBS@
+	-I$(top_srcdir)/IlmCtlSimd \
+	@ILMBASE_CXXFLAGS@
 
 LDADD =	-L$(top_builddir)/IlmCtlSimd \
 	-L$(top_builddir)/IlmCtlMath \
 	-L$(top_builddir)/IlmCtl \
+	@ILMBASE_LDFLAGS@ @ILMBASE_LIBS@ \
 	-lIlmCtl -lIlmCtlSimd -lIlmCtlMath -lImath -lIex -lHalf -lpthread
 
 TESTS = IlmCtlTest
