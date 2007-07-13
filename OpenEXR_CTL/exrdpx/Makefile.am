@@ -5,15 +5,15 @@ bin_PROGRAMS = exrdpx
 exrdpx_CPPFLAGS = $(AM_CPPFLAGS) 
 
 INCLUDES = \
+	-I$(top_srcdir)/IlmImfCtl \
 	@OPENEXR_CXXFLAGS@ \
-	@CTL_CXXFLAGS@ \
-	-I$(top_srcdir)/IlmImfCtl
+	@CTL_CXXFLAGS@
 
 LDADD =	\
+	-L$(top_builddir)/IlmImfCtl -lIlmImfCtl \
 	@CTL_LIBS@ @OPENEXR_LIBS@ \
 	@OPENEXR_LDFLAGS@ \
-	@CTL_LDFLAGS@ \
-	-L$(top_builddir)/IlmImfCtl -lIlmImfCtl
+	@CTL_LDFLAGS@
 
 exrdpx_SOURCES = \
 	applyCtl.cpp \
