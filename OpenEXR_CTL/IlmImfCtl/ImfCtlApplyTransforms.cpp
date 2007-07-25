@@ -45,11 +45,14 @@
 #include <ImfHeader.h>
 #include <ImfFrameBuffer.h>
 #include <CtlInterpreter.h>
+#include <IlmThreadPool.h>
+#include <IlmThreadMutex.h>
 #include <Iex.h>
 
 using namespace std;
 using namespace Iex;
 using namespace Imath;
+using namespace IlmThread;
 using namespace Imf;
 using namespace Ctl;
 
@@ -58,6 +61,13 @@ using namespace Ctl;
     #define debug(x) (cout << x << endl)
 #else
     #define debug(x)
+#endif
+
+#if 0
+    #include <iostream>
+    #define debug1(x) (cout << x << endl)
+#else
+    #define debug1(x)
 #endif
 
 
@@ -306,6 +316,130 @@ callFunctions
     }
 }
 
+
+class CallFunctionsTask: public Task
+{
+  public:
+
+    CallFunctionsTask
+	(TaskGroup *group,
+	 Interpreter &interpreter,
+	 const StringList &transformNames,
+	 const Box2i &transformWindow,
+	 size_t taskSamplesBegin,
+	 size_t taskSamplesEnd,
+	 const Header &envHeader,
+	 const Header &inHeader,
+	 const FrameBuffer &inFb,
+	 Header &outHeader,
+	 const FrameBuffer &outFb,
+	 Mutex &exceptionMutex,
+	 string &exceptionWhat);
+
+    virtual void	execute();
+
+  private:
+
+    Interpreter &	_interpreter;
+    const StringList &	_transformNames;
+    const Box2i &	_transformWindow;
+    size_t		_taskSamplesBegin;
+    size_t		_taskSamplesEnd;
+    const Header &	_envHeader;
+    const Header &	_inHeader;
+    const FrameBuffer &	_inFb;
+    Header &		_outHeader;
+    const FrameBuffer &	_outFb;
+    Mutex &		_exceptionMutex;
+    string &		_exceptionWhat;
+};
+
+
+CallFunctionsTask::CallFunctionsTask
+    (TaskGroup *group,
+     Interpreter &interpreter,
+     const StringList &transformNames,
+     const Box2i &transformWindow,
+     size_t taskSamplesBegin,
+     size_t taskSamplesEnd,
+     const Header &envHeader,
+     const Header &inHeader,
+     const FrameBuffer &inFb,
+     Header &outHeader,
+     const FrameBuffer &outFb,
+     Mutex &exceptionMutex,
+     string &exceptionWhat)
+:
+    Task (group),
+    _interpreter (interpreter),
+    _transformNames (transformNames),
+    _transformWindow (transformWindow),
+    _taskSamplesBegin (taskSamplesBegin),
+    _taskSamplesEnd (taskSamplesEnd),
+    _envHeader (envHeader),
+    _inHeader (inHeader),
+    _inFb (inFb),
+    _outHeader (outHeader),
+    _outFb (outFb),
+    _exceptionMutex (exceptionMutex),
+    _exceptionWhat (exceptionWhat)
+{
+    // empty
+}
+
+
+void
+CallFunctionsTask::execute()
+{
+    debug1 ("CallFunctionsTask::execute()");
+
+    try
+    {
+	//
+	// Get function call objects for all transform functions
+	// that we want to call.
+	//
+
+	FunctionList funcs;
+
+	for (size_t i = 0; i < _transformNames.size(); ++i)
+	    funcs.push_back (_interpreter.newFunctionCall (_transformNames[i]));
+
+	//
+	// Repeatedly call the transform functions, breaking the
+	// varying data into packets of at most maxSamples samples.
+	//
+
+	size_t maxSamples = _interpreter.maxSamples();
+	size_t begin = _taskSamplesBegin;
+	size_t end = _taskSamplesEnd;
+
+	debug1 ("\tbegin = " << begin << ", end = " << end);
+	
+	while (begin < end)
+	{
+	    size_t numSamples = min (end - begin, maxSamples);
+
+	    callFunctions (funcs, _transformWindow,
+			   begin, numSamples,
+			   _envHeader, _inHeader, _inFb,
+			   _outHeader, _outFb);
+
+	    begin += numSamples;
+	}
+    }
+    catch (const std::exception &exc)
+    {
+	Lock lock (_exceptionMutex);
+	_exceptionWhat = exc.what();
+    }
+    catch (...)
+    {
+	Lock lock (_exceptionMutex);
+	_exceptionWhat = "unrecognized exception";
+    }
+}
+
 } // namespace
 
 
@@ -318,47 +452,82 @@ applyTransforms
      const Header &inHeader,
      const FrameBuffer &inFb,
      Header &outHeader,
-     const FrameBuffer &outFb)
+     const FrameBuffer &outFb,
+     int numThreads)
 {
     //
-    // Get function call objects for all transform functions we want to call
+    // Load the CTL modules that we expect to contain the 
+    // functions we want to call.
     //
 
-    FunctionList funcs;
-
     for (size_t i = 0; i < transformNames.size(); ++i)
-    {
 	interpreter.loadModule (transformNames[i]);
-	funcs.push_back (interpreter.newFunctionCall (transformNames[i]));
-    }
 
     //
     // Determine how many samples we will process.
     //
 
     size_t totalSamples = (transformWindow.max.x - transformWindow.min.x + 1) *
-		          (transformWindow.max.y - transformWindow.min.y + 1);
+			  (transformWindow.max.y - transformWindow.min.y + 1);
+
+    if (totalSamples <= 0)
+	return;
 
     //
-    // Repeatedly call the transform functions, breaking the
-    // varying data into packets of at most maxSamples samples.
+    // Create tasks to be processed by the thread pool.
+    // The pixels in the transformWindow are are split into
+    // chunks of approximately equal size.  Each task will
+    // process one of of those chunks, breaking it down
+    // further into packets that are small enough for the
+    // interpreter.
+    //
+    // If a task catches an exception, it locks the exceptionMutex,
+    // below, stores the exception's what() string in exceptionWhat,
+    // and releases the mutex.
     //
 
-    size_t maxSamples = interpreter.maxSamples();
-    size_t firstSample = 0;
-    
-    while (firstSample < totalSamples)
+    Mutex exceptionMutex;
+    string exceptionWhat;
+
     {
-	size_t numSamples = min (totalSamples - firstSample, maxSamples);
+	TaskGroup taskGroup;
 
-	callFunctions (funcs, transformWindow,
-		       firstSample, numSamples,
-		       envHeader, inHeader, inFb,
-		       outHeader, outFb);
+	numThreads = max (numThreads, 1);
 
-	firstSample += numSamples;
+	for (int i = 0; i < numThreads; ++i)
+	{
+	    size_t taskSamplesBegin = totalSamples * i / numThreads;
+	    size_t taskSamplesEnd = totalSamples * (i + 1) / numThreads;
+	    
+	    ThreadPool::addGlobalTask
+		(new CallFunctionsTask (&taskGroup,
+					interpreter,
+		                        transformNames,
+					transformWindow,
+					taskSamplesBegin,
+					taskSamplesEnd,
+					envHeader,
+					inHeader,
+					inFb,
+					outHeader,
+					outFb,
+					exceptionMutex,
+					exceptionWhat));
+	}
+
+	//
+	// finish all tasks
+	//
     }
-}
 
+    //
+    // If any of the tasks encountered an exception, re-throw
+    // the exception so that it can be handled by the caller
+    // of applyTransforms().
+    //
+
+    if (exceptionWhat.size() > 0)
+	throw Iex::LogicExc (exceptionWhat);
+}
 
 } // namespace ImfCtl

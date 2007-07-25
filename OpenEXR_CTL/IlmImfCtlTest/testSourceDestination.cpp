@@ -38,6 +38,7 @@
 #include <ImfFrameBuffer.h>
 #include <ImfArray.h>
 #include <ImfFloatAttribute.h>
+#include <ImfThreading.h>
 #include <ImathRandom.h>
 #include <iostream>
 #include <exception>
@@ -52,9 +53,13 @@ using namespace std;
 namespace {
 
 void
-runTest (Interpreter &interp)
+runTest (Interpreter &interp, int numThreads)
 {
-    Rand48 rand (0);
+    cout << "\tnumber of threads = " << numThreads << endl;
+
+    setGlobalThreadCount (numThreads);
+
+    Rand48 rand (numThreads);
 
     //
     // Create transformNames
@@ -209,7 +214,10 @@ testSourceDestination ()
 	cout << "Testing function argument sources and destinations" << endl;
 
 	SimdInterpreter interp;
-	runTest (interp);
+	runTest (interp, 0);
+	runTest (interp, 1);
+	runTest (interp, 2);
+	runTest (interp, 3);
 
 	cout << "ok\n" << endl;
     }

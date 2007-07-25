@@ -1,3 +1,7 @@
+	* Added support for multithreaded execution to function
+	  ImfCtl::applyTransforms(), added command line option to
+	  enable multithreading to exr_ctl_exr and exrdpx.
+	  (Florian Kainz)
 	* Added exr_ctl_exr, a program that reads an OpenEXR file,
 	  applies one or more CTL programs to the pixels, and
 	  stores the result in another OpenEXR file.

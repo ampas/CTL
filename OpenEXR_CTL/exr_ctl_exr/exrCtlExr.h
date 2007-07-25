@@ -65,6 +65,7 @@ void exrCtlExr (const char inFileName[],
 	        const char outFileName[],
 	        const std::vector<std::string> &transformNames,
 		const AttrMap &extraAttrs,
+		int numThreads,
 		bool verbose);
 
 

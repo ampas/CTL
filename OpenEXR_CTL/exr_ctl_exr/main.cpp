@@ -103,6 +103,8 @@ usageMessage (const char argv0[], bool verbose = false)
 		"       and the value {f1, f2, f3}, is made available to\n"
 		"       the CTL transforms.\n"
 		"\n"
+		"-t n   process the image using n parallel threads\n"
+		"\n"
 		"-v     verbose mode\n"
 		"\n"
 		"-h     prints this message\n"
@@ -208,6 +210,7 @@ main(int argc, char **argv)
     const char *outFileName = 0;
     vector<string> transformNames;
     AttrMap extraAttrs;
+    int numThreads = 0;
     bool verbose = false;
     
     //
@@ -267,6 +270,25 @@ main(int argc, char **argv)
 	    verbose = true;
 	    i += 1;
 	}
+	else if (!strcmp (argv[i], "-t"))
+	{
+	    //
+	    // Set number of threads
+	    //
+
+	    if (i > argc - 2)
+		usageMessage (argv[0]);
+
+	    numThreads = strtol (argv[i + 1], 0, 0);
+
+	    if (numThreads < 0)
+	    {
+		cerr << "Number of threads cannot be negative." << endl;
+		return 1;
+	    }
+
+	    i += 2;
+	}
 	else if (!strcmp (argv[i], "-h"))
 	{
 	    //
@@ -314,6 +336,7 @@ main(int argc, char **argv)
 		   outFileName,
 		   transformNames,
 		   extraAttrs,
+		   numThreads,
 		   verbose);
     }
     catch (const exception &e)

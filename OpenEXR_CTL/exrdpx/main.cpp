@@ -56,6 +56,7 @@
 #include <dpxToExr.h>
 #include <exrToDpx.h>
 #include <ImfTestFile.h>
+#include <ImfThreading.h>
 #include <iostream>
 #include <string>
 #include <exception>
@@ -99,6 +100,8 @@ usageMessage (const char argv0[], bool verbose = false)
 		"-s     the header of the DPX input file is checked less\n"
 		"       strictly; some fields are ignored even though they\n"
 		"       are part of the core set.\n"
+		"\n"
+		"-t n	process the pixels using n parallel threads\n"
 		"\n"
 		"-v     verbose mode\n"
 		"\n"
@@ -174,6 +177,7 @@ main(int argc, char **argv)
     bool outputYc = false;
     bool strict = true;
     Compression compression = PIZ_COMPRESSION;
+    int numThreads = 0;
     bool verbose = false;
     
     //
@@ -230,6 +234,25 @@ main(int argc, char **argv)
 	    outputYc = true;
 	    i += 1;
 	}
+	else if (!strcmp (argv[i], "-t"))
+	{
+	    //
+	    // Set number of threads
+	    //
+
+	    if (i > argc - 2)
+		usageMessage (argv[0]);
+
+	    numThreads = strtol (argv[i + 1], 0, 0);
+
+	    if (numThreads < 0)
+	    {
+		cerr << "Number of threads cannot be negative." << endl;
+		return 1;
+	    }
+
+	    i += 2;
+	}
 	else if (!strcmp (argv[i], "-v"))
 	{
 	    //
@@ -285,6 +308,8 @@ main(int argc, char **argv)
 
     try
     {
+	setGlobalThreadCount (numThreads);
+
 	if (isOpenExrFile (fileName1))
 	{
 	    if (transformNames.empty())

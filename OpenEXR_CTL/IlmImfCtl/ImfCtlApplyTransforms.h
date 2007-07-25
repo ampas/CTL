@@ -77,6 +77,9 @@
 //	    outFb		The output frame buffer; holds the pixels
 //	    			output by the CTL functions.
 //
+//	    numThreads		Number of threads that will be used to
+//				execute the CTL functions (see below).
+//
 //	applyTransforms() first loads the CTL modules that contain the
 //	functions listed in transformNames.  Each function is assumed to
 //	live in a module with the same name as the function.
@@ -165,11 +168,24 @@
 //	applyTransforms() does not add attributes to outHeader or slices
 //	to the outFb.  Only existing attributes or slices are used.
 //
+//	Multi-Threading:
+//
+//	applyTransforms() uses threads to execute multiple instances of
+//	the CTL functions in parallel.  applyTransforms() does this by
+//	submitting tasks to the same thread pool that the IlmImf library
+//	uses for OpenEXR file I/O.
+//
+//	The numThreads argument to applyTransforms() lets application
+//	code specify how many threads should be kept busy running CTL
+//	code.  The default behavior is to try to occupy all threads in
+//	the thread pool.
+//
 //-----------------------------------------------------------------------------
 
 #include <string>
 #include <vector>
 #include <ImathBox.h>
+#include <ImfThreading.h>
 
 namespace Imf
 {
@@ -195,7 +211,8 @@ namespace ImfCtl
 	 const Imf::Header &inHeader,
 	 const Imf::FrameBuffer &inFb,
 	 Imf::Header &outHeader,
-	 const Imf::FrameBuffer &outFb);
+	 const Imf::FrameBuffer &outFb,
+	 int numThreads = Imf::globalThreadCount());
 }
 
 #endif
