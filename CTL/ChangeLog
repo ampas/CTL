@@ -1,3 +1,6 @@
+	* Bug fix: multi-threaded execution of CTL programs caused
+	  segmentation faults and bad_alloc exceptions
+	  (Florian Kainz)
 	* Added new functions to the standard library:
 	    3x3 matrix multiplication, addition and inversion
 	    3x3 and 4x4 matrix transposition

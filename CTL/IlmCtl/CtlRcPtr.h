@@ -61,6 +61,8 @@
 //
 //-----------------------------------------------------------------------
 
+#include <IlmThreadMutex.h>
+
 namespace Ctl {
 
 
@@ -209,6 +211,7 @@ class RcPtr
 
 
 void throwRcPtrExc (const RcObject *lhs, const RcObject *rhs);
+IlmThread::Mutex &rcPtrMutex (RcObject *ptr);
 
 
 //---------------
@@ -220,7 +223,10 @@ inline void
 RcPtr<T>::ref ()
 {
     if (_p)
+    {
+	IlmThread::Lock lock (rcPtrMutex (_p));
 	(_p->_n)++;
+    }
 }
 
 
@@ -230,7 +236,14 @@ RcPtr<T>::unref ()
 {
     if (_p)
     {
-	if (--(_p->_n) == 0)
+	unsigned long n;
+
+	{
+	    IlmThread::Lock lock (rcPtrMutex (_p));
+	    n = --(_p->_n);
+	}
+
+	if (n == 0)
 	{
 	    delete _p;
 	    _p = 0;

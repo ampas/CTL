@@ -177,7 +177,11 @@ SimdStack::ownerFpRelative (int offset) const
 }
 
 
-std::string unknown = "unkown";
+namespace {
+
+const std::string unknown = "unkown";
+
+} // namespace
 
 SimdXContext::SimdXContext (SimdInterpreter &interpreter):
     _interpreter (interpreter),
@@ -189,7 +193,7 @@ SimdXContext::SimdXContext (SimdInterpreter &interpreter):
     _abortCount (0),
     _maxInstCount (0),
     _instCount (0),
-    _fileName (unknown)
+    _fileName (&unknown)
 {
     (*_returnMask)[0] = false;
 }
