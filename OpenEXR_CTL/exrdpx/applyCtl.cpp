@@ -104,17 +104,17 @@ initializeDpxFrameBuffer
      const Array2D<Rgba> &pixels,
      FrameBuffer &fb)
 {
-    fb.insert ("dpxR", Slice (HALF,				// type
+    fb.insert ("DR_film", Slice (HALF,				// type
 			      (char *)(&pixels[0][0].r),	// base
 			      sizeof (pixels[0][0]),		// xStride
 			      sizeof (pixels[0][0]) * w));	// yStride
 
-    fb.insert ("dpxG", Slice (HALF,				// type
+    fb.insert ("DG_film", Slice (HALF,				// type
 			      (char *)(&pixels[0][0].g),	// base
 			      sizeof (pixels[0][0]),		// xStride
 			      sizeof (pixels[0][0]) * w));	// yStride
 
-    fb.insert ("dpxB", Slice (HALF,				// type
+    fb.insert ("DB_film", Slice (HALF,				// type
 			      (char *)(&pixels[0][0].b),	// base
 			      sizeof (pixels[0][0]),		// xStride
 			      sizeof (pixels[0][0]) * w));	// yStride
@@ -202,7 +202,7 @@ applyCtlDpxToExr (const vector<string> &transformNames,
     Header envHeader;
 
     envHeader.insert
-	("exrChromaticities", ChromaticitiesAttribute (exrChromaticities));
+	("chromaticities", ChromaticitiesAttribute (exrChromaticities));
 
     //
     // Set up input and output FrameBuffer objects for the transforms.

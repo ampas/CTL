@@ -34,25 +34,27 @@
 
 //
 // A simple display transform for a display with additive RGB
-// channels:  The XYZ output, renderedXYZ, of the rendering
-// transform is converted a set of RGB values, displayR, displayG
-// and displayB, taking the chromaticities of the display's
-// primaries and white point into account.
+// channels:  The XYZ output (X_OCES, Y_OCES, Z_OCES) of the
+// rendering transform is converted a set of RGB values
+// (R_display, G_display, B_display), taking the chromaticities
+// of the display's primaries and white point into account.
 //
 //
+
+import "utilities";
 
 void
 transform_display_video
-    (output varying half displayR,
-     output varying half displayG,
-     output varying half displayB,
-     input varying float renderedXYZ[3],
+    (output varying half R_display,
+     output varying half G_display,
+     output varying half B_display,
+     input varying half X_OCES,
+     input varying half Y_OCES,
+     input varying half Z_OCES,
      input uniform Chromaticities displayChromaticities)
 {
-    float toRGB[4][4] = XYZtoRGB (displayChromaticities, 1.0);
-    float RGB[3] = mult_f3_f44 (renderedXYZ, toRGB);
+    float XYZ[3] = {X_OCES, Y_OCES, Z_OCES};
 
-    displayR = RGB[0];
-    displayG = RGB[1];
-    displayB = RGB[2];
+    convertXYZtoRGB_h (displayChromaticities, 1.0, XYZ,
+		       R_display, G_display, B_display);
 }

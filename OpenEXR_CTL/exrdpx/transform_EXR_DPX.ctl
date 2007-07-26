@@ -48,23 +48,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 //
-// A transform that converts approximately scene-linear
+// A transform that converts approximately scene-linear ACES
 // RGB values into density values for storing in DPX files.
 //
 
-const Chromaticities rec709 =
-{
-    {0.6400, 0.3300},
-    {0.3000, 0.6000},
-    {0.1500, 0.0600},
-    {0.3172, 0.3290}
-};
+import "utilities";
 
 void
 transform_EXR_DPX
-    (output varying half dpxR,
-     output varying half dpxG,
-     output varying half dpxB,
+    (output varying half DR_film,
+     output varying half DG_film,
+     output varying half DB_film,
      input varying half R,
      input varying half G,
      input varying half B,
@@ -79,7 +73,7 @@ transform_EXR_DPX
     //
 
     float toRec709[4][4] = mult_f44_f44 (RGBtoXYZ (chromaticities, 1.0), 
-				         XYZtoRGB (rec709, 1.0));
+				         XYZtoRGB (rec709Chromaticities, 1.0));
 
     float linear[3] = {R, G, B};
     linear = mult_f3_f44 (linear, toRec709);
@@ -113,7 +107,7 @@ transform_EXR_DPX
     // Convert density to DPX code values
     //
 
-    dpxR = density[0] * (1023.0 / maxAimDensity[0]) + 445.0;
-    dpxG = density[1] * (1023.0 / maxAimDensity[1]) + 445.0;
-    dpxB = density[2] * (1023.0 / maxAimDensity[2]) + 445.0;
+    DR_film = density[0] * (1023.0 / maxAimDensity[0]) + 445.0;
+    DG_film = density[1] * (1023.0 / maxAimDensity[1]) + 445.0;
+    DB_film = density[2] * (1023.0 / maxAimDensity[2]) + 445.0;
 }

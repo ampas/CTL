@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // 
-// Copyright (c) 2006 Academy of Motion Picture Arts and Sciences
+// Copyright (c) 2007 Academy of Motion Picture Arts and Sciences
 // ("A.M.P.A.S."). Portions contributed by others as indicated.
 // All rights reserved.
 // 
@@ -48,58 +48,90 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 //
-// A transform that converts density values as stored in
-// DPX files into approximately scene-linear ACES RGB values.
+// Data and functions that may be useful for writing CTL programs.
 //
 
-import "utilities";
+const Chromaticities rec709Chromaticities =
+{
+    {0.6400, 0.3300},
+    {0.3000, 0.6000},
+    {0.1500, 0.0600},
+    {0.3172, 0.3290}
+};
+
+float[3]
+convertRGBtoXYZ
+    (Chromaticities chromaticities,
+     float whiteLuminance,
+     float R,
+     float G,
+     float B)
+{
+    float M[4][4] = RGBtoXYZ (chromaticities, whiteLuminance);
+    float RGB[3] = {R, G, B};
+    return mult_f3_f44 (RGB, M);
+}
 
 void
-transform_DPX_EXR
-    (output varying half R,
-     output varying half G,
-     output varying half B,
-     input varying half DR_film,
-     input varying half DG_film,
-     input varying half DB_film,
-     input uniform Chromaticities chromaticities,
-     input uniform float maxAimDensity[3] = {1.890, 2.046, 2.046},
-    					// ARRI "carlos" aims
-     input uniform float negGamma[3] = {0.49, 0.57, 0.60})
-     					// gamma of negative (Kodak 5201)
+convertRGBtoXYZ_f
+    (Chromaticities chromaticities,
+     float whiteLuminance,
+     float RGB[3],
+     output float X,
+     output float Y,
+     output float Z)
 {
-    //
-    // Convert DPX code values to density
-    //
-
-    float density[3] =
-    {
-	(DR_film - 445.0) * (maxAimDensity[0] / 1023.0),
-	(DG_film - 445.0) * (maxAimDensity[1] / 1023.0),
-	(DB_film - 445.0) * (maxAimDensity[2] / 1023.0)
-    };
-
-    //
-    // Convert densities to approximately linear Rec. 709 values
-    //
-    
-    float linear[3] =
-    {
-	pow10_h (density[0] / negGamma[0]) * 0.18,
-	pow10_h (density[1] / negGamma[1]) * 0.18,
-	pow10_h (density[2] / negGamma[2]) * 0.18
-    };
-
-    //
-    // Convert from Rec. 709 to output primaries and white point
-    //
-
-    float toExr[4][4] = mult_f44_f44 (RGBtoXYZ (rec709Chromaticities, 1.0), 
-				      XYZtoRGB (chromaticities, 1.0));
-
-    linear = mult_f3_f44 (linear, toExr);
-
-    R = linear[0];
-    G = linear[1];
-    B = linear[2];
+    float M[4][4] = RGBtoXYZ (chromaticities, whiteLuminance);
+    float XYZ[3] = mult_f3_f44 (RGB, M);
+    X = XYZ[0];
+    Y = XYZ[1];
+    Z = XYZ[2];
 }
+
+void
+convertRGBtoXYZ_h
+    (Chromaticities chromaticities,
+     float whiteLuminance,
+     float RGB[3],
+     output half X,
+     output half Y,
+     output half Z)
+{
+    float M[4][4] = RGBtoXYZ (chromaticities, whiteLuminance);
+    float XYZ[3] = mult_f3_f44 (RGB, M);
+    X = XYZ[0];
+    Y = XYZ[1];
+    Z = XYZ[2];
+}
+
+void
+convertXYZtoRGB_f
+    (Chromaticities chromaticities,
+     float whiteLuminance,
+     float XYZ[3],
+     output float R,
+     output float G,
+     output float B)
+{
+    float M[4][4] = XYZtoRGB (chromaticities, whiteLuminance);
+    float RGB[3] = mult_f3_f44 (XYZ, M);
+    R = RGB[0];
+    G = RGB[1];
+    B = RGB[2];
+}
+
+void
+convertXYZtoRGB_h
+    (Chromaticities chromaticities,
+     float whiteLuminance,
+     float XYZ[3],
+     output half R,
+     output half G,
+     output half B)
+{
+    float M[4][4] = XYZtoRGB (chromaticities, whiteLuminance);
+    float RGB[3] = mult_f3_f44 (XYZ, M);
+    R = RGB[0];
+    G = RGB[1];
+    B = RGB[2];
+} 

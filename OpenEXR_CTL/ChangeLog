@@ -1,3 +1,7 @@
+	* Moved some .ctl files from the OpenEXR_Viewers to the
+	  OpenEXR_CTL package, changed naming conventions for
+	  image channels to match upcoming paper.
+	  (Florian Kainz)
 	* Added support for multithreaded execution to function
 	  ImfCtl::applyTransforms(), added command line option to
 	  enable multithreading to exr_ctl_exr and exrdpx.

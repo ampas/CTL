@@ -33,14 +33,14 @@
 ///////////////////////////////////////////////////////////////////////////
 
 //
-// A simple rendering transform that converts the RGB pixels
-// of a scene-referred image into XYZ pixels for display.
+// A simple rendering transform that converts the pixels
+// of an ACES RGB image into OCES XYZ pixels for display.
 //
 // This rendering transform is a placeholder for the Reference
 // Rendering Transform (RRT) that is currently being developed
 // by the File Format Committee of the Academy of Motion Picture
 // Arts and Sciences.  This transform does not claim to be optimal
-// in any sense, or to be a close approximation of any RRT candidate
+// in any sense, or to be an approximation of any RRT candidate
 // under consideration.
 //
 // The transform consists of three steps:
@@ -56,13 +56,7 @@
 //	- convert from Rec. 709 RGB to CIE XYZ.
 //
 
-const Chromaticities rec709 =
-{
-    {0.6400, 0.3300},
-    {0.3000, 0.6000},
-    {0.1500, 0.0600},
-    {0.3172, 0.3290}
-};
+import "utilities";
 
 const float lutMin = 0.0;
 const float lutMax = 4.0;
@@ -89,14 +83,16 @@ const float lut[] =
 
 void 
 transform_RRT 
-    (varying half R,				// scene-referred RGB pixels
+    (varying half R,				// ACES RGB pixels
      varying half G,
      varying half B,
      uniform Chromaticities chromaticities,	// RGB space of input image
-     output varying float renderedXYZ[3])	// rendered XYZ pixels
+     output varying half X_OCES,		// OCES XYZ pixels
+     output varying half Y_OCES,
+     output varying half Z_OCES)
 {
     float toRec709[4][4] = mult_f44_f44 (RGBtoXYZ (chromaticities, 1.0), 
-					 XYZtoRGB (rec709, 1.0));
+					 XYZtoRGB (rec709Chromaticities, 1.0));
 
     float RGB[3] = {R, G, B};
     RGB = mult_f3_f44 (RGB, toRec709);
@@ -105,6 +101,5 @@ transform_RRT
     RGB[1] = lookup1D (lut, lutMin, lutMax, RGB[1]);
     RGB[2] = lookup1D (lut, lutMin, lutMax, RGB[2]);
 
-    float toXYZ[4][4] = RGBtoXYZ (rec709, 1.0);
-    renderedXYZ = mult_f3_f44 (RGB, toXYZ);
+    convertRGBtoXYZ_h (rec709Chromaticities, 1.0, RGB, X_OCES, Y_OCES, Z_OCES);
 }
