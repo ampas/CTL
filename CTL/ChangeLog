@@ -1,3 +1,6 @@
+Version 1.4.0:
+	* Bumped DSO version number to 2.0
+	  (Florian Kainz)
 	* Bug fix: multi-threaded execution of CTL programs caused
 	  segmentation faults and bad_alloc exceptions
 	  (Florian Kainz)
