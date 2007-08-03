@@ -207,7 +207,7 @@ copyFunctionArg
 
 	break;
 
-      case FLOAT:
+	  case Imf::FLOAT:
 
 	if (!dst->type().cast<FloatType>())
 	    throwSrcSliceTypeMismatch ("FLOAT", dst);
@@ -229,7 +229,7 @@ copyFunctionArg
 
 	break;
 
-      case UINT:
+	  case Imf::UINT:
 
 	if (!dst->type().cast<UIntType>())
 	    throwSrcSliceTypeMismatch ("UINT", dst);
@@ -297,7 +297,7 @@ copyFunctionArg
 
 	break;
 
-      case FLOAT:
+	  case Imf::FLOAT:
 
 	if (!src->type().cast<FloatType>())
 	    throwDstSliceTypeMismatch (src, "FLOAT");
@@ -319,7 +319,7 @@ copyFunctionArg
 
 	break;
 
-      case UINT:
+	  case Imf::UINT:
 
 	if (!src->type().cast<UIntType>())
 	    throwDstSliceTypeMismatch (src, "UINT");

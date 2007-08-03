@@ -190,13 +190,13 @@ runTest (Interpreter &interp)
 		       yStride * sizeof (half)));
 
     inFb.insert
-	("vf1", Slice (FLOAT,
+		("vf1", Slice (Imf::FLOAT,
 		       (char *)&vf1[0] - baseOffset * sizeof (float),
 		       xStride * sizeof (float),
 		       yStride * sizeof (float)));
 
     inFb.insert
-	("vu1", Slice (UINT,
+		("vu1", Slice (Imf::UINT,
 		       (char *)&vu1[0] - baseOffset * sizeof (unsigned int),
 		       xStride * sizeof (unsigned int),
 		       yStride * sizeof (unsigned int)));
@@ -221,13 +221,13 @@ runTest (Interpreter &interp)
 		       yStride * sizeof (half)));
 
     outFb.insert
-	("vf2", Slice (FLOAT,
+		("vf2", Slice (Imf::FLOAT,
 		       (char *)&vf2[0] - baseOffset * sizeof (float),
 		       xStride * sizeof (float),
 		       yStride * sizeof (float)));
 
     outFb.insert
-	("vu2", Slice (UINT,
+		("vu2", Slice (Imf::UINT,
 		       (char *)&vu2[0] - baseOffset * sizeof (unsigned int),
 		       xStride * sizeof (unsigned int),
 		       yStride * sizeof (unsigned int)));
