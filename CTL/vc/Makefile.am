@@ -22,4 +22,24 @@ EXTRA_DIST = \
         vc7/CTL/IlmCtlTest/Debug/.cvsignore \
         vc7/CTL/IlmCtlTest/Release/.cvsignore \
         vc7/CTL/debug/.cvsignore \
-        vc7/CTL/release/.cvsignore
+        vc7/CTL/release/.cvsignore \
+        vc8/CTL/CTL.sln \
+        vc8/CTL/CTL.suo \
+        vc8/CTL/IlmCtl/IlmCtl.vcproj \
+        vc8/CTL/IlmCtl/Debug/.cvsignore \
+        vc8/CTL/IlmCtl/Release/.cvsignore \
+        vc8/CTL/IlmCtlMath/IlmCtlMath.vcproj \
+        vc8/CTL/IlmCtlMath/Debug/.cvsignore \
+        vc8/CTL/IlmCtlMath/Release/.cvsignore \
+        vc8/CTL/IlmCtlMathTest/IlmCtlMathTest.vcproj \
+        vc8/CTL/IlmCtlMathTest/Debug/.cvsignore \
+        vc8/CTL/IlmCtlMathTest/Release/.cvsignore \
+        vc8/CTL/IlmCtlSimd/IlmCtlSimd.vcproj \
+        vc8/CTL/IlmCtlSimd/Debug/.cvsignore \
+        vc8/CTL/IlmCtlSimd/Release/.cvsignore \
+        vc8/CTL/IlmCtlTest/IlmCtlTest.vcproj \
+        vc8/CTL/IlmCtlTest/Debug/.cvsignore \
+        vc8/CTL/IlmCtlTest/Release/.cvsignore \
+        vc8/CTL/debug/.cvsignore \
+        vc8/CTL/release/.cvsignore
+
