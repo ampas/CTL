@@ -3,7 +3,6 @@
 EXTRA_DIST = \
         installIlmImfCtl.cmd \
         vc7/OpenEXR_CTL/OpenEXR_CTL.sln \
-        vc7/OpenEXR_CTL/OpenEXR_CTL.suo \
         vc7/OpenEXR_CTL/IlmImfCtl/IlmImfCtl.vcproj \
         vc7/OpenEXR_CTL/IlmImfCtl/Debug/.cvsignore \
         vc7/OpenEXR_CTL/IlmImfCtl/Release/.cvsignore \
@@ -13,7 +12,6 @@ EXTRA_DIST = \
         vc7/OpenEXR_CTL/debug/.cvsignore \
         vc7/OpenEXR_CTL/release/.cvsignore \
         vc8/OpenEXR_CTL/OpenEXR_CTL.sln \
-        vc8/OpenEXR_CTL/OpenEXR_CTL.suo \
         vc8/OpenEXR_CTL/IlmImfCtl/IlmImfCtl.vcproj \
         vc8/OpenEXR_CTL/IlmImfCtl/Debug/.cvsignore \
         vc8/OpenEXR_CTL/IlmImfCtl/Release/.cvsignore \
