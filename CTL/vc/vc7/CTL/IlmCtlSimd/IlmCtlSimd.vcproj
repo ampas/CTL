@@ -51,7 +51,10 @@
 				Name="VCPostBuildEventTool"
 				CommandLine="..\..\..\..\..\..\Deploy\bin\$(IntDir)\createDLL -n$(OutDir)\IlmCtlSimd.map -l$(IntDir);..\..\..\..\..\..\Deploy\lib\$(IntDir) -i$(OutDir)\IlmCtlSimd.lib &amp;&amp; ..\..\..\installIlmCtlSimd.cmd $(IntDir)"/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPreBuildEventTool"
+				Description="Building LUT files..."
+				CommandLine="..\..\..\buildLUTs.cmd Debug"
+			/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -106,7 +109,10 @@
 				Name="VCPostBuildEventTool"
 				CommandLine="..\..\..\..\..\..\Deploy\bin\$(IntDir)\createDLL -n$(OutDir)\IlmCtlSimd.map -l$(IntDir);..\..\..\..\..\..\Deploy\lib\$(IntDir) -i$(OutDir)\IlmCtlSimd.lib &amp;&amp; ..\..\..\installIlmCtlSimd.cmd $(IntDir)"/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPreBuildEventTool"
+				Description="Building LUT files..."
+				CommandLine="..\..\..\buildLUTs.cmd"
+			/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool

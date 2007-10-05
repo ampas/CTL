@@ -4,6 +4,7 @@ EXTRA_DIST = \
 	installIlmCtl.cmd \
         installIlmCtlMath.cmd \
         installIlmCtlSimd.cmd \
+        buildLUTs.cmd \
         vc7/CTL/CTL.sln \
         vc7/CTL/CTL.suo \
         vc7/CTL/IlmCtl/IlmCtl.vcproj \

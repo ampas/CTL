@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="IlmCtlSimd"
 	ProjectGUID="{364AFD41-D36F-4FC9-A7C8-F5B6BE32B41F}"
+	RootNamespace="IlmCtlSimd"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -24,6 +25,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Building LUT files..."
+				CommandLine="..\..\..\buildLUTs.cmd Debug"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -111,6 +114,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Building LUT files..."
+				CommandLine="..\..\..\buildLUTs.cmd"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
