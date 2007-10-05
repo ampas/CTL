@@ -6,7 +6,6 @@ EXTRA_DIST = \
         installIlmCtlSimd.cmd \
         buildLUTs.cmd \
         vc7/CTL/CTL.sln \
-        vc7/CTL/CTL.suo \
         vc7/CTL/IlmCtl/IlmCtl.vcproj \
         vc7/CTL/IlmCtl/Debug/.cvsignore \
         vc7/CTL/IlmCtl/Release/.cvsignore \
@@ -25,7 +24,6 @@ EXTRA_DIST = \
         vc7/CTL/debug/.cvsignore \
         vc7/CTL/release/.cvsignore \
         vc8/CTL/CTL.sln \
-        vc8/CTL/CTL.suo \
         vc8/CTL/IlmCtl/IlmCtl.vcproj \
         vc8/CTL/IlmCtl/Debug/.cvsignore \
         vc8/CTL/IlmCtl/Release/.cvsignore \
