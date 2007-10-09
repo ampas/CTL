@@ -1,3 +1,10 @@
+Version 1.4.1:
+	* Fixed build problem on Windows: build failed to create the
+	  IlmCtlSimd/halfExpLogTable.h header file.
+	  (Eric Wimmer)
+	* Removed Windows .suo files from distribution.
+	  (Eric Wimmer)
+
 Version 1.4.0:
 	* Bumped DSO version number to 2.0
 	  (Florian Kainz)

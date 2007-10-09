@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(CTL, 1.4.0)
-AC_SUBST(CTL_VERSION, 1.4.0)
+AC_INIT(CTL, 1.4.1)
+AC_SUBST(CTL_VERSION, 1.4.1)
 AC_CANONICAL_HOST
 AC_CONFIG_SRCDIR(IlmCtlTest/main.cpp)
 AM_INIT_AUTOMAKE(1.6.3)  dnl Require automake 1.6.3 or better

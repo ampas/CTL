@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(OpenEXR_CTL, 1.0.0)
-AC_SUBST(OPENEXR_CTL_VERSION, 1.0.0)
+AC_INIT(OpenEXR_CTL, 1.0.1)
+AC_SUBST(OPENEXR_CTL_VERSION, 1.0.1)
 AC_CANONICAL_HOST
 AC_CONFIG_SRCDIR(IlmImfCtlTest/main.cpp)
 AM_INIT_AUTOMAKE(1.6.3)  dnl Require automake 1.6.3 or better
