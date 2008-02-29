@@ -1899,13 +1899,18 @@ Parser::parsePrimaryExpression ()
 
     if (token() == TK_STRINGLITERAL)
     {
+	//
         // Adjacent string literals are treated as a single string literal
+	//
+
 	string value = "";
+
         while(token() == TK_STRINGLITERAL)
         {
             value += tokenStringValue();
             next();
         }
+
         debugSyntax1 ("string literal " << value);
 	return _lcontext.newStringLiteralNode (currentLineNumber(), value);
     }
@@ -1946,7 +1951,7 @@ Parser::parsePrimaryExpression ()
 ExprNodePtr
 Parser::parseMemberArrayExpression (ExprNodePtr lhs)
 {
-    debugSyntax ("MemberArrayExpression");
+    debugSyntax ("memberArrayExpression");
 
     while( token() == TK_DOT || token() == TK_OPENBRACKET)
     {
@@ -1954,6 +1959,7 @@ Parser::parseMemberArrayExpression (ExprNodePtr lhs)
 	{
 	    debugSyntax1 ("struct member access");
 	    next();
+
 	    if( token() == TK_NAME)
 	    {
 		string member = tokenStringValue();

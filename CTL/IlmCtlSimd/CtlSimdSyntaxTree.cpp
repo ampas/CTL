@@ -308,7 +308,6 @@ SimdVariableNode::generateCode (LContext &lcontext)
 	SimdLContext &slcontext = static_cast <SimdLContext &> (lcontext);
 	
 	SimdDataAddrPtr dataPtr = info->addr().cast<SimdDataAddr>();
-	SimdValueNodePtr valuePtr = initialValue.cast<SimdValueNode>();
 
 	if (assignInitialValue)
 	{
@@ -316,10 +315,21 @@ SimdVariableNode::generateCode (LContext &lcontext)
 	    // Initial value is assigned to the variable.
 	    //
 
+	    SimdValueNodePtr valuePtr = info->value().cast<SimdValueNode>();
+
 	    if( valuePtr && valuePtr->type && dataPtr  && dataPtr->reg())
 	    {
+		//
+		// The variable is static, and its value is a literal
+		// or a collection of literals (for structs and arrays).
+		// We can copy the initial value directly into the
+		// variable instead of generating code to assign the
+		// value.
 		
-		// get sizes & offsets of elements
+		//
+		// Get sizes & offsets of elements
+		//
+		
 		SizeVector sizes;
 		SizeVector offsets;
 		DataTypePtr dataType = valuePtr->type;

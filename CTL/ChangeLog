@@ -1,3 +1,6 @@
+	* Bug fix: initializing an element of a static CTL array with
+	  FLT_MIN or FLT_MAX throws a C++ exception (Florian Kainz)
+
 Version 1.4.1:
 	* Fixed build problem on Windows: build failed to create the
 	  IlmCtlSimd/halfExpLogTable.h header file.

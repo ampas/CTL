@@ -1080,7 +1080,8 @@ NameNode::evaluate (LContext &lcontext)
     if (info && info->isData() && info->value())
     {
 	ValueNodePtr valueNode = info->value().cast<ValueNode>();
-	if(valueNode)
+
+	if (valueNode)
 	    info->value()->evaluate (lcontext);
 	else
 	    return info->value()->evaluate (lcontext);

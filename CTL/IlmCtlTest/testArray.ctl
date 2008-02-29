@@ -520,6 +520,21 @@ testArrayCommas ()
 }
 
 
+const float f1[2] = {1, 2};		// initialized by copying value
+					// into variabl at compile time
+
+const float f2[2] = {FLT_MIN, FLT_MAX};	// initialized during module
+					// initialization
+
+
+void
+staticInit ()
+{
+    assert (f1[0] == 1);
+    assert (f1[1] == 2);
+    assert (f2[0] == FLT_MIN);
+    assert (f2[1] == FLT_MAX);
+}
 
 int
 testArrays()
@@ -537,6 +552,7 @@ testArrays()
     sideEffectInit1();
     sideEffectInit2();
     nested();
+    staticInit();
     return 1;
 }
 
