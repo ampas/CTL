@@ -1,3 +1,7 @@
+	* On Windows, paths in the CTL_MODULE_PATH environment
+	  variable are now separated by ";" instead of ":"
+	  characters.
+	  (Florian Kainz)
 	* Bug fix: incorrect CTL code crashes the CTL іnterpereter
 	  (Florian Kainz)
 	* Bug fix: initializing an element of a static CTL array with

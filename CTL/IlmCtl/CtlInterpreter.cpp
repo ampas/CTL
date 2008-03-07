@@ -99,17 +99,21 @@ modulePathsInternal()
     static ModulePathsData mpd;
     static bool firstTime = true;
 
+    Lock lock (mpd.mutex);
 
-    Lock lock(mpd.mutex);
+    //
     // on the first attempt, load all paths from the environment variable
-    if(firstTime)
+    //
+
+    if (firstTime)
     {
         firstTime = false;
-        vector<string>& modPaths = mpd.paths;
+        vector<string> &modPaths = mpd.paths;
 
         string path;
 
         const char *env = getenv ("CTL_MODULE_PATH");
+	
         if (env)
             path = env;
         
@@ -117,22 +121,34 @@ modulePathsInternal()
             path = ".";
 
         size_t pos = 0;
+
         while (pos < path.size())
         {
-            size_t end = path.find (':', pos);
+	    #if defined (WIN32) || defined (WIN64)
+
+		size_t end = path.find (';', pos);
+
+	    #else
+
+		size_t end = path.find (':', pos);
+
+	    #endif
             
             if (end == string::npos)
                 end = path.size();
             
             string pathItem = path.substr (pos, end - pos);
 
-            if(find(modPaths.begin(), modPaths.end(), pathItem ) 
-               == modPaths.end())
-                modPaths.push_back(pathItem);
+            if (find (modPaths.begin(), modPaths.end(), pathItem) 
+		       == modPaths.end())
+	    {
+                modPaths.push_back (pathItem);
+	    }
 
             pos = end + 1;
         }
     }
+
     return mpd;
 }
 
@@ -152,10 +168,11 @@ findModule (const string& moduleName)
     // be used to build absolute or relative file paths.
     //
 
-    if (moduleName.find_first_of ("/:\\") != string::npos)
+    if (moduleName.find_first_of ("/:;\\") != string::npos)
     {
 	THROW (ArgExc, "CTL module name \"" << moduleName << "\" is invalid. "
-		       "Module names cannot contain /, : or \\ characters.");
+		       "Module names cannot contain '/', ':', ';' or '\\' "
+		       "characters.");
     }
 
 
@@ -163,18 +180,23 @@ findModule (const string& moduleName)
         ModulePathsData &mpd = modulePathsInternal();
         Lock lock(mpd.mutex);
 
-        for(vector<string>::iterator it = mpd.paths.begin();
-            it != mpd.paths.end();
-            it++)
+        for (vector<string>::iterator it = mpd.paths.begin();
+             it != mpd.paths.end();
+             it++)
         {
             string fileName = *it  + '/' + moduleName + ".ctl";
 
-#ifdef WIN32            
-            if (!_access (fileName.c_str(), 0))
-#else
-            if (!access (fileName.c_str(), F_OK))
-#endif
-                return fileName;
+	    #if defined (WIN32) || defined (WIN64)
+
+		if (!_access (fileName.c_str(), 0))
+		    return fileName;
+
+	    #else
+
+		if (!access (fileName.c_str(), F_OK))
+		    return fileName;
+
+	    #endif
         }
     }
 

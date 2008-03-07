@@ -133,6 +133,7 @@ class Interpreter
     virtual void	setMaxInstCount (unsigned long count) = 0;
     virtual void	abortAllPrograms () = 0;
 
+
     //---------------------------------------------------------------------
     // Module paths:
     //
@@ -142,8 +143,9 @@ class Interpreter
     // examined and modified by modulePaths() and setModulePaths().
     //
     //---------------------------------------------------------------------
-    static std::vector<std::string>  modulePaths();
-    static void    setModulePaths(const std::vector<std::string>& newModPaths);
+
+    static std::vector<std::string> modulePaths();
+    static void setModulePaths (const std::vector<std::string> &newModPaths);
 
 
   protected:
