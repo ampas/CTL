@@ -92,29 +92,28 @@ generateCodeForPath (StatementNodePtr node, SimdLContext &slcontext,
 		     const SimdLContext::Path *insertPath = 0,
 		     const vector<DataTypePtr> *locals = 0)
 {
-    if( !node )
-    {
+    if (!node)
 	return 0;
-    }
 
 
     slcontext.newPath();
 
-    if( locals )
+    if (locals)
     {
+	//
 	// Insert instructions to hold space for local variables on stack
-	for(vector<DataTypePtr>::const_iterator type = locals->begin();
-	    type != locals->end(); 
-	    type++)
+	//
+
+	for (vector<DataTypePtr>::const_iterator type = locals->begin();
+	     type != locals->end(); 
+	     type++)
 	{
-	    (*type)->newAutomaticVariable(node, slcontext);
+	    (*type)->newAutomaticVariable (node, slcontext);
 	}
     }
     
-    if(insertPath && insertPath->firstInst)
-    {
-	slcontext.appendPath(*insertPath);
-    }
+    if (insertPath && insertPath->firstInst)
+	slcontext.appendPath (*insertPath);
 
     while (node)
     {
@@ -199,39 +198,57 @@ void
 SimdFunctionNode::generateESizeCode(SimdLContext &slcontext, 
 				    SimdArrayTypePtr arrayType)
 {
-    if( arrayType && arrayType->unknownElementSize())
+    if (arrayType && arrayType->unknownElementSize())
     {
+	//
 	// push unknownESize
+	//
+
 	slcontext.addInst 
 	    (new SimdPushRefInst (arrayType->unknownElementSize(), lineNumber));
 
+	//
 	// we know sub-type is an array
-	SimdArrayTypePtr subArrayType = arrayType->elementType();
-	generateESizeCode(slcontext, subArrayType);
+	//
 
-	// push sub elementSize : reference to computed or literal
-	if( subArrayType->unknownElementSize() )
+	SimdArrayTypePtr subArrayType = arrayType->elementType();
+	generateESizeCode (slcontext, subArrayType);
+
+	//
+	// push sub elementSize: reference to computed or literal
+	//
+
+	if (subArrayType->unknownElementSize())
 	    slcontext.addInst 
-		(new SimdPushRefInst(subArrayType->unknownElementSize(), 
-				     lineNumber));
+		(new SimdPushRefInst (subArrayType->unknownElementSize(), 
+				      lineNumber));
 	else
 	    slcontext.addInst 
 		(new SimdPushLiteralInst <int> (subArrayType->elementSize(), 
 						lineNumber));
 
-	// push sub size : reference to computed or literal
-	if( subArrayType->unknownSize() )
+	//
+	// push sub size: reference to computed or literal
+	//
+
+	if (subArrayType->unknownSize())
 	    slcontext.addInst 
 		(new SimdPushRefInst (subArrayType->unknownSize(), lineNumber));
 	else
 	    slcontext.addInst 
 		(new SimdPushLiteralInst <int> (subArrayType->size(), 
 						lineNumber));
+	//
 	// multiply
+	//
+
 	slcontext.addInst
 	    (new SimdBinaryOpInst <int, int, int, TimesOp> (lineNumber));
 
+	//
 	// assign
+	//
+
 	slcontext.addInst (new SimdAssignInst (sizeof(int), lineNumber));
     }
 }
@@ -1072,11 +1089,14 @@ bool
 SimdCallNode::returnsType(const TypePtr &t) const
 {
     SymbolInfoPtr info = function->info;
+
+    if (!info)
+	return false;
+
     FunctionTypePtr functionType = function->info->functionType();
     DataTypePtr returnType = functionType->returnType();
-    if( returnType->isSameTypeAs(t))
-	return true;
-    return false;
+
+    return returnType->isSameTypeAs (t);
 }
 
 
@@ -1091,6 +1111,10 @@ SimdCallNode::generateCode (LContext &lcontext)
     SimdLContext &slcontext = static_cast <SimdLContext &> (lcontext);
 
     SymbolInfoPtr info = function->info;
+
+    if (!info)
+	return;
+
     FunctionTypePtr functionType = info->functionType();
 
     //
@@ -1106,6 +1130,7 @@ SimdCallNode::generateCode (LContext &lcontext)
     const ParamVector &parameters = functionType->parameters();
 
     int numParameters = parameters.size();
+
     for (int i = parameters.size() - 1; i >= 0; --i)
     {
 	ExprNodePtr nextArg;
@@ -1116,6 +1141,7 @@ SimdCallNode::generateCode (LContext &lcontext)
 	    // Argument is not explicity specified; use the default
 	    // value for the corresponding function parameter.
 	    //
+
 	    nextArg = parameters[i].defaultValue;
 	}
 	else
@@ -1123,15 +1149,19 @@ SimdCallNode::generateCode (LContext &lcontext)
 	    //
 	    // Argument is explicitly specified.
 	    //
+
 	    nextArg = arguments[i];
 	}
 
 	nextArg->generateCode (lcontext);
 	parameters[i].type->generateCastFrom(nextArg, lcontext);
 
+	//
 	// If the size is unknown, push the unknown sizes onto the array
 	//
+
 	SimdArrayTypePtr arrayParam = parameters[i].type.cast<SimdArrayType>();
+
 	if(arrayParam)
 	{
 	    SimdArrayTypePtr arrayArg = nextArg->type.cast<SimdArrayType>();
@@ -1139,16 +1169,17 @@ SimdCallNode::generateCode (LContext &lcontext)
 
             SizeVector unknown;
 	    arrayParam->sizes(unknown);
-	    for(int i = 0; i < unknown.size(); i++)
+
+	    for (int i = 0; i < unknown.size(); i++)
 	    {
-                assert(arrayArg);
-		if(unknown[i] == 0)
+                assert (arrayArg);
+		if (unknown[i] == 0)
 		{
-                    if(arrayArg->size() == 0)
+                    if (arrayArg->size() == 0)
                     {
-                        slcontext.addInst(new SimdPushRefInst 
-                                          (arrayArg->unknownSize(),
-                                             lineNumber));
+                        slcontext.addInst (new SimdPushRefInst 
+                                           (arrayArg->unknownSize(),
+                                            lineNumber));
                     }
                     else
                     {
@@ -1156,11 +1187,13 @@ SimdCallNode::generateCode (LContext &lcontext)
                             (new SimdPushLiteralInst<int>(int(arrayArg->size()), 
                                                           lineNumber));
                     }
+
 		    numParameters++;
 		}
                 arrayArg = arrayArg->elementType().cast<SimdArrayType>();
 	    }
-            assert(!arrayArg);
+
+            assert (!arrayArg);
 	}
     }
 

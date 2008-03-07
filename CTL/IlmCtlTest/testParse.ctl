@@ -31,6 +31,11 @@ variableNames()
 
 }
 
+void
+undefinedType()
+{
+    @error29 @error32 a b;
+}
 
 void
 junk()

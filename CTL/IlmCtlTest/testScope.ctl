@@ -1,11 +1,11 @@
 import "testName";
 
-// void
-// testScope1()
-// {
-// @error20 @error29    i = 2;
-//     int i;
-// }
+void
+testScope1()
+{
+@error20 @error29    i = 2;
+    int i;
+}
 
 void
 testScope2()
@@ -56,14 +56,14 @@ testCall1(output int i)
 }
 
 
-// void
-// testScope3()
-// {
-//     int i = 0;
-//     testCall1(i);
-//     assert(i == 1);
-// @error29    testCall2(i);
-// }
+void
+testScope4()
+{
+    int i = 0;
+    testCall1(i);
+    assert(i == 1);
+@error29    testCall2(i);
+}
 
 
 void
