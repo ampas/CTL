@@ -83,9 +83,6 @@ class RcObject
 };
 
 
-class RcRefAllocator;	// Default allocator/deallocator for reference counts
-
-
 template <class T>
 class RcPtr
 {
