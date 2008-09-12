@@ -625,7 +625,7 @@ SimdAssignInst::execute
     const SimdReg &in = xcontext.stack().regSpRelative(-1);
     SimdReg &out = xcontext.stack().regSpRelative(-2);
 
-    if (in.isVarying() || mask.isVarying())
+    if (in.isVarying() || out.isVarying() || mask.isVarying())
     {
 	if (!mask.isVarying() &&
 	    !in.isReference() &&
