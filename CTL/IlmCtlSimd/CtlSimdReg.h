@@ -49,9 +49,10 @@
 #ifndef INCLUDED_CTL_SIMD_REG_H
 #define INCLUDED_CTL_SIMD_REG_H
 
-#include <typeinfo>
 #include <CtlExc.h>
 #include <Iex.h>
+#include <typeinfo>
+#include <cstring>
 
 //-----------------------------------------------------------------------------
 //
