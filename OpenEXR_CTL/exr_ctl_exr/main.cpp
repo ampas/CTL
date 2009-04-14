@@ -58,6 +58,7 @@
 #include <exrCtlExr.h>
 #include <iostream>
 #include <string>
+#include <cstdlib>
 #include <exception>
 #include <ImfFloatAttribute.h>
 #include <ImfVecAttribute.h>

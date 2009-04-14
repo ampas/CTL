@@ -108,6 +108,7 @@ AM_COMPILELINKRUN(
    [$CTL_LIBS],[[
 #include <CtlSimdInterpreter.h>
 #include <Iex.h>
+#include <cstdlib>
 ]],
    [[Ctl::SimdInterpreter interp; interp.setMaxInstCount(10);]],
    AC_MSG_RESULT([The ctl test program succeeded.]), 

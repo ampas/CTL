@@ -59,6 +59,8 @@
 #include <ImfThreading.h>
 #include <iostream>
 #include <string>
+#include <cstring>
+#include <cstdlib>
 #include <exception>
 
 using namespace std;
