@@ -261,7 +261,6 @@ ctl/IlmCtlMath/Makefile
 ctl/IlmCtlMathTest/Makefile
 ctl/IlmCtlSimd/Makefile
 ctl/IlmCtlTest/Makefile
-openexr/CtlModules/Makefile
 openexr/IlmImfCtl/Makefile
 openexr/IlmImfCtlTest/Makefile
 util/Makefile
