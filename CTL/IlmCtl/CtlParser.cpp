@@ -838,6 +838,33 @@ Parser::parseVariableDefinition (AllocationMode mode,
     {
 	next();
 
+#if 0
+	if (token() == TK_IMPORT)
+	{
+	    //
+	    // "int x[] = import(...);"
+	    //
+	    
+	    DataTypePtr type = baseType;
+
+	    if (declArraySizes.size() > 0)
+		type = _lcontext.newArrayType (baseType, declArraySizes);
+	    
+	    ExprNodePtr initialValue = 0;
+
+	    if (parseInitializer (initialValue, type, declArraySizes))
+	    {
+		node = variableDefinitionImport (mode,
+						 lineNumber,
+						 name,
+						 isConst,
+		                                 baseType,
+		                                 declArraySizes,
+						 initialValue);
+	    }
+	}
+	else
+#endif
 	if (token() == TK_OPENBRACE)
 	{
 	    //
@@ -1054,18 +1081,11 @@ Parser::parseExprVariableDefinitionOrAssign()
 	    MESSAGE_PLE (_lex, _lcontext, ERR_UNKNOWN_TYPE, lhs->lineNumber,
 			"Definition with unknown type: " << name->name 
 			<< "\n");
-
-	    #if 0 //XXX
 	    MemberVector members;
-	    dataType = _lcontext.newStructType ("", members);
-	    #else
-	    dataType = _lcontext.newIntType();
-	    #endif
+	    dataType = _lcontext.newStructType("",members);
 	}
 	else
-	{
 	    dataType = name->info->type();
-	}
 
 	return parseVariableDefinition(AM_AUTO, dataType);
     }
@@ -1908,18 +1928,13 @@ Parser::parsePrimaryExpression ()
 
     if (token() == TK_STRINGLITERAL)
     {
-	//
         // Adjacent string literals are treated as a single string literal
-	//
-
 	string value = "";
-
         while(token() == TK_STRINGLITERAL)
         {
             value += tokenStringValue();
             next();
         }
-
         debugSyntax1 ("string literal " << value);
 	return _lcontext.newStringLiteralNode (currentLineNumber(), value);
     }
@@ -1968,7 +1983,6 @@ Parser::parseMemberArrayExpression (ExprNodePtr lhs)
 	{
 	    debugSyntax1 ("struct member access");
 	    next();
-
 	    if( token() == TK_NAME)
 	    {
 		string member = tokenStringValue();
@@ -2549,6 +2563,74 @@ Parser::variableDefinitionCurlyBraces
 	(lineNumber, name, info, initialValue, true);
 }
 
+VariableNodePtr
+Parser::variableDefinitionImport
+    (AllocationMode mode,
+     int lineNumber,
+     const string &name,
+     bool isConst,
+     const DataTypePtr &baseType,
+     const SizeVector &declArraySizes,
+     ExprNodePtr &initialValue)
+{
+    debugSyntax ("variableDefinitionImport");
+
+    //
+    // Variable definition, initial value is imported from
+    // a file
+    //
+
+    DataTypePtr type = baseType;
+
+    if (declArraySizes.size() > 0)
+	type = _lcontext.newArrayType (baseType, declArraySizes);
+	
+    if (initialValue)
+	initialValue->computeType (_lcontext);
+
+    ValueNodePtr value = initialValue;
+
+    if (value && !value->checkElementTypes (baseType, _lcontext))
+    {
+	value = 0;
+    }
+
+    if( value )
+    {
+	value->type = type;
+	value->evaluate(_lcontext);
+    }
+    
+    ExprNodePtr constValue = 0;
+    
+    if (isConst && value && value->elementsAreLiterals())
+	constValue = value;
+
+    //
+    // Store the variable's name, type and address in the symbol table.
+    // Create a syntax tree node for the variable.
+    //
+
+    AddrPtr addr;
+
+    if (mode == AM_STATIC)
+	addr = type->newStaticVariable (_lcontext.module());
+    else
+	addr = _lcontext.autoVariableAddr (type);
+
+    SymbolInfoPtr info = new SymbolInfo (module(), 
+					 isConst? RWA_READ: RWA_READWRITE, 
+					 false, type, addr);
+    if (constValue)
+	info->setValue (constValue);
+
+    if (!symtab().defineSymbol (name, info))
+	duplicateName (name, lineNumber, fileName());
+
+    return _lcontext.newVariableNode
+	(lineNumber, name, info, initialValue, true);
+}
+
 
 VariableNodePtr
 Parser::variableDefinitionAssignExpr
@@ -2865,3 +2947,5 @@ loadModuleRecursive (Parser &parser, const string &moduleName)
 }
 
 } // namespace Ctl
+
+// vim: ts=8:sts=4
