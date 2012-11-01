@@ -329,7 +329,7 @@ Parser::parseFunction ()
 	SizeVector arraySizes;
 	parseArraySize(arraySizes);
 
-	for(int i = 0; i < arraySizes.size(); i++ )
+	for(int i = 0; i < (int)arraySizes.size(); i++ )
 	{
 	    if(arraySizes[i] == 0)
 	    {
@@ -983,7 +983,7 @@ Parser::parseStructDefinition (AllocationMode mode)
 	SizeVector declArraySizes;
 	parseArraySize(declArraySizes);
 
-	for( int i = 0; i < declArraySizes.size(); i++)
+	for( int i = 0; i < (int)declArraySizes.size(); i++)
 	{
 	    if(declArraySizes[i] == 0)
 		MESSAGE_PLE (_lex, _lcontext, ERR_STRUCT_ARR_LEN, 
@@ -1041,8 +1041,7 @@ Parser::parseExprVariableDefinitionOrAssign()
     }
 
     ExprNodePtr lhs = parseExpression();
-
-    if (token() == TK_NAME)
+    if( token() == TK_NAME )
     {
 	NameNodePtr name = lhs.cast<NameNode>();
 	DataTypePtr dataType;
@@ -1068,13 +1067,13 @@ Parser::parseExprVariableDefinitionOrAssign()
 	    dataType = name->info->type();
 	}
 
-	return parseVariableDefinition (AM_AUTO, dataType);
+	return parseVariableDefinition(AM_AUTO, dataType);
     }
 
-    if (token() == TK_ASSIGN)
-	return parseAssignment (lhs);
+    if( token() == TK_ASSIGN )
+	return parseAssignment(lhs);
 
-    return parseExprStatement (lhs);
+    return parseExprStatement(lhs);
 }
 
 
@@ -1393,7 +1392,7 @@ Parser::parsePrintStatement()
     StatementNodePtr firstStmt = 0;
     StatementNodePtr lastStmt = 0;
 
-    for (int i = 0; i < exprs.size(); ++i)
+    for (int i = 0; i < (int)exprs.size(); ++i)
     {
 	ExprNodePtr expr = exprs[i];
 	expr->computeType (_lcontext);
@@ -1938,7 +1937,7 @@ Parser::parsePrimaryExpression ()
     NameNodePtr name = parseScopedName();
     ExprNodePtr lhs = name;
 
-    if (name && name->info && name->info->isTypeName())
+    if( name && name->info && name->info->isTypeName())
 	return lhs;
 
     if (token() == TK_OPENPAREN)
@@ -1961,7 +1960,7 @@ Parser::parsePrimaryExpression ()
 ExprNodePtr
 Parser::parseMemberArrayExpression (ExprNodePtr lhs)
 {
-    debugSyntax ("memberArrayExpression");
+    debugSyntax ("MemberArrayExpression");
 
     while( token() == TK_DOT || token() == TK_OPENBRACKET)
     {
@@ -2003,7 +2002,7 @@ Parser::parseMemberArrayExpression (ExprNodePtr lhs)
 	    next();
 
 	    lhs = _lcontext.newArrayIndexNode 
-		        (currentLineNumber(), lhs, index);
+			(currentLineNumber(), lhs, index);
 	}
     }
     
@@ -2166,11 +2165,11 @@ Parser::parseInitializerRecursive (DataTypePtr dataType,
 	match (TK_OPENBRACE);
 	next();
 
-	if( sizes.size() == depth )
+	if( (int)sizes.size() == depth )
 	{
- 	    MESSAGE_PLE (_lex, _lcontext, ERR_INIT_TYPE,  currentLineNumber(),
+	    MESSAGE_PLE (_lex, _lcontext, ERR_INIT_TYPE,  currentLineNumber(),
 			"The dimension of the initial array value is higher "
- 			"than the declared dimension.");
+			"than the declared dimension.");
 	    sizes.push_back(0);
 	    success = false;
 	}
@@ -2202,7 +2201,7 @@ Parser::parseInitializerRecursive (DataTypePtr dataType,
 
 	if( sizes[depth] == 0 )
 	    sizes[depth] = count;
-	else if( sizes[depth] != count )
+	else if( (int)sizes[depth] != count )
 	{
 	    MESSAGE_PLE (_lex, _lcontext, ERR_ARR_INIT_READ, 
 			 currentLineNumber(),
@@ -2217,11 +2216,11 @@ Parser::parseInitializerRecursive (DataTypePtr dataType,
     }
     else
     {
-	if( sizes.size() > depth )
+	if( (int)sizes.size() > depth )
 	{
- 	    MESSAGE_PLE (_lex, _lcontext, ERR_INIT_TYPE,  currentLineNumber(),
+	    MESSAGE_PLE (_lex, _lcontext, ERR_INIT_TYPE,  currentLineNumber(),
 			"The dimension of the initial array value is lower "
- 			"than the declared dimension.");
+			"than the declared dimension.");
 	    success = false;
 	}
 	elements.push_back (parseExpression());
@@ -2444,7 +2443,7 @@ Parser::variableDefinitionNoInit
 
 	bool sizeError = false;
 
-	for (int i = 0; i < declArraySizes.size(); i++)
+	for (int i = 0; i < (int)declArraySizes.size(); i++)
 	{
 	    if (declArraySizes[i] == 0)
 	    {
@@ -2603,7 +2602,7 @@ Parser::variableDefinitionAssignExpr
 		rhsType->sizes (initSizes);
 	    }
 
-	    for (int i = 0; i < arraySizes.size() && !initError ; i++)
+	    for (int i = 0; i < (int)arraySizes.size() && !initError ; i++)
 	    {
 		if (initSizes[i] == 0)
 		{
@@ -2634,7 +2633,7 @@ Parser::variableDefinitionAssignExpr
 	}
 	else
 	{
-	    for (int i = 0; i < arraySizes.size() && !initError; i++)
+	    for (int i = 0; i < (int)arraySizes.size() && !initError; i++)
 	    {
 		if (arraySizes[i] == 0)
 		{
@@ -2725,7 +2724,7 @@ Parser::variableDefinitionExprSideEffect
     {
 	bool initError = false;
 
-	for (int i = 0; i < declArraySizes.size(); i++ )
+	for (int i = 0; i < (int)declArraySizes.size(); i++ )
 	{
 	    if (declArraySizes[i] == 0)
 	    {
