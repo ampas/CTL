@@ -55,7 +55,6 @@
 #include <CtlFunctionCall.h>
 #include <CtlType.h>
 #include <string>
-#include <half.h>
 
 using namespace std;
 

@@ -115,13 +115,25 @@ modulePathsInternal()
             path = env;
         
         if (path == "")
+			#if defined (WIN32) || defined (WIN64)
+			path = "."; // default windows install location?
+			#else
             path = ".:/usr/local/lib/CTL:/usr/local/" PACKAGE
 			       "-" VERSION "/lib/CTL";
+			#endif
 
         size_t pos = 0;
         while (pos < path.size())
         {
-            size_t end = path.find (':', pos);
+	    #if defined (WIN32) || defined (WIN64)
+
+		size_t end = path.find (';', pos);
+
+	    #else
+
+		size_t end = path.find (':', pos);
+
+	    #endif
             
             if (end == string::npos)
                 end = path.size();
@@ -154,10 +166,11 @@ findModule (const string& moduleName)
     // be used to build absolute or relative file paths.
     //
 
-    if (moduleName.find_first_of ("/:\\") != string::npos)
+    if (moduleName.find_first_of ("/:;\\") != string::npos)
     {
 	THROW (ArgExc, "CTL module name \"" << moduleName << "\" is invalid. "
-		       "Module names cannot contain /, : or \\ characters.");
+		       "Module names cannot contain '/', ':', ';' or '\\' "
+		       "characters.");
     }
 
 

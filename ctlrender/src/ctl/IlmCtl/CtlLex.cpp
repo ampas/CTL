@@ -57,7 +57,8 @@
 #include <CtlLContext.h>
 #include <iomanip>
 #include <cassert>
-#include <stdlib.h>
+#include <cstdlib>
+
 
 #if 0
     #include <iostream>

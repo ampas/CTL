@@ -1072,7 +1072,11 @@ Parser::parseExprVariableDefinitionOrAssign()
     {
 	NameNodePtr name = lhs.cast<NameNode>();
 	DataTypePtr dataType;
-	if(!name || !name->info->isTypeName() || !name->info->type())
+
+	if (!name ||
+	    !name->info ||
+	    !name->info->isTypeName() ||
+	    !name->info->type())
 	{
 	    MESSAGE_PLE (_lex, _lcontext, ERR_UNKNOWN_TYPE, lhs->lineNumber,
 			"Definition with unknown type: " << name->name 
@@ -1884,8 +1888,6 @@ Parser::parsePrimaryExpression ()
 {
     debugSyntax ("primaryExpression");
 
-    NameNodePtr name;
-
     if (token() == TK_TRUE)
     {
 	debugSyntax1 ("true");
@@ -1947,7 +1949,7 @@ Parser::parsePrimaryExpression ()
 	return expr;
     }
 
-    name = parseScopedName();
+    NameNodePtr name = parseScopedName();
     ExprNodePtr lhs = name;
 
     if( name && name->info && name->info->isTypeName())
