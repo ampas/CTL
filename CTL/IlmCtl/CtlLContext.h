@@ -56,7 +56,7 @@
 //	An LContext ("load-time context") keeps track of information
 //	that is important while a CTL module is being loaded, such
 //	as a pointer to the module that is being constructed or whether
-//	any errors have been encountered.  (In order to give food
+//	any errors have been encountered.  (In order to give good
 //	feedback to the user, module loading continues even if errors
 //	are found, but a module with errors is unloaded and discarded
 //	immediately after loading.)

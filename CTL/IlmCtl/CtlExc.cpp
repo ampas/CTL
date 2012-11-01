@@ -45,76 +45,47 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-//-----------------------------------------------------------------------------
-//
-//	class SimdModule
-//
-//-----------------------------------------------------------------------------
-
-#include <CtlSimdModule.h>
-#include <CtlSimdReg.h>
-#include <CtlSimdInst.h>
-#include <CtlSimdAddr.h>
-
-using namespace std;
+#include <CtlExc.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <alloca.h>
+#include <string.h>
 
 namespace Ctl {
 
+void CtlExc::_explain(const char *text, va_list _ap) {
+	char *ptr;
+	int length=1024;
+	int need_len;
+	va_list ap;
 
-SimdModule::SimdModule
-    (SimdInterpreter &interpreter,
-     const string &name,
-     const string &fileName)
-:
-    Module (name, fileName),
-    _interpreter (interpreter),
-    _firstInitInst(0)
-{
-    // empty
+	if(text==NULL) {
+		operator=("no explanation given.");
+	}
+	while(1) {
+		va_copy(ap, _ap);
+		ptr=(char *)alloca(length);
+		memset(ptr, 0, length);
+		need_len=vsnprintf(ptr, length, text, ap);
+		if(need_len<length && need_len!=-1) {
+			break;
+		}
+		if(need_len==-1) {
+			length=length*2;
+		} else {
+			length=need_len+2;
+		}
+	}
+
+	operator=(ptr);
 }
 
+CtlExc::CtlExc(const char *format, ...) throw() {
+	va_list ap;
 
-SimdModule::~SimdModule ()
-{
-    for (int i = 0; i < (int)_code.size(); ++i)
-	delete _code[i];
-
-    for (int i = 0; i < (int)_staticData.size(); ++i)
-	delete _staticData[i];
+	va_start(ap, format);
+	_explain(format, ap);
+	va_end(ap);
 }
 
-
-void	
-SimdModule::addInst (SimdInst *inst)
-{
-    _code.push_back (inst);
 }
-
-
-void
-SimdModule::addStaticData (SimdReg *reg)
-{
-    _staticData.push_back (reg);
-}
-
-
-void
-SimdModule::setFirstInitInst (const SimdInst *inst)
-{
-    _firstInitInst = inst;
-}
-
-
-void
-SimdModule::runInitCode ()
-{
-    if (_firstInitInst)
-    {
-	SimdXContext xcontext (_interpreter);
-	xcontext.setModule(this);
-	xcontext.run (1, _firstInitInst);
-    }
-}
-
-
-} // namespace Ctl

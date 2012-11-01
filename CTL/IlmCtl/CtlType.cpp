@@ -63,6 +63,8 @@
 #include <iostream>
 #include <iomanip>
 #include <cassert>
+#include <stdint.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -74,6 +76,102 @@ Type::~Type ()
     // empty
 }
 
+void Type::childElement(size_t *offset, TypePtr *type, const std::string &path,
+                        ...) {
+	va_list ap;
+
+	va_start(ap, path);
+	childElementV(offset, type, path, ap);
+	va_end(ap);
+}
+
+void Type::childElementV(size_t *offset, TypePtr *type, const std::string &path,
+                         va_list ap) {
+	std::string segment;
+	std::string remainder;
+	std::string::size_type start;
+	ArrayTypePtr array_type;
+	StructTypePtr struct_type;
+	SizeVector sizes;	
+	SizeVector *offsets;
+	uint32_t u, count;
+
+	remainder=path;
+	start=remainder.find_first_not_of("/");
+	if(start!=(std::string::size_type)-1 && start!=0) {
+		remainder=std::string(remainder.begin()+start, remainder.end());
+	}
+
+	segment=remainder;
+	start=remainder.find_first_of("/");
+	if(start!=(std::string::size_type)-1) {
+		segment=std::string(remainder.begin(), remainder.begin()+start-1);
+		remainder=std::string(remainder.begin()+start, remainder.end());
+	} else {
+		remainder="";
+	}
+
+	if(segment.size()==0 || segment==".") {
+		return;
+	}
+
+	if((*type)->cDataType()==ArrayTypeEnum) {
+		array_type=*type;
+		array_type->sizes(sizes);
+		if(segment=="%s") {
+			segment=std::string(va_arg(ap, char *));
+			u=strtoul(segment.c_str(), NULL, 0);
+		} else if(segment=="%v") {
+			offsets=((SizeVector *)va_arg(ap, SizeVector *));
+			while(offsets->size()!=0) {
+				if(sizes.size()==0) {
+					throw(DatatypeExc("too many dimensions specified for matrix (or array) vector element (at least %d too many)", offsets->size()));
+				}
+				if(offset[0]>=sizes[0]) {
+					throw(DatatypeExc("out of range matrix (or array) vector element (%u>=%u)", offset[0], sizes[0]));
+				}
+				*offset=*offset+array_type->elementType()->objectSize()*((*offsets)[0]);
+				*type=array_type->elementType();
+				offsets->erase(offsets->begin());
+				sizes.erase(sizes.begin());
+			}
+			childElementV(offset, type, remainder, ap);
+		} else if(segment!="%d" && segment!="%u") {
+			u=strtoul(segment.c_str(), NULL, 0);
+		} else { // segment=="%d" || segment=="%u"
+			u=va_arg(ap, uint32_t);
+		}
+
+		if(u>=sizes[0]) {
+			throw(DatatypeExc("out of range matrix (or array) element specification (%u>=%u)", u, sizes[0]));
+		}
+
+		*offset=*offset+u*array_type->elementType()->objectSize();
+		*type=array_type->elementType();
+		childElementV(offset, type, remainder, ap);
+	} else if((*type)->cDataType()==StructTypeEnum) {
+		struct_type=*type;
+
+		if(segment=="%s") {
+			segment=va_arg(ap, char *);
+		} else if(segment=="%v" || segment=="%d" || segment=="%u") {
+			throw(DatatypeExc("The '%s' replacement may not be used when finding the child of a structure", segment.c_str()));
+		}
+
+		count=struct_type->members().size();
+		for(u=0; u<count; u++) {
+			if(struct_type->members()[u].name==segment) {
+				*offset=*offset+u*struct_type->objectSize();
+				*type=struct_type->members()[u].type;
+				childElementV(offset, type, remainder, ap);
+				return;
+			}
+		}
+		throw(DatatypeExc("The structure type '%s' does not have an element named '%s'", (*type)->asString().c_str(), segment.c_str()));
+	} else {
+		throw(DatatypeExc("The type '%s' does not have any children", (*type)->asString().c_str()));
+	}
+}
 
 char *		
 DataType::alignObjectAddr (char *addr) const
@@ -1493,7 +1591,7 @@ FunctionType::FunctionType
 {
     assert (returnType);
 
-    for (int i = 0; i < parameters.size(); ++i)
+    for (int i = 0; i < (int)parameters.size(); ++i)
 	assert (parameters[i].type);
 }
 
@@ -1512,7 +1610,7 @@ FunctionType::isSameTypeAs (const TypePtr &t) const
     if (parameters().size() != functionT->parameters().size())
 	return false;
 
-    for (int i = 0; i < parameters().size(); ++i)
+    for (int i = 0; i < (int)parameters().size(); ++i)
     {
 	if (!parameters()[i].type->isSameTypeAs
 		    (functionT->parameters()[i].type))
@@ -1569,7 +1667,7 @@ FunctionType::print (int indent) const
 
     cout << setw (indent + 1) << "" << "parameters" << endl;
 
-    for (int i = 0; i < parameters().size(); ++i)
+    for (int i = 0; i < (int)parameters().size(); ++i)
     {
 	cout << setw (indent + 2) << "" << "type" << endl;
 	parameters()[i].type->print (indent + 3);
@@ -1590,9 +1688,9 @@ FunctionType::asString () const
 
     ss << (returnType()? returnType()->asString(): "unknown") << "(";
 
-    for (int i = 0; i < parameters().size(); ++i)
+    for (int i = 0; i < (int)parameters().size(); ++i)
 	ss << parameters()[i].type->asString() <<
-	      (i < parameters().size() - 1? ",": "");
+	      (i < (int)parameters().size() - 1? ",": "");
 
     ss << ")";
 

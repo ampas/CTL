@@ -1080,8 +1080,7 @@ NameNode::evaluate (LContext &lcontext)
     if (info && info->isData() && info->value())
     {
 	ValueNodePtr valueNode = info->value().cast<ValueNode>();
-
-	if (valueNode)
+	if(valueNode)
 	    info->value()->evaluate (lcontext);
 	else
 	    return info->value()->evaluate (lcontext);
@@ -1307,7 +1306,7 @@ CallNode::print (int indent) const
     if (function)
 	function->print (indent + 1);
 
-    for (int i = 0; i < arguments.size(); ++i)
+    for (int i = 0; i < (int)arguments.size(); ++i)
 	arguments[i]->print (indent + 1);
 }
 
@@ -1363,9 +1362,9 @@ CallNode::computeType (LContext &lcontext, const SymbolInfoPtr &initInfo)
     // the types of the function's parameters.
     //
 
-    for (int i = 0; i < parameters.size(); ++i)
+    for (int i = 0; i < (int)parameters.size(); ++i)
     {
-	if (i < arguments.size())
+	if (i < (int)arguments.size())
 	{
 	    //
 	    // We have a function call argument for parameter i.
@@ -1458,7 +1457,7 @@ CallNode::computeType (LContext &lcontext, const SymbolInfoPtr &initInfo)
 ExprNodePtr
 CallNode::evaluate (LContext &lcontext)
 {
-    for (int i = 0; i < arguments.size(); ++i)
+    for (int i = 0; i < (int)arguments.size(); ++i)
 	arguments[i] = arguments[i]->evaluate (lcontext);
 
     return this;
@@ -1490,20 +1489,20 @@ ValueNode::print (int indent) const
 
     if(elements.size() <= 20)
     {
-	for (int i = 0; i < elements.size(); ++i)
+	for (int i = 0; i < (int)elements.size(); ++i)
 	    elements[i]->print (indent + 1);
     }
     else
     {
 	cout << setw (indent) << "[";
-	for (int i = 0; i < elements.size(); ++i)
+	for (int i = 0; i < (int)elements.size(); ++i)
 	{
 	    LiteralNodePtr literal = elements[i].cast<LiteralNode>();
 	    if(literal)
 	    {
 		literal->printLiteral();
 
-		if( i == elements.size() -1)
+		if( i == (int)elements.size() -1)
 		    cout << "]\n";
 		else
 		{
@@ -1537,7 +1536,7 @@ ValueNode::print (int indent) const
 void
 ValueNode::computeType (LContext &lcontext, const SymbolInfoPtr &initInfo)
 {
-    for (int i = 0; i < elements.size(); ++i)
+    for (int i = 0; i < (int)elements.size(); ++i)
     {
 	elements[i]->computeType (lcontext, initInfo);
 
@@ -1550,7 +1549,7 @@ ValueNode::computeType (LContext &lcontext, const SymbolInfoPtr &initInfo)
 ExprNodePtr
 ValueNode::evaluate (LContext &lcontext)
 {
-    for (int i = 0; i < elements.size(); ++i)
+    for (int i = 0; i < (int)elements.size(); ++i)
 	elements[i] = elements[i]->evaluate (lcontext);
 
     return this;
@@ -1575,7 +1574,7 @@ ValueNode::checkElementTypesRec (const DataTypePtr &dataType,
     //  in this data type, checking element types along the way
     //
 
-    assert(eIndex < elements.size());
+    assert(eIndex < (int)elements.size());
     if( StructTypePtr structType = dataType.cast<StructType>() )
     {
 	for(MemberVectorConstIterator it = structType->members().begin();
@@ -1614,7 +1613,7 @@ ValueNode::checkElementTypesRec (const DataTypePtr &dataType,
 bool	
 ValueNode::elementsAreLiterals () const
 {
-    for (int i = 0; i < elements.size(); ++i)
+    for (int i = 0; i < (int)elements.size(); ++i)
 	if (!elements[i].cast<LiteralNode>())
 	    return false;
 
