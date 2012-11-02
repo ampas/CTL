@@ -253,7 +253,6 @@ AC_CONFIG_FILES([
 Makefile
 dpx/Makefile
 openexr/Makefile
-doc/Makefile
 ctl/Makefile
 ctl/CTL.pc
 ctl/IlmCtl/Makefile
