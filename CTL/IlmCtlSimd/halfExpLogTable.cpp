@@ -101,7 +101,7 @@ genHeaders (const char tablesFileName[], const char functionsFileName[])
     // float(log10(h)); otherwise store a NaN or an infinity.
     //
 
-    const int iMax = (1 << 16);
+    const unsigned int iMax = (1 << 16);
 
     tables.setf (ios_base::dec, ios_base::basefield);
 

@@ -74,6 +74,7 @@
 #include <CtlAddr.h>
 #include <string>
 #include <vector>
+#include <stdarg.h>
 
 namespace Ctl {
 
@@ -122,6 +123,18 @@ typedef RcPtr <StructType> StructTypePtr;
 class FunctionType;
 typedef RcPtr <FunctionType> FunctionTypePtr;
 
+enum CDataType_e {
+	VoidTypeEnum=0,
+	BoolTypeEnum=1,
+	IntTypeEnum=2,
+	UIntTypeEnum=3,
+	HalfTypeEnum=4,
+	FloatTypeEnum=5,
+	StringTypeEnum=6,
+	StructTypeEnum=7,
+	ArrayTypeEnum=8
+};
+
 typedef std::vector<size_t> SizeVector;
 typedef std::vector<size_t>::iterator SizeVectorIterator;
 typedef std::vector<size_t>::reverse_iterator SizeVectorRIterator;
@@ -129,7 +142,6 @@ typedef std::vector<size_t>::reverse_iterator SizeVectorRIterator;
 class LContext;
 class XContext;
 class Module;
-
 
 class Type: public RcObject
 {
@@ -200,7 +212,7 @@ class Type: public RcObject
     virtual ExprNodePtr		castValue (LContext &lcontext,
 					   const ExprNodePtr &expr) const = 0;
 
-
+	
     //--------------------------------
     // Print this type (for debugging)
     //--------------------------------
@@ -229,13 +241,42 @@ class Type: public RcObject
 
     virtual void		generateCode (const SyntaxNodePtr &node,
 					      LContext &lcontext) const = 0;
+
+	// This is something of a cheat and mostly for internal use
+	// to avoid doing RTTI for determining type conversions.
+	virtual CDataType_e cDataType() const { return VoidTypeEnum; };
+
+	// These methods are for dealing with complex and aggregate
+	// type introspection. They have the concept of a 'path' where
+	// that consists of a '/' separated list of element identifiers.
+	// In the case of an array an element identifier is interpreted
+	// as a number. In the case of a struct an element identifier is
+	// interpreted as a structure item name. The following element
+	// identifiers have special meaning (but do not conflict with CTL
+	// syntax:
+	//
+	//   *  A null identifier or "." is a no-op to the parser. 
+	//   *  If an identifier is "%s" then the next item on the var-args
+	//      list is interpreted as a char * string and used as the element
+	//      identifier.
+	//   *  If an identifier is "%u", "%d" then the next item on the vargs
+	//      list is interpreted as an integer and used as the element
+	//      identifier.
+	//   *  If an identifier is "%v" then the next item on the vargs list
+	//      is interpreted as a SizeVector * and all elements are used to
+	//      identify an element in a matrix.
+	//
+	static void         childElement(size_t *offset, TypePtr *type,
+	                                 const std::string &path, ...);
+
+	static void         childElementV(size_t *offset, TypePtr *type,
+	                                  const std::string &path, va_list ap);
 };
 
 
 class DataType: public Type
 {
   public:
-
     //------------------------------------------------------------
     // Size and required alignment of objects of this data type:
     //
@@ -249,19 +290,19 @@ class DataType: public Type
     // such that y >= x and y is divisible by objectAlignment().
     //------------------------------------------------------------
 
-    virtual size_t		objectSize () const = 0;
-    virtual size_t		alignedObjectSize () const = 0;
-    virtual size_t		objectAlignment () const = 0;
-    char *			alignObjectAddr (char *addr) const;
+    virtual size_t  objectSize() const=0;
+    virtual size_t  alignedObjectSize() const=0;
+    virtual size_t  objectAlignment() const=0;
+    char *          alignObjectAddr(char *addr) const;
 
     //-------------------------------------------------------
     // For basic data types, appends alignedOjectSize.  For arrays 
     // and structs recurses through sub-elements to return number of 
     // non-struct, non-array elements.
     //-------------------------------------------------------
-    virtual void                coreSizes(size_t parentOffset,
-					  SizeVector &sizes, 
-					  SizeVector &offsets) const;
+    virtual void    coreSizes(size_t parentOffset,
+					          SizeVector &sizes, 
+	                          SizeVector &offsets) const;
 
 
     //-------------------------------------------------------
@@ -287,6 +328,8 @@ class VoidType: public DataType
     virtual bool		canPromoteFrom (const TypePtr &t) const;
     virtual bool		canCastFrom (const TypePtr &t) const;
 
+	virtual CDataType_e cDataType() const { return VoidTypeEnum; };
+
     virtual ExprNodePtr		evaluate (LContext &lcontext,
 					  const ExprNodePtr &expr) const;
 
@@ -303,7 +346,6 @@ class VoidType: public DataType
 				      LContext &lcontext) const;
 };
 
-
 class BoolType: public DataType
 {
   public:
@@ -314,6 +356,8 @@ class BoolType: public DataType
     virtual bool		canAssign (const TypePtr &t) const;
     virtual bool		canPromoteFrom (const TypePtr &t) const;
     virtual bool		canCastFrom (const TypePtr &t) const;
+
+	virtual CDataType_e cDataType() const { return IntTypeEnum; };
 
     virtual ExprNodePtr		evaluate (LContext &lcontext,
 					  const ExprNodePtr &expr) const;
@@ -337,6 +381,8 @@ class IntType: public DataType
     virtual bool		canPromoteFrom (const TypePtr &t) const;
     virtual bool		canCastFrom (const TypePtr &t) const;
 
+	virtual CDataType_e cDataType() const { return IntTypeEnum; };
+
     virtual ExprNodePtr		evaluate (LContext &lcontext,
 					  const ExprNodePtr &expr) const;
 
@@ -358,6 +404,8 @@ class UIntType: public DataType
     virtual bool		canAssign (const TypePtr &t) const;
     virtual bool		canPromoteFrom (const TypePtr &t) const;
     virtual bool		canCastFrom (const TypePtr &t) const;
+
+	virtual CDataType_e cDataType() const { return UIntTypeEnum; };
 
     virtual ExprNodePtr		evaluate (LContext &lcontext,
 					  const ExprNodePtr &expr) const;
@@ -381,6 +429,8 @@ class HalfType: public DataType
     virtual bool		canPromoteFrom (const TypePtr &t) const;
     virtual bool		canCastFrom (const TypePtr &t) const;
 
+	virtual CDataType_e cDataType() const { return HalfTypeEnum; };
+
     virtual ExprNodePtr		evaluate (LContext &lcontext,
 					  const ExprNodePtr &expr) const;
 
@@ -402,6 +452,8 @@ class FloatType: public DataType
     virtual bool		canAssign (const TypePtr &t) const;
     virtual bool		canPromoteFrom (const TypePtr &t) const;
     virtual bool		canCastFrom (const TypePtr &t) const;
+
+	virtual CDataType_e cDataType() const { return FloatTypeEnum; };
 
     virtual ExprNodePtr		evaluate (LContext &lcontext,
  					  const ExprNodePtr &expr) const;
@@ -425,6 +477,8 @@ class StringType: public DataType
     virtual bool		canPromoteFrom (const TypePtr &t) const;
     virtual bool		canCastFrom (const TypePtr &t) const;
 
+	virtual CDataType_e cDataType() const { return StringTypeEnum; };
+
     virtual ExprNodePtr		evaluate (LContext &lcontext,
  					  const ExprNodePtr &expr) const;
 
@@ -439,7 +493,6 @@ class StringType: public DataType
 class ArrayType: public DataType
 {
   public:
-
     ArrayType (const DataTypePtr &elementType, int size);
 
     //---------------------------------------------------------------
@@ -458,6 +511,8 @@ class ArrayType: public DataType
     virtual bool		canAssign (const TypePtr &t) const;
     virtual bool		canPromoteFrom (const TypePtr &t) const;
     virtual bool		canCastFrom (const TypePtr &t) const;
+
+	virtual CDataType_e cDataType() const { return ArrayTypeEnum; };
 
     virtual ExprNodePtr		evaluate (LContext &lcontext,
 					  const ExprNodePtr &expr) const;
@@ -485,9 +540,8 @@ class ArrayType: public DataType
 
   private:
 
-    DataTypePtr			_elementType;
-    int 			_size;
-
+    DataTypePtr _elementType;
+    int         _size;
 };
 
 
@@ -524,6 +578,8 @@ class StructType: public DataType
     virtual bool		canAssign (const TypePtr &t) const;
     virtual bool		canPromoteFrom (const TypePtr &t) const;
     virtual bool		canCastFrom (const TypePtr &t) const;
+
+	virtual CDataType_e cDataType() const { return StructTypeEnum; };
 
     virtual ExprNodePtr		evaluate (LContext &lcontext,
 					  const ExprNodePtr &expr) const;

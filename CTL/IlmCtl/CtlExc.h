@@ -57,37 +57,64 @@
 //-----------------------------------------------------------------------------
 
 #include <IexBaseExc.h>
+#include <stdarg.h>
 
 namespace Ctl {
 
+class CtlExc : public Iex::BaseExc {
+	public:
+		void _explain(const char *text, va_list ap);
+		CtlExc(const char *format=0, ...) throw();
+		CtlExc(const std::string &text) throw(): Iex::BaseExc(text) {};
+		CtlExc(std::stringstream &text) throw(): Iex::BaseExc(text) {};
+};
 
-DEFINE_EXC (CtlExc, Iex::BaseExc)		// base class for exceptions
-						// defined in this library
-
-    DEFINE_EXC (MaxInstExc, CtlExc)		// program terminated because
-    						// it reached its maximum
-						// instruction count
-
-    DEFINE_EXC (AbortExc, CtlExc)		// program was aborted
-
-    DEFINE_EXC (LoadModuleExc, CtlExc)		// failed to load module
-
-    DEFINE_EXC (StackUnderflowExc, CtlExc)	// run-time stack underflow
-
-    DEFINE_EXC (StackOverflowExc, CtlExc)	// run-time stack overflow
-
-    DEFINE_EXC (StackLogicExc, CtlExc)	        // run-time stack error
-
-    DEFINE_EXC (IndexOutOfRangeExc, CtlExc)	// array index out of range
-
-    DEFINE_EXC (InvalidSizeExc, CtlExc)	        // invalid array size specified
-
-    DEFINE_EXC (ArrayMismatchExc, CtlExc)       // array assignment mismatch
-
-    DEFINE_EXC (StructAccessExc, CtlExc)	// inconsistent struct access
-    						// permissions
+#define CTL_DEFINE_EXC(name, base)                              \
+    class name : public base                                    \
+    {                                                           \
+      public:                                                   \
+        name (const char* text=0, ...) throw() {                \
+            va_list ap;                                         \
+            va_start(ap, text);                                 \
+            _explain(text, ap);                                 \
+            va_end(ap);                                         \
+        };                                                      \
+        name (const std::string &text) throw(): base (text) {}  \
+        name (std::stringstream &text) throw(): base (text) {}  \
+    };
 
 
-} // namespace Ctl
+CTL_DEFINE_EXC (MaxInstExc, CtlExc)         // program terminated because
+                                            // it reached its maximum
+                                            // instruction count
+
+CTL_DEFINE_EXC (AbortExc, CtlExc)           // program was aborted
+
+CTL_DEFINE_EXC (LoadModuleExc, CtlExc)      // failed to load module
+
+CTL_DEFINE_EXC (StackUnderflowExc, CtlExc)  // run-time stack underflow
+
+CTL_DEFINE_EXC (StackOverflowExc, CtlExc)   // run-time stack overflow
+
+CTL_DEFINE_EXC (StackLogicExc, CtlExc)      // run-time stack error
+
+CTL_DEFINE_EXC (IndexOutOfRangeExc, CtlExc) // array index out of range
+
+CTL_DEFINE_EXC (InvalidSizeExc, CtlExc)	    // invalid array size specified
+
+CTL_DEFINE_EXC (ArrayMismatchExc, CtlExc)   // array assignment mismatch
+
+CTL_DEFINE_EXC (StructAccessExc, CtlExc)    // inconsistent struct access
+                                            // permissions
+
+CTL_DEFINE_EXC (RuntimeExc, CtlExc)         // Some compile time issue was
+                                            // not caught until runtime
+
+CTL_DEFINE_EXC (DatatypeExc, CtlExc)        // A compile time type conversion
+                                            // error has been found in the
+                                            // C++ <-> CTL data structure
+                                            // interface code.
+
+}; // namespace Ctl
 
 #endif
