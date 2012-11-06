@@ -253,13 +253,8 @@ AC_CONFIG_FILES([
 Makefile
 dpx/Makefile
 doc/Makefile
-ctl/Makefile
-ctl/CTL.pc
-ctl/IlmCtl/Makefile
-ctl/IlmCtlMath/Makefile
-ctl/IlmCtlMathTest/Makefile
-ctl/IlmCtlSimd/Makefile
-ctl/IlmCtlTest/Makefile
+openexr/IlmImfCtl/Makefile
+openexr/IlmImfCtlTest/Makefile
 util/Makefile
 util/ctlrender/Makefile
 vc/Makefile
