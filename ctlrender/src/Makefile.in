@@ -248,7 +248,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = ctl openexr dpx util 
+SUBDIRS = ctl dpx util doc
 DIST_SUBDIRS = \
 	$(SUBDIRS) \
 	vc
