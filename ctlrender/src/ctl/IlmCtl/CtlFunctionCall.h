@@ -67,8 +67,6 @@
 #include <CtlRcPtr.h>
 #include <string>
 #include <vector>
-#include <half.h>
-#include <CtlType.h>
 #include <CtlTypeStorage.h>
 
 namespace Ctl {
@@ -82,7 +80,9 @@ typedef RcPtr<FunctionArg> FunctionArgPtr;
 class DataType;
 typedef RcPtr<DataType> DataTypePtr;
 
-class FunctionCall: public RcObject {
+
+class FunctionCall: public RcObject
+{
   public:
 
     //-----------------------------------------------------------------

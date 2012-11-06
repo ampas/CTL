@@ -319,6 +319,11 @@ SimdVariableNode::generateCode (LContext &lcontext)
 #if 0
 	        if( valuePtr && valuePtr->type && dataPtr  && dataPtr->reg())
 	        {
+				// The variable is static, and its value is a literal
+				// or a collection of literals (for structs and arrays).
+				// We can copy the initial value directly into the
+				// variable instead of generating code to assign the
+				// value.
 		
 		        // get sizes & offsets of elements
 		        SizeVector sizes;
@@ -1064,11 +1069,14 @@ bool
 SimdCallNode::returnsType(const TypePtr &t) const
 {
     SymbolInfoPtr info = function->info;
+
+    if (!info)
+	return false;
+
     FunctionTypePtr functionType = function->info->functionType();
     DataTypePtr returnType = functionType->returnType();
-    if( returnType->isSameTypeAs(t))
-	return true;
-    return false;
+
+    return returnType->isSameTypeAs (t);
 }
 
 
@@ -1083,6 +1091,10 @@ SimdCallNode::generateCode (LContext &lcontext)
     SimdLContext &slcontext = static_cast <SimdLContext &> (lcontext);
 
     SymbolInfoPtr info = function->info;
+
+    if (!info)
+	return;
+
     FunctionTypePtr functionType = info->functionType();
 
     //

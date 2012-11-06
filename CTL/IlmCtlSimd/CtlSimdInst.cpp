@@ -625,12 +625,12 @@ SimdAssignInst::execute
     const SimdReg &in = xcontext.stack().regSpRelative(-1);
     SimdReg &out = xcontext.stack().regSpRelative(-2);
 
-    if (in.isVarying() || out.isVarying() || mask.isVarying())
+    if (in.isVarying() || mask.isVarying())
     {
 	if (!mask.isVarying() &&
 	    !in.isReference() &&
 	    !out.isReference() &&
-	    (in[1] - in[0] == _opTypeSize))
+	    (in[1] - in[0] == (int)_opTypeSize))
 	{
 	    //
 	    // The contents of in and out are contiguous in memory.
@@ -654,8 +654,17 @@ SimdAssignInst::execute
     }
     else
     {
-	out.setVarying (false);
-	memcpy(out[0], in[0], _opTypeSize);
+		if( out.isVarying() )
+		{
+			for (int i = xcontext.regSize(); --i >= 0;)
+				if (mask[i])
+					memcpy(out[i], in[0], _opTypeSize);
+		}
+		else
+		{
+			out.setVarying (false);
+			memcpy(out[0], in[0], _opTypeSize);
+		}
     }
 
     xcontext.stack().pop (2);

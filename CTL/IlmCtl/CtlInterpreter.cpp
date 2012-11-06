@@ -64,6 +64,7 @@
 #include <fstream>
 #include <algorithm>
 #include <cassert>
+#include <string.h>
 
 #ifdef WIN32
     #include <io.h>
@@ -99,29 +100,29 @@ modulePathsInternal()
     static ModulePathsData mpd;
     static bool firstTime = true;
 
-    Lock lock (mpd.mutex);
 
-    //
+    Lock lock(mpd.mutex);
     // on the first attempt, load all paths from the environment variable
-    //
-
-    if (firstTime)
+    if(firstTime)
     {
         firstTime = false;
-        vector<string> &modPaths = mpd.paths;
+        vector<string>& modPaths = mpd.paths;
 
         string path;
 
         const char *env = getenv ("CTL_MODULE_PATH");
-	
         if (env)
             path = env;
         
         if (path == "")
-            path = ".";
+			#if defined (WIN32) || defined (WIN64)
+			path = "."; // default windows install location?
+			#else
+            path = ".:/usr/local/lib/CTL:/usr/local/" PACKAGE
+			       "-" VERSION "/lib/CTL";
+			#endif
 
         size_t pos = 0;
-
         while (pos < path.size())
         {
 	    #if defined (WIN32) || defined (WIN64)
@@ -139,16 +140,13 @@ modulePathsInternal()
             
             string pathItem = path.substr (pos, end - pos);
 
-            if (find (modPaths.begin(), modPaths.end(), pathItem) 
-		       == modPaths.end())
-	    {
-                modPaths.push_back (pathItem);
-	    }
+            if(find(modPaths.begin(), modPaths.end(), pathItem ) 
+               == modPaths.end())
+                modPaths.push_back(pathItem);
 
             pos = end + 1;
         }
     }
-
     return mpd;
 }
 
@@ -180,23 +178,18 @@ findModule (const string& moduleName)
         ModulePathsData &mpd = modulePathsInternal();
         Lock lock(mpd.mutex);
 
-        for (vector<string>::iterator it = mpd.paths.begin();
-             it != mpd.paths.end();
-             it++)
+        for(vector<string>::iterator it = mpd.paths.begin();
+            it != mpd.paths.end();
+            it++)
         {
             string fileName = *it  + '/' + moduleName + ".ctl";
 
-	    #if defined (WIN32) || defined (WIN64)
-
-		if (!_access (fileName.c_str(), 0))
-		    return fileName;
-
-	    #else
-
-		if (!access (fileName.c_str(), F_OK))
-		    return fileName;
-
-	    #endif
+#ifdef WIN32            
+            if (!_access (fileName.c_str(), 0))
+#else
+            if (!access (fileName.c_str(), F_OK))
+#endif
+                return fileName;
         }
     }
 
@@ -257,43 +250,52 @@ Interpreter::setModulePaths(const vector<string>& newModPaths)
 
 
 void
-Interpreter::loadModule (const string &moduleName)
+Interpreter::loadModule (const string &moduleName, const string &fileName, const string &moduleSource)
 {
     debug ("Interpreter::loadModule (moduleName = " << moduleName << ")");
 
     Lock lock (_data->mutex);
-    loadModuleRecursive (moduleName);
+    loadModuleRecursive (moduleName, fileName, moduleSource);
 }
 
+void Interpreter::_loadModule(const std::string &moduleName,
+                              const std::string &fileName,
+                              const std::string &moduleSource) {                              
+    // 
+    // set up the source code string for parsing.
+    // 
 
-void
-Interpreter::loadModuleRecursive (const string &moduleName)
-{
-    debug ("Interpreter::loadModuleRecursive "
-	   "(moduleName = " << moduleName << ")");
-
-    if (moduleIsLoadedInternal (moduleName))
+    istream *input = 0;
+        
+    if (!moduleSource.empty())
     {
-	debug ("\talready loaded");
-	return;
+        debug ("\tloading from source");
+        
+        stringstream *tmp_strm = new stringstream;
+        (*tmp_strm) << moduleSource;
+        input = tmp_strm;
     }
-
-    //
-    // Using the module search path, locate the file that contains the
-    // source code for the module.  Open the file.
-    //
-
-    string fileName = findModule (moduleName);
-    ifstream file (fileName.c_str());
-
-    if (!file)
+    else
     {
-	THROW_ERRNO ("Cannot load CTL module \"" << moduleName << "\". "
-		     "Opening file \"" << fileName << "\" for reading "
-		     "failed (%T).");
-    }
+        //
+        // Using the module search path, locate the file that contains the
+        // source code for the module.  Open the file.
+        //
+        ifstream *tmp_strm = new ifstream;
+        tmp_strm->open(fileName.c_str());
+        
+        if (!tmp_strm)
+        {
+	        THROW_ERRNO ("Cannot load CTL module \"" << moduleName << "\". "
+		         "Opening file \"" << fileName << "\" for reading "
+		         "failed (%T).");
+        }
 
-    debug ("\tloading from file \"" << fileName << "\"");
+        debug ("\tloading from file \"" << fileName << "\"");
+        input = tmp_strm;
+    }
+    
+    assert(input);
 
     Module *module = 0;
     LContext *lcontext = 0;
@@ -306,7 +308,7 @@ Interpreter::loadModuleRecursive (const string &moduleName)
 
 	module = newModule (moduleName, fileName);	
 	_data->moduleSet.addModule (module);
-	lcontext = newLContext (file, module, _data->symtab);
+	lcontext = newLContext (*input, module, _data->symtab);
 	Parser parser (*lcontext, *this);
 
 	//
@@ -359,6 +361,41 @@ Interpreter::loadModuleRecursive (const string &moduleName)
     }
 }
 
+void Interpreter::loadFile(const std::string &fileName,
+                           const std::string &_moduleName) {
+    Lock lock (_data->mutex);
+	std::string moduleName;
+	char random[32];
+
+	if(_moduleName.size()==0) {
+		// This might have unintended consequences...
+		memset(random, 0, sizeof(random));
+		snprintf(random, sizeof(random)-1, "module.%08x",
+		         (unsigned int)(time(NULL)+lrand48()));
+		moduleName=random;
+	} else {
+		moduleName=_moduleName;
+	}	
+
+    _loadModule(moduleName, fileName);
+}
+
+void
+Interpreter::loadModuleRecursive (const string &moduleName, const string &fileName, const string &moduleSource)
+{
+    debug ("Interpreter::loadModuleRecursive "
+	   "(moduleName = " << moduleName << ")");
+
+    if (moduleIsLoadedInternal (moduleName))
+    {
+	debug ("\talready loaded");
+	return;
+    }
+    
+    string realFileName = fileName.empty() ? findModule (moduleName) : fileName;
+
+	_loadModule(moduleName, realFileName, moduleSource);
+}
 
 bool
 Interpreter::moduleIsLoaded (const std::string &moduleName) const
@@ -408,7 +445,7 @@ Interpreter::newFunctionCall (const std::string &functionName)
             SizeVector sizes;
             aType->sizes (sizes);
 	    
-            for (int j = 0; j < sizes.size(); j++)
+            for (unsigned int j = 0; j < sizes.size(); j++)
             {
                 if (sizes[j] == 0)
                     THROW (ArgExc, "CTL function " << functionName << " "
