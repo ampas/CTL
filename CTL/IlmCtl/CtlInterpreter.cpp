@@ -69,6 +69,8 @@
     #include <io.h>
     #include <stdio.h>
     #include <stdlib.h>
+#else
+    #include <unistd.h>
 #endif
 
 using namespace std;
