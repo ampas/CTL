@@ -47,44 +47,51 @@
 
 #include "aces_file.hh"
 
-#if defined( HAVE_ACES )
-#include <aces_openEXRWriter.h>
+#if 1//defined( HAVE_ACESFILE )
+#include <aces_Writer.h>
+#include <stdexcept>
+#include <iostream>
 
-void aces_write(const char *name, float scale, const ctl::dpx::fb<half> &pixels, format_t *format) {
-	const half *in;
-	half *out;
-	uint8_t channels;
+void aces_write(const char *name, float scale, 
+               uint32_t width, uint32_t height, uint32_t channels,
+               const void *pixels,
+               format_t *format) {
 
-	if(format->bps!=16) {
-		THROW(Iex::ArgExc, "EXR files only support 16 bps half at the moment.");
+	if (scale != 1.0f && scale != 0.0f) 
+		throw std::invalid_argument("Non-unit scale not implemented with aces format for now");
+	
+	std::vector<std::string> filenames;
+	filenames.push_back( name );
+	
+	aces_Writer x;
+	
+	MetaWriteClip writeParams;
+	
+	writeParams.duration				= 1;	
+	writeParams.outputFilenames			= filenames;
+	
+	writeParams.outputRows				= height;
+	writeParams.outputCols				= width;	
+	
+	writeParams.hi = x.getDefaultHeaderInfo();	
+	writeParams.hi.originalImageFlag	= 0;	
+	writeParams.hi.software				= "ctlrender";
+
+	DynamicMetadata dynamicMeta;
+	dynamicMeta.imageIndex = 0;
+	
+	x.configure ( writeParams );
+	x.newImageObject ( dynamicMeta );		
+	
+	for ( uint32 row = 0; row < height; row++) {
+		half *rgbData = (half*)pixels + width*channels*row;
+		x.storeHalfRow ( rgbData, row ); 
 	}
-
-	if(scale!=0.0 && scale!=1.0) {
-		// Yes... I should lookup table this. I *know*!
-		ctl::dpx::fb<half> scaled_pixels;
-		uint64_t i;
-
-		scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
-		scaled_pixels.alpha(1.0);
-		in=pixels.ptr();
-		out=scaled_pixels.ptr();
-		for(i=0; i<scaled_pixels.count(); i++) {
-			*(out++)=*(in++)/scale;
-		}
-
-		channels=scaled_pixels.depth();	
-		in=scaled_pixels.ptr();
-	} else {
-		channels=pixels.depth();	
-		in=pixels.ptr();
-	}
-
-	Imf::RgbaOutputFile file(name, pixels.width(), pixels.height(),
-	                         channels==4 ? Imf::WRITE_RGBA : Imf::WRITE_RGB, 1, Imath::V2f (0, 0), 1,
-	                         Imf::INCREASING_Y, Imf::PIZ_COMPRESSION);
-
-	file.setFrameBuffer((Imf::Rgba *)in, 1, pixels.width());
-	file.writePixels(pixels.height());
+	
+	std::cout << "saving aces file" << std::endl;
+	std::cout << "size " << width << "x" << height << "x" channels << std::endl;
+	
+	x.saveImageObject ( );	
 }
 
 #else 
@@ -92,6 +99,7 @@ void aces_write(const char *name, float scale, const ctl::dpx::fb<half> &pixels,
 void aces_write(const char *name, float scale,
                const ctl::dpx::fb<half> &pixels,
                format_t *format) {
+	std::cerr << "AcesContainer library not found" << std::endl;
 }
 
 #endif

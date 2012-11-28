@@ -124,6 +124,7 @@ struct file_format_t
 file_format_t allowed_formats[] =
 {
 	{ "exr",    format_t("exr",  16) },
+	{ "aces",   format_t("aces", 16) },
 	{ "dpx",    format_t("dpx",   0) },
 	{ "dpx8",   format_t("dpx",   8) },
 	{ "dpx10",  format_t("dpx",  10) },
@@ -524,7 +525,12 @@ int main(int argc, const char **argv)
 				}
 				else
 				{
-					if (strcmp(desired_format.ext, dot + 1) && !force_overwrite_output_file)
+					// HACK aces format file type check
+					const char *ext = desired_format.ext;
+					static const char exrext[] = "exr";
+					if (!strcmp(ext, "aces"))
+						ext = exrext;
+					if (strcmp(ext, dot + 1) && !force_overwrite_output_file)
 					{
 						fprintf(stderr,
 								"You have specified a destination file "
@@ -584,7 +590,12 @@ int main(int argc, const char **argv)
 					dot++;
 					if (desired_format.ext != NULL)
 					{
-						strcpy(dot, desired_format.ext);
+						// HACK aces format file type check
+						const char *ext = desired_format.ext;
+						static const char exrext[] = "exr";
+						if (!strcmp(ext, "aces"))
+							ext = exrext;
+						strcpy(dot, ext);
 						actual_format = desired_format;
 					}
 					else

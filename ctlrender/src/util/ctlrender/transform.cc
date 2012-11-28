@@ -49,6 +49,7 @@
 #include "dpx_file.hh"
 #include "tiff_file.hh"
 #include "exr_file.hh"
+#include "aces_file.hh"
 #include <dpx.hh>
 #include <CtlRcPtr.h>
 #include <CtlFunctionCall.h>
@@ -820,7 +821,14 @@ void transform(const char *inputFile, const char *outputFile,
 		image_buffer.swizzle(0, TRUE);
 	}
 
-	if (!strncmp(image_format->ext, "exr", 3))
+		std::cout << image_format->ext << std::endl;
+	if (!strncmp(image_format->ext, "aces", 3))
+	{
+		aces_write(outputFile, output_scale, 
+			image_buffer.width(), image_buffer.height(), image_buffer.depth(),
+			(void*)image_buffer.ptr(), image_format);
+	}
+	else if (!strncmp(image_format->ext, "exr", 3))
 	{
 		exr_write(outputFile, output_scale, image_buffer, image_format);
 	}
