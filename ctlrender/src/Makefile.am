@@ -2,7 +2,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = openexr dpx util doc
+SUBDIRS = dpx util
 
 DIST_SUBDIRS = \
 	$(SUBDIRS) \

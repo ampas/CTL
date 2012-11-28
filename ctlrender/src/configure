@@ -17691,7 +17691,7 @@ $as_echo "#define HAVE_DARWIN 1" >>confdefs.h
 
 
 
-ac_config_files="$ac_config_files Makefile dpx/Makefile openexr/Makefile doc/Makefile openexr/IlmImfCtl/Makefile openexr/IlmImfCtlTest/Makefile util/Makefile util/ctlrender/Makefile vc/Makefile"
+ac_config_files="$ac_config_files Makefile dpx/Makefile util/Makefile util/ctlrender/Makefile vc/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -18831,9 +18831,6 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "dpx/Makefile") CONFIG_FILES="$CONFIG_FILES dpx/Makefile" ;;
-    "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
-    "openexr/IlmImfCtl/Makefile") CONFIG_FILES="$CONFIG_FILES openexr/IlmImfCtl/Makefile" ;;
-    "openexr/IlmImfCtlTest/Makefile") CONFIG_FILES="$CONFIG_FILES openexr/IlmImfCtlTest/Makefile" ;;
     "util/Makefile") CONFIG_FILES="$CONFIG_FILES util/Makefile" ;;
     "util/ctlrender/Makefile") CONFIG_FILES="$CONFIG_FILES util/ctlrender/Makefile" ;;
     "vc/Makefile") CONFIG_FILES="$CONFIG_FILES vc/Makefile" ;;

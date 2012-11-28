@@ -54,7 +54,8 @@ PROGRAMS = $(bin_PROGRAMS)
 am_ctlrender_OBJECTS = ctlrender-main.$(OBJEXT) \
 	ctlrender-transform.$(OBJEXT) ctlrender-usage.$(OBJEXT) \
 	ctlrender-dpx_file.$(OBJEXT) ctlrender-exr_file.$(OBJEXT) \
-	ctlrender-tiff_file.$(OBJEXT) ctlrender-format.$(OBJEXT)
+	ctlrender-tiff_file.$(OBJEXT) ctlrender-format.$(OBJEXT) \
+	ctlrender-aces_file.$(OBJEXT)
 ctlrender_OBJECTS = $(am_ctlrender_OBJECTS)
 ctlrender_LDADD = $(LDADD)
 ctlrender_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -216,10 +217,10 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-ctlrender_SOURCES = main.cc transform.cc usage.cc dpx_file.cc exr_file.cc tiff_file.cc format.cc
-ctlrender_LIBS = ctldpx tiff jpeg
-ctlrender_CXXFLAGS = -I$(top_srcdir)/dpx -I$(top_srcdir)/ctl/IlmCtl -I$(top_srcdir)/ctl/IlmCtlSimd $(ILMBASE_CXXFLAGS) @OPENEXR_CXXFLAGS@ @TIFF_CXXFLAGS@
-AM_LDFLAGS = -L$(top_builddir)/ctl/IlmCtl -L$(top_builddir)/ctl/IlmCtlSimd -L$(top_builddir)/dpx -lctldpx -lIlmCtl -lIlmCtlSimd @OPENEXR_LDFLAGS@ @OPENEXR_LIBS@ @TIFF_LDFLAGS@ @TIFF_LIBS@
+ctlrender_SOURCES = main.cc transform.cc usage.cc dpx_file.cc exr_file.cc tiff_file.cc format.cc aces_file.cc
+ctlrender_LIBS = ctldpx tiff jpeg acesfile
+ctlrender_CXXFLAGS = -I$(top_srcdir)/dpx -I$(top_srcdir)/ctl/IlmCtl -I$(top_srcdir)/ctl/IlmCtlSimd $(ILMBASE_CXXFLAGS) @OPENEXR_CXXFLAGS@ @TIFF_CXXFLAGS@ -I/usr/local/include
+AM_LDFLAGS = -L$(top_builddir)/ctl/IlmCtl -L$(top_builddir)/ctl/IlmCtlSimd -L$(top_builddir)/dpx -lctldpx -lIlmCtl -lIlmCtlSimd @OPENEXR_LDFLAGS@ @OPENEXR_LIBS@ @TIFF_LDFLAGS@ @TIFF_LIBS@ -L/usr/local/lib -lAcesContainer
 all: all-am
 
 .SUFFIXES:
@@ -307,6 +308,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctlrender-aces_file.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctlrender-dpx_file.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctlrender-exr_file.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctlrender-format.Po@am__quote@
@@ -433,6 +435,20 @@ ctlrender-format.obj: format.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='format.cc' object='ctlrender-format.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ctlrender_CXXFLAGS) $(CXXFLAGS) -c -o ctlrender-format.obj `if test -f 'format.cc'; then $(CYGPATH_W) 'format.cc'; else $(CYGPATH_W) '$(srcdir)/format.cc'; fi`
+
+ctlrender-aces_file.o: aces_file.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ctlrender_CXXFLAGS) $(CXXFLAGS) -MT ctlrender-aces_file.o -MD -MP -MF $(DEPDIR)/ctlrender-aces_file.Tpo -c -o ctlrender-aces_file.o `test -f 'aces_file.cc' || echo '$(srcdir)/'`aces_file.cc
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/ctlrender-aces_file.Tpo $(DEPDIR)/ctlrender-aces_file.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='aces_file.cc' object='ctlrender-aces_file.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ctlrender_CXXFLAGS) $(CXXFLAGS) -c -o ctlrender-aces_file.o `test -f 'aces_file.cc' || echo '$(srcdir)/'`aces_file.cc
+
+ctlrender-aces_file.obj: aces_file.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ctlrender_CXXFLAGS) $(CXXFLAGS) -MT ctlrender-aces_file.obj -MD -MP -MF $(DEPDIR)/ctlrender-aces_file.Tpo -c -o ctlrender-aces_file.obj `if test -f 'aces_file.cc'; then $(CYGPATH_W) 'aces_file.cc'; else $(CYGPATH_W) '$(srcdir)/aces_file.cc'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/ctlrender-aces_file.Tpo $(DEPDIR)/ctlrender-aces_file.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='aces_file.cc' object='ctlrender-aces_file.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ctlrender_CXXFLAGS) $(CXXFLAGS) -c -o ctlrender-aces_file.obj `if test -f 'aces_file.cc'; then $(CYGPATH_W) 'aces_file.cc'; else $(CYGPATH_W) '$(srcdir)/aces_file.cc'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
