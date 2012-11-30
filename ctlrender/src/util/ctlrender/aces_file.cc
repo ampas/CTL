@@ -48,7 +48,7 @@
 #include "aces_file.hh"
 
 #if 1//defined( HAVE_ACESFILE )
-#include <aces_Writer.h>
+#include <aces/aces_Writer.h>
 #include <stdexcept>
 #include <iostream>
 
@@ -59,7 +59,9 @@ void aces_write(const char *name, float scale,
 
 	if (scale != 1.0f && scale != 0.0f) 
 		throw std::invalid_argument("Non-unit scale not implemented with aces format for now");
-	
+	if (channels != 3) 
+		throw std::invalid_argument("Only RGB file supported");
+		
 	std::vector<std::string> filenames;
 	filenames.push_back( name );
 	
@@ -89,7 +91,8 @@ void aces_write(const char *name, float scale,
 	}
 	
 	std::cout << "saving aces file" << std::endl;
-	std::cout << "size " << width << "x" << height << "x" channels << std::endl;
+	std::cout << "size " << width << "x" << height << "x" << channels << std::endl;
+
 	
 	x.saveImageObject ( );	
 }
