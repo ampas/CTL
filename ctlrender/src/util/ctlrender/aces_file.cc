@@ -76,24 +76,36 @@ void aces_write(const char *name, float scale,
 	writeParams.outputCols				= width;	
 	
 	writeParams.hi = x.getDefaultHeaderInfo();	
-	writeParams.hi.originalImageFlag	= 0;	
+	writeParams.hi.originalImageFlag	= 1;	
 	writeParams.hi.software				= "ctlrender";
 
 	DynamicMetadata dynamicMeta;
 	dynamicMeta.imageIndex = 0;
+	dynamicMeta.imageCounter = 0;
 	
 	x.configure ( writeParams );
 	x.newImageObject ( dynamicMeta );		
-	
+
 	for ( uint32 row = 0; row < height; row++) {
 		half *rgbData = (half*)pixels + width*channels*row;
 		x.storeHalfRow ( rgbData, row ); 
 	}
-	
+
+#if 0
 	std::cout << "saving aces file" << std::endl;
 	std::cout << "size " << width << "x" << height << "x" << channels << std::endl;
+	std::cout << "size " << writeParams.outputCols << "x" << writeParams.outputRows << std::endl;
+	std::cout << "duration " << writeParams.duration << std::endl;
+	std::cout << writeParams.hi;
+	std::cout << "\ndynamic meta" << std::endl;
+	std::cout << "imageIndex " << dynamicMeta.imageIndex << std::endl;
+	std::cout << "imageCounter " << dynamicMeta.imageCounter << std::endl;
+	std::cout << "timeCode " << dynamicMeta.timeCode << std::endl;
+	std::cout << "keyCode " << dynamicMeta.keyCode << std::endl;
+	std::cout << "capDate " << dynamicMeta.capDate << std::endl;
+	std::cout << "uuid " << dynamicMeta.uuid << std::endl;
+#endif
 
-	
 	x.saveImageObject ( );	
 }
 
