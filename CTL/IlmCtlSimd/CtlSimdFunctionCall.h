@@ -84,7 +84,6 @@ class SimdFunctionCall: public FunctionCall
     virtual SymbolTable &	symbols()	{return _symbols;}
 
   private:
-
     SimdXContext	_xcontext;
     const SimdInst *	_entryPoint;
     SymbolTable &	_symbols;
@@ -96,7 +95,7 @@ class SimdFunctionArg: public FunctionArg
   public:
 
     SimdFunctionArg (const std::string &name,
-		     const FunctionCallPtr &func,
+		     FunctionCall* func,
 		     const DataTypePtr &type,
 		     bool varying,
 		     SimdReg *reg);
@@ -104,6 +103,8 @@ class SimdFunctionArg: public FunctionArg
     virtual ~SimdFunctionArg ();
 
     virtual void        setVarying(bool varying);
+
+	virtual size_t  elements(void) const;
 
     virtual char *	data ();
     virtual bool	hasDefaultValue ();

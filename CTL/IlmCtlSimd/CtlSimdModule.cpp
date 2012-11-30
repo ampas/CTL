@@ -76,10 +76,10 @@ SimdModule::SimdModule
 
 SimdModule::~SimdModule ()
 {
-    for (int i = 0; i < _code.size(); ++i)
+    for (int i = 0; i < (int)_code.size(); ++i)
 	delete _code[i];
 
-    for (int i = 0; i < _staticData.size(); ++i)
+    for (int i = 0; i < (int)_staticData.size(); ++i)
 	delete _staticData[i];
 }
 

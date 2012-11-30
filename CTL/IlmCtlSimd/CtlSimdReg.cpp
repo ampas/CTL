@@ -106,10 +106,11 @@ SimdReg::SimdReg
     {
 	if( r._oVarying)
 	{
-	    for( int i = 0; i < regSize; i++ )
+	    for( int i = 0; i < (int)regSize; i++ )
 	    {
+	    if( !mask[i] ) continue;
 		int ind = *(int *)(indReg[i]);
-		if( ind < 0 || ind >= arraySize )
+		if( ind < 0 || ind >= (int)arraySize )
 		    throwIndexOutOfRange (ind, arraySize);
 
 		if( mask[i] )
@@ -119,10 +120,11 @@ SimdReg::SimdReg
 	}
 	else  // !r._oVarying
 	{
-	    for( int i = 0; i < regSize; i++ )
+	    for( int i = 0; i < (int)regSize; i++ )
 	    {
+	    if( !mask[i] ) continue;
 		int ind = *(int *)(indReg[i]);
-		if( ind < 0 || ind >= arraySize )
+		if( ind < 0 || ind >= (int)arraySize )
 		    throwIndexOutOfRange (ind, arraySize);
 
 		if( mask[i] )
@@ -134,7 +136,7 @@ SimdReg::SimdReg
     else // ! _oVarying
     {
 	int ind = *(int*)(indReg[0]);
-	if( ind < 0 || ind >= arraySize )
+	if( ind < 0 || ind >= (int)arraySize )
 	    throwIndexOutOfRange (ind, arraySize);
 	
 	_offsets[0] = r._offsets[0] + ind*arrayElementSize;
@@ -167,7 +169,7 @@ SimdReg::SimdReg
 {
     if( _oVarying )
     {
-	for( int i = 0; i < regSize; i++ )
+	for( int i = 0; i < (int)regSize; i++ )
 	{
 	    if( mask[i] )
 		_offsets[i] = r._offsets[i] + offset;
