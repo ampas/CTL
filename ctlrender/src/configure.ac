@@ -252,7 +252,6 @@ AC_SUBST(HAVE_DARWIN)
 AC_CONFIG_FILES([
 Makefile
 dpx/Makefile
-doc/Makefile
 ctl/Makefile
 ctl/CTL.pc
 ctl/IlmCtl/Makefile

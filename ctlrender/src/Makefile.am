@@ -2,7 +2,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = ctl dpx util doc
+SUBDIRS = ctl dpx util
 
 DIST_SUBDIRS = \
 	$(SUBDIRS) \
