@@ -139,6 +139,8 @@ class SimdXContext
 
     void		countInstruction ();
 
+    SimdInterpreter &interpreter(void) const { return _interpreter; };
+
   private:
 
     SimdInterpreter &	_interpreter;

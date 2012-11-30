@@ -120,28 +120,22 @@ FunctionCall::setReturnValue (const FunctionArgPtr &rval)
     _returnValue = rval;
 }
 
-
 FunctionArg::FunctionArg
     (const string &name,
-     const FunctionCallPtr &func,
+     FunctionCall* func,
      const DataTypePtr &type,
      bool varying)
 :
-    _name (name),
+    TypeStorage(name, type), 
     _func (func),
-    _type (type),
     _varying (varying)
 {
     // empty
 }
 
-
 FunctionArg::~FunctionArg ()
 {
     // empty
 }
-
-    
-
 
 } // namespace Ctl

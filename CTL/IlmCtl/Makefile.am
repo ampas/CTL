@@ -9,6 +9,7 @@ libIlmCtl_la_SOURCES = \
 	CtlAlign.h \
 	CtlErrors.h \
 	CtlExc.h \
+	CtlExc.cpp \
 	CtlFunctionCall.cpp \
 	CtlFunctionCall.h \
 	CtlInterpreter.cpp \
@@ -35,6 +36,9 @@ libIlmCtl_la_SOURCES = \
 	CtlTokens.cpp \
 	CtlTokens.h \
 	CtlType.cpp \
+	CtlTypeStorage.cpp \
+	CtlStdType.cpp \
+	CtlStdType.h \
 	CtlType.h \
 	CtlVersion.h
 
@@ -60,6 +64,8 @@ libIlmCtlinclude_HEADERS = \
 	CtlSyntaxTree.h \
 	CtlTokens.h \
 	CtlType.h \
+	CtlTypeStorage.h \
+	CtlStdType.h \
 	CtlVersion.h
 
 noinst_HEADERS = \

@@ -218,7 +218,7 @@ Lex::nextLine ()
 inline bool
 Lex::atEndOfLine () const
 {
-    return _currentCharIndex >= _currentLine.size();
+    return _currentCharIndex >= (int)_currentLine.size();
 }
 
 
@@ -613,7 +613,7 @@ Lex::getAtKeyword()
     int errorValue = -1;
     errorValue = strtol (b, &e, 0);
 
-    if (e - b != _tokenStringValue.size())
+    if (e - b != (int)_tokenStringValue.size())
     {
 	printCurrentLine();
 	MESSAGE_LE (_lcontext, ERR_AT_SYNTAX, _currentLineNumber, 
@@ -748,7 +748,7 @@ Lex::getIntOrFloatLiteral (bool decimalPointSeen)
 
 	    _tokenIntValue = strtol (b, &e, 0);
 
-	    if (e - b != _tokenStringValue.size())
+	    if (e - b != (int)_tokenStringValue.size())
 	    {
 		_tokenIntValue = 0;
 
@@ -822,7 +822,7 @@ Lex::getIntOrFloatLiteral (bool decimalPointSeen)
 
 	_tokenFloatValue = strtod (b, &e);
 
-	if (e - b != _tokenStringValue.size())
+	if (e - b != (int)_tokenStringValue.size())
 	{
 	    _tokenFloatValue = 0;
 
@@ -859,7 +859,7 @@ Lex::getIntOrFloatLiteral (bool decimalPointSeen)
 
 	_tokenIntValue = strtol (b, &e, 0);
 
-	if (e - b != _tokenStringValue.size())
+	if (e - b != (int)_tokenStringValue.size())
 	{
 	    _tokenIntValue = 0;
 

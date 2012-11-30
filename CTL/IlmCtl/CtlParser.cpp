@@ -329,7 +329,7 @@ Parser::parseFunction ()
 	SizeVector arraySizes;
 	parseArraySize(arraySizes);
 
-	for(int i = 0; i < arraySizes.size(); i++ )
+	for(int i = 0; i < (int)arraySizes.size(); i++ )
 	{
 	    if(arraySizes[i] == 0)
 	    {
@@ -838,6 +838,33 @@ Parser::parseVariableDefinition (AllocationMode mode,
     {
 	next();
 
+#if 0
+	if (token() == TK_IMPORT)
+	{
+	    //
+	    // "int x[] = import(...);"
+	    //
+	    
+	    DataTypePtr type = baseType;
+
+	    if (declArraySizes.size() > 0)
+		type = _lcontext.newArrayType (baseType, declArraySizes);
+	    
+	    ExprNodePtr initialValue = 0;
+
+	    if (parseInitializer (initialValue, type, declArraySizes))
+	    {
+		node = variableDefinitionImport (mode,
+						 lineNumber,
+						 name,
+						 isConst,
+		                                 baseType,
+		                                 declArraySizes,
+						 initialValue);
+	    }
+	}
+	else
+#endif
 	if (token() == TK_OPENBRACE)
 	{
 	    //
@@ -983,7 +1010,7 @@ Parser::parseStructDefinition (AllocationMode mode)
 	SizeVector declArraySizes;
 	parseArraySize(declArraySizes);
 
-	for( int i = 0; i < declArraySizes.size(); i++)
+	for( int i = 0; i < (int)declArraySizes.size(); i++)
 	{
 	    if(declArraySizes[i] == 0)
 		MESSAGE_PLE (_lex, _lcontext, ERR_STRUCT_ARR_LEN, 
@@ -1041,8 +1068,7 @@ Parser::parseExprVariableDefinitionOrAssign()
     }
 
     ExprNodePtr lhs = parseExpression();
-
-    if (token() == TK_NAME)
+    if( token() == TK_NAME )
     {
 	NameNodePtr name = lhs.cast<NameNode>();
 	DataTypePtr dataType;
@@ -1055,26 +1081,19 @@ Parser::parseExprVariableDefinitionOrAssign()
 	    MESSAGE_PLE (_lex, _lcontext, ERR_UNKNOWN_TYPE, lhs->lineNumber,
 			"Definition with unknown type: " << name->name 
 			<< "\n");
-
-	    #if 0 //XXX
 	    MemberVector members;
-	    dataType = _lcontext.newStructType ("", members);
-	    #else
-	    dataType = _lcontext.newIntType();
-	    #endif
+	    dataType = _lcontext.newStructType("",members);
 	}
 	else
-	{
 	    dataType = name->info->type();
-	}
 
-	return parseVariableDefinition (AM_AUTO, dataType);
+	return parseVariableDefinition(AM_AUTO, dataType);
     }
 
-    if (token() == TK_ASSIGN)
-	return parseAssignment (lhs);
+    if( token() == TK_ASSIGN )
+	return parseAssignment(lhs);
 
-    return parseExprStatement (lhs);
+    return parseExprStatement(lhs);
 }
 
 
@@ -1393,7 +1412,7 @@ Parser::parsePrintStatement()
     StatementNodePtr firstStmt = 0;
     StatementNodePtr lastStmt = 0;
 
-    for (int i = 0; i < exprs.size(); ++i)
+    for (int i = 0; i < (int)exprs.size(); ++i)
     {
 	ExprNodePtr expr = exprs[i];
 	expr->computeType (_lcontext);
@@ -1909,18 +1928,13 @@ Parser::parsePrimaryExpression ()
 
     if (token() == TK_STRINGLITERAL)
     {
-	//
         // Adjacent string literals are treated as a single string literal
-	//
-
 	string value = "";
-
         while(token() == TK_STRINGLITERAL)
         {
             value += tokenStringValue();
             next();
         }
-
         debugSyntax1 ("string literal " << value);
 	return _lcontext.newStringLiteralNode (currentLineNumber(), value);
     }
@@ -1938,7 +1952,7 @@ Parser::parsePrimaryExpression ()
     NameNodePtr name = parseScopedName();
     ExprNodePtr lhs = name;
 
-    if (name && name->info && name->info->isTypeName())
+    if( name && name->info && name->info->isTypeName())
 	return lhs;
 
     if (token() == TK_OPENPAREN)
@@ -1961,7 +1975,7 @@ Parser::parsePrimaryExpression ()
 ExprNodePtr
 Parser::parseMemberArrayExpression (ExprNodePtr lhs)
 {
-    debugSyntax ("memberArrayExpression");
+    debugSyntax ("MemberArrayExpression");
 
     while( token() == TK_DOT || token() == TK_OPENBRACKET)
     {
@@ -1969,7 +1983,6 @@ Parser::parseMemberArrayExpression (ExprNodePtr lhs)
 	{
 	    debugSyntax1 ("struct member access");
 	    next();
-
 	    if( token() == TK_NAME)
 	    {
 		string member = tokenStringValue();
@@ -2003,7 +2016,7 @@ Parser::parseMemberArrayExpression (ExprNodePtr lhs)
 	    next();
 
 	    lhs = _lcontext.newArrayIndexNode 
-		        (currentLineNumber(), lhs, index);
+			(currentLineNumber(), lhs, index);
 	}
     }
     
@@ -2166,11 +2179,11 @@ Parser::parseInitializerRecursive (DataTypePtr dataType,
 	match (TK_OPENBRACE);
 	next();
 
-	if( sizes.size() == depth )
+	if( (int)sizes.size() == depth )
 	{
- 	    MESSAGE_PLE (_lex, _lcontext, ERR_INIT_TYPE,  currentLineNumber(),
+	    MESSAGE_PLE (_lex, _lcontext, ERR_INIT_TYPE,  currentLineNumber(),
 			"The dimension of the initial array value is higher "
- 			"than the declared dimension.");
+			"than the declared dimension.");
 	    sizes.push_back(0);
 	    success = false;
 	}
@@ -2202,7 +2215,7 @@ Parser::parseInitializerRecursive (DataTypePtr dataType,
 
 	if( sizes[depth] == 0 )
 	    sizes[depth] = count;
-	else if( sizes[depth] != count )
+	else if( (int)sizes[depth] != count )
 	{
 	    MESSAGE_PLE (_lex, _lcontext, ERR_ARR_INIT_READ, 
 			 currentLineNumber(),
@@ -2217,11 +2230,11 @@ Parser::parseInitializerRecursive (DataTypePtr dataType,
     }
     else
     {
-	if( sizes.size() > depth )
+	if( (int)sizes.size() > depth )
 	{
- 	    MESSAGE_PLE (_lex, _lcontext, ERR_INIT_TYPE,  currentLineNumber(),
+	    MESSAGE_PLE (_lex, _lcontext, ERR_INIT_TYPE,  currentLineNumber(),
 			"The dimension of the initial array value is lower "
- 			"than the declared dimension.");
+			"than the declared dimension.");
 	    success = false;
 	}
 	elements.push_back (parseExpression());
@@ -2444,7 +2457,7 @@ Parser::variableDefinitionNoInit
 
 	bool sizeError = false;
 
-	for (int i = 0; i < declArraySizes.size(); i++)
+	for (int i = 0; i < (int)declArraySizes.size(); i++)
 	{
 	    if (declArraySizes[i] == 0)
 	    {
@@ -2497,6 +2510,74 @@ Parser::variableDefinitionCurlyBraces
     //
     // Variable definition, initial value is defined by
     // by list of expressions in curly braces.
+    //
+
+    DataTypePtr type = baseType;
+
+    if (declArraySizes.size() > 0)
+	type = _lcontext.newArrayType (baseType, declArraySizes);
+	
+    if (initialValue)
+	initialValue->computeType (_lcontext);
+
+    ValueNodePtr value = initialValue;
+
+    if (value && !value->checkElementTypes (baseType, _lcontext))
+    {
+	value = 0;
+    }
+
+    if( value )
+    {
+	value->type = type;
+	value->evaluate(_lcontext);
+    }
+    
+    ExprNodePtr constValue = 0;
+    
+    if (isConst && value && value->elementsAreLiterals())
+	constValue = value;
+
+    //
+    // Store the variable's name, type and address in the symbol table.
+    // Create a syntax tree node for the variable.
+    //
+
+    AddrPtr addr;
+
+    if (mode == AM_STATIC)
+	addr = type->newStaticVariable (_lcontext.module());
+    else
+	addr = _lcontext.autoVariableAddr (type);
+
+    SymbolInfoPtr info = new SymbolInfo (module(), 
+					 isConst? RWA_READ: RWA_READWRITE, 
+					 false, type, addr);
+    if (constValue)
+	info->setValue (constValue);
+
+    if (!symtab().defineSymbol (name, info))
+	duplicateName (name, lineNumber, fileName());
+
+    return _lcontext.newVariableNode
+	(lineNumber, name, info, initialValue, true);
+}
+
+VariableNodePtr
+Parser::variableDefinitionImport
+    (AllocationMode mode,
+     int lineNumber,
+     const string &name,
+     bool isConst,
+     const DataTypePtr &baseType,
+     const SizeVector &declArraySizes,
+     ExprNodePtr &initialValue)
+{
+    debugSyntax ("variableDefinitionImport");
+
+    //
+    // Variable definition, initial value is imported from
+    // a file
     //
 
     DataTypePtr type = baseType;
@@ -2603,7 +2684,7 @@ Parser::variableDefinitionAssignExpr
 		rhsType->sizes (initSizes);
 	    }
 
-	    for (int i = 0; i < arraySizes.size() && !initError ; i++)
+	    for (int i = 0; i < (int)arraySizes.size() && !initError ; i++)
 	    {
 		if (initSizes[i] == 0)
 		{
@@ -2634,7 +2715,7 @@ Parser::variableDefinitionAssignExpr
 	}
 	else
 	{
-	    for (int i = 0; i < arraySizes.size() && !initError; i++)
+	    for (int i = 0; i < (int)arraySizes.size() && !initError; i++)
 	    {
 		if (arraySizes[i] == 0)
 		{
@@ -2725,7 +2806,7 @@ Parser::variableDefinitionExprSideEffect
     {
 	bool initError = false;
 
-	for (int i = 0; i < declArraySizes.size(); i++ )
+	for (int i = 0; i < (int)declArraySizes.size(); i++ )
 	{
 	    if (declArraySizes[i] == 0)
 	    {
@@ -2866,3 +2947,5 @@ loadModuleRecursive (Parser &parser, const string &moduleName)
 }
 
 } // namespace Ctl
+
+// vim: ts=8:sts=4

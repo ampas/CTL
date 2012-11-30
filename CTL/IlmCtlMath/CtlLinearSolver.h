@@ -377,10 +377,10 @@ operator () (b_iterator b_first, b_iterator b_last,
     ASSERT(!M || M->numColumns() == op().numColumns(), Iex::ArgExc,
 	   "Ctl::CG() requires that "
 	   "M->numColumns() == A.numColumns().");
-    ASSERT(std::distance(b_first, b_last) == op().numRows(), Iex::ArgExc,
+    ASSERT(std::distance(b_first, b_last) == (int)op().numRows(), Iex::ArgExc,
 	   "Ctl::CG() requires that "
 	   "distance(b_first, b_last) == A.numRows().");
-    ASSERT(std::distance(x_first, x_last) == op().numColumns(), Iex::ArgExc,
+    ASSERT(std::distance(x_first, x_last) == (int)op().numColumns(), Iex::ArgExc,
 	   "Ctl::CG() requires that "
 	   "distance(x_first, x_last) == A.numColumns().");
 
