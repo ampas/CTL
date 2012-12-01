@@ -57,11 +57,22 @@ void aces_write(const char *name, float scale,
                const void *pixels,
                format_t *format) {
 
-	if (scale != 1.0f && scale != 0.0f) 
-		throw std::invalid_argument("Non-unit scale not implemented with aces format for now");
 	if (channels != 3) 
 		throw std::invalid_argument("Only RGB file supported");
 		
+	half *in = (half*)pixels;
+	std::vector<half> scaled_pixels;
+	
+	if (scale != 1.0f && scale != 0.0f) 
+	{	
+		scaled_pixels.resize(height*width*channels);
+		half *out = &scaled_pixels[0];
+		for(size_t i=0; i<scaled_pixels.size(); i++) {
+			*(out++)=*(in++)/scale;
+		}
+
+		in = &scaled_pixels[0];
+	}
 	std::vector<std::string> filenames;
 	filenames.push_back( name );
 	
@@ -87,7 +98,7 @@ void aces_write(const char *name, float scale,
 	x.newImageObject ( dynamicMeta );		
 
 	for ( uint32 row = 0; row < height; row++) {
-		half *rgbData = (half*)pixels + width*channels*row;
+		half *rgbData = in + width*channels*row;
 		x.storeHalfRow ( rgbData, row ); 
 	}
 
