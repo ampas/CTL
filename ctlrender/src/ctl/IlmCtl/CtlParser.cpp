@@ -1070,25 +1070,29 @@ Parser::parseExprVariableDefinitionOrAssign()
     ExprNodePtr lhs = parseExpression();
     if( token() == TK_NAME )
     {
-	NameNodePtr name = lhs.cast<NameNode>();
-	DataTypePtr dataType;
-	if(!name || !name->info->isTypeName() || !name->info->type())
-	{
-	    MESSAGE_PLE (_lex, _lcontext, ERR_UNKNOWN_TYPE, lhs->lineNumber,
-			"Definition with unknown type: " << name->name 
-			<< "\n");
-	    MemberVector members;
-	    dataType = _lcontext.newStructType("",members);
-	}
-	else
-	    dataType = name->info->type();
-
-	return parseVariableDefinition(AM_AUTO, dataType);
+        NameNodePtr name = lhs.cast<NameNode>();
+        DataTypePtr dataType;
+        
+        if (!name ||
+            !name->info ||
+            !name->info->isTypeName() ||
+            !name->info->type())
+        {
+            MESSAGE_PLE (_lex, _lcontext, ERR_UNKNOWN_TYPE, lhs->lineNumber,
+                         "Definition with unknown type: " << name->name
+                         << "\n");
+            MemberVector members;
+            dataType = _lcontext.newStructType("",members);
+        }
+        else
+            dataType = name->info->type();
+        
+        return parseVariableDefinition(AM_AUTO, dataType);
     }
-
+    
     if( token() == TK_ASSIGN )
-	return parseAssignment(lhs);
-
+        return parseAssignment(lhs);
+    
     return parseExprStatement(lhs);
 }
 
@@ -1884,8 +1888,11 @@ Parser::parsePrimaryExpression ()
 {
     debugSyntax ("primaryExpression");
 
+<<<<<<< HEAD
     NameNodePtr name;
 
+=======
+>>>>>>> origin/update_ctl
     if (token() == TK_TRUE)
     {
 	debugSyntax1 ("true");
@@ -1947,7 +1954,11 @@ Parser::parsePrimaryExpression ()
 	return expr;
     }
 
+<<<<<<< HEAD
     name = parseScopedName();
+=======
+    NameNodePtr name = parseScopedName();
+>>>>>>> origin/update_ctl
     ExprNodePtr lhs = name;
 
     if( name && name->info && name->info->isTypeName())

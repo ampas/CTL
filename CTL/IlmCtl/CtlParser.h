@@ -169,6 +169,15 @@ class Parser
 				 const DataTypePtr &baseType,
 				 const SizeVector &declArraySizes);
 
+    VariableNodePtr	variableDefinitionImport
+				(AllocationMode mode,
+				 int lineNumber,
+				 const std::string &name,
+				 bool isConst,
+				 const DataTypePtr &baseType,
+				 const SizeVector &declArraySizes,
+				 ExprNodePtr &initialValue);
+
     VariableNodePtr	variableDefinitionCurlyBraces
 				(AllocationMode mode,
 				 int lineNumber,

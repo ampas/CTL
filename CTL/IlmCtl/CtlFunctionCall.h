@@ -67,6 +67,7 @@
 #include <CtlRcPtr.h>
 #include <string>
 #include <vector>
+#include <CtlTypeStorage.h>
 
 namespace Ctl {
 
@@ -106,7 +107,6 @@ class FunctionCall: public RcObject
     //------------------------------
 
     const std::string &		name () const		{return _name;}
-
 
     //---------------------------------------------------------------------
     // Access to the arguments for the function call
@@ -164,11 +164,8 @@ class FunctionCall: public RcObject
     FunctionArgPtr	_returnValue;
 };
 
-
-class FunctionArg: public RcObject
-{
+class FunctionArg: public TypeStorage {
   public:
-
     //-------------------------------------------------------------
     // Constructor and destructor
     //
@@ -180,10 +177,10 @@ class FunctionArg: public RcObject
     // objects.
     //-------------------------------------------------------------
 
-    FunctionArg (const std::string &name,
-		 const FunctionCallPtr &func,
-		 const DataTypePtr &type,
-		 bool varying);
+    FunctionArg(const std::string &name,
+	            FunctionCall* func,
+	            const DataTypePtr &type,
+	            bool varying);
 
     virtual ~FunctionArg ();
 
@@ -192,21 +189,7 @@ class FunctionArg: public RcObject
     // The FunctionCall object to which this FunctionArg belongs
     //----------------------------------------------------------
 
-    const FunctionCallPtr &	func () const		{return _func;}
-
-
-    //-------------------------
-    // The name of the argument
-    //-------------------------
-
-    const std::string &		name () const		{return _name;}
-
-
-    //--------------------
-    // The argument's type
-    //--------------------
-
-    const DataTypePtr &		type () const		{return _type;}
+    const FunctionCall*	func () const		{return _func;}
 
 
     //-----------------------------------------------------------------
@@ -216,9 +199,8 @@ class FunctionArg: public RcObject
     // for a function's output arguments or return value is undefined.
     //-----------------------------------------------------------------
 
-    bool			isVarying () const	{return _varying;}
+    virtual bool                isVarying () const	{return _varying;}
     virtual void                setVarying (bool varying) {_varying = varying;}
-
 
     //----------------------------------------------------------------
     // A pointer to a buffer for the argument's value.  Before calling
@@ -228,7 +210,6 @@ class FunctionArg: public RcObject
     // of the output argument values and the return value from the
     // corresponding buffers.
     //----------------------------------------------------------------
-
     virtual char *		data ()	= 0;
 
 
@@ -242,11 +223,8 @@ class FunctionArg: public RcObject
     virtual void		setDefaultValue () = 0;
 
   private:
-
-    std::string 		_name;
-    FunctionCallPtr		_func;
-    DataTypePtr			_type;
-    bool			_varying;
+    FunctionCall*		_func;
+    bool                _varying;
 };
 
 

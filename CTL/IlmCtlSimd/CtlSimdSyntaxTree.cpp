@@ -92,28 +92,29 @@ generateCodeForPath (StatementNodePtr node, SimdLContext &slcontext,
 		     const SimdLContext::Path *insertPath = 0,
 		     const vector<DataTypePtr> *locals = 0)
 {
-    if (!node)
+    if( !node )
+    {
 	return 0;
+    }
 
 
     slcontext.newPath();
 
-    if (locals)
+    if( locals )
     {
-	//
 	// Insert instructions to hold space for local variables on stack
-	//
-
-	for (vector<DataTypePtr>::const_iterator type = locals->begin();
-	     type != locals->end(); 
-	     type++)
+	for(vector<DataTypePtr>::const_iterator type = locals->begin();
+	    type != locals->end(); 
+	    type++)
 	{
-	    (*type)->newAutomaticVariable (node, slcontext);
+	    (*type)->newAutomaticVariable(node, slcontext);
 	}
     }
     
-    if (insertPath && insertPath->firstInst)
-	slcontext.appendPath (*insertPath);
+    if(insertPath && insertPath->firstInst)
+    {
+	slcontext.appendPath(*insertPath);
+    }
 
     while (node)
     {
@@ -198,57 +199,39 @@ void
 SimdFunctionNode::generateESizeCode(SimdLContext &slcontext, 
 				    SimdArrayTypePtr arrayType)
 {
-    if (arrayType && arrayType->unknownElementSize())
+    if( arrayType && arrayType->unknownElementSize())
     {
-	//
 	// push unknownESize
-	//
-
 	slcontext.addInst 
 	    (new SimdPushRefInst (arrayType->unknownElementSize(), lineNumber));
 
-	//
 	// we know sub-type is an array
-	//
-
 	SimdArrayTypePtr subArrayType = arrayType->elementType();
-	generateESizeCode (slcontext, subArrayType);
+	generateESizeCode(slcontext, subArrayType);
 
-	//
-	// push sub elementSize: reference to computed or literal
-	//
-
-	if (subArrayType->unknownElementSize())
+	// push sub elementSize : reference to computed or literal
+	if( subArrayType->unknownElementSize() )
 	    slcontext.addInst 
-		(new SimdPushRefInst (subArrayType->unknownElementSize(), 
-				      lineNumber));
+		(new SimdPushRefInst(subArrayType->unknownElementSize(), 
+				     lineNumber));
 	else
 	    slcontext.addInst 
 		(new SimdPushLiteralInst <int> (subArrayType->elementSize(), 
 						lineNumber));
 
-	//
-	// push sub size: reference to computed or literal
-	//
-
-	if (subArrayType->unknownSize())
+	// push sub size : reference to computed or literal
+	if( subArrayType->unknownSize() )
 	    slcontext.addInst 
 		(new SimdPushRefInst (subArrayType->unknownSize(), lineNumber));
 	else
 	    slcontext.addInst 
 		(new SimdPushLiteralInst <int> (subArrayType->size(), 
 						lineNumber));
-	//
 	// multiply
-	//
-
 	slcontext.addInst
 	    (new SimdBinaryOpInst <int, int, int, TimesOp> (lineNumber));
 
-	//
 	// assign
-	//
-
 	slcontext.addInst (new SimdAssignInst (sizeof(int), lineNumber));
     }
 }
@@ -322,77 +305,72 @@ SimdVariableNode::generateCode (LContext &lcontext)
 
     if (initialValue)
     {
-	SimdLContext &slcontext = static_cast <SimdLContext &> (lcontext);
+	    SimdLContext &slcontext = static_cast <SimdLContext &> (lcontext);
 	
-	SimdDataAddrPtr dataPtr = info->addr().cast<SimdDataAddr>();
+	    SimdDataAddrPtr dataPtr = info->addr().cast<SimdDataAddr>();
+	    SimdValueNodePtr valuePtr = initialValue.cast<SimdValueNode>();
 
-	if (assignInitialValue)
-	{
-	    //
-	    // Initial value is assigned to the variable.
-	    //
-
-	    SimdValueNodePtr valuePtr = info->value().cast<SimdValueNode>();
-
-	    if( valuePtr && valuePtr->type && dataPtr  && dataPtr->reg())
+	    if (assignInitialValue)
 	    {
-		//
-		// The variable is static, and its value is a literal
-		// or a collection of literals (for structs and arrays).
-		// We can copy the initial value directly into the
-		// variable instead of generating code to assign the
-		// value.
-		
-		//
-		// Get sizes & offsets of elements
-		//
-		
-		SizeVector sizes;
-		SizeVector offsets;
-		DataTypePtr dataType = valuePtr->type;
-		dataType->coreSizes(0, sizes, offsets);
+	        //
+	        // Initial value is assigned to the variable.
+	        //
 
-		ExprNodeVector &elements = valuePtr->elements;
-		int numElements = elements.size();
-		assert(sizes.size() == numElements 
-		       && offsets.size() == numElements);
-		assert(!dataPtr->reg()->isVarying());
+	        if( valuePtr && valuePtr->type && dataPtr  && dataPtr->reg())
+	        {
+				// The variable is static, and its value is a literal
+				// or a collection of literals (for structs and arrays).
+				// We can copy the initial value directly into the
+				// variable instead of generating code to assign the
+				// value.
 		
-		char* dest = (*dataPtr->reg())[0];
+		        // get sizes & offsets of elements
+		        SizeVector sizes;
+		        SizeVector offsets;
+		        DataTypePtr dataType = valuePtr->type;
+		        dataType->coreSizes(0, sizes, offsets);
+
+		        ExprNodeVector &elements = valuePtr->elements;
+		        int numElements = elements.size();
+		        assert((int)sizes.size() == numElements 
+		               && (int)offsets.size() == numElements);
+		        assert(!dataPtr->reg()->isVarying());
 		
-		int eIndex = 0;
+		        char* dest = (*dataPtr->reg())[0];
+		
+		        int eIndex = 0;
 
-		valuePtr->castAndCopyRec(lcontext, dataType, eIndex, 
-					 dest, sizes, offsets);
+		        valuePtr->castAndCopyRec(lcontext, dataType, eIndex, 
+					         dest, sizes, offsets);
 
+	        }
+	        else
+	        {
+		        slcontext.addInst (new SimdPushRefInst (info->addr(), lineNumber));
+		        initialValue->generateCode (lcontext);
+		        info->type()->generateCastFrom (initialValue, lcontext);
+
+		        info->type()->generateCode (this, lcontext);
+	        }
 	    }
 	    else
 	    {
-		slcontext.addInst (new SimdPushRefInst (info->addr(), lineNumber));
-		initialValue->generateCode (lcontext);
-		info->type()->generateCastFrom (initialValue, lcontext);
+	        //
+	        // Variable is initialized via side-effect.
+	        //
 
-		info->type()->generateCode (this, lcontext);
+	        initialValue->generateCode (lcontext);
+
+	        const SimdCallNode *call = 
+		    dynamic_cast <const SimdCallNode*>(initialValue.pointer());
+	        
+	        RcPtr<SimdVoidType> pv(new SimdVoidType());
+
+	        if (call == 0 || !call->returnsType (pv))
+	        {
+		        slcontext.addInst (new SimdPopInst (1, lineNumber));
+	        }
 	    }
-	}
-	else
-	{
-	    //
-	    // Variable is initialized via side-effect.
-	    //
-
-	    initialValue->generateCode (lcontext);
-
-	    const SimdCallNode *call = 
-		dynamic_cast <const SimdCallNode*>(initialValue.pointer());
-	    
-	    RcPtr<SimdVoidType> pv(new SimdVoidType());
-
-	    if (call == 0 || !call->returnsType (pv))
-	    {
-		slcontext.addInst (new SimdPopInst (1, lineNumber));
-	    }
-	}
     }
 }
 
@@ -1130,18 +1108,16 @@ SimdCallNode::generateCode (LContext &lcontext)
     const ParamVector &parameters = functionType->parameters();
 
     int numParameters = parameters.size();
-
     for (int i = parameters.size() - 1; i >= 0; --i)
     {
 	ExprNodePtr nextArg;
 
-	if (i >= arguments.size())
+	if (i >= (int)arguments.size())
 	{
 	    //
 	    // Argument is not explicity specified; use the default
 	    // value for the corresponding function parameter.
 	    //
-
 	    nextArg = parameters[i].defaultValue;
 	}
 	else
@@ -1149,19 +1125,15 @@ SimdCallNode::generateCode (LContext &lcontext)
 	    //
 	    // Argument is explicitly specified.
 	    //
-
 	    nextArg = arguments[i];
 	}
 
 	nextArg->generateCode (lcontext);
 	parameters[i].type->generateCastFrom(nextArg, lcontext);
 
-	//
 	// If the size is unknown, push the unknown sizes onto the array
 	//
-
 	SimdArrayTypePtr arrayParam = parameters[i].type.cast<SimdArrayType>();
-
 	if(arrayParam)
 	{
 	    SimdArrayTypePtr arrayArg = nextArg->type.cast<SimdArrayType>();
@@ -1169,17 +1141,16 @@ SimdCallNode::generateCode (LContext &lcontext)
 
             SizeVector unknown;
 	    arrayParam->sizes(unknown);
-
-	    for (int i = 0; i < unknown.size(); i++)
+	    for(int i = 0; i < (int)unknown.size(); i++)
 	    {
-                assert (arrayArg);
-		if (unknown[i] == 0)
+                assert(arrayArg);
+		if(unknown[i] == 0)
 		{
-                    if (arrayArg->size() == 0)
+                    if(arrayArg->size() == 0)
                     {
-                        slcontext.addInst (new SimdPushRefInst 
-                                           (arrayArg->unknownSize(),
-                                            lineNumber));
+                        slcontext.addInst(new SimdPushRefInst 
+                                          (arrayArg->unknownSize(),
+                                             lineNumber));
                     }
                     else
                     {
@@ -1187,13 +1158,11 @@ SimdCallNode::generateCode (LContext &lcontext)
                             (new SimdPushLiteralInst<int>(int(arrayArg->size()), 
                                                           lineNumber));
                     }
-
 		    numParameters++;
 		}
                 arrayArg = arrayArg->elementType().cast<SimdArrayType>();
 	    }
-
-            assert (!arrayArg);
+            assert(!arrayArg);
 	}
     }
 
@@ -1288,7 +1257,7 @@ SimdValueNode::generateCodeRec (LContext &lcontext,
     }
     else
     {
-	assert(eIndex < elements.size());
+	assert(eIndex < (int)elements.size());
 	elements[eIndex]->generateCode(lcontext);
 	dataType->generateCastFrom(elements[eIndex], lcontext);
 	eIndex++;
@@ -1311,28 +1280,28 @@ SimdValueNode::castAndCopyRec(LContext &lcontext,
     //
     if( StructTypePtr structType = dataType.cast<StructType>())
     {
-	for(MemberVectorConstIterator it = structType->members().begin();
-	    it != structType->members().end();
-	    it++)
-	{
-	    castAndCopyRec(lcontext, it->type, eIndex, dest, sizes, offsets);
-	}
+	    for(MemberVectorConstIterator it = structType->members().begin();
+	        it != structType->members().end();
+	        it++)
+	    {
+	        castAndCopyRec(lcontext, it->type, eIndex, dest, sizes, offsets);
+	    }
     }
     else if( ArrayTypePtr arrayType = dataType.cast<ArrayType>())
     {
-	for (int i = 0; i < arrayType->size(); ++i)
-	{
-	    castAndCopyRec(lcontext, arrayType->elementType(), eIndex, 
-			   dest, sizes, offsets);
-	}
+	    for (int i = 0; i < arrayType->size(); ++i)
+	    {
+	        castAndCopyRec(lcontext, arrayType->elementType(), eIndex, 
+			       dest, sizes, offsets);
+	    }
     }
     else
     {
-	assert(eIndex < elements.size());
-	LiteralNodePtr literal = elements[eIndex];
-	literal = dataType->castValue(lcontext, literal);
-	memcpy(dest+offsets[eIndex], literal->valuePtr(), sizes[eIndex]);
-	eIndex++;
+	    assert(eIndex < (int)elements.size());
+	    LiteralNodePtr literal = elements[eIndex];
+	    literal = dataType->castValue(lcontext, literal);
+	    memcpy(dest+offsets[eIndex], literal->valuePtr(), sizes[eIndex]);
+	    eIndex++;
     }
 }
 

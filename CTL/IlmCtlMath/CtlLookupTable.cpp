@@ -305,7 +305,7 @@ interpolateCubic1D
 			       (table[i][0] - table[i-1][0]));
     }
 
-    if (i < size - 2)
+    if ((int)i < size - 2)
     {
 	m1 = 0.5f * (dy + dx * (table[i+2][1] - table[i+1][1]) /
 			       (table[i+2][0] - table[i+1][0]));
@@ -316,7 +316,7 @@ interpolateCubic1D
 	m0 = (3 * dy - m1) * 0.5f;
     }
 
-    if (i >= size - 2)
+    if ((int)i >= size - 2)
     {
 	m1 = (3 * dy - m0) * 0.5f;
     }

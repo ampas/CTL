@@ -82,7 +82,8 @@ typedef RcPtr<FunctionArg> FunctionArgPtr;
 class DataType;
 typedef RcPtr<DataType> DataTypePtr;
 
-class FunctionCall: public RcObject {
+class FunctionCall: public RcObject
+{
   public:
 
     //-----------------------------------------------------------------
