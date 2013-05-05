@@ -126,6 +126,8 @@ void usage(const char *section) {
 "        exr     Produces an exr file in the half (16 bit float) per sample\n"
 "                format.\n"
 "\n"
+"        aces    Produces an aces complient exr file\n"
+"\n"
 "    When only one source file is specified with a destination file name,\n"
 "    the extension is interpreted the same way as an argument to '-format',\n"
 "    and will not be changed.\n"
