@@ -120,6 +120,8 @@ void usage(const char *section) {
 "\n"
 "        tiff16  Produces a TIFF file in the 16 bits per sample format\n"
 "\n"
+"        tiff32  Produces a TIFF file in the 32 bits per sample format\n"
+"\n"
 "        tiff    Produces a TIFF file with the same bit depth as the source\n"
 "                image\n"
 "\n"
