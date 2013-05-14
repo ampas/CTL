@@ -128,7 +128,7 @@ void usage(const char *section) {
 "        exr     Produces an exr file in the half (16 bit float) per sample\n"
 "                format\n"
 "\n"
-"        aces    Produces an aces complient exr file\n"
+"        aces    Produces an aces compliant exr file\n"
 "\n"
 "    When only one source file is specified with a destination file name,\n"
 "    the extension is interpreted the same way as an argument to '-format',\n"
@@ -167,7 +167,7 @@ void usage(const char *section) {
 "    integral input files (integer tiff, integer dpx):\n"
 "        If the '-input_scale' option is provided then the sample value from\n"
 "        the file is *divided by* the specified scale.\n"
-"        If the -input_scale option is not provided, then the input values\n"
+"        If the '-input_scale' option is not provided, then the input values\n"
 "        are scaled to the range 0.0-1.0 (inclusive). For the purposes of\n"
 "        this argument, DPX files are considered an integral file format,\n"
 "        however ACES files are *not*. This is equivalent to specifying\n"
@@ -197,8 +197,8 @@ void usage(const char *section) {
 "        If the '-output_scale' option is not provided then the sample values\n"
 "        from the file is used as-is (with a scale of 1.0).\n"
 "\n"
-"    In all cases the the CTL output values (after output_scaling) are\n"
-"    clipped to the maximum values supported by the output file format.\n"
+"    In all cases the CTL output values (after output_scaling) are clipped\n"
+"    to the maximum values supported by the output file format.\n"
 "");
 	} else if(!strncmp(section, "param", 1)) {
 		fprintf(stdout, ""
