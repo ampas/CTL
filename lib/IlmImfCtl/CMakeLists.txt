@@ -11,3 +11,4 @@ install( FILES ImfCtlApplyTransforms.h DESTINATION include/OpenEXR )
 
 export( TARGETS IlmImfCtl IlmCtl FILE "${PROJECT_BINARY_DIR}/CTLLibraryDepends.cmake" )
 
+install( TARGETS IlmImfCtl DESTINATION lib )
