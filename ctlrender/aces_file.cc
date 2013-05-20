@@ -45,29 +45,91 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#if !defined(CTL_UTIL_CTLRENDER_FORMAT_INCLUDE)
-#define CTL_UTIL_CTLRENDER_FORMAT_INCLUDE
-
-#include <exception>
-#include <Iex.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/stat.h>
-
+#include "aces_file.hh"
 #include <iostream>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <vector>
 
-#include <CtlRcPtr.h>
-#include <CtlFunctionCall.h>
-#include <CtlSimdInterpreter.h>
-#include <CtlStdType.h>
+#if defined( HAVE_ACESFILE )
+#include <aces/aces_Writer.h>
+#include <stdexcept>
 
-std::string getInputParams(std::ifstream*);
-std::string inputParameters(const char*, std::vector<std::string> *, std::vector<std::vector<float> >*, std::vector<int>*);
+void aces_write(const char *name, float scale, 
+               uint32_t width, uint32_t height, uint32_t channels,
+               const void *pixels,
+               format_t *format) {
 
+	if (channels != 3) 
+		throw std::invalid_argument("Only RGB file supported");
+		
+	half *in = (half*)pixels;
+	std::vector<half> scaled_pixels;
+	
+	if (scale != 1.0f && scale != 0.0f) 
+	{	
+		scaled_pixels.resize(height*width*channels);
+		half *out = &scaled_pixels[0];
+		for(size_t i=0; i<scaled_pixels.size(); i++) {
+			*(out++)=*(in++)/scale;
+		}
+
+		in = &scaled_pixels[0];
+	}
+	std::vector<std::string> filenames;
+	filenames.push_back( name );
+	
+	aces_Writer x;
+	
+	MetaWriteClip writeParams;
+	
+	writeParams.duration				= 1;	
+	writeParams.outputFilenames			= filenames;
+	
+	writeParams.outputRows				= height;
+	writeParams.outputCols				= width;	
+	
+	writeParams.hi = x.getDefaultHeaderInfo();	
+	writeParams.hi.originalImageFlag	= 1;	
+	writeParams.hi.software				= "ctlrender";
+
+	DynamicMetadata dynamicMeta;
+	dynamicMeta.imageIndex = 0;
+	dynamicMeta.imageCounter = 0;
+	
+	x.configure ( writeParams );
+	x.newImageObject ( dynamicMeta );		
+
+	for ( uint32 row = 0; row < height; row++) {
+		half *rgbData = in + width*channels*row;
+		x.storeHalfRow ( rgbData, row ); 
+	}
+
+#if 0
+	std::cout << "saving aces file" << std::endl;
+	std::cout << "size " << width << "x" << height << "x" << channels << std::endl;
+	std::cout << "size " << writeParams.outputCols << "x" << writeParams.outputRows << std::endl;
+	std::cout << "duration " << writeParams.duration << std::endl;
+	std::cout << writeParams.hi;
+	std::cout << "\ndynamic meta" << std::endl;
+	std::cout << "imageIndex " << dynamicMeta.imageIndex << std::endl;
+	std::cout << "imageCounter " << dynamicMeta.imageCounter << std::endl;
+	std::cout << "timeCode " << dynamicMeta.timeCode << std::endl;
+	std::cout << "keyCode " << dynamicMeta.keyCode << std::endl;
+	std::cout << "capDate " << dynamicMeta.capDate << std::endl;
+	std::cout << "uuid " << dynamicMeta.uuid << std::endl;
+#endif
+
+	x.saveImageObject ( );	
+}
+
+#else 
+
+void aces_write(const char *name, float scale,
+                uint32_t width, uint32_t height, uint32_t channels,
+                const void *pixels,
+                format_t *format)
+{
+	std::cerr << "AcesContainer library not found" << std::endl;
+}
 
 #endif
+
+

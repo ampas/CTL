@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=@INSTALL_BIN_DIR@
+libdir=@INSTALL_LIB_DIR@
+includedir=@INSTALL_INCLUDE_DIR@
+CTL_includedir=@INSTALL_INCLUDE_DIR@/CTL
+
+Name: CTL
+Description: CTL interpreter library
+Version: @CTL_VERSION@
+Libs: -L${libdir} -lIlmCtlSimd -lIlmCtlMath -lIlmCtl @IlmBase_LDFLAGS@
+Cflags: @IlmBase_CFLAGS@ -I${CTL_includedir}

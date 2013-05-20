@@ -58,7 +58,7 @@ void NukeTransform(const Row& in, int y, int x, int r, ChannelMask channels, Row
 	int numChan = channels.size();
 	int i = 0, j;
 	size_t width = r - x;
-	half image_buffer[numChan*width];
+	half *image_buffer = new half[numChan*width];
 	int fExists = strcasecmp("", filename);
 	
 	// if file hasn't been selected copy input channels to output
@@ -153,7 +153,7 @@ void NukeTransform(const Row& in, int y, int x, int r, ChannelMask channels, Row
         }
         i++;
     }
-    
+    delete [] image_buffer;
 }
 
 void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_results, size_t count) {

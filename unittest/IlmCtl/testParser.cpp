@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 //
-// Copyright (c) 2009 Academy of Motion Picture Arts and Sciences
+// Copyright (c) 2006 Academy of Motion Picture Arts and Sciences
 // ("A.M.P.A.S."). Portions contributed by others as indicated.
 // All rights reserved.
 // 
@@ -45,29 +45,56 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#if !defined(CTL_UTIL_CTLRENDER_FORMAT_INCLUDE)
-#define CTL_UTIL_CTLRENDER_FORMAT_INCLUDE
 
-#include <exception>
-#include <Iex.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/stat.h>
-
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <vector>
-
-#include <CtlRcPtr.h>
-#include <CtlFunctionCall.h>
 #include <CtlSimdInterpreter.h>
-#include <CtlStdType.h>
+#include <iostream>
+#include <exception>
+#include <assert.h>
+#include <sstream>
 
-std::string getInputParams(std::ifstream*);
-std::string inputParameters(const char*, std::vector<std::string> *, std::vector<std::vector<float> >*, std::vector<int>*);
+using namespace Ctl;
+using namespace std;
 
+void
+testParser ()
+{
+    try
+    {
+        cout << "Testing parser" << endl;
 
-#endif
+        SimdInterpreter interp;
+        interp.loadModule ("test");
+        interp.loadModule ("testName2");
+        interp.loadModule ("testScope");
+        interp.loadModule ("testScope2");
+        interp.loadModule ("testLiterals");
+        interp.loadModule ("example");
+        interp.loadModule ("testComments");
+        interp.loadModule ("testVSArrays");
+        interp.loadModule ("testTypes");
+        interp.loadModule ("testLoops");
+        interp.loadModule ("testStdLibrary");
+        interp.loadModule ("testLookupTables");
+        interp.loadModule ("testCast");
+        interp.loadModule ("testFunc");
+        interp.loadModule ("testDefaults");
+        interp.loadModule ("testArray");
+        interp.loadModule ("testNameSpace");
+        interp.loadModule ("testNameSpace2");
+        interp.loadModule ("testName");
+        interp.loadModule ("testStruct");
+       	interp.loadModule ("testParse");
+       	interp.loadModule ("testEmpty");
+       	interp.loadModule ("testExpr");
+        interp.loadModule ("testInterpolator");
+        interp.loadModule ("testCtlVersion");
+        interp.loadModule ("testExamples");
+
+	cout << "ok\n" << endl;
+    }
+    catch (const std::exception &e)
+    {
+	cerr << "ERROR -- caught exception: " << endl << e.what() << endl;
+	assert (false);
+    }
+}

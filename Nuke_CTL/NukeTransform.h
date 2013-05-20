@@ -58,7 +58,7 @@
 #include <CtlSimdInterpreter.h>
 #include <CtlStdType.h>
 #include <exception>
-#include <Iex/Iex.h>
+#include <Iex.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
