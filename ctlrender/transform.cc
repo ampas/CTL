@@ -821,7 +821,7 @@ void transform(const char *inputFile, const char *outputFile,
 		image_buffer.swizzle(0, TRUE);
 	}
 
-    std::cout << image_format->ext << std::endl;
+//    std::cout << image_format->ext << std::endl;
     if (!strncmp(image_format->ext, "aces", 3))
     {
         aces_write(outputFile, output_scale,
