@@ -2,7 +2,7 @@
 set( NUKE_INSTALL_PATH $ENV{NDKDIR} CACHE PATH "Path to install directory of Nuke" )
 
 # TODO: replace with FindNuke.cmake
-get_filename_component( NUKE_VERSION ${NUKE_INSTALL_PATH} NAME )
+get_filename_component( NUKE_VERSION "${NUKE_INSTALL_PATH}" NAME )
 set( NUKE_OSX_SUFFIX ${NUKE_VERSION}.app/Contents/MacOS )
 find_path(  NUKE_INCLUDE_DIR
             NAMES DDImage/Op.h
