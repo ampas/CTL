@@ -41,17 +41,21 @@ the same CTL program can apply the same transform to an image.
 ## Package Contents ##
 The CTL source code contains the following:
 
-* Color Transformation Language libraries and the CTL interpreter 
-* `doc/` - contains CTL documentation
-* `OpenEXR_CTL/` - contains sample CTL application packages, such as:
-  * `exrdpx/` - an initial version of a CTL-driven file converter that 
+
+* `lib/` - CTL libraries and the CTL interpreter 
+  * dpx/ - DPX library
+  * IlmCtl - CTL language library
+  * IlmCtlMath - CTL math library
+  * IlmCtlSimd - CTL simd backend library
+  * IlmImfCtl - a simplified OpenEXR interface to CTL
+* `doc/` - CTL documentation
+* `OpenEXR_CTL/` - sample CTL application packages utilizing IlmImfCtl
+  * `exrdpx/` - a CTL-driven file converter that 
   translates DPX files into OpenEXR files and vice versa. The conversion between
   the DPX and OpenEXR color spaces is handled by CTL transforms.
-  * `exr_ctl_exr` - an initial version of a program that can bake the effect of a series of CTL transforms into the pixels of an OpenEXR file.
-* `ctlrender/` - contains a fully functional CTL application that allows for
-  application of CTL transforms to an image using one or more CTL scripts, 
-  potentially converting the file format in the process.
-* `\Nuke_CTL` - contains an application for using CTL transforms in a Nuke node
+  * `exr_ctl_exr` - an application to bake the effect of a series of CTL transforms into the pixels of an OpenEXR file
+* `ctlrender/` - an application that allows for application of CTL transforms to an image using one or more CTL scripts, potentially converting the file format in the process.
+* `Nuke_CTL/` - an application for using CTL transforms in a Nuke node
 
 ## Installation Prerequisites ##
 ### Required ###
@@ -145,7 +149,7 @@ indicates acceptance to be bound by the following terms and conditions:
 * Copies of source code, in whole or in part, must retain the above copyright
 notice, this list of conditions and the Disclaimer of Warranty.
 
-* Use in binary form must retain the copyright notice (below), this list of
+* Use in binary form must retain the above copyright notice, this list of
 conditions and the Disclaimer of Warranty in the documentation and/or other
 materials provided with the distribution.
 
@@ -161,9 +165,6 @@ contributors, as appropriate.
 This license shall be construed pursuant to the laws of the State of California, 
 and any disputes related thereto shall be subject to the jurisdiction of the 
 courts therein.
-
-Copyright © 2013 Academy of Motion Picture Arts and Sciences (A.M.P.A.S.).
-Portions contributed by others as indicated. All rights reserved.
 
 Disclaimer of Warranty: THIS SOFTWARE IS PROVIDED BY A.M.P.A.S. AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,

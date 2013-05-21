@@ -1,19 +1,64 @@
-Developers:
------------
+Cmake build system
 
-Florian Kainz <kainz@ilm.com>
-Andrew Kunz <akunz@ilm.com>
+  Kimball Thurston
+  Ken Boreham
 
-Contributors:
--------------
 
-Fred Pighin
-Francesco Callari
-Richard Patterson
-Joseph Goldstone
+CTL Language
 
-Win32 build system:
--------------------
+  Developers:
+  -----------
 
-Kimball Thurston
+  Florian Kainz <kainz@ilm.com>
+  Andrew Kunz <akunz@ilm.com>
+
+  Contributors:
+  -------------
+
+  Fred Pighin
+  Francesco Callari
+  Richard Patterson
+  Joseph Goldstone
+  Ken Boreham
+  Tom Dilligan
+  John Hurst
+
+
+OpenEXR_CTL
+
+  Developers:
+  -----------
+
+  Florian Kainz <kainz@ilm.com>
+  Andrew Kunz <akunz@ilm.com>
+
+  Contributors:
+  -------------
+
+
+ctlrender
+
+  Developers:
+  -----------
+  
+  Tom Dilligan
+  Ken Boreham
+  
+  Contributors:
+  -------------
+  
+  Bill Elswick
+  
+
+Nuke_CTL
+
+  Developers:
+  -----------
+  
+  Jonathan Graham
+  
+  Contributors:
+  -------------
+  
+  Ken Boreham
 
