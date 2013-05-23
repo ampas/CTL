@@ -41,7 +41,7 @@ the same CTL program can apply the same transform to an image.
 ## Package Contents ##
 The CTL source code contains the following:
 
-* Color Transform Language libraries and the CTL interpreter 
+* Color Transformation Language libraries and the CTL interpreter 
 * `doc/` - contains CTL documentation
 * `OpenEXR_CTL/` - contains sample CTL application packages, such as:
   * `exrdpx/` - an initial version of a CTL-driven file converter that 

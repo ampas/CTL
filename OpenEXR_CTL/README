@@ -1,7 +1,7 @@
 ABOUT THE OPENEXR_CTL LIBRARIES
 ----------------------------
 
-IlmImfCtl provides a simplified OpenEXR interface to CTL
+Requires IlmImfCtl
 
 exrdpx is an initial version of a CTL-driven file converter
 that translates DPX files into OpenEXR files and vice versa.
@@ -18,42 +18,6 @@ but they are not ready for production use.  The programs are slow,
 and the DPX file I/O capabilities of exrdpx are minimal; most DPX
 header fields and most OpenEXR attributes are lost during file
 conversion.
-
-
-LICENSE
--------
-
-The OpenEXR_CTL source code distribution is free software.  See the file
-named COPYING (included in this distribution) for details.
-
-
-BUILDING OPENEXR_CTL
-----------------
-
-Building OpenEXR_CTL requires the OpenEXR and CTL libraries.
-
-After installing the required libraries, to build OpenEXR_CTL on
-GNU/Linux or other UNIX-like systems, do this:
-
-./configure
-make
-make install
-
-unless you obtained OpenEXR_CTL directly from CVS, in which case you
-should first read README.CVS.
-
-See README.OSX for details on building OpenEXR_CTL in MacOS X.
-
-Do `make check` to run the OpenEXR_CTL confidence tests.  They should all
-pass; if you find a test that does not pass on your system, please let
-us know.
-
-Other UNIX variants haven't been tested, but should be easy to build.
-Let us know if you're having problems porting OpenEXR_CTL to a particular
-platform.
-
-All include files needed to use the OpenEXR_CTL libraries are installed in the 
-OpenEXR subdirectory of the install prefix, e.g. /usr/local/include/OpenEXR.
 
 
 USING OPENEXR_CTL IN YOUR APPLICATIONS
