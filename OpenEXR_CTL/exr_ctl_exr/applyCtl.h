@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 // 
-// Copyright (c) 2007 Academy of Motion Picture Arts and Sciences
+// Copyright (c) 2013 Academy of Motion Picture Arts and Sciences
 // ("A.M.P.A.S."). Portions contributed by others as indicated.
 // All rights reserved.
 // 
