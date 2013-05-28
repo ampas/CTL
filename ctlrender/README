@@ -1,0 +1,10 @@
+ABOUT CTLRENDER
+----------------------------
+
+ctlrender is a command line application for applying CTL transforms to an image using one or more CTL scripts, potentially converting the file format in the process
+
+ctlrender supports OpenEXR, TIFF, DPX, and ACES container file formats
+
+for further documentation on how to use ctlrender, type:
+
+  $ ctlrender -help
