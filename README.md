@@ -41,7 +41,6 @@ the same CTL program can apply the same transform to an image.
 ## Package Contents ##
 The CTL source code contains the following:
 
-
 * `lib/` - CTL libraries and the CTL interpreter 
   * dpx/ - DPX library
   * IlmCtl - CTL language library
@@ -53,28 +52,33 @@ The CTL source code contains the following:
   * `exrdpx/` - a CTL-driven file converter that 
   translates DPX files into OpenEXR files and vice versa. The conversion between
   the DPX and OpenEXR color spaces is handled by CTL transforms.
-  * `exr_ctl_exr` - an application to bake the effect of a series of CTL transforms into the pixels of an OpenEXR file
-* `ctlrender/` - an application that allows for application of CTL transforms to an image using one or more CTL scripts, potentially converting the file format in the process.
+  * `exr_ctl_exr` - an application to bake the effect of a series of CTL 
+  transforms into the pixels of an OpenEXR file
+* `ctlrender/` - an application that allows for application of CTL transforms to
+  an image using one or more CTL scripts, potentially converting the file format
+  in the process.
 * `Nuke_CTL/` - an application for using CTL transforms in a Nuke node
 
 ## Installation Prerequisites ##
 ### Required ###
+
 __CMake__
 
-CMake can be downloaded directly from www.cmake.org or use one of the commands below.
+CMake can be downloaded directly from www.cmake.org or use one of the commands 
+below.
 
 * Ubuntu
 
-    $ apt-get install cmake
+        $ sudo apt-get install cmake
 
 * Redhat
 
-    $ yum install cmake
+        $ yum install cmake
 
 * OS X (Install homebrew if not already installed)
 
-    $ ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
-    $ brew install cmake
+        $ ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+        $ brew install cmake
 
 __IlmBase__
 
@@ -83,43 +87,46 @@ downloaded from http://www.openexr.com or use one of the commands below.
 
 * Ubuntu
 
-		$ apt-get install ilmbase
-		
+        $ sudo apt-get install libilmbase-dev
+
 * Redhat
 
-		$ yum install ilmbase
-		
+        $ yum install ilmbase-devel
+
 * OS X (Install homebrew if not already installed)
 
-		$ ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
-		$ brew install ilmBase
+        $ ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+        $ brew install ilmBase
+
 
 ### Suggested ###
+
 __OpenEXR__
 
 If you want to use CTL together with the OpenEXR image file format, you should
 download OpenEXR. The sample programs included with the CTL package (i.e.
 ctlrender, dpxexr, exr_ctl_exr, etc.) require that OpenEXR be installed. OpenEXR 
-can be downloaded from http://www.openexr.com or using one of the commands 
-below.
+can be downloaded from http://www.openexr.com/downloads.html or using one of the 
+commands below.
 
 * Ubuntu
 
-		$ apt-get install openexr
-		
+        $ sudo apt-get install libopenexr-dev
+
 * Redhat
 
-		$ yum install openexr
-		
+        $ yum install OpenEXR-devel
+
 * OS X (Install homebrew if not already installed)
 
-		$ ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
-		$ brew install openexr
-		
+        $ ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
+        $ brew install openexr
+
 __ACES Container__
 
 ctlrender is able to write files compliant with SMPTE S2065-4. This
-functionality requires the aces_container library, the latest version of which can be downloaded from https://github.com/ampas/aces_container
+functionality requires the aces_container library, the latest version of which 
+can be downloaded from https://github.com/ampas/aces_container
 
 ## Installation ##
 
