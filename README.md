@@ -42,18 +42,8 @@ the same CTL program can apply the same transform to an image.
 The CTL source code contains the following:
 
 * `lib/` - CTL libraries and the CTL interpreter 
-  * dpx/ - DPX library
-  * IlmCtl - CTL language library
-  * IlmCtlMath - CTL math library
-  * IlmCtlSimd - CTL simd backend library
-  * IlmImfCtl - a simplified OpenEXR interface to CTL
 * `doc/` - CTL documentation
-* `OpenEXR_CTL/` - sample CTL application packages utilizing IlmImfCtl
-  * `exrdpx/` - a CTL-driven file converter that 
-  translates DPX files into OpenEXR files and vice versa. The conversion between
-  the DPX and OpenEXR color spaces is handled by CTL transforms.
-  * `exr_ctl_exr` - an application to bake the effect of a series of CTL 
-  transforms into the pixels of an OpenEXR file
+* `OpenEXR_CTL/` - sample CTL applications utilizing IlmImfCtl
 * `ctlrender/` - an application that allows for application of CTL transforms to
   an image using one or more CTL scripts, potentially converting the file format
   in the process.
