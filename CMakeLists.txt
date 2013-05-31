@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 project( CTL )
 
 set( CTL_MAJOR_VERSION 1 )
-set( CTL_MINOR_VERSION 4 )
-set( CTL_PATCH_VERSION 2 )
+set( CTL_MINOR_VERSION 5 )
+set( CTL_PATCH_VERSION 0 )
 set( CTL_VERSION ${CTL_MAJOR_VERSION}.${CTL_MINOR_VERSION}.${CTL_PATCH_VERSION} )
 
 ## Make install directories overrideable
