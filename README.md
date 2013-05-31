@@ -48,6 +48,8 @@ The CTL source code contains the following:
   an image using one or more CTL scripts, potentially converting the file format
   in the process.
 * `Nuke_CTL/` - an application for using CTL transforms in a Nuke node
+* `config/` - CMake configuration files
+* `unittest/` - unit test files
 
 ## Installation Prerequisites ##
 ### Required ###
