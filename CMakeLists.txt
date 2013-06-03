@@ -35,21 +35,13 @@ else()
 set( DO_SHARED STATIC )
 endif()
 
+# Find packages and set up global settings
 include( configure.cmake )
 
 # generated config files end up in binary dir so to find them, need
 # to add to include path
 include_directories( "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}" )
 # implement find library stuff...
-
-###
-### Everyone (well, except for DPX) uses IlmBase, so
-### make that a global setting
-###
-if ( IlmBase_FOUND )
-include_directories( ${IlmBase_INCLUDE_DIRS} )
-link_directories( ${IlmBase_LIBRARY_DIRS} )
-endif()
 
 add_definitions( -DPACKAGE="CTL" -DVERSION="${CTL_VERSION}" )
 add_subdirectory(doc)
