@@ -209,11 +209,8 @@ apply(xit xi, xit xe, yit yi, yit ye) const
     {
 	*yi = YValue(0);
 
-	if (*ri < 0)
-	    continue;
-	
 	ce = ri + 1;
-	while (*ce < 0 && ce <= re)
+	while (ce <= re)
 	    ++ce;
 	
 	ce = col_ind.begin() + *ce;
@@ -242,11 +239,8 @@ applyT(xit xi, xit xe, yit yi, yit ye) const
 
     for (ri = row_ptr.begin(); ri < re; ++ri, ++xi)
     {
-	if (*ri < 0)
-	    continue;
-
 	ce = ri + 1;
-	while (*ce < 0 && ce <= re)
+	while (ce <= re)
 	    ++ce;
 	
 	ce = col_ind.begin() + *ce;
