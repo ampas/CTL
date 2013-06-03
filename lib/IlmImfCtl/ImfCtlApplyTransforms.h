@@ -207,12 +207,8 @@
 #include <vector>
 #include <ImathBox.h>
 #include <ImfThreading.h>
-
-namespace Imf
-{
-    class Header;
-    class FrameBuffer;
-}
+#include <ImfHeader.h>
+#include <ImfFrameBuffer.h>
 
 namespace Ctl
 {
