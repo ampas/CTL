@@ -4,7 +4,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_INSTALL_PREFIX}/share/CMake"
 
 find_package( PkgConfig QUIET )
 
-find_package( IlmBase REQUIRED QUIET )
+find_package( IlmBase QUIET )
 if(IlmBase_FOUND)
   message( STATUS "found IlmBase, version ${IlmBase_VERSION}" )
   ###

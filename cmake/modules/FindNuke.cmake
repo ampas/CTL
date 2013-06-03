@@ -14,16 +14,19 @@ if(EXISTS ${NUKE_INSTALL_PATH})
              PATH_SUFFIXES include ${NUKE_OSX_SUFFIX}/include )
 
   if(NUKE_INCLUDE_DIR AND EXISTS "${NUKE_INCLUDE_DIR}/DDImage/ddImageVersionNumbers.h")
-      file(STRINGS "${NUKE_INCLUDE_DIR}/DDImage/ddImageVersionNumbers.h" 
-           nuke_version_str
-           REGEX "^#define[\t ]+kDDImageVersion[\t ]+\".*")
+    file(STRINGS "${NUKE_INCLUDE_DIR}/DDImage/ddImageVersionNumbers.h" 
+         nuke_version_str
+         REGEX "^#define[\t ]+kDDImageVersion[\t ]+\".*")
 
-      string(REGEX REPLACE "^#define[\t ]+kDDImageVersion[\t ]+\"([^ \\n]*)\".*"
-             "\\1" NUKE_VERSION "${nuke_version_str}")
-      string(REGEX REPLACE "^(.*)v.*"
-             "\\1" NUKE_API_VERSION "${NUKE_VERSION}")
-      unset(nuke_version_str)
+    string(REGEX REPLACE "^#define[\t ]+kDDImageVersion[\t ]+\"([^ \\n]*)\".*"
+           "\\1" NUKE_VERSION "${nuke_version_str}")
+    unset(nuke_version_str)
+  else()
+    string(REGEX REPLACE "^Nuke(.*)"
+           "\\1" NUKE_VERSION "${NUKE_VERSION}")
   endif()
+  string(REGEX REPLACE "^(.*)v.*"
+         "\\1" NUKE_API_VERSION "${NUKE_VERSION}")
 
   find_library(NUKE_LIBRARY
                NAMES DDImage
@@ -66,7 +69,6 @@ include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set NUKE_FOUND to TRUE
 # if all listed variables are TRUE
 find_package_handle_standard_args(Nuke
-                                  FOUND_VAR NUKE_FOUND
                                   REQUIRED_VARS NUKE_LIBRARY NUKE_INCLUDE_DIR
                                   VERSION_VAR NUKE_VERSION
                                   FAIL_MESSAGE "Unable to find NUKE NDK library" )
