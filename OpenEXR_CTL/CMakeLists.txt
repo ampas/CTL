@@ -15,4 +15,6 @@ if ( PKG_CONFIG_FOUND )
 configure_file(../config/OpenEXR_CTL.pc.in "${PROJECT_BINARY_DIR}/OpenEXR_CTL.pc" @ONLY)
 install( FILES "${PROJECT_BINARY_DIR}/OpenEXR_CTL.pc" DESTINATION lib/pkgconfig COMPONENT dev )
 endif()
+
 # TODO CMake config
+

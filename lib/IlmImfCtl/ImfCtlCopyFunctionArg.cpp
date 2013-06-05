@@ -271,6 +271,9 @@ copyFunctionArg
 	}
 
 	break;
+
+	  case Imf::NUM_PIXELTYPES:
+	break;
     }
 }
 
@@ -360,6 +363,9 @@ copyFunctionArg
 	    }
 	}
 
+	break;
+
+	  case Imf::NUM_PIXELTYPES:
 	break;
     }
 }

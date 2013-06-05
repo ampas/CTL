@@ -1,4 +1,5 @@
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/IlmCtl" "${PROJECT_SOURCE_DIR}/lib/IlmCtlMath" "${PROJECT_SOURCE_DIR}/lib/IlmCtlSimd" )
+include_directories( ${OpenEXR_INCLUDE_DIRS} )
 
 add_library( IlmImfCtl ${DO_SHARED}
   ImfCtlApplyTransforms.cpp

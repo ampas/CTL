@@ -17,7 +17,22 @@ else()
   set(DEF_INSTALL_CMAKE_DIR lib/CMake/CTL)
 endif()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Install directory for project CMake files" )
-SET( CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib" )
+
+# use, i.e. don't skip the full RPATH for the build tree
+SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+# when building, don't use the install RPATH already
+# (but later on when installing)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+#SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+# add the automatically determined parts of the RPATH
+# which point to directories outside the build tree to the install RPATH
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+# the RPATH to be used when installing, but only if it's not a system directory
+LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+IF("${isSystemDir}" STREQUAL "-1")
+  SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+ENDIF("${isSystemDir}" STREQUAL "-1")
+
 
 ## convert install paths to absolute
 foreach( p LIB BIN INCLUDE CMAKE DOC)
@@ -35,21 +50,13 @@ else()
 set( DO_SHARED STATIC )
 endif()
 
+# Find packages and set up global settings
 include( configure.cmake )
 
 # generated config files end up in binary dir so to find them, need
 # to add to include path
 include_directories( "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}" )
 # implement find library stuff...
-
-###
-### Everyone (well, except for DPX) uses IlmBase, so
-### make that a global setting
-###
-if ( IlmBase_FOUND )
-include_directories( ${IlmBase_INCLUDE_DIRS} )
-link_directories( ${IlmBase_LIBRARY_DIRS} )
-endif()
 
 add_definitions( -DPACKAGE="CTL" -DVERSION="${CTL_VERSION}" )
 add_subdirectory(doc)
