@@ -267,7 +267,7 @@ void Interpreter::_loadModule(const std::string &moduleName,
     // set up the source code string for parsing.
     // 
 
-    istream *input = 0;
+    std::auto_ptr<istream> input;
         
     if (!moduleSource.empty())
     {
@@ -275,7 +275,7 @@ void Interpreter::_loadModule(const std::string &moduleName,
         
         stringstream *tmp_strm = new stringstream;
         (*tmp_strm) << moduleSource;
-        input = tmp_strm;
+        input.reset( tmp_strm );
     }
     else
     {
@@ -294,10 +294,10 @@ void Interpreter::_loadModule(const std::string &moduleName,
         }
 
         debug ("\tloading from file \"" << fileName << "\"");
-        input = tmp_strm;
+        input.reset( tmp_strm );
     }
     
-    assert(input);
+    assert(input.get());
 
     Module *module = 0;
     LContext *lcontext = 0;
