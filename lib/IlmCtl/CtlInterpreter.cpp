@@ -65,6 +65,7 @@
 #include <algorithm>
 #include <cassert>
 #include <string.h>
+#include <memory>
 
 #ifdef WIN32
     #include <io.h>
@@ -267,7 +268,11 @@ void Interpreter::_loadModule(const std::string &moduleName,
     // set up the source code string for parsing.
     // 
 
+#if __cplusplus >= 201103L
+    std::unique_ptr<istream> input;
+#else
     std::auto_ptr<istream> input;
+#endif
         
     if (!moduleSource.empty())
     {
