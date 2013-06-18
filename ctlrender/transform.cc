@@ -355,36 +355,34 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
 		{
 			*dot = 0;
 		}
-
-		try
-		{
-			interpreter.loadFile(ctl_operation.filename);
-			try
-			{
-				// It's probably broken that you can't get a list of the function
-				// calls from a file. It's an article of faith that the primary
-				// function of a ctl script is named the same as the base ctl script
-				// name (without '.ctl' extension). We deal with this by looking
-				// for a 'main' function, and failing that, a function named whatever
-				// the ctl file is named. This is probably not ideal. The 'main'
-				// function convention is used by 'toxik'
-				fn = interpreter.newFunctionCall(std::string("main"));
-			}
-			catch (const Iex::ArgExc &e)
-			{
-				// XXX CTL library needs to be changed so that we have a better
-				// XXX 'function not exists' exception.
-			}
-
-			if (fn.refcount() == 0)
-			{
-				fn = interpreter.newFunctionCall(std::string(module));
-			}
-		}
-		catch (...)
-		{
-
-		}
+        
+        
+        interpreter.loadFile(ctl_operation.filename);
+        try
+        {
+            // It's probably broken that you can't get a list of the function
+            // calls from a file. It's an article of faith that the primary
+            // function of a ctl script is named the same as the base ctl script
+            // name (without '.ctl' extension). We deal with this by looking
+            // for a 'main' function, and failing that, a function named whatever
+            // the ctl file is named. This is probably not ideal. The 'main'
+            // function convention is used by 'toxik'
+            fn = interpreter.newFunctionCall(std::string("main"));
+        }
+        catch (const Iex::ArgExc &e)
+        {
+            // XXX CTL library needs to be changed so that we have a better
+            // XXX 'function not exists' exception.
+        }
+        
+        try {
+            if (fn.refcount() == 0)
+            {
+                fn = interpreter.newFunctionCall(std::string(module));
+            }
+        } catch (...) {
+            
+        }		
 
 		if (fn->returnValue()->type().cast<Ctl::VoidType>().refcount() == 0)
 		{
