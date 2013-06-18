@@ -56,7 +56,7 @@
 #include <iostream>
 
 #if defined( HAVE_ACESFILE )
-#include <aces_Writer.h>
+#include <aces/aces_Writer.h>
 #include <stdexcept>
 
 void aces_write(const char *name, float scale, 
