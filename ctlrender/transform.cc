@@ -677,6 +677,7 @@ void mkimage(ctl::dpx::fb<half> *image_buffer, const CTLResults &ctl_results, fo
 void transform(const char *inputFile, const char *outputFile,
 		       float input_scale, float output_scale,
 		       format_t *image_format,
+               Compression *compression,
 		       const CTLOperations &ctl_operations,
 		       const CTLParameters &global_parameters)
 {
@@ -835,7 +836,7 @@ void transform(const char *inputFile, const char *outputFile,
     }
     else if (!strncmp(image_format->ext, "exr", 3))
 	{
-		exr_write(outputFile, output_scale, image_buffer, image_format);
+		exr_write(outputFile, output_scale, image_buffer, image_format, compression);
 	}
 	else if (!strncmp(image_format->ext, "adx", 3))
 	{

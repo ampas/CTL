@@ -28,6 +28,7 @@ add_executable( ctlrender
   exr_file.cc
   tiff_file.cc
   format.cc
+  compression.cc
 )
 
 target_link_libraries( ctlrender IlmCtlSimd IlmCtlMath IlmCtl ctldpx ${IlmBase_LIBRARIES} )

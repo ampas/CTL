@@ -105,7 +105,7 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<half> *pixels,
 }
 
 void exr_write(const char *name, float scale, const ctl::dpx::fb<half> &pixels,
-               format_t *format) {
+               format_t *format, Compression *compression) {
 	const half *in;
 	half *out;
 	uint8_t channels;
@@ -136,7 +136,7 @@ void exr_write(const char *name, float scale, const ctl::dpx::fb<half> &pixels,
 
 	Imf::RgbaOutputFile file(name, pixels.width(), pixels.height(),
 	                         channels==4 ? Imf::WRITE_RGBA : Imf::WRITE_RGB, 1, Imath::V2f (0, 0), 1,
-	                         Imf::INCREASING_Y, Imf::PIZ_COMPRESSION);
+	                         Imf::INCREASING_Y, (Imf::Compression)compression->exrCompressionScheme);
 
 	file.setFrameBuffer((Imf::Rgba *)in, 1, pixels.width());
 	file.writePixels(pixels.height());

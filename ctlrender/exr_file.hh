@@ -63,6 +63,7 @@ bool exr_read(const char *name, float scale,
               format_t *bpp);
 void exr_write(const char *name, float scale,
                const ctl::dpx::fb<half> &pixels,
-               format_t *format);
+               format_t *format,
+               Compression *compression);
 
 #endif
