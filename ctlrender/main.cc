@@ -180,7 +180,7 @@ int main(int argc, const char **argv)
 		std::list<const char *> input_image_files;
 		char output_path[MAXPATHLEN + 1];
 
-        Compression compression = Compression::supported_compression_schemes[0];
+        Compression compression = Compression::supported_compression_schemes[4];
 		format_t desired_format;
 		format_t actual_format;
 		float input_scale = 0.0;
