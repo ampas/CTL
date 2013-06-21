@@ -58,6 +58,8 @@
 #if defined(HAVE_OPENEXR)
 #include <ImfCompression.h>
 
+const Compression Compression::no_compression = { "NO_COMPRESSION", Imf::NO_COMPRESSION };
+
 const Compression Compression::supported_compression_schemes[] =
 {
     { "NONE",   Imf::NO_COMPRESSION      },
@@ -72,6 +74,7 @@ const Compression Compression::supported_compression_schemes[] =
 
 #else
 
+const Compression Compression::no_compression = { "NO_COMPRESSION", 0 };
 const Compression Compression::supported_compression_schemes[] =
 {
     { "NONE",   0  }
@@ -94,7 +97,6 @@ const Compression& Compression::compressionNamed( char const * name )
         }
         current++;
     }
-    fprintf(stderr, "Unrecognized compression scheme '%s'. Turning off compression.\n", name);
-    return supported_compression_schemes[0];
+    return no_compression;
 }
 

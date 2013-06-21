@@ -58,8 +58,12 @@ struct Compression {
     char const *name;
     int exrCompressionScheme;
     
+    // compressionNamed will return no_compression if no matching
+    // scheme is found in supported_compression_schemes.
     static const Compression& compressionNamed( char const * name );
+    
     static const Compression supported_compression_schemes[];
+    static const Compression no_compression;
 };
 
 #endif
