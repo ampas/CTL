@@ -57,12 +57,9 @@
 
 #include <format.hh>
 
-// HACK! input needs width, height, channels, and void *pixels
-// because of the half type name conflict. Defined in aces_types.h 
-// and again in OpenEXR/half.h
-void aces_write(const char *name, float scale, 
-               uint32_t width, uint32_t height, uint32_t channels,
-               const void *pixels,
-               format_t *format);
+void aces_write(const char *name, float scale,
+                uint32_t width, uint32_t height, uint32_t channels,
+                const float *pixels,
+                format_t *format);
 
 #endif

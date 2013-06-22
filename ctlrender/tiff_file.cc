@@ -17,7 +17,7 @@
 //    this list of conditions and the Disclaimer of Warranty in the
 //    documentation and/or other materials provided with the distribution.
 //
-//  * Nothing in this license shall be deemed to grant any rights to 
+//  * Nothing in this license shall be deemed to grant any rights to
 //    trademarks, copyrights, patents, trade secrets or any other 
 //    intellectual property of A.M.P.A.S. or any contributors, except 
 //    as expressly stated herein.
@@ -63,21 +63,21 @@
 #include <Iex.h>
 #include <alloca.h>
 
-void tiff_read_multiplane(TIFF *t, float scale, ctl::dpx::fb<half> * pixels);
-void tiff_read_interleaved(TIFF *t, float scale, ctl::dpx::fb<half> * pixels);
-void tiff_read_failsafe(TIFF *t, float scale, ctl::dpx::fb<half> * pixels);
+void tiff_read_multiplane(TIFF *t, float scale, ctl::dpx::fb<float> * pixels);
+void tiff_read_interleaved(TIFF *t, float scale, ctl::dpx::fb<float> * pixels);
+void tiff_read_failsafe(TIFF *t, float scale, ctl::dpx::fb<float> * pixels);
 
-void tiff_interleave_int8(half *row, int offset, float scale,
+void tiff_interleave_int8(float *row, int offset, float scale,
                           uint8_t *r, int r_stride, uint8_t *g, int g_stride,
                           uint8_t *b, int b_stride, uint8_t *a, int a_stride,
                           uint32_t width);
                            
-void tiff_interleave_int16(half *row, int offset, float scale,
+void tiff_interleave_int16(float *row, int offset, float scale,
                            uint16_t *r, int r_stride, uint16_t *g, int g_stride,
                            uint16_t *b, int b_stride, uint16_t *a, int a_stride,
                            uint32_t width);
 
-void tiff_interleave_float(half *row, float scale,
+void tiff_interleave_float(float *row, float scale,
                            float *r, int r_stride, float *g, int g_stride,
                            float *b, int b_stride, float *a, int a_stride,
                            uint32_t width);
@@ -92,7 +92,7 @@ void WarningHandler(const char *module, const char *fmt, va_list ap) {
 //	vfprintf(stderr, fmt, ap);
 }
 
-bool tiff_read(const char *name, float scale, ctl::dpx::fb<half> *pixels,
+bool tiff_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
                format_t *format) {
 	TIFF *t;
 	uint16_t samples_per_pixel;
@@ -148,7 +148,7 @@ bool tiff_read(const char *name, float scale, ctl::dpx::fb<half> *pixels,
 	return TRUE;
 }
 
-void tiff_interleave_int8(half *o, int offset, float scale,
+void tiff_interleave_int8(float *o, int offset, float scale,
                           uint8_t *r, int r_stride, uint8_t *g, int g_stride,
                           uint8_t *b, int b_stride, uint8_t *a, int a_stride,
                           uint32_t width) {
@@ -184,7 +184,7 @@ void tiff_interleave_int8(half *o, int offset, float scale,
 }
 
                            
-void tiff_interleave_int16(half *o, uint16_t offset, float scale,
+void tiff_interleave_int16(float *o, uint16_t offset, float scale,
                            uint16_t *r, int r_stride, uint16_t *g, int g_stride,
                            uint16_t *b, int b_stride, uint16_t *a, int a_stride,
                            uint32_t width) {
@@ -219,7 +219,7 @@ void tiff_interleave_int16(half *o, uint16_t offset, float scale,
 	}
 }
 
-void tiff_interleave_float(half *o, float scale,
+void tiff_interleave_float(float *o, float scale,
                            float *r, int r_stride, float *g, int g_stride,
                            float *b, int b_stride, float *a, int a_stride,
                            uint32_t width) {
@@ -254,7 +254,7 @@ void tiff_interleave_float(half *o, float scale,
 	}
 }
 
-void tiff_read_multiplane(TIFF *t, float scale, ctl::dpx::fb<half> * pixels) {
+void tiff_read_multiplane(TIFF *t, float scale, ctl::dpx::fb<float> * pixels) {
 	uint8_t *scanline_buffer_uint8[4];
 	uint16_t *scanline_buffer_uint16[4];
 	float *scanline_buffer_float[4];
@@ -266,7 +266,7 @@ void tiff_read_multiplane(TIFF *t, float scale, ctl::dpx::fb<half> * pixels) {
 	uint16_t offset;
 	uint16_t orientation;
 	tsize_t scanline_size;
-	half *row_ptr;
+	float *row_ptr;
 	uint32_t row;
 	uint32_t orientation_offset;
 	uint16_t d;
@@ -373,7 +373,7 @@ void tiff_read_multiplane(TIFF *t, float scale, ctl::dpx::fb<half> * pixels) {
 	}
 }
 
-void tiff_read_interleaved(TIFF *t, float scale, ctl::dpx::fb<half> * pixels) {
+void tiff_read_interleaved(TIFF *t, float scale, ctl::dpx::fb<float> * pixels) {
 	uint8_t *scanline_buffer_uint8;
 	uint16_t *scanline_buffer_uint16;
 	float *scanline_buffer_float;
@@ -384,7 +384,7 @@ void tiff_read_interleaved(TIFF *t, float scale, ctl::dpx::fb<half> * pixels) {
 	uint16_t sample_format;
 	uint16_t offset;
 	uint32_t row;
-	half *row_ptr;
+	float *row_ptr;
 
 	TIFFGetFieldDefaulted(t, TIFFTAG_IMAGEWIDTH, &w);
 	TIFFGetFieldDefaulted(t, TIFFTAG_IMAGELENGTH, &h);
@@ -467,7 +467,7 @@ void tiff_read_interleaved(TIFF *t, float scale, ctl::dpx::fb<half> * pixels) {
 	}
 }
 
-void tiff_read_failsafe(TIFF *t, float scale, ctl::dpx::fb<half> *pixels) {
+void tiff_read_failsafe(TIFF *t, float scale, ctl::dpx::fb<float> *pixels) {
 	uint8_t *temp_buffer;
 	uint8_t *flip;
 	uint32_t i;
@@ -487,7 +487,7 @@ void tiff_read_failsafe(TIFF *t, float scale, ctl::dpx::fb<half> *pixels) {
 	}
 }
 
-void tiff_convert_uint8(uint8_t *data, const half *in,
+void tiff_convert_uint8(uint8_t *data, const float *in,
                         float scale, uint32_t width) {
 #if 1
 	ctl::dpx::convert(data, in, 0.0, width);
@@ -510,7 +510,7 @@ void tiff_convert_uint8(uint8_t *data, const half *in,
 #endif
 }
 
-void tiff_convert_uint16(uint16_t *data, const half *in,
+void tiff_convert_uint16(uint16_t *data, const float *in,
                          float scale, uint32_t width) {
 #if 1
 	ctl::dpx::convert(data, in, 0.0, width);
@@ -535,7 +535,7 @@ void tiff_convert_uint16(uint16_t *data, const half *in,
 #endif
 }
 
-void tiff_convert_float(float *out, const half *in,
+void tiff_convert_float(float *out, const float *in,
                         float scale, uint32_t width) {
 #if 1
 	ctl::dpx::convert(out, in, 1.0, width);
@@ -553,14 +553,14 @@ void tiff_convert_float(float *out, const half *in,
 }
 
 void tiff_write(const char *name, float scale,
-                const ctl::dpx::fb<half> &pixels,
+                const ctl::dpx::fb<float> &pixels,
                 format_t *format) {
 	TIFF *t;
 	uint16_t bits_per_sample;
 	tdata_t scanline_buffer;
 	uint32_t y;
 	uint8_t channel;
-	const half *row;
+	const float *row;
 
 	TIFFSetErrorHandler(ErrorHandler);
 	TIFFSetWarningHandler(WarningHandler);
@@ -620,12 +620,12 @@ void tiff_write(const char *name, float scale,
 }
 
 #else
-bool tiff_read(const char *name, float scale, ctl::dpx::fb<half> *pixels,
+bool tiff_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
                format_t *bps) {
 	return FALSE;
 }
 void tiff_write(const char *name, float scale,
-                const ctl::dpx::fb<half> &pixels, format_t *format) {
+                const ctl::dpx::fb<float> &pixels, format_t *format) {
 	// thow tiff is unsupported message.
 }
 #endif

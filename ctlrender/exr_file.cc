@@ -61,7 +61,7 @@
 #include <ImfArray.h>
 #include <Iex.h>
 
-bool exr_read(const char *name, float scale, ctl::dpx::fb<half> *pixels,
+bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
               format_t *format) {
 	std::ifstream ins;
 	unsigned int magic, endian;
@@ -83,7 +83,7 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<half> *pixels,
     Imf::RgbaInputFile in(name);
     Imath::Box2i dw = in.dataWindow();
 	uint64_t i;
-	half *p;
+	float *p;
   
 	format->src_bps=16;
 
@@ -104,7 +104,7 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<half> *pixels,
 	return 1;
 }
 
-void exr_write(const char *name, float scale, const ctl::dpx::fb<half> &pixels,
+void exr_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
                format_t *format, Compression *compression) {
 	const half *in;
 	half *out;
@@ -114,24 +114,26 @@ void exr_write(const char *name, float scale, const ctl::dpx::fb<half> &pixels,
 		THROW(Iex::ArgExc, "EXR files only support 16 bps half at the moment.");
 	}
 
-	if(scale!=0.0 && scale!=1.0) {
+    if (scale == 0.0) scale = 1.0;
+//	if(scale!=0.0 && scale!=1.0)
+    {
 		// Yes... I should lookup table this. I *know*!
 		ctl::dpx::fb<half> scaled_pixels;
 		uint64_t i;
 
 		scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
 		scaled_pixels.alpha(1.0);
-		in=pixels.ptr();
+		const float *fIn=pixels.ptr();
 		out=scaled_pixels.ptr();
 		for(i=0; i<scaled_pixels.count(); i++) {
-			*(out++)=*(in++)/scale;
+			*(out++)=*(fIn++)/scale;
 		}
 
 		channels=scaled_pixels.depth();	
 		in=scaled_pixels.ptr();
-	} else {
-		channels=pixels.depth();	
-		in=pixels.ptr();
+//	} else {
+//		channels=pixels.depth();	
+//		in=pixels.ptr();
 	}
 
 	Imf::RgbaOutputFile file(name, pixels.width(), pixels.height(),
@@ -145,13 +147,13 @@ void exr_write(const char *name, float scale, const ctl::dpx::fb<half> &pixels,
 #else
 
 bool exr_read(const char *name, float scale,
-              ctl::dpx::fb<half> *pixels,
+              ctl::dpx::fb<float> *pixels,
               format_t *bpp) {
 	return FALSE;
 }
 
 void exr_write(const char *name, float scale,
-               const ctl::dpx::fb<half> &pixels,
+               const ctl::dpx::fb<float> &pixels,
                format_t *format) {
 }
 

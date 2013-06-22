@@ -57,7 +57,7 @@
 #include <dpx.hh>
 #include <fstream>
 
-bool dpx_read(const char *name, float scale, ctl::dpx::fb<half> *pixels,
+bool dpx_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
               format_t *format) {
 	std::ifstream file;
 	ctl::dpx dpxheader;
@@ -77,7 +77,7 @@ bool dpx_read(const char *name, float scale, ctl::dpx::fb<half> *pixels,
 	return 1;
 }
 
-void dpx_write(const char *name, float scale, const ctl::dpx::fb<half> &pixels,
+void dpx_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
                format_t *format) {
 	std::ofstream file;
 	ctl::dpx dpxheader;

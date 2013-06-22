@@ -482,25 +482,25 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
 
 // Creates a new ctl result object from the image buffer (fb parameter) passed in
 // Copies a new CTL result (block of data) from the framebuffer fb.
-CTLResultPtr mkresult(const char *name, const char *alt_name, const ctl::dpx::fb<half> &fb, size_t offset)
+CTLResultPtr mkresult(const char *name, const char *alt_name, const ctl::dpx::fb<float> &fb, size_t offset)
 {
 	CTLResultPtr new_result = CTLResultPtr(new CTLResult());
 
 	// DataArg represents a raw block of data
 	// XXX - seems like last argument to Ctl::DataArg should be (fb.pixels() + offset) because the argument represents the data size (i.e. number of bytes)
-	new_result->data = Ctl::DataArgPtr(new Ctl::DataArg(name, Ctl::DataTypePtr(new Ctl::StdHalfType()), fb.pixels()));
+	new_result->data = Ctl::DataArgPtr(new Ctl::DataArg(name, Ctl::DataTypePtr(new Ctl::StdFloatType()), fb.pixels()));
 
 	if (alt_name != NULL)
 	{
 		new_result->alt_name = alt_name;
 	}
 
-	new_result->data->set(fb.ptr() + offset, sizeof(half) * fb.depth(), 0, fb.pixels());
+	new_result->data->set(fb.ptr() + offset, sizeof(float) * fb.depth(), 0, fb.pixels());
 
 	return new_result;
 }
 
-void mkimage(ctl::dpx::fb<half> *image_buffer, const CTLResults &ctl_results, format_t *image_format)
+void mkimage(ctl::dpx::fb<float> *image_buffer, const CTLResults &ctl_results, format_t *image_format)
 {
 	enum have_channel_e
 	{
@@ -658,7 +658,7 @@ void mkimage(ctl::dpx::fb<half> *image_buffer, const CTLResults &ctl_results, fo
 	{
 		if (channels_mask & (1 << c))
 		{
-			channels[c]->data->get(image_buffer->ptr() + on_channel, sizeof(half) * channel_count, 0, image_buffer->pixels());
+			channels[c]->data->get(image_buffer->ptr() + on_channel, sizeof(float) * channel_count, 0, image_buffer->pixels());
 			on_channel++;
 		}
 	}
@@ -686,7 +686,7 @@ void transform(const char *inputFile, const char *outputFile,
 	CTLParameters::const_iterator parameters_iter;
 	uint8_t i;
 	std::string error;
-	ctl::dpx::fb<half> image_buffer;
+	ctl::dpx::fb<float> image_buffer;
 
 	if (verbosity > 1)
 	{
@@ -832,7 +832,7 @@ void transform(const char *inputFile, const char *outputFile,
     {
         aces_write(outputFile, output_scale,
                    image_buffer.width(), image_buffer.height(), image_buffer.depth(),
-                   (void*)image_buffer.ptr(), image_format);
+                   image_buffer.ptr(), image_format);
     }
     else if (!strncmp(image_format->ext, "exr", 3))
 	{

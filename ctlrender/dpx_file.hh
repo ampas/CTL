@@ -59,10 +59,10 @@
 #include "main.hh"
 
 bool dpx_read(const char *name, float scale,
-              ctl::dpx::fb<half> *pixels,
+              ctl::dpx::fb<float> *pixels,
               format_t *format);
 void dpx_write(const char *name, float scale,
-               const ctl::dpx::fb<half> &pixels,
+               const ctl::dpx::fb<float> &pixels,
                format_t *format);
 
 #endif

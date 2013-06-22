@@ -59,10 +59,10 @@
 #include <dpx.hh>
 
 bool tiff_read(const char *name, float scale,
-               ctl::dpx::fb<half> *pixels,
+               ctl::dpx::fb<float> *pixels,
                format_t *format);
 void tiff_write(const char *name, float scale,
-                const ctl::dpx::fb<half> &pixels,
+                const ctl::dpx::fb<float> &pixels,
                 format_t *format);
 
 #endif
