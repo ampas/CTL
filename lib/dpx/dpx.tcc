@@ -233,7 +233,7 @@ void ctl::dpx::fb<T>::alpha(const T &value) {
 
 	if(alpha()) {
 		i=_data+_depth-1;
-		for(u=0; u<count(); u++) {
+		for(u=0; u<pixels(); u++) {
 			*i=value;
 			i=i+_depth;
 		}
@@ -244,14 +244,14 @@ void ctl::dpx::fb<T>::alpha(const T &value) {
 	if(depth()==1) {
 		i=_data;
 		o=new_fb.ptr();
-		for(u=0; u<count(); u++) {
+		for(u=0; u<pixels(); u++) {
 			*(o++)=*(i++);
 			*(o++)=value;
 		}
-	} else if(depth()==3) {	
+	} else if(depth()==3) {
 		i=_data;
 		o=new_fb.ptr();
-		for(u=0; u<count(); u++) {
+		for(u=0; u<pixels(); u++) {
 			*(o++)=*(i++);
 			*(o++)=*(i++);
 			*(o++)=*(i++);
