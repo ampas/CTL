@@ -95,6 +95,7 @@ typedef std::list<ctl_operation_t> CTLOperations;
 void transform(const char *inputFile, const char *outputFile,
 		       float input_scale, float output_scale,
 		       format_t *format,
+               Compression *compression,
 		       const CTLOperations &ops, const CTLParameters &global);
 
 #endif

@@ -291,7 +291,7 @@ void Interpreter::_loadModule(const std::string &moduleName,
         ifstream *tmp_strm = new ifstream;
         tmp_strm->open(fileName.c_str());
         
-        if (!tmp_strm)
+        if (!(*tmp_strm))
         {
 	        THROW_ERRNO ("Cannot load CTL module \"" << moduleName << "\". "
 		         "Opening file \"" << fileName << "\" for reading "
@@ -361,7 +361,7 @@ void Interpreter::_loadModule(const std::string &moduleName,
 	// Something went wrong while loading the module, clean up
 	//
 
-	delete lcontext;
+	if(lcontext) delete lcontext;
 	_data->symtab.deleteAllSymbols (module);
 	_data->moduleSet.removeModule (moduleName);
 	throw;

@@ -180,6 +180,7 @@ int main(int argc, const char **argv)
 		std::list<const char *> input_image_files;
 		char output_path[MAXPATHLEN + 1];
 
+        Compression compression = Compression::compressionNamed("PIZ");
 		format_t desired_format;
 		format_t actual_format;
 		float input_scale = 0.0;
@@ -261,7 +262,7 @@ int main(int argc, const char **argv)
 					argc--;
 				}
 			}
-			else if (!strncmp(argv[0], "-ctl", 2))
+			else if (!strncmp(argv[0], "-ctl", 3))
 			{
 				if (argc == 1)
 				{
@@ -287,7 +288,7 @@ int main(int argc, const char **argv)
 				if (argc == 1)
 				{
 					fprintf(stderr,
-							"the -format option requires an addition "
+							"the -format option requires an additional "
 							"argument specifying the destination file\nformat. "
 							"this may be one of the following: 'dpx10', 'dpx16', "
 							"'aces', 'tiff8',\n'tiff16', or 'exr'.\nSee '-help "
@@ -298,6 +299,28 @@ int main(int argc, const char **argv)
 				argv++;
 				argc--;
 			}
+            else if (!strncmp(argv[0], "-compression", 3))
+            {
+                if (argc == 1)
+                {
+                    fprintf(stderr,
+                            "the -compression option requires an additional "
+                            "argument specifying a compression scheme to be "
+                            "used.\n See '-help compression' for more details.\n");
+                    exit(1);
+                }
+                char scheme[8];
+                memset(scheme, '\0', 8);
+                for(int i = 0; i < 8 && argv[1][i]; ++i) {
+                    scheme[i] = toupper(argv[1][i]);
+                }
+                compression = Compression::compressionNamed(scheme);
+                if (!strcmp(compression.name, Compression::no_compression.name)) {
+                    fprintf(stderr, "Unrecognized compression scheme '%s'. Turning off compression.\n", scheme);
+                }
+                argv++;
+                argc--;
+            }
 			else if (!strcmp(argv[0], "-param1") || !strcmp(argv[0], "-p1"))
 			{
 				if (argc < 3)
@@ -630,7 +653,7 @@ int main(int argc, const char **argv)
 				exit(1);
 			}
 			actual_format.squish = noalpha;
-			transform(inputFile, outputFile, input_scale, output_scale, &actual_format, ctl_operations, global_ctl_parameters);
+			transform(inputFile, outputFile, input_scale, output_scale, &actual_format, &compression, ctl_operations, global_ctl_parameters);
 			input_image_files.pop_front();
 		}
 

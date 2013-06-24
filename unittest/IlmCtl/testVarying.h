@@ -58,6 +58,7 @@
 #include <sstream>
 #include <limits>
 #include <half.h>
+#include <halfLimits.h>
 
 using namespace Ctl;
 using namespace Imath;
@@ -90,7 +91,7 @@ getRange (T* array, int dataSize, int mult)
 
   	if( (i+1)%10 == 0)
   	    array[i] = 0;
-	//	cout << "array[i]= (" << array[i] << ")\n";
+//		cout << "array[i]= (" << array[i] << ")\n";
     }
     //    cout << "\n";
 }

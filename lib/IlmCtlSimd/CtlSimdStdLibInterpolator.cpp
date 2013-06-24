@@ -83,25 +83,25 @@ scatteredDataToGrid3D (int dataSize,
 
     for (int i = 0; i < gridSize.x; ++i)
     {
-	s = float (i) / float (gridSize.x - 1);
-	t = 1 - s;
-	p.x = pMin.x * t + pMax.x * s;
-
-	for (int j = 0; j < gridSize.y; ++j)
-	{
-	    s = float (j) / float (gridSize.y - 1);
-	    t = 1 - s;
-	    p.y = pMin.y * t + pMax.y * s;
-
-	    for (int k = 0; k < gridSize.z; ++k)
-	    {
-		s = float (k) / float (gridSize.z - 1);
-		t = 1 - s;
-		p.z = pMin.z * t + pMax.z * s;
-
-		grid[(i * gridSize.y + j) * gridSize.z + k] = interp.value (p);
-	    }
-	}
+        s = float (i) / float (gridSize.x - 1);
+        t = 1 - s;
+        p.x = pMin.x * t + pMax.x * s;
+        
+        for (int j = 0; j < gridSize.y; ++j)
+        {
+            s = float (j) / float (gridSize.y - 1);
+            t = 1 - s;
+            p.y = pMin.y * t + pMax.y * s;
+            
+            for (int k = 0; k < gridSize.z; ++k)
+            {
+                s = float (k) / float (gridSize.z - 1);
+                t = 1 - s;
+                p.z = pMin.z * t + pMax.z * s;
+                
+                grid[(i * gridSize.y + j) * gridSize.z + k] = interp.value (p);
+            }
+        }
     }
 }
 

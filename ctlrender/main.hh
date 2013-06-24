@@ -58,6 +58,7 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <format.hh>
+#include <compression.hh>
 
 extern int verbosity;
 

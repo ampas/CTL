@@ -207,17 +207,21 @@ apply(xit xi, xit xe, yit yi, yit ye) const
 	
     for (ri = row_ptr.begin(); ri < re; ++ri, ++yi)
     {
-	*yi = YValue(0);
-
-	ce = ri + 1;
-	while (ce <= re)
-	    ++ce;
-	
-	ce = col_ind.begin() + *ce;
-	DBGASSERT(ce <= col_ind.end());
-	
-	for (ci = col_ind.begin() + *ri; ci < ce; ++ci, ++vi)
-	    *yi += (*vi) * (*(xi + *ci));
+        *yi = YValue(0);
+        
+//        if (*ri < 0)
+//            continue;
+        
+        ce = ri + 1;
+//        while (*ce < 0 && ce <= re)
+//            ++ce;
+        
+        ce = col_ind.begin() + *ce;
+        DBGASSERT(ce <= col_ind.end());
+        
+        for (ci = col_ind.begin() + *ri; ci < ce; ++ci, ++vi) {
+            *yi += (*vi) * (*(xi + *ci));
+        }
     }
 }
 
@@ -239,22 +243,25 @@ applyT(xit xi, xit xe, yit yi, yit ye) const
 
     for (ri = row_ptr.begin(); ri < re; ++ri, ++xi)
     {
-	ce = ri + 1;
-	while (ce <= re)
-	    ++ce;
-	
-	ce = col_ind.begin() + *ce;
-	DBGASSERT(ce <= col_ind.end());
-	
-	XValue x = *xi;
-
-	vi = val.begin() + *ri;
-	DBGASSERT(vi < val.end());
+//        if (*ri < 0)
+//            continue;
+        
+        ce = ri + 1;
+//        while (*ce < 0 && ce <= re)
+//            ++ce;
+        
+        ce = col_ind.begin() + *ce;
+        DBGASSERT(ce <= col_ind.end());
+        
+        XValue x = *xi;
+        
+        vi = val.begin() + *ri;
+        DBGASSERT(vi < val.end());
 	    
-	for (ci = col_ind.begin() + *ri; ci < ce; ++ci, ++vi)
-	{
-	    *(yi + *ci) += (*vi) * x;
-	}
+        for (ci = col_ind.begin() + *ri; ci < ce; ++ci, ++vi)
+        {
+            *(yi + *ci) += (*vi) * x;
+        }
     }
 }
 
