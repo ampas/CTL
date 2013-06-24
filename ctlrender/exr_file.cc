@@ -59,6 +59,8 @@
 #include <ImfOutputFile.h>
 #include <ImfRgbaFile.h>
 #include <ImfArray.h>
+#include <ImfHeader.h>
+#include <ImfChannelList.h>
 #include <Iex.h>
 
 bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
@@ -79,69 +81,176 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
 			return 0;
 		}
 	}
-	
-    Imf::RgbaInputFile in(name);
-    Imath::Box2i dw = in.dataWindow();
-	uint64_t i;
-	float *p;
-  
-	format->src_bps=16;
-
-	pixels->init(dw.max.x-dw.min.x+1, dw.max.y-dw.min.y+1, 4);
-
-	in.setFrameBuffer((Imf::Rgba *)(pixels->ptr()-dw.min.x-dw.min.y*pixels->width()), 1, pixels->width());
-	in.readPixels(dw.min.y, dw.max.y);
-
+	//////////////////////////
+    
+    Imf::InputFile file(name);
+    Imath::Box2i dw = file.header().dataWindow();
+    
+    if (file.header().channels().begin().channel().type == Imf::HALF)
+        format->src_bps=16;
+    else
+        format->src_bps=32;
+        
+    int width = dw.max.x - dw.min.x + 1;
+    int height = dw.max.y - dw.min.y + 1;
+    
+    pixels->init(width, height, 4);
+    Imf::PixelType pixelType = Imf::FLOAT;
+    
+    int xstride = sizeof (*pixels->ptr()) * pixels->depth();
+    int ystride = sizeof (*pixels->ptr()) * pixels->depth() * pixels->width();
+    
+    Imf::FrameBuffer frameBuffer;
+    frameBuffer.insert ("R",
+                        Imf::Slice (pixelType,
+                                    (char *) pixels->ptr(),
+                                    xstride, ystride,
+                                    1, 1,
+                                    0.0));
+    
+    frameBuffer.insert ("G",
+                        Imf::Slice (pixelType,
+                                    (char *) (pixels->ptr()+1),
+                                    xstride, ystride,
+                                    1, 1,
+                                    0.0));
+    
+    frameBuffer.insert ("B",
+                        Imf::Slice (pixelType,
+                                    (char *) (pixels->ptr()+2),
+                                    xstride, ystride,
+                                    1, 1,
+                                    0.0));
+    
+    frameBuffer.insert ("A",
+                        Imf::Slice (pixelType,
+                                    (char *) (pixels->ptr()+3),
+                                    xstride, ystride,
+                                    1, 1,
+                                    1.0));
+    
+    file.setFrameBuffer(frameBuffer);
+    file.readPixels(dw.min.y, dw.max.y);
+    
 	if(scale==0.0 || scale==1.0) {
 		return 1;
 	}
 
-	p=pixels->ptr();
-	for(i=0; i<pixels->count(); i++) {
+	float *p=pixels->ptr();
+	for(uint64_t i=0; i<pixels->count(); i++) {
 		*p=*p*scale;
 		p++;
 	}
 	return 1;
 }
 
-void exr_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
-               format_t *format, Compression *compression) {
-	const half *in;
-	half *out;
-	uint8_t channels;
+void exr_write32(const char *name, float scale, const ctl::dpx::fb<float> &pixels, Compression *compression)
+{
+    int depth = pixels.depth();
+    float width = pixels.width();
+    float height = pixels.height();
+    float const *pixelPtr = pixels.ptr();
+    
+    if (scale != 0.0 && scale != 1.0) {
+        ctl::dpx::fb<float> scaled_pixels;
+        scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
+        scaled_pixels.alpha(1.0);
+        
+        const float *fIn=pixels.ptr();
+        float *out=scaled_pixels.ptr();
+        
+        for(uint64_t i=0; i<pixels.count(); i++) {
+            *(out++)=*(fIn++)/scale;
+        }
+        
+        depth = scaled_pixels.depth();
+        width = scaled_pixels.width();
+        height = scaled_pixels.height();
+        pixelPtr = scaled_pixels.ptr();
+    }
+    
+    Imf::PixelType pixelType = Imf::FLOAT;
+    
+    Imf::Header header(width, height);
+    header.compression() = (Imf::Compression)compression->exrCompressionScheme;
+    
+    header.channels().insert("R", Imf::Channel(pixelType));
+    header.channels().insert("G", Imf::Channel(pixelType));
+    header.channels().insert("B", Imf::Channel(pixelType));
+    
+    if (depth == 4)
+        header.channels().insert("A", Imf::Channel(pixelType));
+    
+    Imf::OutputFile file (name, header);
+    
+    Imf::FrameBuffer frameBuffer;
+    
+    int xstride = sizeof (*pixelPtr) * depth;
+    int ystride = sizeof (*pixelPtr) * depth * width;
+    
+    frameBuffer.insert ("R",
+                        Imf::Slice (pixelType,
+                                    (char *) pixelPtr,
+                                    xstride, ystride));
+    
+    frameBuffer.insert ("G",
+                        Imf::Slice (pixelType,
+                                    (char *) (pixelPtr+1),
+                                    xstride, ystride));
+    
+    frameBuffer.insert ("B",
+                        Imf::Slice (pixelType,
+                                    (char *) (pixelPtr+2),
+                                    xstride, ystride));
+    
+    if (depth == 4)
+        frameBuffer.insert ("A",
+                            Imf::Slice (pixelType,
+                                        (char *) (pixelPtr+3),
+                                        xstride, ystride));
+    
+    file.setFrameBuffer (frameBuffer);
+    file.writePixels (height);
+}
 
-	if(format->bps!=16) {
-		THROW(Iex::ArgExc, "EXR files only support 16 bps half at the moment.");
-	}
+void exr_write16(const char *name, float scale, const ctl::dpx::fb<float> &pixels, Compression *compression) {
+	if (scale == 0.0) scale = 1.0;
 
-    if (scale == 0.0) scale = 1.0;
-//	if(scale!=0.0 && scale!=1.0)
-    {
-		// Yes... I should lookup table this. I *know*!
-		ctl::dpx::fb<half> scaled_pixels;
-		uint64_t i;
-
-		scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
-		scaled_pixels.alpha(1.0);
-		const float *fIn=pixels.ptr();
-		out=scaled_pixels.ptr();
-		for(i=0; i<scaled_pixels.count(); i++) {
-			*(out++)=*(fIn++)/scale;
-		}
-
-		channels=scaled_pixels.depth();	
-		in=scaled_pixels.ptr();
-//	} else {
-//		channels=pixels.depth();	
-//		in=pixels.ptr();
-	}
-
+    ctl::dpx::fb<half> scaled_pixels;
+    scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
+    scaled_pixels.alpha(1.0);
+    
+    const float *fIn=pixels.ptr();
+    half *out=scaled_pixels.ptr();
+    
+    // Yes... I should lookup table this. I *know*!
+    for(uint64_t i=0; i<pixels.count(); i++) {
+        *(out++)=*(fIn++)/scale;
+    }
+    
+	uint8_t channels=scaled_pixels.depth();
+    const half *in=scaled_pixels.ptr();
+    
 	Imf::RgbaOutputFile file(name, pixels.width(), pixels.height(),
 	                         channels==4 ? Imf::WRITE_RGBA : Imf::WRITE_RGB, 1, Imath::V2f (0, 0), 1,
 	                         Imf::INCREASING_Y, (Imf::Compression)compression->exrCompressionScheme);
-
+    
 	file.setFrameBuffer((Imf::Rgba *)in, 1, pixels.width());
 	file.writePixels(pixels.height());
+}
+
+void exr_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
+               format_t *format, Compression *compression)
+{
+    if(format->bps == 32) {
+        exr_write32(name, scale, pixels, compression);
+    }
+    else if(format->bps == 16) {
+        exr_write16(name, scale, pixels, compression);
+    }
+    else {
+        THROW(Iex::ArgExc, "EXR files only support 16 or 32 bps at the moment.");
+    }
 }
 
 #else

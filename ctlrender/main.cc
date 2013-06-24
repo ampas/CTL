@@ -130,7 +130,9 @@ struct file_format_t
 
 file_format_t allowed_formats[] =
 {
-	{ "exr",    format_t("exr",  16) },
+	{ "exr",    format_t("exr",   0) },
+    { "exr16",  format_t("exr",  16) },
+    { "exr32",  format_t("exr",  32) },
     { "aces",   format_t("aces", 16) },
 	{ "dpx",    format_t("dpx",   0) },
 	{ "dpx8",   format_t("dpx",   8) },
