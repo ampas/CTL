@@ -73,7 +73,7 @@ void aces_write(const char *name, float scale,
         scaled_pixels.resize(height*width*channels);
         half *out = &scaled_pixels[0];
         for(size_t i=0; i<scaled_pixels.size(); i++) {
-            *(out++)=(half)(*(in++)/scale);
+            *(out++)=format->float_to_half(*(in++)/scale);
         }
     }
 
