@@ -1,0 +1,134 @@
+Version 1.5:
+  * added OpenEXR_CTL, Nuke_CTL, ctlrender
+  * changed build system to Cmake
+  * updated CTL libraries with features previously only avialable to ctlrender
+  * ctlrender now uses official CTL libraries
+  * ctlrender now uses single precision buffer and allows for 32 bit float operations
+  * added ability to read and write 32 bit OpenEXR and TIFF files from ctlrender
+  * added ability to specify OpenEXR compression method from ctlrender
+  * added ability to write ACES files (SMPTE 2065-4) from ctlrender when   
+    optional aces_container library is installed
+  * added ability allowing for loading CTL modules directly from memory
+  * Bug fix: update to CtlSimdInst.cpp to resolve streaks that occur in 
+    some images
+  * Bug fix: dpx::fb::alpha function no longer iterates past end of data
+  * Bug fix: fix memory leak
+
+Version 1.4.2:
+  * Bug fix: x[y] = z overwrites the entire array x if x is
+    varying while y and z are uniform.
+    (Florian Kainz)
+  * On Windows, paths in the CTL_MODULE_PATH environment
+    variable are now separated by ";" instead of ":"
+    characters.
+    (Florian Kainz)
+  * Bug fix: incorrect CTL code crashes the CTL іnterpereter
+    (Florian Kainz)
+  * Bug fix: initializing an element of a static CTL array with
+    FLT_MIN or FLT_MAX throws a C++ exception (Florian Kainz)
+
+Version 1.4.1:
+  * Fixed build problem on Windows: build failed to create the
+    IlmCtlSimd/halfExpLogTable.h header file.
+    (Eric Wimmer)
+  * Removed Windows .suo files from distribution.
+    (Eric Wimmer)
+
+Version 1.4.0:
+  * Bumped DSO version number to 2.0
+    (Florian Kainz)
+  * Bug fix: multi-threaded execution of CTL programs caused
+    segmentation faults and bad_alloc exceptions
+    (Florian Kainz)
+  * Added new functions to the standard library:
+      3x3 matrix multiplication, addition and inversion
+      3x3 and 4x4 matrix transposition
+      1D lookup table with explicit x,y pairs and linear interpolation
+      1D lookup table with explicit x,y pairs and cubic interpolation
+      1D lookup table with regularly-spaced entries and cubic
+      interpolation
+    (Florian Kainz)
+  * Added new ctlversion statement (Florian Kainz)
+
+Version 1.2.1:
+  Installation Tuning
+  * corrected version number on dso's  - now 1.0
+  * Separated package's LDFLAGS and LIBS flags so that test programs
+  can link with static libraries properly
+  * eliminated some warning messages during install
+  (Andrew Kunz)
+
+Version 1.2.0:
+  * Reorganized libraries for general release
+  * Bug fix: parsing of expressions with commas is stricter
+    (Andrew Kunz)
+  * New build scripts for Linux/Unix
+    (Andrew Kunz)
+  * New Windows project files and build scripts
+    (Kimball Thurston)
+
+Version 1.1.0:
+  * Bug fix: Scattered-data interpolation did not interpolate
+    smoothly between the given data points.
+  * Bug fix: file IlmCtlSimd/CtlSimdReg.cpp did not compile on Windows.
+
+Version 1.0.2:
+  * Bug fix: FunctionArg::setDefaultValue() had unexpected side-effects.
+  * Bug fix: log_h(+infinity) returned NaN instead of +infinity
+  * Some operations on varying operands are faster.
+  * Added new built-in functions:
+      float log10_h (half x)  a faster version of log10(x)
+      float pow10 (float x)  returns pow(10,x)
+      half pow10_h (float x)  a faster version of pow10(x)
+    The sample transforms in directory exrdisplay_ctl now
+    call log10_h() and pow10_h().
+
+  * Added missing IlmCtlMathTest directory.
+
+Version 1.0.1:
+  * Fixed code that compiled with gcc 3.x but not with gcc 4.x.
+  * Bug fix: the size operator for a variable-size arrays
+    sometimes incorrectly returned zero.
+
+Version 1.0.0:
+  * Initial release (only to AMPAS File Format Committee)
+
+
+--------
+OpenEXR_CTL Changes prior to CTL 1.5
+Future versions of OpenEXR_CTL will be part of the CTL package and not 
+have independent version numbering
+
+Version 1.0.1:
+  * Removed Windows .suo files from distribution.
+    (Eric Wimmer)
+
+Version 1.0.0:
+  * Bumped DSO version number to 2.0
+    (Florian Kainz)
+  * Moved some .ctl files from the OpenEXR_Viewers to the
+    OpenEXR_CTL package, changed naming conventions for
+    image channels to match upcoming paper.
+    (Florian Kainz)
+  * Added support for multithreaded execution to function
+    ImfCtl::applyTransforms(), added command line option to
+    enable multithreading to exr_ctl_exr and exrdpx.
+    (Florian Kainz)
+  * Added exr_ctl_exr, a program that reads an OpenEXR file,
+    applies one or more CTL programs to the pixels, and
+    stores the result in another OpenEXR file.
+    (Florian Kainz)
+  * Installation Tuning :
+    - corrected version number on dso's (libtool) - now 1.0
+    - Separated package's LDFLAGS and LIBS flags so that test programs
+      can link with static libraries properly
+    - eliminated some warning messages during install
+    (Andrew Kunz)
+
+Version 0.9.0:
+  * initial release
+  * New build scripts for Linux/Unix
+    (Andrew Kunz)
+  * New Windows project files and build scripts
+    (Kimball Thurston)
+
