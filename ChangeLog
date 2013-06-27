@@ -1,14 +1,18 @@
 Version 1.5:
-  * added OpenEXR_CTL, Nuke_CTL, ctlrender
-  * changed build system to Cmake
-  * updated CTL libraries with features previously only avialable to ctlrender
-  * ctlrender now uses official CTL libraries
-  * added ability to write ACES files (SMPTE 2065-4) from ctlrender when   
+	* added OpenEXR_CTL, Nuke_CTL, ctlrender
+	* changed build system to Cmake
+	* updated CTL libraries with features previously only avialable to ctlrender
+	* ctlrender now uses official CTL libraries
+	* ctlrender now uses single precision buffer and allows for 32 bit float operations
+	* added ability to read and write 32 bit OpenEXR and TIFF files from ctlrender
+	* added ability to specify OpenEXR compression method from ctlrender
+	* added ability to write ACES files (SMPTE 2065-4) from ctlrender when   
     optional aces_container library is installed
-  * added ability allow for loading CTL modules directly from memory
-  * Bug fix: update to CtlSimdInst.cpp to resolve streaks that occur in 
+	* added ability allow for loading CTL modules directly from memory
+	* Bug fix: update to CtlSimdInst.cpp to resolve streaks that occur in 
     some images
-  * Bug fix: fix memory leak
+    * Bug fix: dpx::fb::alpha function no longer iterates past end of data
+	* Bug fix: fix memory leak
 
 Version 1.4.2:
 	* Bug fix: x[y] = z overwrites the entire array x if x is
