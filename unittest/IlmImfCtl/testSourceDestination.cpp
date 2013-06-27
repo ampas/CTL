@@ -1,5 +1,4 @@
 ///////////////////////////////////////////////////////////////////////////
-//
 // Copyright (c) 2013 Academy of Motion Picture Arts and Sciences 
 // ("A.M.P.A.S."). Portions contributed by others as indicated.
 // All rights reserved.
@@ -51,8 +50,8 @@
 // RELATED TO PATENT OR OTHER INTELLECTUAL PROPERTY RIGHTS IN THE ACADEMY 
 // COLOR ENCODING SYSTEM, OR APPLICATIONS THEREOF, HELD BY PARTIES OTHER 
 // THAN A.M.P.A.S., WHETHER DISCLOSED OR UNDISCLOSED.
-//
 ///////////////////////////////////////////////////////////////////////////
+
 #include <ImfCtlApplyTransforms.h>
 #include <CtlSimdInterpreter.h>
 #include <ImfHeader.h>
