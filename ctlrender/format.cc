@@ -54,6 +54,8 @@
 
 #include <format.hh>
 
+#include <half.h>
+
 format_t::format_t() {
 	ext=0;
 	bps=0;
@@ -67,4 +69,11 @@ format_t::format_t(const char *_ext, uint8_t _bps) {
 	squish=0;
 	descriptor=0;
 };
+
+uint16_t
+format_t::float_to_half( float val )
+{
+	half xx( val );
+	return xx.bits();
+}
 

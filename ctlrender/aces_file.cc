@@ -64,9 +64,6 @@ void aces_write(const char *name, float scale,
                const float *pixels,
                format_t *format) {
 
-	if (channels != 3) 
-		throw std::invalid_argument("Only RGB file supported");
-		
 	std::vector<half> scaled_pixels;
 	
     {
@@ -76,7 +73,7 @@ void aces_write(const char *name, float scale,
         scaled_pixels.resize(height*width*channels);
         half *out = &scaled_pixels[0];
         for(size_t i=0; i<scaled_pixels.size(); i++) {
-            *(out++)=(half)(*(in++)/scale);
+            *(out++)=format->float_to_half(*(in++)/scale);
         }
     }
 
@@ -98,6 +95,49 @@ void aces_write(const char *name, float scale,
 	writeParams.hi = x.getDefaultHeaderInfo();	
 	writeParams.hi.originalImageFlag	= 1;	
 	writeParams.hi.software				= "ctlrender";
+
+	writeParams.hi.channels.clear();
+	switch ( channels )
+	{
+		case 3:
+			writeParams.hi.channels.resize(3);
+			writeParams.hi.channels[0].name = "B";
+			writeParams.hi.channels[1].name = "G";
+			writeParams.hi.channels[2].name = "R";
+			break;
+		case 4:
+			writeParams.hi.channels.resize(4);
+			writeParams.hi.channels[0].name = "A";
+			writeParams.hi.channels[1].name = "B";
+			writeParams.hi.channels[2].name = "G";
+			writeParams.hi.channels[3].name = "R";
+			break;
+		case 6:
+			throw std::invalid_argument("Stereo RGB support not yet implemented");
+//			writeParams.hi.channels.resize(6);
+//			writeParams.hi.channels[0].name = "B";
+//			writeParams.hi.channels[1].name = "G";
+//			writeParams.hi.channels[2].name = "R";
+//			writeParams.hi.channels[3].name = "left.B";
+//			writeParams.hi.channels[4].name = "left.G";
+//			writeParams.hi.channels[5].name = "left.R";
+//			break;
+		case 8:
+			throw std::invalid_argument("Stereo RGB support not yet implemented");
+//			writeParams.hi.channels.resize(8);
+//			writeParams.hi.channels[0].name = "A";
+//			writeParams.hi.channels[1].name = "B";
+//			writeParams.hi.channels[2].name = "G";
+//			writeParams.hi.channels[3].name = "R";
+//			writeParams.hi.channels[4].name = "left.A";
+//			writeParams.hi.channels[5].name = "left.B";
+//			writeParams.hi.channels[6].name = "left.G";
+//			writeParams.hi.channels[7].name = "left.R";
+//			break;
+		default:
+			throw std::invalid_argument("Only RGB, RGBA or stereo RGB[A] file supported");
+			break;
+	}
 
 	DynamicMetadata dynamicMeta;
 	dynamicMeta.imageIndex = 0;
