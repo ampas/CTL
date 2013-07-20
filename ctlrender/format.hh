@@ -63,9 +63,6 @@ struct format_t {
 	format_t();
 	format_t(const char *_ext, uint8_t _bps);
 
-	// utility function because we have typedef collision issues
-	uint16_t float_to_half( float val );
-
 	const char *driver;
 	const char *ext;
 	uint8_t bps;
