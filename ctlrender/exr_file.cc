@@ -151,8 +151,8 @@ void exr_write32(const char *name, float scale, const ctl::dpx::fb<float> &pixel
     float height = pixels.height();
     float const *pixelPtr = pixels.ptr();
     
+	ctl::dpx::fb<float> scaled_pixels;
     if (scale != 0.0 && scale != 1.0) {
-        ctl::dpx::fb<float> scaled_pixels;
         scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
         scaled_pixels.alpha(1.0);
         

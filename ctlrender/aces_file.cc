@@ -58,26 +58,28 @@
 #if defined( HAVE_ACESFILE )
 #include <aces_Writer.h>
 #include <stdexcept>
+#include <half.h>
 
 void aces_write(const char *name, float scale, 
                uint32_t width, uint32_t height, uint32_t channels,
                const float *pixels,
                format_t *format) {
 
-	std::vector<half> scaled_pixels;
+	std::vector<half_bytes> scaled_pixels;
 	
     {
         float const *in = pixels;
         if (scale == 0.0f) scale = 1.0f;
         
         scaled_pixels.resize(height*width*channels);
-        half *out = &scaled_pixels[0];
+        half_bytes *out = &scaled_pixels[0];
         for(size_t i=0; i<scaled_pixels.size(); i++) {
-            *(out++)=format->float_to_half(*(in++)/scale);
+			half tmpV( *(in++) / scale );
+            *(out++)=tmpV.bits();
         }
     }
 
-    half *in = &scaled_pixels[0];
+    half_bytes *in = &scaled_pixels[0];
 	
     std::vector<std::string> filenames;
 	filenames.push_back( name );
@@ -147,7 +149,7 @@ void aces_write(const char *name, float scale,
 	x.newImageObject ( dynamicMeta );		
 
 	for ( uint32 row = 0; row < height; row++) {
-		half *rgbData = in + width*channels*row;
+		half_bytes *rgbData = in + width*channels*row;
 		x.storeHalfRow ( rgbData, row ); 
 	}
 
