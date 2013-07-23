@@ -65,21 +65,21 @@ void aces_write(const char *name, float scale,
                const float *pixels,
                format_t *format) {
 
-	std::vector<half_bytes> scaled_pixels;
+	std::vector<halfBytes> scaled_pixels;
 	
     {
         float const *in = pixels;
         if (scale == 0.0f) scale = 1.0f;
         
         scaled_pixels.resize(height*width*channels);
-        half_bytes *out = &scaled_pixels[0];
+        halfBytes *out = &scaled_pixels[0];
         for(size_t i=0; i<scaled_pixels.size(); i++) {
 			half tmpV( *(in++) / scale );
             *(out++)=tmpV.bits();
         }
     }
 
-    half_bytes *in = &scaled_pixels[0];
+    halfBytes *in = &scaled_pixels[0];
 	
     std::vector<std::string> filenames;
 	filenames.push_back( name );
@@ -149,7 +149,7 @@ void aces_write(const char *name, float scale,
 	x.newImageObject ( dynamicMeta );		
 
 	for ( uint32 row = 0; row < height; row++) {
-		half_bytes *rgbData = in + width*channels*row;
+		halfBytes *rgbData = in + width*channels*row;
 		x.storeHalfRow ( rgbData, row ); 
 	}
 
