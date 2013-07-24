@@ -173,7 +173,7 @@ void aces_write(const char *name, float scale,
 
 void aces_write(const char *name, float scale,
                 uint32_t width, uint32_t height, uint32_t channels,
-                const void *pixels,
+                const float *pixels,
                 format_t *format)
 {
 	std::cerr << "AcesContainer library not found" << std::endl;
