@@ -828,13 +828,13 @@ void transform(const char *inputFile, const char *outputFile,
 	}
 
 //    std::cout << image_format->ext << std::endl;
-    if (!strncmp(image_format->ext, "aces", 3))
-    {
-        aces_write(outputFile, output_scale,
-                   image_buffer.width(), image_buffer.height(), image_buffer.depth(),
-                   image_buffer.ptr(), image_format);
-    }
-    else if (!strncmp(image_format->ext, "exr", 3))
+  if (!strncmp(image_format->ext, "aces", 3))
+  {
+      aces_write(outputFile, output_scale,
+                 image_buffer.width(), image_buffer.height(), image_buffer.depth(),
+                 image_buffer.ptr(), image_format);
+  }
+  else if (!strncmp(image_format->ext, "exr", 3))
 	{
 		exr_write(outputFile, output_scale, image_buffer, image_format, compression);
 	}
