@@ -29,7 +29,10 @@ if(PC_OPENEXR_FOUND)
 else()
   if(UNIX)
     set(OpenEXR_CFLAGS "-pthread")
-    set(OpenEXR_LDFLAGS "-pthread")
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    else()
+      set(OpenEXR_LDFLAGS "-pthread")
+    endif()
   endif()
 endif()
 
@@ -58,6 +61,11 @@ unset(_OpenEXR_HINT_LIB)
 
 set(OpenEXR_LIBRARIES ${OpenEXR_LIBRARY} ${IlmBase_LIBRARIES} )
 set(OpenEXR_INCLUDE_DIRS ${OpenEXR_INCLUDE_DIR} )
+
+if(NOT PC_OPENEXR_FOUND)
+get_filename_component(OpenEXR_LDFLAGS_OTHER ${OpenEXR_LIBRARY} PATH)
+set(OpenEXR_LDFLAGS_OTHER -L${OpenEXR_LDFLAGS_OTHER})
+endif()
 
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set OpenEXR_FOUND to TRUE
