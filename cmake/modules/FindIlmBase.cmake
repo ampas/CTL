@@ -29,7 +29,10 @@ if(PC_ILMBASE_FOUND)
 else()
   if(UNIX)
     set(IlmBase_CFLAGS "-pthread")
-    set(IlmBase_LDFLAGS "-pthread")
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    else()
+      set(OpenEXR_LDFLAGS "-pthread")
+    endif()
   endif()
 endif()
 
@@ -67,6 +70,11 @@ unset(_IlmBase_HINT_INCLUDE)
 unset(_IlmBase_HINT_LIB)
 set(IlmBase_LIBRARIES ${IlmBase_LIBRARY} )
 set(IlmBase_INCLUDE_DIRS ${IlmBase_INCLUDE_DIR} )
+
+if(NOT PC_ILMBASE_FOUND)
+get_filename_component(IlmBase_LDFLAGS_OTHER ${IlmBase_HALF_LIBRARY} PATH)
+set(IlmBase_LDFLAGS_OTHER -L${IlmBase_LDFLAGS_OTHER})
+endif()
 
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set IlmBase_FOUND to TRUE
