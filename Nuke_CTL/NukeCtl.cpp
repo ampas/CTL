@@ -23,11 +23,13 @@ void getUserParameters(const char*, std::vector<std::string>*, std::vector<std::
 class NukeCtlIop : public PixelIop {
 
 private:
+	DD::Image::Knob* moduleKnob;
 	DD::Image::Knob* readKnob;
 	DD::Image::Knob* textKnob;
 	DD::Image::Knob* writeKnob;
 	DD::Image::Knob* paramKnob;
 
+	const char *modulePath;
 	const char *inFilename;
 	const char *outFilename;
 	const char *ctlText;
@@ -41,6 +43,7 @@ private:
 public:
 	
     NukeCtlIop(Node* node) : PixelIop(node) {
+    	modulePath 		= "";
     	inFilename      = "";
     	outFilename     = "";
     	ctlText         = "";
@@ -79,10 +82,11 @@ void NukeCtlIop::pixel_engine(const Row& in, int y, int x, int r, ChannelMask ch
 
 void NukeCtlIop::knobs(Knob_Callback f) {
 
-	readKnob  = File_knob(f, &inFilename, "Read CTL File");
-	textKnob  = Multiline_String_knob(f, &ctlText, "CTL Text");
-	paramKnob = Multiline_String_knob(f, &parameters, "Input Parameters");
-	writeKnob = Write_File_knob(f, &outFilename, "Write CTL File");
+	moduleKnob = File_knob(f, &modulePath, "Module Path");
+	readKnob   = File_knob(f, &inFilename, "Read CTL File");
+	textKnob   = Multiline_String_knob(f, &ctlText, "CTL Text");
+	paramKnob  = Multiline_String_knob(f, &parameters, "Input Parameters");
+	writeKnob  = Write_File_knob(f, &outFilename, "Write CTL File");
 
 }
 
@@ -90,6 +94,10 @@ void NukeCtlIop::knobs(Knob_Callback f) {
 int NukeCtlIop::knob_changed(Knob *k) {
 
 	char *buffer;
+	
+	if (k == moduleKnob) {
+		return 1;
+	}
 
 	// If we read in a file, get the input parameters, display the ctl file to the text knob,
 	// and extract the user parameters from the input parameters.
