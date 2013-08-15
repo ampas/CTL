@@ -57,7 +57,7 @@
 
 #include <list>
 
-#include "NukeInputParameters.h"
+#include "NukeInputParameters.h" 
 #include "DDImage/Row.h"
 #include "DDImage/PixelIop.h"
 #include <CtlRcPtr.h>
@@ -130,10 +130,10 @@ public:
 typedef Ctl::RcPtr<CTLResult> CTLResultPtr;
 typedef std::list<CTLResultPtr> CTLResults;
 
-void NukeTransform(const Row&, int, int, int, ChannelMask, Row&, const char*, std::vector<std::string>, std::vector<std::vector<float> >, std::vector<int>);
+void NukeTransform(const Row&, int, int, int, ChannelMask, Row&, const char*, std::vector<std::string>, std::vector<std::vector<float> >, std::vector<int>, const char*);
 CTLResultPtr mkresult(const char*, const char*, const half*, size_t, size_t);
 void mkimage(half*, const CTLResults&, size_t);
-void run_ctl_transform(const ctl_operation_t&, CTLResults*, size_t);
+void run_ctl_transform(const ctl_operation_t&, CTLResults*, size_t, const char*);
 void set_ctl_function_arguments_from_ctl_results(Ctl::FunctionArgPtr*, const CTLResults&, size_t, size_t);
 void set_ctl_results_from_ctl_function_arguments(CTLResults*, const Ctl::FunctionArgPtr&, size_t, size_t, size_t);
 void add_parameter_value_to_ctl_results(CTLResults*, std::string, std::vector<float>, int);

@@ -15,6 +15,7 @@ using namespace DD::Image;
 
 static const char* const CLASS = "NukeCtl";
 
+void checkModulePath(const char*);
 char* readFile(const char*, std::string*);
 void saveFile(const char*, const char*);
 bool fileExists(const char*);
@@ -76,7 +77,7 @@ void NukeCtlIop::_validate(bool for_real) {
 
 // Called on each scanline
 void NukeCtlIop::pixel_engine(const Row& in, int y, int x, int r, ChannelMask channels, Row& out) {
-    NukeTransform(in, y, x, r, channels, out, inFilename, paramName, paramValues, paramSize);
+    NukeTransform(in, y, x, r, channels, out, inFilename, paramName, paramValues, paramSize, modulePath);
 }
 
 
@@ -96,6 +97,8 @@ int NukeCtlIop::knob_changed(Knob *k) {
 	char *buffer;
 	
 	if (k == moduleKnob) {
+	
+		checkModulePath(modulePath);
 		return 1;
 	}
 
@@ -135,6 +138,29 @@ static Iop* build(Node* node) {
 }
 
 const Iop::Description NukeCtlIop::d(CLASS, "Color/NukeCtl", build);
+
+void checkModulePath(const char* path) {
+	struct stat buf;
+    int status;
+    
+    status = stat(path, &buf);
+    
+	if (status == -1) {
+        Op::message_f('!', "Error. Directory does not exist.");
+        return;
+	}
+    
+    if (S_ISDIR(buf.st_mode)) {
+        printf("Is directory\n");
+        return;
+    }
+    else {
+        Op::message_f('!', "Error. Path is not a directory.");
+        return;
+    }
+    
+	return;
+}
 
 
 // Read ctl file and copy to buffer

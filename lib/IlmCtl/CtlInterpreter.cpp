@@ -160,53 +160,6 @@ modulePathsInternal()
     return mpd;
 }
 
-
-
-string
-findModule (const string& moduleName)
-{
-    //
-    // Find the file that contains the source code for a given module
-    // by searching a colon-separated list of directories provided by
-    // the CTL_MODULE_PATH environment variable.
-    //
-    // Note: for security reasons, we do not want to give CTL modules
-    // any information about the host machine's file system layout.
-    // Therefore we disallow any characters in module names that could
-    // be used to build absolute or relative file paths.
-    //
-
-    if (moduleName.find_first_of ("/:;\\") != string::npos)
-    {
-	THROW (ArgExc, "CTL module name \"" << moduleName << "\" is invalid. "
-		       "Module names cannot contain '/', ':', ';' or '\\' "
-		       "characters.");
-    }
-
-
-    {
-        ModulePathsData &mpd = modulePathsInternal();
-        Lock lock(mpd.mutex);
-
-        for(vector<string>::iterator it = mpd.paths.begin();
-            it != mpd.paths.end();
-            it++)
-        {
-            string fileName = *it  + '/' + moduleName + ".ctl";
-
-#ifdef WIN32            
-            if (!_access (fileName.c_str(), 0))
-#else
-            if (!access (fileName.c_str(), F_OK))
-#endif
-                return fileName;
-        }
-    }
-
-    THROW (ArgExc, "Cannot find CTL module \"" << moduleName << "\".");
-    return "";
-}
-
 } // namespace
 
 
@@ -220,7 +173,7 @@ struct Interpreter::Data
 
 Interpreter::Interpreter (): _data (new Data)
 {
-    // empty
+    user_module_path = "";
 }
 
 
@@ -249,6 +202,60 @@ Interpreter::modulePaths()
     return retPaths;
 }
 
+string
+Interpreter::findModule (const string& moduleName)
+{
+    //
+    // Find the file that contains the source code for a given module
+    // by searching a colon-separated list of directories provided by
+    // the CTL_MODULE_PATH environment variable.
+    //
+    // Note: for security reasons, we do not want to give CTL modules
+    // any information about the host machine's file system layout.
+    // Therefore we disallow any characters in module names that could
+    // be used to build absolute or relative file paths.
+    //
+
+    if (moduleName.find_first_of ("/:;\\") != string::npos)
+    {
+	THROW (ArgExc, "CTL module name \"" << moduleName << "\" is invalid. "
+		       "Module names cannot contain '/', ':', ';' or '\\' "
+		       "characters.");
+    }
+
+
+    {
+        ModulePathsData &mpd = modulePathsInternal();
+        Lock lock(mpd.mutex);
+        vector<string>::iterator it = mpd.paths.begin();
+        
+        // Users can define a separate module path besides the environment variable
+        // per instance on ctl running.
+        if (user_module_path.length() != 0 ) 
+        {
+            mpd.paths.insert(it, user_module_path);
+        }
+        
+
+        for(it = mpd.paths.begin();
+            it != mpd.paths.end();
+            it++)
+        {
+            string fileName = *it  + '/' + moduleName + ".ctl";
+
+#ifdef WIN32            
+            if (!_access (fileName.c_str(), 0))
+#else
+            if (!access (fileName.c_str(), F_OK))
+#endif
+                return fileName;
+        }
+    }
+
+    THROW (ArgExc, "Cannot find CTL module \"" << moduleName << "\".");
+    return "";
+}
+
 void
 Interpreter::setModulePaths(const vector<string>& newModPaths)
 {
@@ -258,6 +265,11 @@ Interpreter::setModulePaths(const vector<string>& newModPaths)
     mpd.paths = newModPaths;
 }
 
+void
+Interpreter::setUserModulePath(const string path)
+{
+    user_module_path = path;
+}
 
 void
 Interpreter::loadModule (const string &moduleName, const string &fileName, const string &moduleSource)
