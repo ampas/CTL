@@ -101,7 +101,7 @@ class Interpreter
 	                     const std::string &moduleName=std::string());
     bool		moduleIsLoaded (const std::string &moduleName) const;
     
-    void setUserModulePath(const std::string path);
+    void setUserModulePath(const std::vector<std::string> path, const bool set);
 
 
     //--------------------------------------------------
@@ -200,7 +200,8 @@ class Interpreter
     struct Data;
 
     Data *	_data;
-    std::string user_module_path; 
+    std::vector<std::string> user_module_paths;
+    bool set_module_path; 
 };
 
 

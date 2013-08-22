@@ -173,7 +173,7 @@ struct Interpreter::Data
 
 Interpreter::Interpreter (): _data (new Data)
 {
-    user_module_path = "";
+    set_module_path = false;
 }
 
 
@@ -227,17 +227,33 @@ Interpreter::findModule (const string& moduleName)
     {
         ModulePathsData &mpd = modulePathsInternal();
         Lock lock(mpd.mutex);
-        vector<string>::iterator it = mpd.paths.begin();
         
         // Users can define a separate module path besides the environment variable
         // per instance on ctl running.
-        if (user_module_path.length() != 0 ) 
+        
+        if (set_module_path) 
         {
-            mpd.paths.insert(it, user_module_path);
+            for(vector<string>::iterator it = user_module_paths.begin();
+            it != user_module_paths.end();
+            it++)
+            {
+                string fileName = *it + '/' + moduleName + ".ctl";
+            
+                #ifdef WIN32            
+                if (!_access (fileName.c_str(), 0)) {
+#else
+                if (!access (fileName.c_str(), F_OK)) {
+#endif
+                    return fileName;
+                }
+            }
+            
+            THROW (ArgExc, "Cannot find CTL module \"" << moduleName << "\".");
+            return ""; 
         }
         
 
-        for(it = mpd.paths.begin();
+        for(vector<string>::iterator it = mpd.paths.begin();
             it != mpd.paths.end();
             it++)
         {
@@ -266,9 +282,10 @@ Interpreter::setModulePaths(const vector<string>& newModPaths)
 }
 
 void
-Interpreter::setUserModulePath(const string path)
+Interpreter::setUserModulePath(const vector<string> path, const bool set)
 {
-    user_module_path = path;
+    set_module_path = set;
+    user_module_paths = path;
 }
 
 void

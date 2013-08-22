@@ -14,8 +14,10 @@ const char* const HELP =
 using namespace DD::Image;
 
 static const char* const CLASS = "NukeCtl";
+std::vector<std::string> user_module_paths;
 
 void checkModulePath(const char*);
+std::vector<std::string> parseModulePath(const char*);
 char* readFile(const char*, std::string*);
 void saveFile(const char*, const char*);
 bool fileExists(const char*);
@@ -24,13 +26,18 @@ void getUserParameters(const char*, std::vector<std::string>*, std::vector<std::
 class NukeCtlIop : public PixelIop {
 
 private:
+    DD::Image::Knob* modSetKnob;
 	DD::Image::Knob* moduleKnob;
 	DD::Image::Knob* readKnob;
 	DD::Image::Knob* textKnob;
 	DD::Image::Knob* writeKnob;
 	DD::Image::Knob* paramKnob;
 
+    bool moduleSet;
+    bool initKnob;
+    const char *ctl_env;
 	const char *modulePath;
+    const char *empty;
 	const char *inFilename;
 	const char *outFilename;
 	const char *ctlText;
@@ -40,16 +47,21 @@ private:
 	std::vector<std::string>         paramName;
 	std::vector<std::vector<float> > paramValues;
 	std::vector<int>		 		 paramSize;
-	
+    
 public:
 	
     NukeCtlIop(Node* node) : PixelIop(node) {
     	modulePath 		= "";
+        moduleSet       = false;
+        initKnob        = true;
+        empty           = "";
     	inFilename      = "";
     	outFilename     = "";
     	ctlText         = "";
     	parameters      = "";
     	parameterString = "";
+        envVars();
+        user_module_paths.push_back("");
     }
     
     static const Iop::Description d;
@@ -68,6 +80,7 @@ public:
     const char* Class() const { return CLASS; }
     const char* node_help() const { return HELP; }
     void _validate(bool);
+    void envVars();
 };
 
 void NukeCtlIop::_validate(bool for_real) {
@@ -77,17 +90,24 @@ void NukeCtlIop::_validate(bool for_real) {
 
 // Called on each scanline
 void NukeCtlIop::pixel_engine(const Row& in, int y, int x, int r, ChannelMask channels, Row& out) {
-    NukeTransform(in, y, x, r, channels, out, inFilename, paramName, paramValues, paramSize, modulePath);
-}
 
+    NukeTransform(in, y, x, r, channels, out, inFilename, paramName, paramValues, paramSize, user_module_paths, moduleSet);
+}
 
 void NukeCtlIop::knobs(Knob_Callback f) {
 
+    modSetKnob = Bool_knob(f, &moduleSet, "Set Module Path");
 	moduleKnob = File_knob(f, &modulePath, "Module Path");
 	readKnob   = File_knob(f, &inFilename, "Read CTL File");
 	textKnob   = Multiline_String_knob(f, &ctlText, "CTL Text");
 	paramKnob  = Multiline_String_knob(f, &parameters, "Input Parameters");
 	writeKnob  = Write_File_knob(f, &outFilename, "Write CTL File");
+    
+    if (initKnob) {
+        initKnob = false;
+        moduleKnob->disable();
+        moduleKnob->set_text(ctl_env);
+    }
 
 }
 
@@ -96,8 +116,23 @@ int NukeCtlIop::knob_changed(Knob *k) {
 
 	char *buffer;
 	
+    if (k == modSetKnob) {
+        if (moduleSet) {
+            moduleKnob->enable();
+            moduleKnob->set_text(modulePath);
+            checkModulePath(modulePath);
+        }
+        else {
+            moduleKnob->disable();
+            moduleKnob->set_text(ctl_env);
+        }
+        
+        return 1;
+    
+    }
+    
 	if (k == moduleKnob) {
-	
+    printf("Checking path\n");
 		checkModulePath(modulePath);
 		return 1;
 	}
@@ -133,33 +168,85 @@ int NukeCtlIop::knob_changed(Knob *k) {
 	return 0;
 }
 
+void NukeCtlIop::envVars() {
+
+    const char *env = std::getenv ("CTL_MODULE_PATH");
+    
+    if (env) {
+        ctl_env = env;
+    }
+    else {
+        ctl_env = "";
+    }
+}
+
 static Iop* build(Node* node) {
     return (new NukeWrapper(new NukeCtlIop(node)));
 }
 
 const Iop::Description NukeCtlIop::d(CLASS, "Color/NukeCtl", build);
 
+// Make sure module path is a valid directory
 void checkModulePath(const char* path) {
 	struct stat buf;
     int status;
+    const char *temp;
+    bool err = false;
     
-    status = stat(path, &buf);
+    std::vector<std::string> paths = parseModulePath(path);
     
-	if (status == -1) {
-        Op::message_f('!', "Error. Directory does not exist.");
-        return;
+    for(std::vector<std::string>::iterator it = paths.begin(); it != paths.end(); it++) {
+        temp = it->c_str();
+        status = stat(temp, &buf);
+        
+        if (status == -1 || !S_ISDIR(buf.st_mode)) {
+            err = true;
+        }
+    
+    }
+    
+	if (err) {
+        Op::message_f('!', "Error. Not a valid directory.");
+        paths.clear();
 	}
-    
-    if (S_ISDIR(buf.st_mode)) {
-        printf("Is directory\n");
-        return;
-    }
-    else {
-        Op::message_f('!', "Error. Path is not a directory.");
-        return;
-    }
-    
+
+    user_module_paths = paths;
+
 	return;
+}
+
+std::vector<std::string> parseModulePath(const char* inPath) {
+
+    std::vector<std::string> modPaths;
+    size_t pos = 0;
+    std::string path = std::string(inPath);
+    
+    while (pos < path.size())
+    {
+	#if defined (WIN32) || defined (WIN64) 
+
+	size_t end = path.find (';', pos);
+
+	#else
+
+	size_t end = path.find (':', pos);
+
+	#endif
+            
+        if (end == std::string::npos)
+            end = path.size();
+            
+        std::string pathItem = path.substr (pos, end - pos);
+
+        if(find(modPaths.begin(), modPaths.end(), pathItem ) 
+           == modPaths.end())
+            modPaths.push_back(pathItem);
+
+        pos = end + 1;
+    }
+    
+    return modPaths;
+
 }
 
 
@@ -202,6 +289,9 @@ void saveFile(const char *filename, const char *ctlText) {
 	// Check if file exists so it isn't accidentally overwritten
 	if (fileExists(filename)) {
         write = Op::message_f('?', "File already exists. Are you sure you would like to overwrite it?");
+    }
+    else {
+        return;
     }
     
     if (write) {
