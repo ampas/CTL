@@ -103,6 +103,7 @@ void NukeCtlIop::knobs(Knob_Callback f) {
 	paramKnob  = Multiline_String_knob(f, &parameters, "Input Parameters");
 	writeKnob  = Write_File_knob(f, &outFilename, "Write CTL File");
     
+    // initialize the module knob to be disabled
     if (initKnob) {
         initKnob = false;
         moduleKnob->disable();
@@ -116,6 +117,7 @@ int NukeCtlIop::knob_changed(Knob *k) {
 
 	char *buffer;
 	
+    // if the box is checked, enable or disable the set module knob
     if (k == modSetKnob) {
         if (moduleSet) {
             moduleKnob->enable();
@@ -130,9 +132,9 @@ int NukeCtlIop::knob_changed(Knob *k) {
         return 1;
     
     }
-    
+
+    // if the module path is changed, make sure it is valid
 	if (k == moduleKnob) {
-    printf("Checking path\n");
 		checkModulePath(modulePath);
 		return 1;
 	}
@@ -168,6 +170,7 @@ int NukeCtlIop::knob_changed(Knob *k) {
 	return 0;
 }
 
+// Gets the environment variable for CTL_MODULE_PATH
 void NukeCtlIop::envVars() {
 
     const char *env = std::getenv ("CTL_MODULE_PATH");
@@ -194,7 +197,7 @@ void checkModulePath(const char* path) {
     bool err = false;
     
     std::vector<std::string> paths = parseModulePath(path);
-    
+    // if a path is not valid then give an error message
     for(std::vector<std::string>::iterator it = paths.begin(); it != paths.end(); it++) {
         temp = it->c_str();
         status = stat(temp, &buf);
@@ -215,6 +218,7 @@ void checkModulePath(const char* path) {
 	return;
 }
 
+// parse the module path into an array of strings 
 std::vector<std::string> parseModulePath(const char* inPath) {
 
     std::vector<std::string> modPaths;
