@@ -100,6 +100,8 @@ class Interpreter
 	void        loadFile(const std::string &fileName,
 	                     const std::string &moduleName=std::string());
     bool		moduleIsLoaded (const std::string &moduleName) const;
+    
+    void setUserModulePath(const std::vector<std::string> path, const bool set);
 
 
     //--------------------------------------------------
@@ -154,7 +156,7 @@ class Interpreter
     //
     //---------------------------------------------------------------------
     static std::vector<std::string>  modulePaths();
-    static void    setModulePaths(const std::vector<std::string>& newModPaths);
+    static void setModulePaths(const std::vector<std::string>& newModPaths);
 
 
   protected:
@@ -193,9 +195,13 @@ class Interpreter
 	                        const std::string &fileName,
 	                        const std::string &moduleSource = "");
 
+    virtual std::string findModule (const std::string& moduleName);
+
     struct Data;
 
     Data *	_data;
+    std::vector<std::string> user_module_paths;
+    bool set_module_path; 
 };
 
 

@@ -60,7 +60,7 @@ void set_ctl_function_arguments_from_ctl_results(Ctl::FunctionArgPtr *arg, const
 void set_ctl_results_from_ctl_function_arguments(CTLResults *ctl_results, const Ctl::FunctionArgPtr &arg, size_t offset, size_t count, size_t total);
 
 // Performs Ctl transformation on Nuke scanline
-void NukeTransform(const Row& in, int y, int x, int r, ChannelMask channels, Row& out, const char* filename, std::vector<std::string> paramName, std::vector<std::vector<float> > paramValues, std::vector<int> paramSize) {
+void NukeTransform(const Row& in, int y, int x, int r, ChannelMask channels, Row& out, const char* filename, std::vector<std::string> paramName, std::vector<std::vector<float> > paramValues, std::vector<int> paramSize, const std::vector<std::string> modulePath, const bool moduleSet) {
 
 	int numChan = channels.size();
 	int i = 0, j;
@@ -142,7 +142,7 @@ void NukeTransform(const Row& in, int y, int x, int r, ChannelMask channels, Row
     		add_parameter_value_to_ctl_results(&ctl_results, paramName[i], paramValues[i], paramSize[i]);
     	}
     	// performs ctl operation on data
-     	run_ctl_transform(*operations_iter, &ctl_results, width);
+     	run_ctl_transform(*operations_iter, &ctl_results, width, modulePath, moduleSet);
     }
     
     // load results back into image buffer
@@ -163,7 +163,7 @@ void NukeTransform(const Row& in, int y, int x, int r, ChannelMask channels, Row
     delete [] image_buffer;
 }
 
-void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_results, size_t count) {
+void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_results, size_t count, const std::vector<std::string> module_paths, const bool moduleSet) {
     Ctl::SimdInterpreter interpreter;
     Ctl::FunctionCallPtr fn;
     Ctl::FunctionArgPtr arg;
@@ -189,7 +189,7 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
     	else {
     		module = slash + 1;
     	}
-    	
+    	 
     	// remove extension from module
     	dot = strrchr(module, '.'); 
     	if (dot != NULL) {
@@ -197,6 +197,7 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
     	}
     	
     	try {
+            interpreter.setUserModulePath(module_paths, moduleSet); 
     		interpreter.loadFile(ctl_operation.filename);
 
 			// enter at main
