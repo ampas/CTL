@@ -138,8 +138,8 @@ class SimdXContext
     int			lineNumber () const		{return _lineNumber;}
     void		setLineNumber (int ln)   	{_lineNumber = ln;}
     
-    const std::string & fileName () const		{return *_fileName;}
-    void		setFileName (const std::string &fn) {_fileName = &fn;}
+    const std::string & fileName () const		{return _fileName;}
+    void		setFileName (const std::string &fn) {_fileName = fn;}
 
     SimdModule*		module()			{return _module;}
     void		setModule(SimdModule* m)	{_module = m;}
@@ -162,7 +162,7 @@ class SimdXContext
     unsigned long	_abortCount;
     unsigned long	_maxInstCount;
     unsigned long	_instCount;
-    const std::string *	_fileName;
+    std::string		_fileName;
 };
 
 
