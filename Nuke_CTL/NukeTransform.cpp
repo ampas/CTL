@@ -1,54 +1,54 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2013 Academy of Motion Picture Arts and Sciences 
+// Copyright (c) 2013 Academy of Motion Picture Arts and Sciences
 // ("A.M.P.A.S."). Portions contributed by others as indicated.
 // All rights reserved.
-// 
+//
 // A worldwide, royalty-free, non-exclusive right to copy, modify, create
-// derivatives, and use, in source and binary forms, is hereby granted, 
-// subject to acceptance of this license. Performance of any of the 
-// aforementioned acts indicates acceptance to be bound by the following 
+// derivatives, and use, in source and binary forms, is hereby granted,
+// subject to acceptance of this license. Performance of any of the
+// aforementioned acts indicates acceptance to be bound by the following
 // terms and conditions:
 //
-//  * Copies of source code, in whole or in part, must retain the 
-//    above copyright notice, this list of conditions and the 
+//  * Copies of source code, in whole or in part, must retain the
+//    above copyright notice, this list of conditions and the
 //    Disclaimer of Warranty.
 //
-//  * Use in binary form must retain the above copyright notice, 
+//  * Use in binary form must retain the above copyright notice,
 //    this list of conditions and the Disclaimer of Warranty in the
 //    documentation and/or other materials provided with the distribution.
 //
-//  * Nothing in this license shall be deemed to grant any rights to 
-//    trademarks, copyrights, patents, trade secrets or any other 
-//    intellectual property of A.M.P.A.S. or any contributors, except 
+//  * Nothing in this license shall be deemed to grant any rights to
+//    trademarks, copyrights, patents, trade secrets or any other
+//    intellectual property of A.M.P.A.S. or any contributors, except
 //    as expressly stated herein.
 //
-//  * Neither the name "A.M.P.A.S." nor the name of any other 
-//    contributors to this software may be used to endorse or promote 
-//    products derivative of or based on this software without express 
-//    prior written permission of A.M.P.A.S. or the contributors, as 
+//  * Neither the name "A.M.P.A.S." nor the name of any other
+//    contributors to this software may be used to endorse or promote
+//    products derivative of or based on this software without express
+//    prior written permission of A.M.P.A.S. or the contributors, as
 //    appropriate.
-// 
-// This license shall be construed pursuant to the laws of the State of 
-// California, and any disputes related thereto shall be subject to the 
+//
+// This license shall be construed pursuant to the laws of the State of
+// California, and any disputes related thereto shall be subject to the
 // jurisdiction of the courts therein.
 //
-// Disclaimer of Warranty: THIS SOFTWARE IS PROVIDED BY A.M.P.A.S. AND 
-// CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, 
-// BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS 
-// FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT ARE DISCLAIMED. IN NO 
-// EVENT SHALL A.M.P.A.S., OR ANY CONTRIBUTORS OR DISTRIBUTORS, BE LIABLE 
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, RESITUTIONARY, 
-// OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+// Disclaimer of Warranty: THIS SOFTWARE IS PROVIDED BY A.M.P.A.S. AND
+// CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
+// BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT ARE DISCLAIMED. IN NO
+// EVENT SHALL A.M.P.A.S., OR ANY CONTRIBUTORS OR DISTRIBUTORS, BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, RESITUTIONARY,
+// OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
 // THE POSSIBILITY OF SUCH DAMAGE.
 //
-// WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE ACADEMY 
-// SPECIFICALLY DISCLAIMS ANY REPRESENTATIONS OR WARRANTIES WHATSOEVER 
-// RELATED TO PATENT OR OTHER INTELLECTUAL PROPERTY RIGHTS IN THE ACADEMY 
-// COLOR ENCODING SYSTEM, OR APPLICATIONS THEREOF, HELD BY PARTIES OTHER 
+// WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE ACADEMY
+// SPECIFICALLY DISCLAIMS ANY REPRESENTATIONS OR WARRANTIES WHATSOEVER
+// RELATED TO PATENT OR OTHER INTELLECTUAL PROPERTY RIGHTS IN THE ACADEMY
+// COLOR ENCODING SYSTEM, OR APPLICATIONS THEREOF, HELD BY PARTIES OTHER
 // THAN A.M.P.A.S., WHETHER DISCLOSED OR UNDISCLOSED.
 ///////////////////////////////////////////////////////////////////////////
 
@@ -61,7 +61,7 @@ void set_ctl_results_from_ctl_function_arguments(CTLResults *ctl_results, const 
 
 // Performs Ctl transformation on Nuke scanline
 void NukeTransform(const Row& in, int y, int x, int r, ChannelMask channels, Row& out, const char* filename, std::vector<std::string> paramName, std::vector<std::vector<float> > paramValues, std::vector<int> paramSize, const std::vector<std::string> modulePath, const bool moduleSet) {
-
+  
 	int numChan = channels.size();
 	int i = 0, j;
 	size_t width = r - x;
@@ -72,201 +72,201 @@ void NukeTransform(const Row& in, int y, int x, int r, ChannelMask channels, Row
 	if (fExists) {
 		
 		// format input data to image buffer
-	    foreach(n, channels) {
-    
-    		const float* inptr = in[n] + x;
-    		float* outptr = out.writable(n) + x;
-
-    		for (j = 0; j < width; j++) {   
-    			      		        	
-          		image_buffer[i+numChan*j] = *inptr++;
-        	}
-        	i++;
-    	}  	
-    } else {	
-    	
-    	// copy input channels to output and return
-    	foreach(n, channels) {
-    
-    		const float* inptr = in[n] + x;
-    		float* outptr = out.writable(n) + x;
-
-    		for (j = 0; j < width; j++) {   
-    	      		
-          		*outptr++ = *inptr++;
-        	}
-        	i++;
-    	} 
-    	return; 	
-    }	
-	
-    CTLOperations ctl_operations;
-    CTLParameters global_ctl_parameters;
-    ctl_operation_t new_ctl_operation;
-    CTLOperations::const_iterator operations_iter;
-    CTLResults ctl_results;
-    	
-    // can add ability to have multiple ctl operations here
-    new_ctl_operation.local.clear();
-    new_ctl_operation.filename = filename;
-
-    ctl_operations.push_back(new_ctl_operation);
-    
-    // push channels into image buffer
-    
-    if (numChan > 0) {
-    	ctl_results.push_back(mkresult("rIn", "c00In", image_buffer, 0, width));
-    }
-    if (numChan > 1) {
-    	ctl_results.push_back(mkresult("gIn", "c01In", image_buffer, 1, width));
-    }
-    if (numChan > 2) {
-    	ctl_results.push_back(mkresult("bIn", "c02In", image_buffer, 2, width));
-    }
-    if (numChan > 3) {
-    	ctl_results.push_back(mkresult("aIn", "c03In", image_buffer, 3, width));
-    }
-    
-    // if more than RGBA channels
-    char name[16];
-    for (i = 4; i < numChan; i++) {
-    	memset(name, 0, sizeof(name));
-    	snprintf(name, sizeof(name) - 1, "c%02dIn", i);
-    	ctl_results.push_back(mkresult(name, NULL, image_buffer, i, width));
-    }
-    	
-    // run for each ctl transformation, this will be 1 unless plugin is modified to handle multiple files
-    for (operations_iter = ctl_operations.begin(); operations_iter != ctl_operations.end(); operations_iter++) {
-    	// add user parameters ctl results
-    	for (i = 0; i < paramSize.size(); i++) {
-    		add_parameter_value_to_ctl_results(&ctl_results, paramName[i], paramValues[i], paramSize[i]);
-    	}
-    	// performs ctl operation on data
-     	run_ctl_transform(*operations_iter, &ctl_results, width, modulePath, moduleSet);
-    }
-    
-    // load results back into image buffer
-    mkimage(image_buffer, ctl_results, width);
-    
-    i = 0;
-    // format image buffer data to output channel
     foreach(n, channels) {
-    
-    	float* outptr = out.writable(n) + x;
-    	int pos = 0;
-
-    	for (j = 0; j < width; j++) {
-          	*outptr++ = image_buffer[i+numChan*j];      		
-        }
-        i++;
+      
+      const float* inptr = in[n] + x;
+      float* outptr = out.writable(n) + x;
+      
+      for (j = 0; j < width; j++) {
+        
+        image_buffer[i+numChan*j] = *inptr++;
+      }
+      i++;
     }
-    delete [] image_buffer;
+  } else {
+    
+    // copy input channels to output and return
+    foreach(n, channels) {
+      
+      const float* inptr = in[n] + x;
+      float* outptr = out.writable(n) + x;
+      
+      for (j = 0; j < width; j++) {
+        
+        *outptr++ = *inptr++;
+      }
+      i++;
+    }
+    return;
+  }
+	
+  CTLOperations ctl_operations;
+  CTLParameters global_ctl_parameters;
+  ctl_operation_t new_ctl_operation;
+  CTLOperations::const_iterator operations_iter;
+  CTLResults ctl_results;
+  
+  // can add ability to have multiple ctl operations here
+  new_ctl_operation.local.clear();
+  new_ctl_operation.filename = filename;
+  
+  ctl_operations.push_back(new_ctl_operation);
+  
+  // push channels into image buffer
+  
+  if (numChan > 0) {
+    ctl_results.push_back(mkresult("rIn", "c00In", image_buffer, 0, width));
+  }
+  if (numChan > 1) {
+    ctl_results.push_back(mkresult("gIn", "c01In", image_buffer, 1, width));
+  }
+  if (numChan > 2) {
+    ctl_results.push_back(mkresult("bIn", "c02In", image_buffer, 2, width));
+  }
+  if (numChan > 3) {
+    ctl_results.push_back(mkresult("aIn", "c03In", image_buffer, 3, width));
+  }
+  
+  // if more than RGBA channels
+  char name[16];
+  for (i = 4; i < numChan; i++) {
+    memset(name, 0, sizeof(name));
+    snprintf(name, sizeof(name) - 1, "c%02dIn", i);
+    ctl_results.push_back(mkresult(name, NULL, image_buffer, i, width));
+  }
+  
+  // run for each ctl transformation, this will be 1 unless plugin is modified to handle multiple files
+  for (operations_iter = ctl_operations.begin(); operations_iter != ctl_operations.end(); operations_iter++) {
+    // add user parameters ctl results
+    for (i = 0; i < paramSize.size(); i++) {
+      add_parameter_value_to_ctl_results(&ctl_results, paramName[i], paramValues[i], paramSize[i]);
+    }
+    // performs ctl operation on data
+    run_ctl_transform(*operations_iter, &ctl_results, width, modulePath, moduleSet);
+  }
+  
+  // load results back into image buffer
+  mkimage(image_buffer, ctl_results, width);
+  
+  i = 0;
+  // format image buffer data to output channel
+  foreach(n, channels) {
+    
+    float* outptr = out.writable(n) + x;
+    int pos = 0;
+    
+    for (j = 0; j < width; j++) {
+      *outptr++ = image_buffer[i+numChan*j];
+    }
+    i++;
+  }
+  delete [] image_buffer;
 }
 
 void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_results, size_t count, const std::vector<std::string> module_paths, const bool moduleSet) {
-    Ctl::SimdInterpreter interpreter;
-    Ctl::FunctionCallPtr fn;
-    Ctl::FunctionArgPtr arg;
-    char *name = NULL;
-    char *module;
-    char *slash;
-    char *dot;
-    CTLResults new_ctl_results;
+  Ctl::SimdInterpreter interpreter;
+  Ctl::FunctionCallPtr fn;
+  Ctl::FunctionArgPtr arg;
+  char *name = NULL;
+  char *module;
+  char *slash;
+  char *dot;
+  CTLResults new_ctl_results;
+  
+  try {
+    
+    // copy filename to name
+    int len = strlen(ctl_operation.filename) + 1;
+    name = (char*)alloca(len);
+    memset(name, 0, len);
+    strcpy(name, ctl_operation.filename);
+    
+    // set module name to filename without path
+    slash = strrchr(name, '/');
+    if (slash == NULL) {
+      module = name;
+    }
+    else {
+      module = slash + 1;
+    }
+    
+    // remove extension from module
+    dot = strrchr(module, '.');
+    if (dot != NULL) {
+      *dot = 0;
+    }
     
     try {
-    
-    	// copy filename to name
-    	int len = strlen(ctl_operation.filename) + 1;
-    	name = (char*)alloca(len);
-    	memset(name, 0, len);
-    	strcpy(name, ctl_operation.filename);
-    	
-    	// set module name to filename without path
-    	slash = strrchr(name, '/');
-    	if (slash == NULL) {
-    		module = name;
-    	} 
-    	else {
-    		module = slash + 1;
-    	}
-    	 
-    	// remove extension from module
-    	dot = strrchr(module, '.'); 
-    	if (dot != NULL) {
-    		*dot = 0;
-    	}
-    	
-    	try {
-            interpreter.setUserModulePath(module_paths, moduleSet); 
-    		interpreter.loadFile(ctl_operation.filename);
-
+      interpreter.setUserModulePath(module_paths, moduleSet);
+      interpreter.loadFile(ctl_operation.filename);
+      
 			// enter at main
-    		fn = interpreter.newFunctionCall(std::string("main"));
-    		
-    		// if main doesn't exist use filename as entrance
-    		if (fn.refcount() == 0) {	
-    			fn = interpreter.newFunctionCall(std::string(module));
-    		}
-    	}
-    	catch (...) {
-    		THROW(Iex::ArgExc, "Problem loading CTL module into interpreter");
-    	}
-    	
-    	// must return void
-    	if (fn->returnValue()->type().cast<Ctl::VoidType>().refcount() == 0) {
-    		THROW(Iex::ArgExc, "CTL main (or <module_name>) function must return a 'void'");
-    		return;
-    	}
-    	
-    	size_t offset = 0;
-    	bool found_aOut = false;
-    	while (offset < count) {
-    		size_t pass = interpreter.maxSamples();
-    		size_t i;
-    	
-    		if (pass > (count - offset)) {
-    			pass = count- offset;
-    		}
-    	
-    		// set input arguments
-    		for (i = 0; i < fn->numInputArgs(); i++) {
-    			arg = fn->inputArg(i);
-    			set_ctl_function_arguments_from_ctl_results(&arg, *ctl_results, offset, pass);
-    		}
-    	
-    		// do work
-    		fn->callFunction(pass);
-    	
-    		// get results from output arguments
-    		for (i = 0; i < fn->numOutputArgs(); i++) {
-    			arg = fn->outputArg(i);
-    			if (arg->name() == "aOut") {
-    				found_aOut = true;
-    			}    		
-    			set_ctl_results_from_ctl_function_arguments(&new_ctl_results, arg, offset, pass, count);
-    		}
-    		
-    		// out alpha channel must exist
-    		if (!found_aOut) {
-       			THROW(Iex::InputExc, "Must specify output alpha channel aOut");
-    			return; 		
-    		}
-    		
-    		offset += pass;
- 		}
- 		*ctl_results = new_ctl_results;   
-    }
-    catch (const Iex::InputExc &e) {
-    	throw e;
-    }
-    catch (const Iex::ArgExc &e) {
-    	throw e;
+      fn = interpreter.newFunctionCall(std::string("main"));
+      
+      // if main doesn't exist use filename as entrance
+      if (fn.refcount() == 0) {
+        fn = interpreter.newFunctionCall(std::string(module));
+      }
     }
     catch (...) {
-    	THROW(Iex::ArgExc, "Problem running transformation");
-    	throw;
+      THROW(Iex::ArgExc, "Problem loading CTL module into interpreter");
     }
-
+    
+    // must return void
+    if (fn->returnValue()->type().cast<Ctl::VoidType>().refcount() == 0) {
+      THROW(Iex::ArgExc, "CTL main (or <module_name>) function must return a 'void'");
+      return;
+    }
+    
+    size_t offset = 0;
+    bool found_aOut = false;
+    while (offset < count) {
+      size_t pass = interpreter.maxSamples();
+      size_t i;
+    	
+      if (pass > (count - offset)) {
+        pass = count- offset;
+      }
+    	
+      // set input arguments
+      for (i = 0; i < fn->numInputArgs(); i++) {
+        arg = fn->inputArg(i);
+        set_ctl_function_arguments_from_ctl_results(&arg, *ctl_results, offset, pass);
+      }
+    	
+      // do work
+      fn->callFunction(pass);
+    	
+      // get results from output arguments
+      for (i = 0; i < fn->numOutputArgs(); i++) {
+        arg = fn->outputArg(i);
+        if (arg->name() == "aOut") {
+          found_aOut = true;
+        }
+        set_ctl_results_from_ctl_function_arguments(&new_ctl_results, arg, offset, pass, count);
+      }
+      
+      // out alpha channel must exist
+      if (!found_aOut) {
+        THROW(Iex::InputExc, "Must specify output alpha channel aOut");
+        return;
+      }
+      
+      offset += pass;
+ 		}
+ 		*ctl_results = new_ctl_results;
+  }
+  catch (const Iex::InputExc &e) {
+    throw e;
+  }
+  catch (const Iex::ArgExc &e) {
+    throw e;
+  }
+  catch (...) {
+    THROW(Iex::ArgExc, "Problem running transformation");
+    throw;
+  }
+  
 }
 
 // load data from buffer into ctl results for a given channel
@@ -330,25 +330,25 @@ void mkimage(half *image_buffer, const CTLResults &ctl_results, size_t width) {
 	
 	int tests[] =
 	{
-			(51 << 24) | (mask_rout | mask_gout | mask_bout | mask_aout), (50 << 24)
-			| (mask_rout | mask_gout | mask_bout), (158 << 24)
-			| (mask_xout | mask_yout | mask_zout | mask_aout), (157 << 24)
-			| (mask_xout | mask_yout | mask_zout), (159 << 24)
-			| (mask_yout | mask_aout), (6 << 24) | (mask_yout), (162 << 24)
-			| (mask_gout | mask_aout), (2 << 24) | (mask_gout), (161 << 24)
-			| (mask_bout | mask_aout), (3 << 24) | (mask_bout), (160 << 24)
-			| (mask_rout | mask_aout), (1 << 24) | (mask_rout), (4 << 24)
-			| (mask_aout),
-
-	        (51 << 24) | (mask_r | mask_g | mask_b | mask_a), (50 << 24)
-			| (mask_r | mask_g | mask_b), (158 << 24)
-			| (mask_x | mask_y | mask_z | mask_a), (159 << 24)
-			| (mask_y | mask_a), (6 << 24) | (mask_y), (162 << 24)
-			| (mask_g | mask_a), (2 << 24) | (mask_g), (161 << 24)
-			| (mask_b | mask_a), (3 << 24) | (mask_b), (160 << 24)
-			| (mask_r | mask_a), (1 << 24) | (mask_r), (4 << 24) | (mask_a),
-
-	        0
+    (51 << 24) | (mask_rout | mask_gout | mask_bout | mask_aout), (50 << 24)
+    | (mask_rout | mask_gout | mask_bout), (158 << 24)
+    | (mask_xout | mask_yout | mask_zout | mask_aout), (157 << 24)
+    | (mask_xout | mask_yout | mask_zout), (159 << 24)
+    | (mask_yout | mask_aout), (6 << 24) | (mask_yout), (162 << 24)
+    | (mask_gout | mask_aout), (2 << 24) | (mask_gout), (161 << 24)
+    | (mask_bout | mask_aout), (3 << 24) | (mask_bout), (160 << 24)
+    | (mask_rout | mask_aout), (1 << 24) | (mask_rout), (4 << 24)
+    | (mask_aout),
+    
+    (51 << 24) | (mask_r | mask_g | mask_b | mask_a), (50 << 24)
+    | (mask_r | mask_g | mask_b), (158 << 24)
+    | (mask_x | mask_y | mask_z | mask_a), (159 << 24)
+    | (mask_y | mask_a), (6 << 24) | (mask_y), (162 << 24)
+    | (mask_g | mask_a), (2 << 24) | (mask_g), (161 << 24)
+    | (mask_b | mask_a), (3 << 24) | (mask_b), (160 << 24)
+    | (mask_r | mask_a), (1 << 24) | (mask_r), (4 << 24) | (mask_a),
+    
+    0
 	};
 	
 	channels_mask = 0;
@@ -369,18 +369,18 @@ void mkimage(half *image_buffer, const CTLResults &ctl_results, size_t width) {
 		 	channel = have_gout;
 		} else if (!strcasecmp("bOut", channel_name)) {
 		 	channel = have_bout;
-		} 
+		}
 		
 		if (channel == have_none) {
 			continue;
 		}
 		
 		if (ctl_result->data->type().cast<Ctl::HalfType>().refcount() == 0 && ctl_result->data->type().cast<Ctl::FloatType>().refcount() == 0) {
-			THROW(Iex::ArgExc, "CTL script not providing half or float as the output data type.");	
+			THROW(Iex::ArgExc, "CTL script not providing half or float as the output data type.");
 		}
 		channels[channel] = ctl_result;
 		channels_mask = channels_mask | (1 << channel);
-	}		
+	}
 	
 	for (c = 0; tests[c] != 0; c++) {
 		if ((channels_mask & tests[c] & 0x00ffffff) == (tests[c] & 0x00ffffff)) {
@@ -432,7 +432,7 @@ void set_ctl_function_arguments_from_ctl_results(Ctl::FunctionArgPtr *arg, const
 			dst->setDefaultValue();
 		}
 		else {
-		    THROW(Iex::ArgExc, "CTL parameter '" << dst->name() << "' not specified and does not have a default value.");
+      THROW(Iex::ArgExc, "CTL parameter '" << dst->name() << "' not specified and does not have a default value.");
 			throw(std::exception());
 		}
 		return;
@@ -457,7 +457,7 @@ void set_ctl_function_arguments_from_ctl_results(Ctl::FunctionArgPtr *arg, const
 	}
 }
 
-// set ctl results from output arguments 
+// set ctl results from output arguments
 void set_ctl_results_from_ctl_function_arguments(CTLResults *ctl_results, const Ctl::FunctionArgPtr &arg, size_t offset, size_t count, size_t total) {
 	CTLResults::iterator results_iter;
 	CTLResultPtr ctl_result;
@@ -530,7 +530,7 @@ void set_ctl_results_from_ctl_function_arguments(CTLResults *ctl_results, const 
 		
 		if (!inputName.empty()) {
 			CTLResultPtr ctl_result_input;
-				
+      
 			ctl_result_input = CTLResultPtr(new CTLResult());
 			ctl_result_input->data = new Ctl::DataArg(inputName, arg->type(), total);
 			ctl_results->push_back(ctl_result_input);
@@ -540,12 +540,12 @@ void set_ctl_results_from_ctl_function_arguments(CTLResults *ctl_results, const 
 	
 	// copy data from arguments
 	ctl_result->data->copy(arg, 0, offset, count);
-
+  
 }
 
 //
 void add_parameter_value_to_ctl_results(CTLResults *ctl_results, std::string paramName, std::vector<float> paramValues, int arSize) {
-
+  
 	CTLResults::iterator results_iter;
 	CTLResultPtr ctl_result;
 	Ctl::DataTypePtr type;
@@ -560,10 +560,10 @@ void add_parameter_value_to_ctl_results(CTLResults *ctl_results, std::string par
 	
 	if (results_iter != ctl_results->end()) {
 		ctl_result = *results_iter;
-
+    
 		if (!ctl_result->external)	{
 			return;
-		}	
+		}
 	}
 	else {
 		// create new CTL result for user parameter
@@ -573,7 +573,7 @@ void add_parameter_value_to_ctl_results(CTLResults *ctl_results, std::string par
 	
 	// If there is a single parameter value then we set the data type to a float
 	// and copy the parameter value to the data portion of the ctl result
-	if (arSize == 1) {	
+	if (arSize == 1) {
 		ctl_result->data = new Ctl::DataArg(paramName.c_str(), new Ctl::StdFloatType(), 1);
 		ctl_result->data->set(&(paramValues[0]));
 	}
