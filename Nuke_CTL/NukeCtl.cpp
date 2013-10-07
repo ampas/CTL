@@ -107,6 +107,10 @@ int NukeCtlIop::knob_changed(Knob *k) {
   
 	char *buffer;
 	
+  if (k == &Knob::showPanel) {
+    knob("module_path")->enable(moduleSet);
+    return 1;
+  }
 
   // if the box is checked, enable or disable the set module knob
   if (k->is("set_module_path")) {
