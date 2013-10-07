@@ -92,17 +92,16 @@ void NukeCtlIop::pixel_engine(const Row& in, int y, int x, int r, ChannelMask ch
 
 void NukeCtlIop::knobs(Knob_Callback f) {
   
-  modSetKnob = Bool_knob(f, &moduleSet, "Set Module Path");
-	moduleKnob = File_knob(f, &modulePath, "Module Path");
-	readKnob   = File_knob(f, &inFilename, "Read CTL File");
-	textKnob   = Multiline_String_knob(f, &ctlText, "CTL Text");
-	paramKnob  = Multiline_String_knob(f, &parameters, "Input Parameters");
-	writeKnob  = Write_File_knob(f, &outFilename, "Write CTL File");
-  
+  modSetKnob = Bool_knob(f, &moduleSet, "set_module_path", "Set Module Path");
+	moduleKnob = File_knob(f, &modulePath, "module_path", "Module Path");
   if (f.makeKnobs()) {
     moduleKnob->disable();
     moduleKnob->set_text(defaultModulePath);
   }
+	readKnob   = File_knob(f, &inFilename, "read_ctl_file", "Read CTL File");
+	textKnob   = Multiline_String_knob(f, &ctlText, "ctl_text", "CTL Text");
+	paramKnob  = Multiline_String_knob(f, &parameters, "set_parameters", "Input Parameters");
+	writeKnob  = Write_File_knob(f, &outFilename, "write_ctl_file", "Write CTL File");
 }
 
 // Knob state changed
@@ -110,30 +109,28 @@ int NukeCtlIop::knob_changed(Knob *k) {
   
 	char *buffer;
 	
+  if (k == &Knob::showPanel) {
+    knob("module_path")->enable(moduleSet);
+    return 1;
+  }
+
   // if the box is checked, enable or disable the set module knob
-  if (k == modSetKnob) {
-    if (moduleSet) {
-      moduleKnob->enable();
-      moduleKnob->set_text(modulePath);
+  if (k->is("set_module_path")) {
+    if (moduleSet)
       checkModulePath(modulePath);
-    }
-    else {
-      moduleKnob->disable();
-      moduleKnob->set_text(ctl_env);
-    }
-    
+    knob("module_path")->enable(moduleSet);
     return 1;
   }
   
   // if the module path is changed, make sure it is valid
-	if (k == moduleKnob) {
+	if (k->is("module_path")) {
 		checkModulePath(modulePath);
 		return 1;
 	}
   
 	// If we read in a file, get the input parameters, display the ctl file to the text knob,
 	// and extract the user parameters from the input parameters.
-	if (k == readKnob) {
+	if (k->is("read_ctl_file")) {
 		parameterString = inputParameters(inFilename, &paramName, &paramValues, &paramSize);
 		buffer = readFile(inFilename, &parameterString);
 		textKnob->set_text(buffer);
@@ -145,21 +142,19 @@ int NukeCtlIop::knob_changed(Knob *k) {
 	}
 	
 	// If the write knob is clicked, save the file.
-	if (k == writeKnob) {
+	if (k->is("write_ctl_file")) {
 		saveFile(outFilename, textKnob->get_text());
 		return 1;
 	}
   
 	// If the parameters are changed, extract the new information so that the changes
 	// can be displayed.
-	if (k == paramKnob) {
+	if (k->is("set_parameters")) {
 		getUserParameters(paramKnob->get_text(), &paramName, &paramValues, paramSize);
 		return 1;
 	}
 	
-	return 0;
-}
-
+	return Iop::knob_changed(k);
 }
 
 static Iop* build(Node* node) {
