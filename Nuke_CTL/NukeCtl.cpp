@@ -30,18 +30,16 @@ private:
 	DD::Image::Knob* moduleKnob;
 	DD::Image::Knob* readKnob;
 	DD::Image::Knob* textKnob;
-	DD::Image::Knob* writeKnob;
 	DD::Image::Knob* paramKnob;
+	DD::Image::Knob* writeKnob;
   
+  const char *defaultModulePath;
   bool moduleSet;
-  bool initKnob;
-  const char *ctl_env;
 	const char *modulePath;
-  const char *empty;
 	const char *inFilename;
-	const char *outFilename;
 	const char *ctlText;
 	const char *parameters;
+	const char *outFilename;
 	std::string parameterString;
 	
 	std::vector<std::string>         paramName;
@@ -51,16 +49,15 @@ private:
 public:
 	
   NukeCtlIop(Node* node) : PixelIop(node) {
-    modulePath 		= "";
+    const char *env = std::getenv ("CTL_MODULE_PATH");
+    defaultModulePath = env ? env : "";
     moduleSet       = false;
-    initKnob        = true;
-    empty           = "";
+    modulePath      = "";
     inFilename      = "";
     outFilename     = "";
     ctlText         = "";
     parameters      = "";
     parameterString = "";
-    envVars();
     user_module_paths.push_back("");
   }
   
@@ -80,7 +77,6 @@ public:
   const char* Class() const { return CLASS; }
   const char* node_help() const { return HELP; }
   void _validate(bool);
-  void envVars();
 };
 
 void NukeCtlIop::_validate(bool for_real) {
@@ -103,11 +99,9 @@ void NukeCtlIop::knobs(Knob_Callback f) {
 	paramKnob  = Multiline_String_knob(f, &parameters, "Input Parameters");
 	writeKnob  = Write_File_knob(f, &outFilename, "Write CTL File");
   
-  // initialize the module knob to be disabled
-  if (initKnob) {
-    initKnob = false;
+  if (f.makeKnobs()) {
     moduleKnob->disable();
-    moduleKnob->set_text(ctl_env);
+    moduleKnob->set_text(defaultModulePath);
   }
 }
 
@@ -166,17 +160,6 @@ int NukeCtlIop::knob_changed(Knob *k) {
 	return 0;
 }
 
-// Gets the environment variable for CTL_MODULE_PATH
-void NukeCtlIop::envVars() {
-  
-  const char *env = std::getenv ("CTL_MODULE_PATH");
-  
-  if (env) {
-    ctl_env = env;
-  }
-  else {
-    ctl_env = "";
-  }
 }
 
 static Iop* build(Node* node) {
