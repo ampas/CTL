@@ -19,8 +19,8 @@ class NukeCtlIop : public PixelIop {
   
 private:
   std::vector<std::string> user_module_paths;
-  void checkModulePath(const char*);
   std::vector<std::string> parseModulePath(const char*);
+  void checkModulePath();
   char* readFile(const char*, std::string*);
   void saveFile(const char*, const char*);
   bool fileExists(const char*);
@@ -93,15 +93,13 @@ void NukeCtlIop::pixel_engine(const Row& in, int y, int x, int r, ChannelMask ch
 void NukeCtlIop::knobs(Knob_Callback f) {
   
   modSetKnob = Bool_knob(f, &moduleSet, "set_module_path", "Set Module Path");
-	moduleKnob = File_knob(f, &modulePath, "module_path", "Module Path");
-  if (f.makeKnobs()) {
-    moduleKnob->disable();
-    moduleKnob->set_text(defaultModulePath);
-  }
+  moduleKnob = File_knob(f, &modulePath, "module_path", "Module Path");
 	readKnob   = File_knob(f, &inFilename, "read_ctl_file", "Read CTL File");
 	textKnob   = Multiline_String_knob(f, &ctlText, "ctl_text", "CTL Text");
 	paramKnob  = Multiline_String_knob(f, &parameters, "set_parameters", "Input Parameters");
 	writeKnob  = Write_File_knob(f, &outFilename, "write_ctl_file", "Write CTL File");
+  moduleKnob->enable(moduleSet);
+  checkModulePath();
 }
 
 // Knob state changed
@@ -109,22 +107,18 @@ int NukeCtlIop::knob_changed(Knob *k) {
   
 	char *buffer;
 	
-  if (k == &Knob::showPanel) {
-    knob("module_path")->enable(moduleSet);
-    return 1;
-  }
 
   // if the box is checked, enable or disable the set module knob
   if (k->is("set_module_path")) {
-    if (moduleSet)
-      checkModulePath(modulePath);
     knob("module_path")->enable(moduleSet);
+    if (moduleSet)
+      checkModulePath();
     return 1;
   }
   
   // if the module path is changed, make sure it is valid
 	if (k->is("module_path")) {
-		checkModulePath(modulePath);
+		checkModulePath();
 		return 1;
 	}
   
@@ -163,35 +157,6 @@ static Iop* build(Node* node) {
 
 const Iop::Description NukeCtlIop::d(CLASS, "Color/NukeCtl", build);
 
-// Make sure module path is a valid directory
-void NukeCtlIop::checkModulePath(const char* path) {
-	struct stat buf;
-  int status;
-  const char *temp;
-  bool err = false;
-  
-  std::vector<std::string> paths = parseModulePath(path);
-  // if a path is not valid then give an error message
-  for(std::vector<std::string>::iterator it = paths.begin(); it != paths.end(); it++) {
-    temp = it->c_str();
-    status = stat(temp, &buf);
-    
-    if (status == -1 || !S_ISDIR(buf.st_mode)) {
-      err = true;
-    }
-    
-  }
-  
-	if (err) {
-    Op::message_f('!', "Error. Not a valid directory.");
-    paths.clear();
-	}
-  
-  user_module_paths = paths;
-  
-	return;
-}
-
 // parse the module path into an array of strings
 std::vector<std::string> NukeCtlIop::parseModulePath(const char* inPath) {
   
@@ -225,6 +190,39 @@ std::vector<std::string> NukeCtlIop::parseModulePath(const char* inPath) {
   
   return modPaths;
   
+}
+
+// Make sure module path is a valid directory
+void NukeCtlIop::checkModulePath() {
+	struct stat buf;
+  int status;
+  const char *temp;
+  bool err = false;
+  
+  const char* candidatePath = moduleSet ? modulePath : defaultModulePath;
+  std::vector<std::string> paths = parseModulePath(candidatePath);
+  // if a path is not valid then give an error message
+  for(std::vector<std::string>::iterator it = paths.begin(); it != paths.end(); it++) {
+    temp = it->c_str();
+    status = stat(temp, &buf);
+    
+    if (status == -1 || !S_ISDIR(buf.st_mode)) {
+      err = true;
+    }
+    
+  }
+  
+	if (err) {
+    if (moduleSet)
+      error("Module path is not set to a valid directory: '%s'", candidatePath);
+    else
+      error("CTL_MODULE_PATH is not set to a valid directory: '%s'", candidatePath);
+    paths.clear();
+	}
+  
+  user_module_paths = paths;
+  
+	return;
 }
 
 
