@@ -66,14 +66,14 @@ public:
     //channels = Mask_RGBA;
   }
   
-  virtual void append(Hash& h) {
+  void append(Hash& h) {
     h.append(__DATE__);
     h.append(__TIME__);
   }
   
   void pixel_engine(const Row &in, int y, int x, int r, ChannelMask, Row &);
-  virtual void knobs(Knob_Callback);
-  virtual int knob_changed(Knob*);
+  void knobs(Knob_Callback);
+  int knob_changed(Knob*);
   const char* Class() const { return CLASS; }
   const char* node_help() const { return HELP; }
   void _validate(bool);
