@@ -190,4 +190,3 @@ std::string inputParameters(const char* filename, std::vector<std::string> *para
 	
   return paramStr;
 }
-

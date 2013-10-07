@@ -590,7 +590,3 @@ void add_parameter_value_to_ctl_results(CTLResults *ctl_results, std::string par
 	ctl_results->push_back(ctl_result);
 	
 }
-
-
-
-

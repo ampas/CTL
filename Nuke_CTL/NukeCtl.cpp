@@ -46,7 +46,7 @@ private:
 	
 	std::vector<std::string>         paramName;
 	std::vector<std::vector<float> > paramValues;
-	std::vector<int>		 		 paramSize;
+	std::vector<int>                 paramSize;
   
 public:
 	
@@ -109,7 +109,6 @@ void NukeCtlIop::knobs(Knob_Callback f) {
     moduleKnob->disable();
     moduleKnob->set_text(ctl_env);
   }
-  
 }
 
 // Knob state changed
@@ -130,7 +129,6 @@ int NukeCtlIop::knob_changed(Knob *k) {
     }
     
     return 1;
-    
   }
   
   // if the module path is changed, make sure it is valid
@@ -149,14 +147,12 @@ int NukeCtlIop::knob_changed(Knob *k) {
 		getUserParameters(parameterString.c_str(), &paramName, &paramValues, paramSize);
 		// prevent memory leak
 		delete(buffer);
-		
 		return 1;
 	}
 	
 	// If the write knob is clicked, save the file.
 	if (k == writeKnob) {
 		saveFile(outFilename, textKnob->get_text());
-		
 		return 1;
 	}
   
