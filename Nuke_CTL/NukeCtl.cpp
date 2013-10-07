@@ -14,18 +14,18 @@ const char* const HELP =
 using namespace DD::Image;
 
 static const char* const CLASS = "NukeCtl";
-std::vector<std::string> user_module_paths;
-
-void checkModulePath(const char*);
-std::vector<std::string> parseModulePath(const char*);
-char* readFile(const char*, std::string*);
-void saveFile(const char*, const char*);
-bool fileExists(const char*);
-void getUserParameters(const char*, std::vector<std::string>*, std::vector<std::vector<float> >*, std::vector<int>);
 
 class NukeCtlIop : public PixelIop {
   
 private:
+  std::vector<std::string> user_module_paths;
+  void checkModulePath(const char*);
+  std::vector<std::string> parseModulePath(const char*);
+  char* readFile(const char*, std::string*);
+  void saveFile(const char*, const char*);
+  bool fileExists(const char*);
+  void getUserParameters(const char*, std::vector<std::string>*, std::vector<std::vector<float> >*, std::vector<int>);
+  
   DD::Image::Knob* modSetKnob;
 	DD::Image::Knob* moduleKnob;
 	DD::Image::Knob* readKnob;
@@ -164,7 +164,7 @@ static Iop* build(Node* node) {
 const Iop::Description NukeCtlIop::d(CLASS, "Color/NukeCtl", build);
 
 // Make sure module path is a valid directory
-void checkModulePath(const char* path) {
+void NukeCtlIop::checkModulePath(const char* path) {
 	struct stat buf;
   int status;
   const char *temp;
@@ -193,7 +193,7 @@ void checkModulePath(const char* path) {
 }
 
 // parse the module path into an array of strings
-std::vector<std::string> parseModulePath(const char* inPath) {
+std::vector<std::string> NukeCtlIop::parseModulePath(const char* inPath) {
   
   std::vector<std::string> modPaths;
   size_t pos = 0;
@@ -229,7 +229,7 @@ std::vector<std::string> parseModulePath(const char* inPath) {
 
 
 // Read ctl file and copy to buffer
-char* readFile(const char *filename, std::string *paramString) {
+char* NukeCtlIop::readFile(const char *filename, std::string *paramString) {
 	char *buffer;
 	size_t size = 0;
 	std::ifstream inf;
@@ -259,7 +259,7 @@ char* readFile(const char *filename, std::string *paramString) {
 }
 
 // write data in CTL Text
-void saveFile(const char *filename, const char *ctlText) {
+void NukeCtlIop::saveFile(const char *filename, const char *ctlText) {
 	size_t size;
 	int write = 1;
 	std::ofstream outf;
@@ -282,7 +282,7 @@ void saveFile(const char *filename, const char *ctlText) {
 
 
 // check to see if file exists
-bool fileExists(const char *filename) {
+bool NukeCtlIop::fileExists(const char *filename) {
 	struct stat buf;
 	if (stat(filename, &buf) != -1) {
 		return true;
@@ -292,7 +292,7 @@ bool fileExists(const char *filename) {
 
 
 // read in parameter text and extract names and values to be set for interpreter
-void getUserParameters(const char* str, std::vector<std::string> *paramName, std::vector<std::vector<float> > *paramValues, std::vector<int> paramSize) {
+void NukeCtlIop::getUserParameters(const char* str, std::vector<std::string> *paramName, std::vector<std::vector<float> > *paramValues, std::vector<int> paramSize) {
 	std::vector<float> value;
 	std::string name;
 	std::string paramLine(str);
