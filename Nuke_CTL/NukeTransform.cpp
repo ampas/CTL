@@ -208,8 +208,8 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
         fn = interpreter.newFunctionCall(std::string(module));
       }
     }
-    catch (...) {
-      THROW(Iex::ArgExc, "Problem loading CTL module into interpreter");
+    catch (const std::exception& e) {
+      THROW(Iex::ArgExc, "Problem loading CTL module into interpreter: " << e.what());
     }
     
     // must return void
