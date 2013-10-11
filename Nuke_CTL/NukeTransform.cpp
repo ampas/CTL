@@ -56,11 +56,33 @@
 
 using namespace DD::Image;
 
-void set_ctl_function_arguments_from_ctl_results(Ctl::FunctionArgPtr *arg, const CTLResults &ctl_results, size_t offset, size_t count);
-void set_ctl_results_from_ctl_function_arguments(CTLResults *ctl_results, const Ctl::FunctionArgPtr &arg, size_t offset, size_t count, size_t total);
+void
+set_ctl_function_arguments_from_ctl_results(Ctl::FunctionArgPtr *arg,
+                                            const CTLResults &ctl_results,
+                                            size_t offset,
+                                            size_t count);
+
+void
+set_ctl_results_from_ctl_function_arguments(CTLResults *ctl_results,
+                                            const Ctl::FunctionArgPtr &arg,
+                                            size_t offset,
+                                            size_t count,
+                                            size_t total);
 
 // Performs Ctl transformation on Nuke scanline
-void NukeTransform(const Row& in, int y, int x, int r, ChannelMask channels, Row& out, const char* filename, std::vector<std::string> paramName, std::vector<std::vector<float> > paramValues, std::vector<int> paramSize, const std::vector<std::string> modulePath, const bool moduleSet) {
+void
+NukeTransform(const Row& in,
+              int y,
+              int x,
+              int r,
+              ChannelMask channels,
+              Row& out,
+              const char* filename,
+              std::vector<std::string> paramName,
+              std::vector<std::vector<float> > paramValues,
+              std::vector<int> paramSize,
+              const std::vector<std::string> modulePath,
+              const bool moduleSet) {
   
 	int numChan = channels.size();
 	int i = 0, j;
@@ -163,7 +185,12 @@ void NukeTransform(const Row& in, int y, int x, int r, ChannelMask channels, Row
   delete [] image_buffer;
 }
 
-void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_results, size_t count, const std::vector<std::string> module_paths, const bool moduleSet) {
+void
+run_ctl_transform(const ctl_operation_t &ctl_operation,
+                  CTLResults *ctl_results,
+                  size_t count,
+                  const std::vector<std::string> module_paths,
+                  const bool moduleSet) {
   Ctl::SimdInterpreter interpreter;
   Ctl::FunctionCallPtr fn;
   Ctl::FunctionArgPtr arg;
@@ -270,7 +297,12 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
 }
 
 // load data from buffer into ctl results for a given channel
-CTLResultPtr mkresult(const char *name, const char *alt_name, const half *fb, size_t offset, size_t width) {
+CTLResultPtr
+mkresult(const char *name,
+         const char *alt_name,
+         const half *fb,
+         size_t offset,
+         size_t width) {
 	CTLResultPtr new_result = CTLResultPtr(new CTLResult());
 	
 	new_result->data = Ctl::DataArgPtr(new Ctl::DataArg(name, Ctl::DataTypePtr(new Ctl::StdHalfType()), width));
@@ -285,7 +317,10 @@ CTLResultPtr mkresult(const char *name, const char *alt_name, const half *fb, si
 }
 
 // take data from ctl results and copy to image buffer
-void mkimage(half *image_buffer, const CTLResults &ctl_results, size_t width) {
+void
+mkimage(half *image_buffer,
+        const CTLResults &ctl_results,
+        size_t width) {
 	enum have_channel_e {
 		have_x = 0,
 		have_y = 1,
@@ -412,7 +447,11 @@ void mkimage(half *image_buffer, const CTLResults &ctl_results, size_t width) {
 }
 
 // set input arguments
-void set_ctl_function_arguments_from_ctl_results(Ctl::FunctionArgPtr *arg, const CTLResults &ctl_results, size_t offset, size_t count) {
+void
+set_ctl_function_arguments_from_ctl_results(Ctl::FunctionArgPtr *arg,
+                                            const CTLResults &ctl_results,
+                                            size_t offset,
+                                            size_t count) {
 	CTLResults::const_iterator results_iter;
 	Ctl::TypeStoragePtr src;
 	Ctl::FunctionArgPtr dst;
@@ -458,7 +497,12 @@ void set_ctl_function_arguments_from_ctl_results(Ctl::FunctionArgPtr *arg, const
 }
 
 // set ctl results from output arguments
-void set_ctl_results_from_ctl_function_arguments(CTLResults *ctl_results, const Ctl::FunctionArgPtr &arg, size_t offset, size_t count, size_t total) {
+void
+set_ctl_results_from_ctl_function_arguments(CTLResults *ctl_results,
+                                            const Ctl::FunctionArgPtr &arg,
+                                            size_t offset,
+                                            size_t count,
+                                            size_t total) {
 	CTLResults::iterator results_iter;
 	CTLResultPtr ctl_result;
 	
@@ -544,7 +588,11 @@ void set_ctl_results_from_ctl_function_arguments(CTLResults *ctl_results, const 
 }
 
 //
-void add_parameter_value_to_ctl_results(CTLResults *ctl_results, std::string paramName, std::vector<float> paramValues, int arSize) {
+void
+add_parameter_value_to_ctl_results(CTLResults *ctl_results,
+                                   std::string paramName,
+                                   std::vector<float> paramValues,
+                                   int arSize) {
   
 	CTLResults::iterator results_iter;
 	CTLResultPtr ctl_result;

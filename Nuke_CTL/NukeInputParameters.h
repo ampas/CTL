@@ -73,8 +73,13 @@
 #include <CtlSimdInterpreter.h>
 #include <CtlStdType.h>
 
-std::string getInputParams(std::ifstream*);
-std::string inputParameters(const char*, std::vector<std::string> *, std::vector<std::vector<float> >*, std::vector<int>*);
+std::string
+getInputParams(std::ifstream*);
 
+std::string
+inputParameters(const char*,
+                std::vector<std::string> *,
+                std::vector<std::vector<float> >*,
+                std::vector<int>*);
 
 #endif
