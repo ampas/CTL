@@ -130,12 +130,56 @@ public:
 typedef Ctl::RcPtr<CTLResult> CTLResultPtr;
 typedef std::list<CTLResultPtr> CTLResults;
 
-void NukeTransform(const Row&, int, int, int, ChannelMask, Row&, const char*, std::vector<std::string>, std::vector<std::vector<float> >, std::vector<int>, const std::vector<std::string>, const bool);
-CTLResultPtr mkresult(const char*, const char*, const half*, size_t, size_t);
-void mkimage(half*, const CTLResults&, size_t);
-void run_ctl_transform(const ctl_operation_t&, CTLResults*, size_t, const std::vector<std::string>, const bool);
-void set_ctl_function_arguments_from_ctl_results(Ctl::FunctionArgPtr*, const CTLResults&, size_t, size_t);
-void set_ctl_results_from_ctl_function_arguments(CTLResults*, const Ctl::FunctionArgPtr&, size_t, size_t, size_t);
-void add_parameter_value_to_ctl_results(CTLResults*, std::string, std::vector<float>, int);
+void
+NukeTransform(const Row& in,
+              int y,
+              int x,
+              int r,
+              ChannelMask channels,
+              Row& out,
+              const char* filename,
+              std::vector<std::string> paramName,
+              std::vector<std::vector<float> > paramValues,
+              std::vector<int> paramSize,
+              const std::vector<std::string> modulePath,
+              const bool moduleSet);
+
+CTLResultPtr
+mkresult(const char* name,
+         const char* alt_name,
+         const half* fb,
+         size_t offset,
+         size_t width);
+
+void
+mkimage(half*image_buffer,
+        const CTLResults& ctl_results,
+        size_t width);
+
+void
+run_ctl_transform(const ctl_operation_t& ctl_operation,
+                  CTLResults* ctl_results,
+                  size_t count,
+                  const std::vector<std::string> module_paths,
+                  const bool moduleSet);
+
+void
+set_ctl_function_arguments_from_ctl_results(Ctl::FunctionArgPtr* arg,
+                                            const CTLResults& ctl_results,
+                                            size_t offset,
+                                            size_t count);
+
+void
+set_ctl_results_from_ctl_function_arguments(CTLResults* ctl_results,
+                                            const Ctl::FunctionArgPtr& arg,
+                                            size_t offset,
+                                            size_t count,
+                                            size_t total);
+
+void
+add_parameter_value_to_ctl_results(CTLResults* results,
+                                   std::string paramName,
+                                   std::vector<float> paramValues,
+                                   int arSize);
 
 #endif

@@ -55,9 +55,11 @@
 #include "NukeInputParameters.h"
 
 // Checks if a string is not a keyword
-// Used to check is an input parameter is
+// Used to check if an input parameter is
 // specified by the user
-bool isKeyword(std::string key) {
+bool
+isKeyword(std::string key)
+{
   
 	if (key == "rIn")
 		return true;
@@ -82,7 +84,12 @@ bool isKeyword(std::string key) {
 
 // Checks for user parameters and returns a string with a the parameters and a default value of 0
 // This is used as a way for users to add and modify custom input parameters
-std::string inputParameters(const char* filename, std::vector<std::string> *paramName, std::vector<std::vector<float> > *paramValues, std::vector<int> *paramSize) {
+std::string
+inputParameters(const char* filename,
+                std::vector<std::string> *paramName,
+                std::vector<std::vector<float> > *paramValues,
+                std::vector<int> *paramSize)
+{
   Ctl::SimdInterpreter interpreter;
   Ctl::FunctionCallPtr fn;
   Ctl::FunctionArgPtr arg;
