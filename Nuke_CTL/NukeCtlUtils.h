@@ -23,6 +23,18 @@ namespace NukeCtl {
   std::vector<std::string>
   split(const std::string &s, char delim);
   
+  const std::string
+  trimLeft(const std::string &s, const std::string &debris);
+  
+  const std::string
+  trimRight(const std::string &s, const std::string &debris);
+  
+  std::string
+  filenameFromPathname(const std::string &path);
+  
+  std::string
+  modulenameFromFilename(const std::string& filename);
+  
 }
 
 #endif /* defined(__IIF__NukeCtlUtils__) */
