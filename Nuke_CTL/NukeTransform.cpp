@@ -365,23 +365,32 @@ mkimage(half *image_buffer,
 	
 	int tests[] =
 	{
-    (51 << 24) | (mask_rout | mask_gout | mask_bout | mask_aout), (50 << 24)
-    | (mask_rout | mask_gout | mask_bout), (158 << 24)
-    | (mask_xout | mask_yout | mask_zout | mask_aout), (157 << 24)
-    | (mask_xout | mask_yout | mask_zout), (159 << 24)
-    | (mask_yout | mask_aout), (6 << 24) | (mask_yout), (162 << 24)
-    | (mask_gout | mask_aout), (2 << 24) | (mask_gout), (161 << 24)
-    | (mask_bout | mask_aout), (3 << 24) | (mask_bout), (160 << 24)
-    | (mask_rout | mask_aout), (1 << 24) | (mask_rout), (4 << 24)
-    | (mask_aout),
+    ( 51 << 24) | (mask_rout | mask_gout | mask_bout | mask_aout),
+    ( 50 << 24) | (mask_rout | mask_gout | mask_bout),
+    (158 << 24) | (mask_xout | mask_yout | mask_zout | mask_aout),
+    (157 << 24) | (mask_xout | mask_yout | mask_zout),
+    (159 << 24) | (mask_yout | mask_aout),
+      (6 << 24) | (mask_yout),
+    (162 << 24) | (mask_gout | mask_aout),
+      (2 << 24) | (mask_gout),
+    (161 << 24) | (mask_bout | mask_aout),
+      (3 << 24) | (mask_bout),
+    (160 << 24) | (mask_rout | mask_aout),
+      (1 << 24) | (mask_rout),
+      (4 << 24) | (mask_aout),
     
-    (51 << 24) | (mask_r | mask_g | mask_b | mask_a), (50 << 24)
-    | (mask_r | mask_g | mask_b), (158 << 24)
-    | (mask_x | mask_y | mask_z | mask_a), (159 << 24)
-    | (mask_y | mask_a), (6 << 24) | (mask_y), (162 << 24)
-    | (mask_g | mask_a), (2 << 24) | (mask_g), (161 << 24)
-    | (mask_b | mask_a), (3 << 24) | (mask_b), (160 << 24)
-    | (mask_r | mask_a), (1 << 24) | (mask_r), (4 << 24) | (mask_a),
+     (51 << 24) | (mask_r | mask_g | mask_b | mask_a),
+     (50 << 24) | (mask_r | mask_g | mask_b),
+    (158 << 24) | (mask_x | mask_y | mask_z | mask_a),
+    (159 << 24) | (mask_y | mask_a),
+      (6 << 24) | (mask_y),
+    (162 << 24) | (mask_g | mask_a),
+      (2 << 24) | (mask_g),
+    (161 << 24) | (mask_b | mask_a),
+      (3 << 24) | (mask_b),
+    (160 << 24) | (mask_r | mask_a),
+      (1 << 24) | (mask_r),
+      (4 << 24) | (mask_a),
     
     0
 	};
