@@ -12,6 +12,8 @@
 using namespace std;
 
 namespace NukeCtl {
+
+  // These two are from http://stackoverflow.com/questions/236129/how-to-split-a-string-in-c
   vector<string>&
   split(const string &s, char delim, vector<string> &elems)
   {
@@ -30,4 +32,5 @@ namespace NukeCtl {
     split(s, delim, elems);
     return elems;
   }
+  
 }
