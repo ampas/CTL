@@ -48,12 +48,12 @@ namespace NukeCtl
     FunctionCallPtr functionCall;
     try {
       functionCall = interpreter.newFunctionCall("main");
-    } catch (const exception &e) {
+    } catch (const ArgExc &e) {
       // This is grotesque but there is no CTL exception specific to this problem, so...
       const string functionNotFoundMarker("Cannot find CTL function");
       if (string(e.what()).find_first_of(functionNotFoundMarker) != string::npos)
       {
-        string moduleName(modulenameFromFilename(transformPath));
+        string moduleName(modulenameFromFilename(filenameFromPathname(transformPath)));
         try {
           functionCall = interpreter.newFunctionCall(moduleName);
         } catch (const exception &e) {
