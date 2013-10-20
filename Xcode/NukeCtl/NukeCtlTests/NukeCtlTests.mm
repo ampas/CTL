@@ -440,9 +440,9 @@ equalVectorContents(const vector<T> &ref, const vector<T> &test)
   SimdInterpreter i;
   NSString* p = @"/tmp/genericFoo.ctl";
   [self writeGenericTransformWithName:@"genericFoo" toPath:p];
-  i.loadFile([p UTF8String]);
-  TransformFriend amigo;
   try {
+    i.loadFile([p UTF8String]);
+    TransformFriend amigo;
     FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, [p UTF8String]);
   } catch (const ArgExc &e) {
     cout << "oops: " << e.what() << endl;
@@ -457,9 +457,9 @@ equalVectorContents(const vector<T> &ref, const vector<T> &test)
   SimdInterpreter i;
   NSString* p = @"/tmp/genericBar.ctl";
   [self writeGenericTransformWithName:@"genericBar" toPath:p];
-  i.loadFile([p UTF8String]);
   bool threw = false;
   try {
+    i.loadFile([p UTF8String]);
     TransformFriend amigo;
     FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, "genericBaz");
   }
@@ -472,6 +472,26 @@ equalVectorContents(const vector<T> &ref, const vector<T> &test)
 }
 
 
+- (void)testTopLevelFunctionNotReturningVoidThrows
+{
+  BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+  SimdInterpreter i;
+  NSString* p = @"/tmp/intMain.ctl";
+  ofstream s([p UTF8String]);
+  s << "int main(input varying float rIn, input varying float gIn, input varying float bIn, input varying float aIn, output varying float rOut, output varying float gOut, output varying float bOut, output varying float aOut) {}" << endl;
+  bool threw = false;
+  try {
+    i.loadFile([p UTF8String]);
+    TransformFriend amigo;
+    FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, "main");
+  }
+  catch(const BaseExc& e)
+  {
+    threw = true;
+  }
+  XCTAssert(threw, @"top-level function not returning void should have been grounds for an exception, but none was thrown");
+  END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+}
 
 
 @end

@@ -67,6 +67,16 @@ namespace NukeCtl
     return functionCall;
   }
   
+  void
+  Transform::checkTopLevelFunctionReturnsVoid()
+  {
+    if (functionCall_->returnValue()->type().cast<Ctl::VoidType>().refcount() == 0)
+    {
+      THROW(ArgExc, "top-level function of CTL file at '" << transformPath_
+            << "' returns other than void type");
+    }
+  }
+  
   Transform::Transform(Row& row,
                        const string &modulePath,
                        const string &transformPath)
@@ -75,6 +85,7 @@ namespace NukeCtl
     interpreter_.setUserModulePath(modulePathComponents_, modulePathComponents_.size() > 0);
     interpreter_.loadFile(transformPath);
     functionCall_ = topLevelFunctionInTransform(interpreter_, transformPath);
+    checkTopLevelFunctionReturnsVoid();
     // build input arg map
     // build output arg map
   }

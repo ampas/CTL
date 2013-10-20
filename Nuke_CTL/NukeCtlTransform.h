@@ -42,6 +42,9 @@ namespace NukeCtl
     static
     Ctl::FunctionCallPtr
     topLevelFunctionInTransform(Ctl::SimdInterpreter& interpreter, const std::string &transformPath);
+    
+    void
+    checkTopLevelFunctionReturnsVoid();
    
     const std::vector<std::string>  modulePathComponents_;
     Ctl::SimdInterpreter            interpreter_;
