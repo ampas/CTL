@@ -44,12 +44,12 @@ namespace NukeCtl
     topLevelFunctionInTransform(Ctl::SimdInterpreter& interpreter, const std::string &transformPath);
    
     const std::vector<std::string>  modulePathComponents_;
-    Ctl::SimdInterpreter      interpreter_;
-    Ctl::FunctionCallPtr      functionCall_;
-    NukeCtl::ChanArgMap       inputArgMap_;
-    NukeCtl::ChanArgMap       outputArgMap_;
+    Ctl::SimdInterpreter            interpreter_;
+    Ctl::FunctionCallPtr            functionCall_;
+    NukeCtl::ChanArgMap             inputArgMap_;
+    NukeCtl::ChanArgMap             outputArgMap_;
 
-    std::string           transformPath_; // Forensics
+    std::string                     transformPath_; // Forensics
     
   };
 }
