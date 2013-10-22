@@ -63,7 +63,6 @@ add_subdirectory(doc)
 add_subdirectory(lib)
 add_subdirectory(ctlrender)
 add_subdirectory(OpenEXR_CTL)
-add_subdirectory(Nuke_CTL)
 add_subdirectory(unittest EXCLUDE_FROM_ALL)
 
 # Add all targets to the build-tree export set
