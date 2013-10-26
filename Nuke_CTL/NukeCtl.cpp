@@ -11,7 +11,11 @@ const char* const HELP =
 #include "NukeTransform.h"
 #include "NukeInputParameters.h"
 
+#include "NukeCtlTransform.h"
+
 using namespace DD::Image;
+using namespace Iex;
+using namespace std;
 
 static const char* const CLASS = "NukeCtl";
 
@@ -33,6 +37,9 @@ private:
 	DD::Image::Knob* paramKnob;
 	DD::Image::Knob* writeKnob;
   
+  NukeCtl::Transform* transform;
+  bool transformArgMapValid;
+  
   const char *defaultModulePath;
   bool moduleSet;
 	const char *modulePath;
@@ -45,6 +52,7 @@ private:
 	std::vector<std::string>         paramName;
 	std::vector<std::vector<float> > paramValues;
 	std::vector<int>                 paramSize;
+  
   
 public:
 	
@@ -59,6 +67,8 @@ public:
     parameters      = "";
     parameterString = "";
     user_module_paths.push_back("");
+    transform            = NULL;
+    transformArgMapValid = false;
   }
   
   static const Iop::Description d;
@@ -76,6 +86,7 @@ public:
   int knob_changed(Knob*);
   const char* Class() const { return CLASS; }
   const char* node_help() const { return HELP; }
+  void _open();
   void _validate(bool);
 };
 
@@ -84,9 +95,50 @@ void NukeCtlIop::_validate(bool for_real) {
   PixelIop::_validate(for_real);
 }
 
+void NukeCtlIop::_open() {
+    transformArgMapValid = false;
+}
+
 // Called on each scanline
+// n.b. we assume (and hope this is a safe assumption) that the number of channels in the image is constant across all invocations of pixel_engine not interrupted by _open() or _close().
 void NukeCtlIop::pixel_engine(const Row& in, int y, int x, int r, ChannelMask channels, Row& out) {
-  
+//  if (strlen(inFilename) > 0 && (! transformArgMapValid))
+//  {
+//    try {
+//      if (! transformArgMapValid)
+//      {
+//        transform->loadArgMap(in);
+//      }
+//      transformArgMapValid = true;
+//      try {
+//        transform->execute(in, x, r, out);
+//      }
+//      catch (const BaseExc& e) {
+//        error("Could not execute CTL argument transform: %s", e.what());
+//      }
+//      catch (const exception& e) {
+//        error("Could not execute CTL argument transform: %s", e.what());
+//      }
+//      catch (...) // Something wicked this way comes
+//      {
+//        error("Could not execute CTL argument transform");
+//      }
+//    }
+//    catch (const BaseExc& e) {
+//      error("Could not configure CTL transform engine: %s", e.what());
+//    }
+//    catch (const exception& e) {
+//      error("Could not configure CTL transform engine: %s", e.what());
+//    }
+//    catch (...) // Something wicked this way comes
+//    {
+//      error("Could not configure CTL transform engine: %s");
+//    }
+//  }
+//  else
+//  {
+//    // just do a copy here
+//  }
   NukeTransform(in, y, x, r, channels, out, inFilename, paramName, paramValues, paramSize, user_module_paths, moduleSet);
 }
 
