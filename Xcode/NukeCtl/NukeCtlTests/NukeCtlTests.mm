@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "NukeCtlUtils.h"
+#import "NukeCtlChanArgMap.h"
 #import "NukeCtlTransform.h"
 using namespace NukeCtl;
 
@@ -49,11 +50,66 @@ namespace NukeCtl
       return Transform::verifyModuleName(n);
     }
     
+    TransformFriend(const Transform& transform)
+    : transform_(transform)
+    {
+    }
+    
+    static
     FunctionCallPtr
     topLevelFunctionInTransform(SimdInterpreter& i, const string &p)
     {
       return Transform::topLevelFunctionInTransform(i, p);
     }
+    
+    ChanArgMap
+    chanArgMap()
+    {
+      return transform_.argMap_;
+    }
+  private:
+    Transform transform_;
+  };
+  
+  class ChanArgMapFriend {
+  public:
+    
+    std::map<std::string, std::string>&
+    chanNameToArgNameMap(ChanArgMap& chanArgMap)
+    {
+      return chanArgMap.chanNameToArgName_;
+    }
+    
+    std::map<std::string, std::string>&
+    ArgNameToChanNameMap(ChanArgMap& chanArgMap)
+    {
+      return chanArgMap.argNameToChanName_;
+    }
+    
+    std::map<DD::Image::Channel, char*>&
+    chanToArgDataMap(ChanArgMap& chanArgMap)
+    {
+      return chanArgMap.chanToArgData_;
+    }
+    
+    std::map<char*, DD::Image::Channel>&
+    argDataToChanMap(ChanArgMap& chanArgMap)
+    {
+      return chanArgMap.argDataToChan_;
+    }
+    
+    ChanArgMapFriend(ChanArgMap& chanArgMap)
+    : chanArgMap_(chanArgMap)
+    {
+    }
+    
+    void
+    load(const DD::Image::Row& in, Ctl::FunctionCallPtr fn)
+    {
+      chanArgMap_.load(in, fn);
+    }
+  private:
+    ChanArgMap chanArgMap_;
   };
 }
 
@@ -351,39 +407,18 @@ equalVectorContents(const vector<T> &ref, const vector<T> &test)
   }
 }
 
-- (void)testEmptyModulePath
-{
-  vector<string> expected;
-  string test;
-  TransformFriend amigo;
-  XCTAssert(amigo.parseModulePath(test) == expected, @"parsing an empty module path should return a vector with no elements");
-}
+#define BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS \
+try {
 
-- (void)testSingleElementModulePath
-{
-  const string test("/usr/local/ctl/aces-dev/utilities");
-  vector<string> expected(1, test);
-  TransformFriend amigo;
-  XCTAssert(amigo.parseModulePath(test) == expected, @"parsing a module path with one element should return a vector with that element");
-}
-
-- (void)testVerificationOfModuleName
-{
-  string badChars("/:;\\");
-  for (int i = 0; i < badChars.size(); ++i)
-  {
-    const string test(string("fo") + badChars[i] + "o");
-    bool threw = false;
-    try {
-      TransformFriend amigo;
-      amigo.verifyModuleName(test);
-    }
-    catch(const ArgExc& e)
-    {
-      threw = true;
-    }
-    XCTAssert(threw, @"getting the module name from an empty filename should thrown ArgExc");
-  }
+#define END_WARINESS_OF_UNCAUGHT_EXCEPTIONS \
+}                                           \
+catch (const std::exception& e)           \
+{                                         \
+XCTFail(@"Failure due to uncaught std::exception subclass having been thrown"); \
+}                                         \
+catch (...)                               \
+{                                         \
+XCTFail(@"Failure due to uncaught exception (and one not based on std::exception)"); \
 }
 
 - (void)writeGenericTransformWithName:(NSString *)name toPath:(NSString *)path
@@ -394,44 +429,68 @@ equalVectorContents(const vector<T> &ref, const vector<T> &test)
   s << " (input varying float rIn, input varying float gIn, input varying float bIn, input varying float aIn, output varying float rOut, output varying float gOut, output varying float bOut, output varying float aOut) {}" << endl;
 }
 
-#define BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS \
-  try {
-
-#define END_WARINESS_OF_UNCAUGHT_EXCEPTIONS \
-  }                                           \
-  catch (const std::exception& e)           \
-  {                                         \
-    XCTFail(@"Failure due to uncaught std::exception subclass having been thrown"); \
-  }                                         \
-  catch (...)                               \
-  {                                         \
-    XCTFail(@"Failure due to uncaught exception (and one not based on std::exception)"); \
-  }
-
-- (void)testBAzExc
+- (void)testEmptyModulePath
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-  class BazExc {};
-  try {
-    throw BazExc();
-  }
-  catch (const exception& e)
+  vector<string> expected;
+  string test;
+  NSString* p = @"/tmp/genericMain.ctl";
+  [self writeGenericTransformWithName:@"main" toPath:p];
+  Transform transform("", [p UTF8String]);
+  TransformFriend amigo(transform);
+  XCTAssert(equalVectorContents(amigo.parseModulePath(test), expected), @"parsing an empty module path should return a vector with no elements");
+  END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+}
+
+- (void)testSingleElementModulePath
+{
+  BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+  const string test("/usr/local/ctl/aces-dev/utilities");
+  vector<string> expected(1, test);
+  NSString* p = @"/tmp/genericMain.ctl";
+  [self writeGenericTransformWithName:@"main" toPath:p];
+  Transform transform("", [p UTF8String]);
+  TransformFriend amigo(transform);
+  XCTAssert(equalVectorContents(amigo.parseModulePath(test), expected), @"parsing a module path with one element should return a vector with that element");
+  END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+}
+
+- (void)testVerificationOfModuleName
+{
+  BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+  string badChars("/:;\\");
+  for (int i = 0; i < badChars.size(); ++i)
   {
-    cout << e.what() << endl;
+    const string test(string("fo") + badChars[i] + "o");
+    bool threw = false;
+    try {
+      NSString* p = @"/tmp/genericMain.ctl";
+      [self writeGenericTransformWithName:@"main" toPath:p];
+      Transform transform("", [p UTF8String]);
+      TransformFriend amigo(transform);
+      amigo.verifyModuleName(test);
+    }
+    catch(const ArgExc& e)
+    {
+      threw = true;
+    }
+    XCTAssert(threw, @"verifying a module name with bad characters embedded should thrown ArgExc");
   }
-  XCTAssert(true, "made it");
   END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
 }
 
 - (void)testFindingTopLevelMainFunction
 {
+  BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
   SimdInterpreter i;
   NSString* p = @"/tmp/genericMain.ctl";
   [self writeGenericTransformWithName:@"main" toPath:p];
   i.loadFile([p UTF8String]);
-  TransformFriend amigo;
+  Transform transform("", [p UTF8String]);
+  TransformFriend amigo(transform);
   FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, [p UTF8String]);
   XCTAssert(f.refcount() != 0, @"top-level 'main' function should be visible");
+  END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
 }
 
 - (void)testFindingTopLevelFooFunction
@@ -442,7 +501,8 @@ equalVectorContents(const vector<T> &ref, const vector<T> &test)
   [self writeGenericTransformWithName:@"genericFoo" toPath:p];
   try {
     i.loadFile([p UTF8String]);
-    TransformFriend amigo;
+    Transform transform("", [p UTF8String]);
+    TransformFriend amigo(transform);
     FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, [p UTF8String]);
   } catch (const ArgExc &e) {
     cout << "oops: " << e.what() << endl;
@@ -460,7 +520,8 @@ equalVectorContents(const vector<T> &ref, const vector<T> &test)
   bool threw = false;
   try {
     i.loadFile([p UTF8String]);
-    TransformFriend amigo;
+    Transform transform("", [p UTF8String]);
+    TransformFriend amigo(transform);
     FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, "genericBaz");
   }
   catch(const ArgExc& e)
@@ -482,7 +543,8 @@ equalVectorContents(const vector<T> &ref, const vector<T> &test)
   bool threw = false;
   try {
     i.loadFile([p UTF8String]);
-    TransformFriend amigo;
+    Transform transform("", [p UTF8String]);
+    TransformFriend amigo(transform);
     FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, "main");
   }
   catch(const BaseExc& e)
@@ -493,5 +555,28 @@ equalVectorContents(const vector<T> &ref, const vector<T> &test)
   END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
 }
 
+- (void)testStandardArgMapLoads
+{
+  BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+  SimdInterpreter i;
+  NSString* p = @"/tmp/genericMain.ctl";
+  [self writeGenericTransformWithName:@"main" toPath:p];
+  try {
+    i.loadFile([p UTF8String]);
+    Transform transform("", [p UTF8String]);
+    TransformFriend amigo(transform);
+    FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, [p UTF8String]);
+    ChanArgMap amigoChanArgMap(amigo.chanArgMap());
+    ChanArgMapFriend pal(amigoChanArgMap);
+    int x = 10;
+    int r = 20;
+    Row in(x, r);
+    amigo.chanArgMap().load(in, f);
+  } catch (const ArgExc &e) {
+    cout << "oops: " << e.what() << endl;
+    XCTFail("could not load argument map of generic top-level function");
+  }
+  END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+}
 
 @end
