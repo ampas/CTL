@@ -25,11 +25,16 @@ namespace NukeCtl
   class Transform {
     friend class TransformFriend;
   public:
-    Transform(DD::Image::Row& row,
-              const std::string &modulePath,
+    Transform(const std::string &modulePath,
               const std::string &transformPath);
+
+    Transform(const Transform& t);
+    
     void
-    execute();
+    loadArgMap(const DD::Image::Row& row);
+    
+    void
+    execute(const DD::Image::Row& row, int x, int r, DD::Image::Row& out);
   private:
     static
     const std::vector<std::string>
@@ -46,11 +51,16 @@ namespace NukeCtl
     void
     checkTopLevelFunctionReturnsVoid();
    
+    char*
+    inputArgBuffer(Ctl::FunctionCallPtr fn, const std::string& argName) const;
+    
+    char*
+    outputArgBuffer(Ctl::FunctionCallPtr fn, const std::string& argName) const;
+    
     const std::vector<std::string>  modulePathComponents_;
     Ctl::SimdInterpreter            interpreter_;
     Ctl::FunctionCallPtr            functionCall_;
-    NukeCtl::ChanArgMap             inputArgMap_;
-    NukeCtl::ChanArgMap             outputArgMap_;
+    NukeCtl::ChanArgMap             argMap_;
 
     std::string                     transformPath_; // Forensics
     

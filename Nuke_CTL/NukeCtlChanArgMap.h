@@ -12,29 +12,48 @@
 #include "DDImage/Channel.h"
 #include "DDImage/Row.h"
 #include "CtlFunctionCall.h"
+#include "CtlRcPtr.h"
+#include "CtlStdType.h"
+
 #include <string>
 #include <map>
 
 namespace NukeCtl
 {
+  class ChanArgMapFriend;
+  
   class ChanArgMap
   {
+    friend class ChanArgMapFriend;
   public:
     ChanArgMap()
     {
+      chanNameToArgName_["r"] = "rIn";
+      chanNameToArgName_["g"] = "gIn";
+      chanNameToArgName_["b"] = "bIn";
+      chanNameToArgName_["a"] = "aIn";
+      argNameToChanName_["rIn"] = "r";
+      argNameToChanName_["gIn"] = "g";
+      argNameToChanName_["bIn"] = "b";
+      argNameToChanName_["aIn"] = "a";
     }
     
+    // Only handles the easy ones for now: in[Chan_Red] -> rIn and rIn -> out[Chan_Red], etc.
     void
-    load(DD::Image::Row& row, Ctl::FunctionCallPtr& fn);
+    load(const DD::Image::Row& row, Ctl::FunctionCallPtr fn);
     
     void
-    bind(DD::Image::Channel, const std::string &functionArgName);
+    copyChanDataToArgData(const DD::Image::Row&, int x0, int x1);
     
     void
-    copyChanToArg(DD::Image::Channel channel, int x, int r);
+    copyArgDataToChanData(DD::Image::Row&, int x0, int x1);
+    
   private:
-    std::map<DD::Image::Channel, Ctl::FunctionArgPtr> chanToFunctionArg_;
-    std::map<Ctl::FunctionArgPtr, DD::Image::Channel> functionArgToChan_;
+    std::map<std::string, std::string> chanNameToArgName_;
+    std::map<std::string, std::string> argNameToChanName_;
+    
+    std::map<DD::Image::Channel, char*> chanToArgData_;
+    std::map<char*, DD::Image::Channel> argDataToChan_;
   };
 }
 

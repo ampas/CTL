@@ -11,6 +11,8 @@
 
 #include "Iex.h"
 
+#include <algorithm>
+
 using namespace DD::Image;
 using namespace NukeCtl;
 using namespace Iex;
@@ -77,27 +79,41 @@ namespace NukeCtl
     }
   }
   
-  Transform::Transform(Row& row,
-                       const string &modulePath,
+  Transform::Transform(const string &modulePath,
                        const string &transformPath)
-  : modulePathComponents_(parseModulePath(modulePath))
+  : modulePathComponents_(parseModulePath(modulePath)),
+    transformPath_(transformPath)
   {
-    interpreter_.setUserModulePath(modulePathComponents_, modulePathComponents_.size() > 0);
+    // be diligent about not having bad parameters or state crash all of Nuke.
+    // TODO: Transform ctor should have separate 'wrapper' try/catch blocks around its various steps.
+    interpreter_.setUserModulePath(modulePathComponents_, modulePathComponents_.size()  > 0);
     interpreter_.loadFile(transformPath);
     functionCall_ = topLevelFunctionInTransform(interpreter_, transformPath);
     checkTopLevelFunctionReturnsVoid();
-    // build input arg map
-    // build output arg map
+  }
+  
+  Transform::Transform(const Transform& t)
+  : modulePathComponents_(t.modulePathComponents_),
+    transformPath_(t.transformPath_)
+  {
   }
   
   void
-  Transform::execute()
+  Transform::loadArgMap(const DD::Image::Row& in)
   {
-    // If transform path is blank or bad, just copy the data and return
-    // Otherwise:
-    //   copy the row input data into the function arg data area as per the input arg map
-    //   run the interpreter
-    //   copy the function arg data into the row output data as per the output arg map
+    argMap_.load(in, functionCall_);
+  }
+  
+  void
+  Transform::execute(const Row& in, int l, int r, Row& out)
+  {
+    for (int x = l; x < r;)
+    {
+      int chunkSize = max(x - r, static_cast<int>(interpreter_.maxSamples()));
+      argMap_.copyChanDataToArgData(in, x, x + chunkSize);
+      functionCall_->callFunction(chunkSize);
+      argMap_.copyArgDataToChanData(out, x, x + chunkSize);
+    }
   }
   
 }
