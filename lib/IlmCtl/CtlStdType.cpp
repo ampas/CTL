@@ -55,6 +55,7 @@
 #include <CtlStdType.h>
 #include <cassert>
 #include <CtlErrors.h>
+#include <CtlSyntaxTree.h>
 #include <half.h>
 #include <CtlExc.h>
 #include <string.h>
