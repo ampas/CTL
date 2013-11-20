@@ -76,11 +76,13 @@ class CtlExc : public Iex::BaseExc {
 		CtlExc(std::stringstream &text) throw(): Iex::BaseExc(text) {};
 };
 
+
+
 #define CTL_DEFINE_EXC(name, base)                              \
     class name : public base                                    \
     {                                                           \
       public:                                                   \
-        name (const char* text=0, ...) throw() {                \
+        name (const char* text=0, ...) throw(): base (text) {   \
             va_list ap;                                         \
             va_start(ap, text);                                 \
             _explain(text, ap);                                 \
