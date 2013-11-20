@@ -55,7 +55,9 @@
 #include <CtlExc.h>
 #include <stdarg.h>
 #include <stdio.h>
+#ifndef _MSC_VER
 #include <alloca.h>
+#endif
 #include <string.h>
 
 namespace Ctl {
@@ -70,7 +72,11 @@ void CtlExc::_explain(const char *text, va_list _ap) {
 		operator=("no explanation given.");
 	}
 	while(1) {
+#ifdef _MSC_VER
+		ap = _ap;
+#else
 		va_copy(ap, _ap);
+#endif
 		ptr=(char *)alloca(length);
 		memset(ptr, 0, length);
 		need_len=vsnprintf(ptr, length, text, ap);

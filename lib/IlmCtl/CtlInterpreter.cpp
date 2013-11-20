@@ -82,6 +82,14 @@
     #include <unistd.h>
 #endif
 
+#if _MSC_VER
+#define snprintf _snprintf
+#include <time.h>
+#define rand_func rand
+#else
+#define rand_func lrand48
+#endif
+
 using namespace std;
 using namespace Iex;
 using namespace IlmThread;
@@ -414,7 +422,7 @@ void Interpreter::loadFile(const std::string &fileName,
 		// This might have unintended consequences...
 		memset(random, 0, sizeof(random));
 		snprintf(random, sizeof(random)-1, "module.%08x",
-		         (unsigned int)(time(NULL)+lrand48()));
+		         (unsigned int)(time(NULL)+rand_func()));
 		moduleName=random;
 	} else {
 		moduleName=_moduleName;

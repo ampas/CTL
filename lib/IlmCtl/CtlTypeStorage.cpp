@@ -64,10 +64,12 @@
 #include <half.h>
 #include <CtlExc.h>
 #include <string.h>
-#include <alloca.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#ifndef _MSC_VER
+#include <alloca.h>
+#endif
 
 using namespace std;
 
@@ -219,7 +221,11 @@ void _convert(void *out, const void *in, CDataType_e out_type,
 				case HalfTypeEnum:
 				case FloatTypeEnum:
 					intermediate=FloatTypeEnum;
+#ifdef _MSC_VER
+					int_f=strtod(str, NULL);
+#else
 					int_f=strtof(str, NULL);
+#endif
 					break;
 
 				default:
