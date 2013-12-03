@@ -27,6 +27,7 @@ using namespace Imath;
 #include <CtlFunctionCall.h>
 using namespace Ctl;
 
+#include "DDImage/Channel.h"
 #include "DDImage/Row.h"
 using namespace DD::Image;
 
@@ -55,11 +56,22 @@ namespace NukeCtl
     {
     }
     
-    static
-    FunctionCallPtr
-    topLevelFunctionInTransform(SimdInterpreter& i, const string &p)
+    SimdInterpreterPtr
+    interpreter()
     {
-      return Transform::topLevelFunctionInTransform(i, p);
+      return transform_.interpreter_;
+    }
+    
+    FunctionCallPtr
+    topLevelFunctionInTransform()
+    {
+      return transform_.functionCall_;
+    }
+    
+    FunctionCallPtr
+    topLevelFunctionInTransform(const string& topLevelFunctionName)
+    {
+      return Transform::topLevelFunctionInTransform(transform_.interpreter_, topLevelFunctionName);
     }
     
     ChanArgMap
@@ -67,6 +79,13 @@ namespace NukeCtl
     {
       return transform_.argMap_;
     }
+
+    void
+    callFunction(size_t n)
+    {
+      transform_.functionCall_->callFunction(n);
+    }
+    
   private:
     Transform transform_;
   };
@@ -74,28 +93,28 @@ namespace NukeCtl
   class ChanArgMapFriend {
   public:
     
-    std::map<std::string, std::string>&
-    chanNameToArgNameMap(ChanArgMap& chanArgMap)
-    {
-      return chanArgMap.chanNameToArgName_;
-    }
+//    std::map<std::string, std::string>&
+//    chanNameToArgNameMap()
+//    {
+//      return chanArgMap_.chanNameToArgName_;
+//    }
     
     std::map<std::string, std::string>&
-    ArgNameToChanNameMap(ChanArgMap& chanArgMap)
+    ArgNameToChanNameMap()
     {
-      return chanArgMap.argNameToChanName_;
+      return chanArgMap_.argNameToChanName_;
     }
     
     std::map<DD::Image::Channel, char*>&
-    chanToArgDataMap(ChanArgMap& chanArgMap)
+    chanToInArgDataMap()
     {
-      return chanArgMap.chanToArgData_;
+      return chanArgMap_.chanToInArgData_;
     }
     
     std::map<char*, DD::Image::Channel>&
-    argDataToChanMap(ChanArgMap& chanArgMap)
+    outArgDataToChanMap()
     {
-      return chanArgMap.argDataToChan_;
+      return chanArgMap_.outArgDataToChan_;
     }
     
     ChanArgMapFriend(ChanArgMap& chanArgMap)
@@ -104,10 +123,23 @@ namespace NukeCtl
     }
     
     void
-    load(const DD::Image::Row& in, Ctl::FunctionCallPtr fn)
+    load(const DD::Image::Row& in, int x, int r, Ctl::FunctionCallPtr fn)
     {
-      chanArgMap_.load(in, fn);
+      chanArgMap_.load(in, x, r, fn);
     }
+    
+    void
+    copyInputRowToArgData(const DD::Image::Row& in, int x, int r)
+    {
+      chanArgMap_.copyInputRowToArgData(in, x, r);
+    }
+    
+    void
+    copyArgDataToOutputRow(int x, int r, DD::Image::Row& out)
+    {
+      chanArgMap_.copyArgDataToOutputRow(x, r, out);
+    }
+    
   private:
     ChanArgMap chanArgMap_;
   };
@@ -424,9 +456,17 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
 - (void)writeGenericTransformWithName:(NSString *)name toPath:(NSString *)path
 {
   ofstream s([path UTF8String]);
-  s << "void ";
+  s << "void\n";
   s << [name UTF8String];
-  s << " (input varying float rIn, input varying float gIn, input varying float bIn, input varying float aIn, output varying float rOut, output varying float gOut, output varying float bOut, output varying float aOut) {}" << endl;
+  s << "(input varying float rIn,\ninput varying float gIn,\ninput varying float bIn,\ninput varying float aIn,\noutput varying float rOut,\noutput varying float gOut,\noutput varying float bOut,\noutput varying float aOut)\n{\nrOut=rIn;\ngOut=gIn;\nbOut=bIn;\naOut=aIn;\n}\n" << endl;
+}
+
+- (void)writeRGBASwappingTransformWithName:(NSString *)name toPath:(NSString *)path
+{
+  ofstream s([path UTF8String]);
+  s << "void\n";
+  s << [name UTF8String];
+  s << "(input varying float rIn,\ninput varying float gIn,\ninput varying float bIn,\ninput varying float aIn,\noutput varying float rOut,\noutput varying float gOut,\noutput varying float bOut,\noutput varying float aOut)\n{\nrOut=aIn;\ngOut=bIn;\nbOut=gIn;\naOut=rIn;\n}\n" << endl;
 }
 
 - (void)testEmptyModulePath
@@ -482,13 +522,14 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
 - (void)testFindingTopLevelMainFunction
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-  SimdInterpreter i;
+//  SimdInterpreter i;
   NSString* p = @"/tmp/genericMain.ctl";
   [self writeGenericTransformWithName:@"main" toPath:p];
-  i.loadFile([p UTF8String]);
+//  i.loadFile([p UTF8String]);
   Transform transform("", [p UTF8String]);
   TransformFriend amigo(transform);
-  FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, [p UTF8String]);
+//  FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, [p UTF8String]);
+  FunctionCallPtr f = amigo.topLevelFunctionInTransform([p UTF8String]);
   XCTAssert(f.refcount() != 0, @"top-level 'main' function should be visible");
   END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
 }
@@ -496,14 +537,15 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
 - (void)testFindingTopLevelFooFunction
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-  SimdInterpreter i;
+  // SimdInterpreter i;
   NSString* p = @"/tmp/genericFoo.ctl";
   [self writeGenericTransformWithName:@"genericFoo" toPath:p];
   try {
-    i.loadFile([p UTF8String]);
+    // i.loadFile([p UTF8String]);
     Transform transform("", [p UTF8String]);
     TransformFriend amigo(transform);
-    FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, [p UTF8String]);
+//    FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, [p UTF8String]);
+    FunctionCallPtr f = amigo.topLevelFunctionInTransform([p UTF8String]);
   } catch (const ArgExc &e) {
     cout << "oops: " << e.what() << endl;
     XCTFail("could not find genericFoo as top-level function");
@@ -514,15 +556,16 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
 - (void)testNotFindingTopLevelFunction
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-  SimdInterpreter i;
+  // SimdInterpreter i;
   NSString* p = @"/tmp/genericBar.ctl";
   [self writeGenericTransformWithName:@"genericBar" toPath:p];
   bool threw = false;
   try {
-    i.loadFile([p UTF8String]);
+    // i.loadFile([p UTF8String]);
     Transform transform("", [p UTF8String]);
     TransformFriend amigo(transform);
-    FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, "genericBaz");
+//    FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, "genericBaz");
+    FunctionCallPtr f = amigo.topLevelFunctionInTransform("genericBaz");
   }
   catch(const ArgExc& e)
   {
@@ -536,16 +579,17 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
 - (void)testTopLevelFunctionNotReturningVoidThrows
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-  SimdInterpreter i;
+  // SimdInterpreter i;
   NSString* p = @"/tmp/intMain.ctl";
   ofstream s([p UTF8String]);
   s << "int main(input varying float rIn, input varying float gIn, input varying float bIn, input varying float aIn, output varying float rOut, output varying float gOut, output varying float bOut, output varying float aOut) {}" << endl;
   bool threw = false;
   try {
-    i.loadFile([p UTF8String]);
+    // i.loadFile([p UTF8String]);
     Transform transform("", [p UTF8String]);
     TransformFriend amigo(transform);
-    FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, "main");
+//    FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, "main");
+    FunctionCallPtr f = amigo.topLevelFunctionInTransform("main");
   }
   catch(const BaseExc& e)
   {
@@ -555,28 +599,108 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
   END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
 }
 
-- (void)testStandardArgMapLoads
+
+- (void)testNukeCTLArgAndResultCopying
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-  SimdInterpreter i;
-  NSString* p = @"/tmp/genericMain.ctl";
-  [self writeGenericTransformWithName:@"main" toPath:p];
+  NSString* p = @"/tmp/RGBASwap.ctl";
+  [self writeRGBASwappingTransformWithName:@"main" toPath:p];
   try {
-    i.loadFile([p UTF8String]);
     Transform transform("", [p UTF8String]);
-    TransformFriend amigo(transform);
-    FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, [p UTF8String]);
-    ChanArgMap amigoChanArgMap(amigo.chanArgMap());
-    ChanArgMapFriend pal(amigoChanArgMap);
     int x = 10;
     int r = 20;
     Row in(x, r);
-    amigo.chanArgMap().load(in, f);
+    ChannelMask mask = Mask_RGBA;
+    float   red_test_value = 0.125;
+    float green_test_value = 0.250;
+    float  blue_test_value = 2.0;
+    float alpha_test_value = 4.0;
+    foreach(z, mask)
+    {
+      switch (z) {
+        case Chan_Red:
+          (in.writable(z))[x] = red_test_value;
+          break;
+        case Chan_Green:
+          (in.writable(z))[x] = green_test_value;
+          break;
+        case Chan_Blue:
+          (in.writable(z))[x] = blue_test_value;
+          break;
+        case Chan_Alpha:
+          (in.writable(z))[x] = alpha_test_value;
+          break;
+        default:
+          break;
+      }
+    }
+    transform.loadArgMap(in, x, r);
+    TransformFriend amigo(transform);
+    int rr = min(r - x, static_cast<int>(amigo.interpreter()->maxSamples()));
+    amigo.chanArgMap().copyInputRowToArgData(in, x, x + rr);
+    ChanArgMap amigoChanArgMap(amigo.chanArgMap());
+    ChanArgMapFriend pal(amigoChanArgMap);
+    FunctionCallPtr functionCall = amigo.topLevelFunctionInTransform();
+    XCTAssert(pal.chanToInArgDataMap()[Chan_Red]   == functionCall->findInputArg("rIn")->data(), "Chan_Red not mapping to data buffer for rIn");
+    XCTAssert(pal.chanToInArgDataMap()[Chan_Green] == functionCall->findInputArg("gIn")->data(), "Chan_Green not mapping to data buffer for gIn");
+    XCTAssert(pal.chanToInArgDataMap()[Chan_Blue]  == functionCall->findInputArg("bIn")->data(), "Chan_Blue not mapping to data buffer for bIn");
+    XCTAssert(pal.chanToInArgDataMap()[Chan_Alpha] == functionCall->findInputArg("aIn")->data(), "Chan_Alpha not mapping to data buffer for aIn");
+    half*   inRedArgData = reinterpret_cast<half*>(pal.chanToInArgDataMap()[Chan_Red]);
+    half* inGreenArgData = reinterpret_cast<half*>(pal.chanToInArgDataMap()[Chan_Green]);
+    half*  inBlueArgData = reinterpret_cast<half*>(pal.chanToInArgDataMap()[Chan_Blue]);
+    half* inAlphaArgData = reinterpret_cast<half*>(pal.chanToInArgDataMap()[Chan_Alpha]);
+    XCTAssertEqualWithAccuracy(static_cast<float>(  inRedArgData[0]),   red_test_value, numeric_limits<half>::epsilon() * 4, "Red data from row not being copied to data buffer for rIn");
+    XCTAssertEqualWithAccuracy(static_cast<float>(inGreenArgData[0]), green_test_value, numeric_limits<half>::epsilon() * 4, "Green data from row not being copied to data buffer for gIn");
+    XCTAssertEqualWithAccuracy(static_cast<float>( inBlueArgData[0]),  blue_test_value, numeric_limits<half>::epsilon() * 4, "Blue channel from row not being copied to data buffer for bIn");
+    XCTAssertEqualWithAccuracy(static_cast<float>(inAlphaArgData[0]), alpha_test_value, numeric_limits<half>::epsilon() * 4, "Alpha channel from row not being copied to data buffer for aIn");
+    char*   outRedArgData = nullptr;
+    char* outGreenArgData = nullptr;
+    char*  outBlueArgData = nullptr;
+    char* outAlphaArgData = nullptr;
+    map<char*, Channel> outArgDataToChanMap = pal.outArgDataToChanMap();
+    for (map<char*, Channel>::iterator i = outArgDataToChanMap.begin(); i != outArgDataToChanMap.end(); ++i)
+    {
+      switch (i->second) {
+        case Chan_Red:
+          outRedArgData = i->first;
+          break;
+        case Chan_Green:
+          outGreenArgData = i->first;
+          break;
+        case Chan_Blue:
+          outBlueArgData = i->first;
+          break;
+        case Chan_Alpha:
+          outAlphaArgData = i->first;
+          break;
+        default:
+          cout << "Unexpected channel " << i->second << " in output arg to channel map" << endl;
+          break;
+      }
+    }
+    functionCall->callFunction(rr);
+    XCTAssertEqualWithAccuracy(reinterpret_cast<half*>(  outRedArgData)[0], static_cast<half>(alpha_test_value), numeric_limits<half>::epsilon() * 4, "aIn not swapping into rOut");
+    XCTAssertEqualWithAccuracy(reinterpret_cast<half*>(outGreenArgData)[0], static_cast<half>( blue_test_value), numeric_limits<half>::epsilon() * 4, "bIn not swapping into gOut");
+    XCTAssertEqualWithAccuracy(reinterpret_cast<half*>( outBlueArgData)[0], static_cast<half>(green_test_value), numeric_limits<half>::epsilon() * 4, "gIn not swapping into bOut");
+    XCTAssertEqualWithAccuracy(reinterpret_cast<half*>(outAlphaArgData)[0], static_cast<half>(  red_test_value), numeric_limits<half>::epsilon() * 4, "rIn not swapping into aOut");
+    XCTAssert(  outRedArgData == functionCall->findOutputArg("rOut")->data(), "data buffer for rOut not mapping to Chan_Red");
+    XCTAssert(outGreenArgData == functionCall->findOutputArg("gOut")->data(), "data buffer for gOut not mapping to Chan_Green");
+    XCTAssert( outBlueArgData == functionCall->findOutputArg("bOut")->data(), "data buffer for bOut not mapping to Chan_Blue");
+    XCTAssert(outAlphaArgData == functionCall->findOutputArg("aOut")->data(), "data buffer for aOut not mapping to Chan_Alpha");
+    Row out(x, r);
+    amigo.chanArgMap().copyArgDataToOutputRow(x, x + rr, out);
+    functionCall->callFunction(rr);
+    XCTAssertEqualWithAccuracy(out[Chan_Red][x],   alpha_test_value, numeric_limits<half>::epsilon() * 4, "Chan_red   output value does not match Chan_alpha input");
+    XCTAssertEqualWithAccuracy(out[Chan_Green][x],  blue_test_value, numeric_limits<half>::epsilon() * 4, "Chan_green output value does not match Chan_blue  input");
+    XCTAssertEqualWithAccuracy(out[Chan_Blue][x],  green_test_value, numeric_limits<half>::epsilon() * 4, "Chan_blue  output value does not match Chan_green input");
+    XCTAssertEqualWithAccuracy(out[Chan_Alpha][x],   red_test_value, numeric_limits<half>::epsilon() * 4, "Chan_alpha output value does not match Chan_red   input");
   } catch (const ArgExc &e) {
     cout << "oops: " << e.what() << endl;
     XCTFail("could not load argument map of generic top-level function");
   }
   END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+  
 }
+
 
 @end

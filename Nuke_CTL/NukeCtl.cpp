@@ -107,7 +107,7 @@ void NukeCtlIop::pixel_engine(const Row& in, int y, int x, int r, ChannelMask ch
 //    try {
 //      if (! transformArgMapValid)
 //      {
-//        transform->loadArgMap(in);
+//        transform->loadArgMap(in, x, r);
 //      }
 //      transformArgMapValid = true;
 //      try {

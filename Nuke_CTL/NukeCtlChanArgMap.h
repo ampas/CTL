@@ -26,34 +26,27 @@ namespace NukeCtl
   {
     friend class ChanArgMapFriend;
   public:
-    ChanArgMap()
-    {
-      chanNameToArgName_["r"] = "rIn";
-      chanNameToArgName_["g"] = "gIn";
-      chanNameToArgName_["b"] = "bIn";
-      chanNameToArgName_["a"] = "aIn";
-      argNameToChanName_["rIn"] = "r";
-      argNameToChanName_["gIn"] = "g";
-      argNameToChanName_["bIn"] = "b";
-      argNameToChanName_["aIn"] = "a";
-    }
+    ChanArgMap();
     
-    // Only handles the easy ones for now: in[Chan_Red] -> rIn and rIn -> out[Chan_Red], etc.
-    void
-    load(const DD::Image::Row& row, Ctl::FunctionCallPtr fn);
+    ChanArgMap(const ChanArgMap& c);
+    
+    ChanArgMap&
+    operator=(const ChanArgMap& rhs);
     
     void
-    copyChanDataToArgData(const DD::Image::Row&, int x0, int x1);
+    load(const DD::Image::Row& row, int x, int r, Ctl::FunctionCallPtr fn);
     
     void
-    copyArgDataToChanData(DD::Image::Row&, int x0, int x1);
+    copyInputRowToArgData(const DD::Image::Row&, int x0, int x1);
+    
+    void
+    copyArgDataToOutputRow(int x0, int x1, DD::Image::Row&);
     
   private:
-    std::map<std::string, std::string> chanNameToArgName_;
     std::map<std::string, std::string> argNameToChanName_;
     
-    std::map<DD::Image::Channel, char*> chanToArgData_;
-    std::map<char*, DD::Image::Channel> argDataToChan_;
+    std::map<DD::Image::Channel, char*> chanToInArgData_;
+    std::map<char*, DD::Image::Channel> outArgDataToChan_;
   };
 }
 

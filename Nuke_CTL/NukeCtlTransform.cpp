@@ -45,11 +45,11 @@ namespace NukeCtl
   }
   
   FunctionCallPtr
-  Transform::topLevelFunctionInTransform(SimdInterpreter& interpreter, const string &transformPath)
+  Transform::topLevelFunctionInTransform(SimdInterpreterPtr interpreter, const string &transformPath)
   {
     FunctionCallPtr functionCall;
     try {
-      functionCall = interpreter.newFunctionCall("main");
+      functionCall = interpreter->newFunctionCall("main");
     } catch (const ArgExc &e) {
       // This is grotesque but there is no CTL exception specific to this problem, so...
       const string functionNotFoundMarker("Cannot find CTL function");
@@ -57,7 +57,7 @@ namespace NukeCtl
       {
         string moduleName(modulenameFromFilename(filenameFromPathname(transformPath)));
         try {
-          functionCall = interpreter.newFunctionCall(moduleName);
+          functionCall = interpreter->newFunctionCall(moduleName);
         } catch (const exception &e) {
           if (string(e.what()).find_first_of(functionNotFoundMarker) != string::npos)
           {
@@ -82,26 +82,44 @@ namespace NukeCtl
   Transform::Transform(const string &modulePath,
                        const string &transformPath)
   : modulePathComponents_(parseModulePath(modulePath)),
+    interpreter_(RcPtr<RcSimdInterpreter>(new RcSimdInterpreter)),
     transformPath_(transformPath)
   {
     // be diligent about not having bad parameters or state crash all of Nuke.
     // TODO: Transform ctor should have separate 'wrapper' try/catch blocks around its various steps.
-    interpreter_.setUserModulePath(modulePathComponents_, modulePathComponents_.size()  > 0);
-    interpreter_.loadFile(transformPath);
+    interpreter_->setUserModulePath(modulePathComponents_, modulePathComponents_.size()  > 0);
+    interpreter_->loadFile(transformPath);
     functionCall_ = topLevelFunctionInTransform(interpreter_, transformPath);
     checkTopLevelFunctionReturnsVoid();
   }
   
   Transform::Transform(const Transform& t)
   : modulePathComponents_(t.modulePathComponents_),
+    interpreter_(t.interpreter_),
+    functionCall_(t.functionCall_),
+    argMap_(t.argMap_),
     transformPath_(t.transformPath_)
   {
   }
   
-  void
-  Transform::loadArgMap(const DD::Image::Row& in)
+  Transform&
+  Transform::operator=(const Transform& rhs)
   {
-    argMap_.load(in, functionCall_);
+    if (this != &rhs)
+    {
+      modulePathComponents_ = rhs.modulePathComponents_;
+      interpreter_          = rhs.interpreter_;
+      functionCall_         = rhs.functionCall_;
+      argMap_               = rhs.argMap_;
+      transformPath_        = rhs.transformPath_;
+    }
+    return *this;
+  }
+
+  void
+  Transform::loadArgMap(const DD::Image::Row& in, int x, int r)
+  {
+    argMap_.load(in, x, r, functionCall_);
   }
   
   void
@@ -109,10 +127,10 @@ namespace NukeCtl
   {
     for (int x = l; x < r;)
     {
-      int chunkSize = max(x - r, static_cast<int>(interpreter_.maxSamples()));
-      argMap_.copyChanDataToArgData(in, x, x + chunkSize);
+      int chunkSize = max(x - r, static_cast<int>(interpreter_->maxSamples()));
+      argMap_.copyInputRowToArgData(in, x, x + chunkSize);
       functionCall_->callFunction(chunkSize);
-      argMap_.copyArgDataToChanData(out, x, x + chunkSize);
+      argMap_.copyArgDataToOutputRow(x, x + chunkSize, out);
     }
   }
   

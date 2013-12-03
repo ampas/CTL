@@ -127,11 +127,11 @@
 		594B4E3C18134DF8003C263C /* NukeInputParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NukeInputParameters.h; path = ../../../Nuke_CTL/NukeInputParameters.h; sourceTree = "<group>"; };
 		594B4E3D18134DF8003C263C /* NukeTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NukeTransform.cpp; path = ../../../Nuke_CTL/NukeTransform.cpp; sourceTree = "<group>"; };
 		594B4E3E18134DF8003C263C /* NukeTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NukeTransform.h; path = ../../../Nuke_CTL/NukeTransform.h; sourceTree = "<group>"; };
-		594B4E4A18134E6B003C263C /* libDDImage.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libDDImage.dylib; path = ../../../../../../../Applications/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS/libDDImage.dylib; sourceTree = "<group>"; };
-		594B4E4B18134E6B003C263C /* libGLEW.1.5.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.5.8.dylib; path = ../../../../../../../Applications/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS/libGLEW.1.5.8.dylib; sourceTree = "<group>"; };
-		594B4E4C18134E6B003C263C /* libRIPFramework.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libRIPFramework.dylib; path = ../../../../../../../Applications/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS/libRIPFramework.dylib; sourceTree = "<group>"; };
-		594B4E4D18134E6B003C263C /* libtcmalloc_minimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtcmalloc_minimal.dylib; path = ../../../../../../../Applications/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS/libtcmalloc_minimal.dylib; sourceTree = "<group>"; };
-		594B4E5218134F86003C263C /* libHalf.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libHalf.10.dylib; path = ../../../../../../../Applications/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS/libHalf.10.dylib; sourceTree = "<group>"; };
+		594B4E4A18134E6B003C263C /* libDDImage.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libDDImage.dylib; path = ../../../../../../../Applications/Nuke8.0v1b48/Nuke8.0v1b48.app/Contents/MacOS/libDDImage.dylib; sourceTree = "<group>"; };
+		594B4E4B18134E6B003C263C /* libGLEW.1.5.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.5.8.dylib; path = ../../../../../../../Applications/Nuke8.0v1b48/Nuke8.0v1b48.app/Contents/MacOS/libGLEW.1.5.8.dylib; sourceTree = "<group>"; };
+		594B4E4C18134E6B003C263C /* libRIPFramework.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libRIPFramework.dylib; path = ../../../../../../../Applications/Nuke8.0v1b48/Nuke8.0v1b48.app/Contents/MacOS/libRIPFramework.dylib; sourceTree = "<group>"; };
+		594B4E4D18134E6B003C263C /* libtcmalloc_minimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtcmalloc_minimal.dylib; path = ../../../../../../../Applications/Nuke8.0v1b48/Nuke8.0v1b48.app/Contents/MacOS/libtcmalloc_minimal.dylib; sourceTree = "<group>"; };
+		594B4E5218134F86003C263C /* libHalf.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libHalf.10.dylib; path = ../../../../../../../Applications/Nuke8.0v1b48/Nuke8.0v1b48.app/Contents/MacOS/libHalf.10.dylib; sourceTree = "<group>"; };
 		594B4E5C18134FD6003C263C /* libIlmCtlMath.1.5.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIlmCtlMath.1.5.0.dylib; path = ../../../../../../../usr/local/Cellar/ctl/HEAD/lib/libIlmCtlMath.1.5.0.dylib; sourceTree = "<group>"; };
 		594B4E5E18134FF5003C263C /* libIlmCtl.1.5.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIlmCtl.1.5.0.dylib; path = ../../../../../../../usr/local/Cellar/ctl/HEAD/lib/libIlmCtl.1.5.0.dylib; sourceTree = "<group>"; };
 		594B4E5F18134FF5003C263C /* libIlmCtlSimd.1.5.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIlmCtlSimd.1.5.0.dylib; path = ../../../../../../../usr/local/Cellar/ctl/HEAD/lib/libIlmCtlSimd.1.5.0.dylib; sourceTree = "<group>"; };
@@ -557,15 +557,15 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					/Applications/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS/include,
+					/usr/local/foundry/include,
 					/usr/local/include/CTL,
 					/usr/local/include/OpenEXR,
 				);
 				LIBRARY_SEARCH_PATHS = (
-					/Applications/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS,
+					/usr/local/foundry/lib,
 					/usr/local/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = "";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -600,15 +600,15 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					/Applications/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS/include,
+					/usr/local/foundry/include,
 					/usr/local/include/CTL,
 					/usr/local/include/OpenEXR,
 				);
 				LIBRARY_SEARCH_PATHS = (
-					/Applications/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS,
+					/usr/local/foundry/lib,
 					/usr/local/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				MACOSX_DEPLOYMENT_TARGET = "";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -627,9 +627,8 @@
 					"$(inherited)",
 					/usr/local/Cellar/ilmbase/2.0.1/lib,
 					/usr/local/Cellar/ctl/HEAD/lib,
-					"$(SYSTEM_APPS_DIR)/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -650,9 +649,8 @@
 					"$(inherited)",
 					/usr/local/Cellar/ilmbase/2.0.1/lib,
 					/usr/local/Cellar/ctl/HEAD/lib,
-					"$(SYSTEM_APPS_DIR)/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
@@ -679,7 +677,6 @@
 					"$(inherited)",
 					/usr/local/Cellar/ilmbase/2.0.1/lib,
 					/usr/local/Cellar/ctl/HEAD/lib,
-					"$(SYSTEM_APPS_DIR)/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
@@ -703,7 +700,6 @@
 					"$(inherited)",
 					/usr/local/Cellar/ilmbase/2.0.1/lib,
 					/usr/local/Cellar/ctl/HEAD/lib,
-					"$(SYSTEM_APPS_DIR)/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
@@ -720,7 +716,6 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SYSTEM_APPS_DIR)/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS",
 					/usr/local/Cellar/ctl/HEAD/lib,
 					/usr/local/Cellar/ilmbase/2.0.1/lib,
 				);
@@ -733,7 +728,6 @@
 			buildSettings = {
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SYSTEM_APPS_DIR)/Nuke8.0v1b17/Nuke8.0v1b17.app/Contents/MacOS",
 					/usr/local/Cellar/ctl/HEAD/lib,
 					/usr/local/Cellar/ilmbase/2.0.1/lib,
 				);
