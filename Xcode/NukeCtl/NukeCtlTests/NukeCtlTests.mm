@@ -123,9 +123,9 @@ namespace NukeCtl
     }
     
     void
-    load(const DD::Image::Row& in, int x, int r, Ctl::FunctionCallPtr fn)
+    load(Ctl::FunctionCallPtr fn)
     {
-      chanArgMap_.load(in, x, r, fn);
+      chanArgMap_.load(fn);
     }
     
     void
@@ -600,7 +600,7 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
 }
 
 
-- (void)testNukeCTLArgAndResultCopying
+- (void)testNukeCTLArgAndResultCopyingSteps
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
   NSString* p = @"/tmp/RGBASwap.ctl";
@@ -634,7 +634,7 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
           break;
       }
     }
-    transform.loadArgMap(in, x, r);
+    transform.loadArgMap();
     TransformFriend amigo(transform);
     int rr = min(r - x, static_cast<int>(amigo.interpreter()->maxSamples()));
     amigo.chanArgMap().copyInputRowToArgData(in, x, x + rr);
@@ -696,10 +696,42 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
     XCTAssertEqualWithAccuracy(out[Chan_Alpha][x],   red_test_value, numeric_limits<half>::epsilon() * 4, "Chan_alpha output value does not match Chan_red   input");
   } catch (const ArgExc &e) {
     cout << "oops: " << e.what() << endl;
-    XCTFail("could not load argument map of generic top-level function");
+    XCTFail("could not load argument map, execute, or extract results of RGBA-swapping top-level function");
   }
   END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-  
+}
+
+// This is the short version. If this doesn't work, consider whether the long version works or not.
+- (void)testNukeCTLArgAndResult
+{
+  BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+  NSString* p = @"/tmp/RGBASwap.ctl";
+  [self writeRGBASwappingTransformWithName:@"main" toPath:p];
+  try {
+    Transform transform("", [p UTF8String]);
+    int x = 10;
+    int r = 20;
+    Row in(x, r);
+    float   red_test_value = 0.125;
+    float green_test_value = 0.250;
+    float  blue_test_value = 2.0;
+    float alpha_test_value = 4.0;
+    in.writable(Chan_Red)  [x] =   red_test_value;
+    in.writable(Chan_Green)[x] = green_test_value;
+    in.writable(Chan_Blue) [x] =  blue_test_value;
+    in.writable(Chan_Alpha)[x] = alpha_test_value;
+    Row out(x,r);
+    transform.loadArgMap();
+    transform.execute(in, x, r, out);
+    XCTAssertEqualWithAccuracy(out[Chan_Red][x],   alpha_test_value, numeric_limits<half>::epsilon() * 4, "Chan_red   output value does not match Chan_alpha input");
+    XCTAssertEqualWithAccuracy(out[Chan_Green][x],  blue_test_value, numeric_limits<half>::epsilon() * 4, "Chan_green output value does not match Chan_blue  input");
+    XCTAssertEqualWithAccuracy(out[Chan_Blue][x],  green_test_value, numeric_limits<half>::epsilon() * 4, "Chan_blue  output value does not match Chan_green input");
+    XCTAssertEqualWithAccuracy(out[Chan_Alpha][x],   red_test_value, numeric_limits<half>::epsilon() * 4, "Chan_alpha output value does not match Chan_red   input");
+  } catch (const ArgExc &e) {
+    cout << "oops: " << e.what() << endl;
+    XCTFail("could not load argument map, execute, or extract results of RGBA-swapping top-level function");
+  }
+  END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
 }
 
 

@@ -41,7 +41,7 @@ namespace NukeCtl
     operator=(const Transform& rhs);
     
     void
-    loadArgMap(const DD::Image::Row& row, int x, int r);
+    loadArgMap();
     
     void
     execute(const DD::Image::Row& row, int x, int r, DD::Image::Row& out);

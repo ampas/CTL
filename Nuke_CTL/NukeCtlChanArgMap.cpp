@@ -48,7 +48,7 @@ namespace NukeCtl
   }
 
   void
-  ChanArgMap::load(const Row& in, int x, int r, FunctionCallPtr fn)
+  ChanArgMap::load(FunctionCallPtr fn)
   {
     // We might be called multiple times if, say, execute() noticed that x and r had changed since a prior row was processed.
     chanToInArgData_.clear();

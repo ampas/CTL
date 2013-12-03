@@ -117,9 +117,9 @@ namespace NukeCtl
   }
 
   void
-  Transform::loadArgMap(const DD::Image::Row& in, int x, int r)
+  Transform::loadArgMap()
   {
-    argMap_.load(in, x, r, functionCall_);
+    argMap_.load(functionCall_);
   }
   
   void
@@ -127,10 +127,11 @@ namespace NukeCtl
   {
     for (int x = l; x < r;)
     {
-      int chunkSize = max(x - r, static_cast<int>(interpreter_->maxSamples()));
+      int chunkSize = min(r - x, static_cast<int>(interpreter_->maxSamples()));
       argMap_.copyInputRowToArgData(in, x, x + chunkSize);
       functionCall_->callFunction(chunkSize);
       argMap_.copyArgDataToOutputRow(x, x + chunkSize, out);
+      x += chunkSize;
     }
   }
   

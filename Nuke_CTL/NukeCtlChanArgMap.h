@@ -34,7 +34,7 @@ namespace NukeCtl
     operator=(const ChanArgMap& rhs);
     
     void
-    load(const DD::Image::Row& row, int x, int r, Ctl::FunctionCallPtr fn);
+    load(Ctl::FunctionCallPtr fn);
     
     void
     copyInputRowToArgData(const DD::Image::Row&, int x0, int x1);
