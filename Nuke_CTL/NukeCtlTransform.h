@@ -23,6 +23,8 @@ namespace NukeCtl
 {
   class TransformFriend;
   
+  // Keeping this in the heap makes it possible to share it between the Transform
+  // and TransformFriend (which gets used in unit testing).
   class RcSimdInterpreter : public Ctl::SimdInterpreter, public Ctl::RcObject
   {
   };
@@ -35,7 +37,7 @@ namespace NukeCtl
     Transform(const std::string &modulePath,
               const std::string &transformPath);
 
-    Transform(const Transform& t);
+    Transform(const Transform& transform);
     
     Transform&
     operator=(const Transform& rhs);
@@ -44,15 +46,15 @@ namespace NukeCtl
     loadArgMap();
     
     void
-    execute(const DD::Image::Row& row, int x, int r, DD::Image::Row& out);
+    execute(const DD::Image::Row& in, int l, int r, DD::Image::Row& out);
   private:
     static
     const std::vector<std::string>
-    parseModulePath(const std::string &mp);
+    parseModulePath(const std::string &modulePath);
     
     static
     void
-    verifyModuleName(const std::string &n);
+    verifyModuleName(const std::string &moduleName);
     
     static
     Ctl::FunctionCallPtr

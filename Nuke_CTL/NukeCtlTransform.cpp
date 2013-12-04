@@ -22,25 +22,25 @@ using namespace std;
 namespace NukeCtl
 {
   const vector<string>
-  Transform::parseModulePath(const string &mp)
+  Transform::parseModulePath(const string &modulePath)
   {
     vector<string> modulePathComponents;
     try {
-      modulePathComponents = split(mp,':');
+      modulePathComponents = split(modulePath,':');
     } catch (const ArgExc &e) {
-      THROW(ArgExc, "Cannot parse module path '" << mp << "': " << e.what());
+      THROW(ArgExc, "Cannot parse module path '" << modulePath << "': " << e.what());
     }
     return modulePathComponents;
   }
   
   void
-  Transform::verifyModuleName(const string &n)
+  Transform::verifyModuleName(const string &moduleName)
   {
     // components of path need not exist, they just need to be syntactically legal. At least, that's as far as Ctl::Interpreter goes.
     // path should be legal, as far as the interpreter allows; that means no /, :. ; or \ characters.
-    if (n.find_first_of("/:;\\") != string::npos)
+    if (moduleName.find_first_of("/:;\\") != string::npos)
     {
-      THROW(ArgExc, "Module path component `" << n << "' contains invalid characters (one of /, :, ; or \\");
+      THROW(ArgExc, "Module path component `" << moduleName << "' contains invalid characters (one of /, :, ; or \\");
     }
   }
   
@@ -93,12 +93,12 @@ namespace NukeCtl
     checkTopLevelFunctionReturnsVoid();
   }
   
-  Transform::Transform(const Transform& t)
-  : modulePathComponents_(t.modulePathComponents_),
-    interpreter_(t.interpreter_),
-    functionCall_(t.functionCall_),
-    argMap_(t.argMap_),
-    transformPath_(t.transformPath_)
+  Transform::Transform(const Transform& transform)
+  : modulePathComponents_(transform.modulePathComponents_),
+    interpreter_(transform.interpreter_),
+    functionCall_(transform.functionCall_),
+    argMap_(transform.argMap_),
+    transformPath_(transform.transformPath_)
   {
   }
   
