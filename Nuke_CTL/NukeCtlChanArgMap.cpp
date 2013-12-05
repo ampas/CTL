@@ -16,7 +16,7 @@ using namespace Iex;
 
 namespace NukeCtl
 {
-  ChanArgMap::ChanArgMap()
+  ChanArgMap::ChanArgMap(FunctionCallPtr fn)
   {
     argNameToChanName_["rIn"] = "r";
     argNameToChanName_["gIn"] = "g";
@@ -26,30 +26,6 @@ namespace NukeCtl
     argNameToChanName_["gOut"] = "g";
     argNameToChanName_["bOut"] = "b";
     argNameToChanName_["aOut"] = "a";
-  }
-  
-  ChanArgMap::ChanArgMap(const ChanArgMap& c)
-  : argNameToChanName_(c.argNameToChanName_),
-  chanToInArgData_(c.chanToInArgData_),
-  outArgDataToChan_(c.outArgDataToChan_)
-  {
-  }
-  
-  ChanArgMap&
-  ChanArgMap::operator=(const ChanArgMap& rhs)
-  {
-    if (this != &rhs)
-    {
-      argNameToChanName_ = rhs.argNameToChanName_;
-      chanToInArgData_   = rhs.chanToInArgData_;
-      outArgDataToChan_  = rhs.outArgDataToChan_;
-    }
-    return *this;
-  }
-
-  void
-  ChanArgMap::load(FunctionCallPtr fn)
-  {
     // We might be called multiple times if, say, execute() noticed that x and r had changed since a prior row was processed.
     chanToInArgData_.clear();
     outArgDataToChan_.clear();
@@ -84,6 +60,25 @@ namespace NukeCtl
       }
       outArgDataToChan_[arg->data()] = findChannel(j->second.c_str());
     }
+  }
+  
+  ChanArgMap::ChanArgMap(const ChanArgMap& c)
+  : argNameToChanName_(c.argNameToChanName_),
+    chanToInArgData_  (c.chanToInArgData_),
+    outArgDataToChan_ (c.outArgDataToChan_)
+  {
+  }
+  
+  ChanArgMap&
+  ChanArgMap::operator=(const ChanArgMap& rhs)
+  {
+    if (this != &rhs)
+    {
+      argNameToChanName_ = rhs.argNameToChanName_;
+      chanToInArgData_   = rhs.chanToInArgData_;
+      outArgDataToChan_  = rhs.outArgDataToChan_;
+    }
+    return *this;
   }
 
   void

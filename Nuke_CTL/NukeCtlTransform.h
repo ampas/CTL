@@ -23,8 +23,6 @@ namespace NukeCtl
 {
   class TransformFriend;
   
-  // Keeping this in the heap makes it possible to share it between the Transform
-  // and TransformFriend (which gets used in unit testing).
   class RcSimdInterpreter : public Ctl::SimdInterpreter, public Ctl::RcObject
   {
   };
@@ -43,9 +41,6 @@ namespace NukeCtl
     operator=(const Transform& rhs);
     
     void
-    loadArgMap();
-    
-    void
     execute(const DD::Image::Row& in, int l, int r, DD::Image::Row& out);
   private:
     static
@@ -56,17 +51,20 @@ namespace NukeCtl
     void
     verifyModuleName(const std::string &moduleName);
     
-    static
     Ctl::FunctionCallPtr
-    topLevelFunctionInTransform(SimdInterpreterPtr interpreter, const std::string &transformPath);
+    topLevelFunctionInTransform();
     
     void
-    checkTopLevelFunctionReturnsVoid();
-   
+    loadArgMap();
+    
     std::vector<std::string>  modulePathComponents_;
+    // Keeping this in the heap makes it possible to share it between the Transform
+    // and TransformFriend (which gets used in unit testing).
+    // On the other hand, you do NOT want to try anything comparable for sharing
+    // functional calls with Ctl::FunctionCallPtr. That sort of thing will work in
+    // unit testing, which is single-threaded, but Nuke has multiple threads sharing
+    // from a single Nuke Op.
     SimdInterpreterPtr        interpreter_;
-    Ctl::FunctionCallPtr      functionCall_;
-    NukeCtl::ChanArgMap       argMap_;
 
     // Forensics
     std::string               transformPath_;

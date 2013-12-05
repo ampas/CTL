@@ -45,38 +45,28 @@ namespace NukeCtl
   }
   
   FunctionCallPtr
-  Transform::topLevelFunctionInTransform(SimdInterpreterPtr interpreter, const string &transformPath)
+  Transform::topLevelFunctionInTransform()
   {
     FunctionCallPtr functionCall;
     try {
-      functionCall = interpreter->newFunctionCall("main");
+      functionCall = interpreter_->newFunctionCall("main");
     } catch (const ArgExc &e) {
       // This is grotesque but there is no CTL exception specific to this problem, so...
       const string functionNotFoundMarker("Cannot find CTL function");
       if (string(e.what()).find_first_of(functionNotFoundMarker) != string::npos)
       {
-        string moduleName(modulenameFromFilename(filenameFromPathname(transformPath)));
+        string moduleName(modulenameFromFilename(filenameFromPathname(transformPath_)));
         try {
-          functionCall = interpreter->newFunctionCall(moduleName);
+          functionCall = interpreter_->newFunctionCall(moduleName);
         } catch (const exception &e) {
           if (string(e.what()).find_first_of(functionNotFoundMarker) != string::npos)
           {
-            THROW(ArgExc, "CTL file at '" << transformPath << "' has neither a main function nor one named '" << moduleName << "'");
+            THROW(ArgExc, "CTL file at '" << transformPath_ << "' has neither a main function nor one named '" << moduleName << "'");
           }
         }
       }
     }
     return functionCall;
-  }
-  
-  void
-  Transform::checkTopLevelFunctionReturnsVoid()
-  {
-    if (functionCall_->returnValue()->type().cast<Ctl::VoidType>().refcount() == 0)
-    {
-      THROW(ArgExc, "top-level function of CTL file at '" << transformPath_
-            << "' returns other than void type");
-    }
   }
   
   Transform::Transform(const string &modulePath,
@@ -89,15 +79,11 @@ namespace NukeCtl
     // TODO: Transform ctor should have separate 'wrapper' try/catch blocks around its various steps.
     interpreter_->setUserModulePath(modulePathComponents_, modulePathComponents_.size()  > 0);
     interpreter_->loadFile(transformPath);
-    functionCall_ = topLevelFunctionInTransform(interpreter_, transformPath);
-    checkTopLevelFunctionReturnsVoid();
   }
   
   Transform::Transform(const Transform& transform)
   : modulePathComponents_(transform.modulePathComponents_),
     interpreter_(transform.interpreter_),
-    functionCall_(transform.functionCall_),
-    argMap_(transform.argMap_),
     transformPath_(transform.transformPath_)
   {
   }
@@ -109,28 +95,27 @@ namespace NukeCtl
     {
       modulePathComponents_ = rhs.modulePathComponents_;
       interpreter_          = rhs.interpreter_;
-      functionCall_         = rhs.functionCall_;
-      argMap_               = rhs.argMap_;
       transformPath_        = rhs.transformPath_;
     }
     return *this;
   }
 
   void
-  Transform::loadArgMap()
-  {
-    argMap_.load(functionCall_);
-  }
-  
-  void
   Transform::execute(const Row& in, int l, int r, Row& out)
   {
+    FunctionCallPtr functionCall = topLevelFunctionInTransform();
+    if (functionCall->returnValue()->type().cast<Ctl::VoidType>().refcount() == 0)
+    {
+      THROW(ArgExc, "top-level function of CTL file at '" << transformPath_
+            << "' returns other than void type");
+    }
+    ChanArgMap argMap(functionCall);
     for (int x = l; x < r;)
     {
       int chunkSize = min(r - x, static_cast<int>(interpreter_->maxSamples()));
-      argMap_.copyInputRowToArgData(in, x, x + chunkSize);
-      functionCall_->callFunction(chunkSize);
-      argMap_.copyArgDataToOutputRow(x, x + chunkSize, out);
+      argMap.copyInputRowToArgData(in, x, x + chunkSize);
+      functionCall->callFunction(chunkSize);
+      argMap.copyArgDataToOutputRow(x, x + chunkSize, out);
       x += chunkSize;
     }
   }

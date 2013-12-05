@@ -26,15 +26,12 @@ namespace NukeCtl
   {
     friend class ChanArgMapFriend;
   public:
-    ChanArgMap();
+    ChanArgMap(Ctl::FunctionCallPtr fn);
     
     ChanArgMap(const ChanArgMap& c);
     
     ChanArgMap&
     operator=(const ChanArgMap& rhs);
-    
-    void
-    load(Ctl::FunctionCallPtr fn);
     
     void
     copyInputRowToArgData(const DD::Image::Row&, int x0, int x1);

@@ -65,25 +65,7 @@ namespace NukeCtl
     FunctionCallPtr
     topLevelFunctionInTransform()
     {
-      return transform_.functionCall_;
-    }
-    
-    FunctionCallPtr
-    topLevelFunctionInTransform(const string& topLevelFunctionName)
-    {
-      return Transform::topLevelFunctionInTransform(transform_.interpreter_, topLevelFunctionName);
-    }
-    
-    ChanArgMap
-    chanArgMap()
-    {
-      return transform_.argMap_;
-    }
-
-    void
-    callFunction(size_t n)
-    {
-      transform_.functionCall_->callFunction(n);
+      return transform_.topLevelFunctionInTransform();
     }
     
   private:
@@ -120,12 +102,6 @@ namespace NukeCtl
     ChanArgMapFriend(ChanArgMap& chanArgMap)
     : chanArgMap_(chanArgMap)
     {
-    }
-    
-    void
-    load(Ctl::FunctionCallPtr fn)
-    {
-      chanArgMap_.load(fn);
     }
     
     void
@@ -522,14 +498,11 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
 - (void)testFindingTopLevelMainFunction
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-//  SimdInterpreter i;
   NSString* p = @"/tmp/genericMain.ctl";
   [self writeGenericTransformWithName:@"main" toPath:p];
-//  i.loadFile([p UTF8String]);
   Transform transform("", [p UTF8String]);
   TransformFriend amigo(transform);
-//  FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, [p UTF8String]);
-  FunctionCallPtr f = amigo.topLevelFunctionInTransform([p UTF8String]);
+  FunctionCallPtr f = amigo.topLevelFunctionInTransform();
   XCTAssert(f.refcount() != 0, @"top-level 'main' function should be visible");
   END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
 }
@@ -537,15 +510,12 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
 - (void)testFindingTopLevelFooFunction
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-  // SimdInterpreter i;
   NSString* p = @"/tmp/genericFoo.ctl";
   [self writeGenericTransformWithName:@"genericFoo" toPath:p];
   try {
-    // i.loadFile([p UTF8String]);
     Transform transform("", [p UTF8String]);
     TransformFriend amigo(transform);
-//    FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, [p UTF8String]);
-    FunctionCallPtr f = amigo.topLevelFunctionInTransform([p UTF8String]);
+    FunctionCallPtr f = amigo.topLevelFunctionInTransform();
   } catch (const ArgExc &e) {
     cout << "oops: " << e.what() << endl;
     XCTFail("could not find genericFoo as top-level function");
@@ -556,16 +526,13 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
 - (void)testNotFindingTopLevelFunction
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-  // SimdInterpreter i;
   NSString* p = @"/tmp/genericBar.ctl";
-  [self writeGenericTransformWithName:@"genericBar" toPath:p];
+  [self writeGenericTransformWithName:@"genericBaz" toPath:p];
   bool threw = false;
   try {
-    // i.loadFile([p UTF8String]);
     Transform transform("", [p UTF8String]);
     TransformFriend amigo(transform);
-//    FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, "genericBaz");
-    FunctionCallPtr f = amigo.topLevelFunctionInTransform("genericBaz");
+    FunctionCallPtr f = amigo.topLevelFunctionInTransform();
   }
   catch(const ArgExc& e)
   {
@@ -579,17 +546,14 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
 - (void)testTopLevelFunctionNotReturningVoidThrows
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-  // SimdInterpreter i;
   NSString* p = @"/tmp/intMain.ctl";
   ofstream s([p UTF8String]);
   s << "int main(input varying float rIn, input varying float gIn, input varying float bIn, input varying float aIn, output varying float rOut, output varying float gOut, output varying float bOut, output varying float aOut) {}" << endl;
   bool threw = false;
   try {
-    // i.loadFile([p UTF8String]);
     Transform transform("", [p UTF8String]);
     TransformFriend amigo(transform);
-//    FunctionCallPtr f = amigo.topLevelFunctionInTransform(i, "main");
-    FunctionCallPtr f = amigo.topLevelFunctionInTransform("main");
+    FunctionCallPtr f = amigo.topLevelFunctionInTransform();
   }
   catch(const BaseExc& e)
   {
@@ -607,8 +571,8 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
   [self writeRGBASwappingTransformWithName:@"main" toPath:p];
   try {
     Transform transform("", [p UTF8String]);
-    int x = 10;
-    int r = 20;
+    int x = 0;
+    int r = 2880;
     Row in(x, r);
     ChannelMask mask = Mask_RGBA;
     float   red_test_value = 0.125;
@@ -634,13 +598,12 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
           break;
       }
     }
-    transform.loadArgMap();
     TransformFriend amigo(transform);
     int rr = min(r - x, static_cast<int>(amigo.interpreter()->maxSamples()));
-    amigo.chanArgMap().copyInputRowToArgData(in, x, x + rr);
-    ChanArgMap amigoChanArgMap(amigo.chanArgMap());
-    ChanArgMapFriend pal(amigoChanArgMap);
     FunctionCallPtr functionCall = amigo.topLevelFunctionInTransform();
+    ChanArgMap argMap(functionCall);
+    argMap.copyInputRowToArgData(in, x, x + rr);
+    ChanArgMapFriend pal(argMap);
     XCTAssert(pal.chanToInArgDataMap()[Chan_Red]   == functionCall->findInputArg("rIn")->data(), "Chan_Red not mapping to data buffer for rIn");
     XCTAssert(pal.chanToInArgDataMap()[Chan_Green] == functionCall->findInputArg("gIn")->data(), "Chan_Green not mapping to data buffer for gIn");
     XCTAssert(pal.chanToInArgDataMap()[Chan_Blue]  == functionCall->findInputArg("bIn")->data(), "Chan_Blue not mapping to data buffer for bIn");
@@ -688,7 +651,7 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
     XCTAssert( outBlueArgData == functionCall->findOutputArg("bOut")->data(), "data buffer for bOut not mapping to Chan_Blue");
     XCTAssert(outAlphaArgData == functionCall->findOutputArg("aOut")->data(), "data buffer for aOut not mapping to Chan_Alpha");
     Row out(x, r);
-    amigo.chanArgMap().copyArgDataToOutputRow(x, x + rr, out);
+    argMap.copyArgDataToOutputRow(x, x + rr, out);
     functionCall->callFunction(rr);
     XCTAssertEqualWithAccuracy(out[Chan_Red][x],   alpha_test_value, numeric_limits<half>::epsilon() * 4, "Chan_red   output value does not match Chan_alpha input");
     XCTAssertEqualWithAccuracy(out[Chan_Green][x],  blue_test_value, numeric_limits<half>::epsilon() * 4, "Chan_green output value does not match Chan_blue  input");
@@ -721,7 +684,9 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
     in.writable(Chan_Blue) [x] =  blue_test_value;
     in.writable(Chan_Alpha)[x] = alpha_test_value;
     Row out(x,r);
-    transform.loadArgMap();
+    TransformFriend amigo(transform);
+    FunctionCallPtr functionCall = amigo.topLevelFunctionInTransform();
+    ChanArgMap argMap(functionCall);
     transform.execute(in, x, r, out);
     XCTAssertEqualWithAccuracy(out[Chan_Red][x],   alpha_test_value, numeric_limits<half>::epsilon() * 4, "Chan_red   output value does not match Chan_alpha input");
     XCTAssertEqualWithAccuracy(out[Chan_Green][x],  blue_test_value, numeric_limits<half>::epsilon() * 4, "Chan_green output value does not match Chan_blue  input");
