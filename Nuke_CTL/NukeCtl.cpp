@@ -81,15 +81,7 @@ void NukeCtlIop::pixel_engine(const Row& in, int y, int x, int r, ChannelMask ch
   }
   else
   {
-    foreach(c, channels)
-    {
-      for (int i = x; i < r; ++i)
-      {
-        out.writable(c)[i] = in[c][i];
-      }
-      // TODO: make this memcpy call work instead of using a loop
-      // memcpy(out.writable(c) + x * sizeof(float), in[c] + x * sizeof(float), (r - x) * sizeof(float));
-    }
+    out.copy(in, channels, x, r);
   }
 }
 
