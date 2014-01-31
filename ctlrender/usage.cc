@@ -112,7 +112,7 @@ void usage(const char *section) {
 "    -quiet                Decreases the level of output verbosity.\n"
 "\n");
 	} else if(!strncmp(section, "format", 1)) {
-		fprintf(stdout, ""
+		fprintf(stdout, "\n"
 "format conversion:\n"
 "\n"
 "    ctlrender provides file format conversion either implicitly by the\n"
@@ -156,10 +156,10 @@ void usage(const char *section) {
 "\n"
 "    Note that no automatic depth scaling is performed, please see\n"
 "    '-help scale' for more details on how scaling is performed.\n"
-"");
+"\n");
     } else if(!strncmp(section, "compression", 2)) {
 #if defined(HAVE_OPENEXR)
-        fprintf(stdout, ""
+        fprintf(stdout, "\n"
 "exr compression:\n"
 "\n"
 "    ctlrender provides the option of a compression scheme when saving an \n"
@@ -185,9 +185,9 @@ void usage(const char *section) {
 "\n"
 "        B44A    (lossy) Like B44 but smaller for images containing large\n"
 "                uniform areas.\n"
-"");
+"\n");
 #else
-        fprintf(stdout, ""
+        fprintf(stdout, "\n"
 "exr compression:\n"
 "\n"
 "    ctlrender provides the option of a compression scheme when saving an \n"
@@ -198,21 +198,21 @@ void usage(const char *section) {
 "\n"
 "    OpenEXR support must be enabled for the '-compression' option to be\n"
 "    meaningful. Please see build documentation for details.\n"
-"");
+"\n");
 #endif
 	} else if(!strncmp(section, "ctl", 1)) {
-		fprintf(stdout, ""
+		fprintf(stdout, "\n"
 "ctl file interpretation:\n"
 "    ctlrender treats all ctl files as if they take their input as 'R', 'G',\n"
 "    'B', and 'A' (optional) channels, and produce output as 'R', 'G', and\n"
 "    'B', and 'A' (if required) channels. In the event of a single channel\n"
 "    input file only the 'G' channel will be used.\n"
-"");
+"\n");
 //"    The *LAST* function in the file is the function that will be called to\n"
 //"    provide the transform. This is to maintain compatability with scripts\n"
 //"    developed for Autodesk's TOXIC product.\n"
 	} else if(!strncmp(section, "scale", 1)) {
-		fprintf(stderr, ""
+		fprintf(stderr, "\n"
 "input and output value scaling:\n"
 "\n"
 "    To deal with differences in input and output file bit depth, the ability\n"
@@ -258,9 +258,9 @@ void usage(const char *section) {
 "\n"
 "    In all cases the CTL output values (after output_scaling) are clipped\n"
 "    to the maximum values supported by the output file format.\n"
-"");
+"\n");
 	} else if(!strncmp(section, "param", 1)) {
-		fprintf(stdout, ""
+		fprintf(stdout, "\n"
 "ctl parameters:\n"
 "\n"
 "    In CTL scripts it is possible to define parameters that are not set\n"
@@ -275,7 +275,7 @@ void usage(const char *section) {
 "        -global_param1 <name> <float1>\n"
 "        -global_param2 <name> <float1> <float2>\n"
 "        -global_param3 <name> <float1> <float2> <float3>\n"
-"");
+"\n");
 	} else {
 		fprintf(stdout, ""
 "The '%s' section of the help does not exist. Try running ctlrender with\n"
