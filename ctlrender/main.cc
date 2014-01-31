@@ -486,8 +486,8 @@ int main(int argc, const char **argv)
 					if (!force_overwrite_output_file)
 					{
 						fprintf(stderr,
-								"The destination file %s already exists.\n"
-								"Supply the -force option to overwrite.\n"
+								"The destination file %s already exists. Refusing to overwrite the existing file.\n"
+								"To overwrite the existing file use the -force option.\n"
 								, outputFile);
 						exit(1);
 					}

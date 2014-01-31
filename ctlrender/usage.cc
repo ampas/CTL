@@ -110,6 +110,15 @@ void usage(const char *section) {
 "\n"
 "    -verbose              Increases the level of output verbosity.\n"
 "    -quiet                Decreases the level of output verbosity.\n"
+"\n"
+"    -force                Overrides the default program behavior in some\n"
+"                          instances such as overwriting existing files and\n"
+"                          requiring format specified and file extensions\n"
+"                          match.\n"
+"\n"
+"    -help                 Prints this message. Additional help details are\n"
+"                          available for some options by specifying an option\n"
+"                          after '-help' (e.g. '-help format').\n"
 "\n");
 	} else if(!strncmp(section, "format", 1)) {
 		fprintf(stdout, "\n"
