@@ -58,7 +58,7 @@
 
 void usage(const char *section) {
 	if(section==NULL) {
-		fprintf(stdout, ""
+		fprintf(stdout, "\n"
 "ctlrender - transforms an image using one or more CTL scripts, potentially\n"
 "            converting the file format in the process\n"
 "\nusage:\n"
@@ -110,7 +110,7 @@ void usage(const char *section) {
 "\n"
 "    -verbose              Increases the level of output verbosity.\n"
 "    -quiet                Decreases the level of output verbosity.\n"
-"");
+"\n");
 	} else if(!strncmp(section, "format", 1)) {
 		fprintf(stdout, ""
 "format conversion:\n"

@@ -448,11 +448,8 @@ int main(int argc, const char **argv)
 
 		if (input_image_files.size() < 2)
 		{
-			fprintf(stderr,
-					"one or more source filenames and a destination "
-					"file or directory must be\nprovided. if more than one "
-					"source filenames is provided then the last argument\nmust "
-					"be a directory. see -help for more details.\n");
+			usage(NULL);
+			
 			exit(1);
 		}
 
