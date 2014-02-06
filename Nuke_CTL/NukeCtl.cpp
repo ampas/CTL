@@ -3,6 +3,11 @@
 const char* const HELP =
 "<p>Applies Ctl transforms onto an image.</p>";
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#endif
+
 #include "DDImage/PixelIop.h"
 #include "DDImage/Row.h"
 #include "DDImage/Knobs.h"
@@ -14,6 +19,10 @@ const char* const HELP =
 #include "NukeCtlUtils.h"
 #include "NukeCtlTransform.h"
 
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+
 using namespace DD::Image;
 using namespace Iex;
 using namespace std;
@@ -24,17 +33,17 @@ static const char* const CLASS = "NukeCtl";
 class NukeCtlIop : public PixelIop {
   
 private:
-  DD::Image::Knob* modSetKnob;
-	DD::Image::Knob* moduleKnob;
+  DD::Image::Knob* modulePathEnabledKnob;
+	DD::Image::Knob* modulePathKnob;
 	DD::Image::Knob* readKnob;
-  NukeCtl::Transform* transform;
-  bool moduleSet;
+  bool modulePathEnabled;
 	const char *modulePath;
-	const char *inFilename;
+	const char *ctlPath;
+  NukeCtl::Transform* transform;
 public:
 	
   NukeCtlIop(Node* node) : PixelIop(node),
-    moduleSet(false), modulePath(""), inFilename(""),
+    modulePathEnabled(false), modulePath(""), ctlPath(""),
     transform(NULL) {
   }
   
@@ -50,6 +59,7 @@ public:
   
   void pixel_engine(const Row &in, int y, int x, int r, ChannelMask, Row &);
   void knobs(Knob_Callback);
+  void load_transform(const char* const modulePath, const char* const ctlPath);
   int knob_changed(Knob*);
   const char* Class() const { return CLASS; }
   const char* node_help() const { return HELP; }
@@ -87,50 +97,60 @@ void NukeCtlIop::pixel_engine(const Row& in, int y, int x, int r, ChannelMask ch
 
 void NukeCtlIop::knobs(Knob_Callback f) {
   
-  modSetKnob = Bool_knob(f, &moduleSet, "set_module_path", "Set Module Path");
-  moduleKnob = File_knob(f, &modulePath, "module_path", "Module Path");
-	readKnob   = File_knob(f, &inFilename, "read_ctl_file", "Read CTL File");
-  moduleKnob->enable(moduleSet);
+  modulePathEnabledKnob = Bool_knob(f, &modulePathEnabled, "enable_module_path", "Use Module Path");
+  modulePathKnob        = File_knob(f, &modulePath,        "module_path",        "Module Path");
+  modulePathKnob->enable(modulePathEnabled);
+	readKnob              = File_knob(f, &ctlPath,           "ctl_path",           "CTL file Path");
+  SetFlags(f, Knob::EARLY_STORE);
+  if (f.makeKnobs() && transform == NULL)
+  {
+    ;
+  }
+}
+
+void NukeCtlIop::load_transform(const char* const modulePath, const char* const ctlPath)
+{
+  try
+  {
+    transform = new NukeCtl::Transform(modulePath, ctlPath);
+  }
+  catch (const Iex::BaseExc& e)
+  {
+    error((string("Error instantiating CTL transform: ") + e.what()).c_str());
+  }
+  catch (const exception& e)
+  {
+    error((string("Error instantiating CTL transform: ") + e.what()).c_str());
+  }
+  catch (...)
+  {
+    error("Error instantiating CTL transform");
+  }
 }
 
 // Knob state changed
 int NukeCtlIop::knob_changed(Knob *k) {
   if (k == &Knob::showPanel) {
-    knob("module_path")->enable(moduleSet);
+    knob("module_path")->enable(modulePathEnabled);
     return 1;
   }
 
   // if the box is checked, enable or disable the set module knob
-  if (k->is("set_module_path")) {
-    knob("module_path")->enable(moduleSet);
+  if (k->is("enable_module_path")) {
+    knob("module_path")->enable(modulePathEnabled);
     return 1;
   }
   
   // if the module path is changed, make sure it is valid
 	if (k->is("module_path")) {
-    // TODO: Add something to check module path here
+    load_transform(modulePath, ctlPath);
 		return 1;
 	}
   
 	// If we read in a file, get the input parameters, display the ctl file to the text knob,
 	// and extract the user parameters from the input parameters.
-	if (k->is("read_ctl_file")) {
-    try
-    {
-      transform = new NukeCtl::Transform(modulePath, inFilename);
-    }
-    catch (const Iex::BaseExc& e)
-    {
-      error((string("Error instantiating CTL transform: ") + e.what()).c_str());
-    }
-    catch (const exception& e)
-    {
-      error((string("Error instantiating CTL transform: ") + e.what()).c_str());
-    }
-    catch (...)
-    {
-      error("Error instantiating CTL transform");
-    }
+	if (k->is("ctl_path")) {
+    load_transform(modulePath, ctlPath);
 		return 1;
 	}
 	return Iop::knob_changed(k);
