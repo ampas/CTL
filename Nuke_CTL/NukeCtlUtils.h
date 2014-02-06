@@ -33,7 +33,7 @@ namespace NukeCtl {
   filenameFromPathname(const std::string &path);
   
   std::string
-  modulenameFromFilename(const std::string& filename);
+  modulenameFromFilename(const std::string &filename);
   
 }
 

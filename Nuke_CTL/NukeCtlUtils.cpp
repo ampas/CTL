@@ -86,7 +86,7 @@ namespace NukeCtl {
   }
   
   string
-  modulenameFromFilename(const string& filename)
+  modulenameFromFilename(const string &filename)
   {
     // blank filename is an error
     string strippedFilename(trimRight(trimLeft(filename, "\t "), "\t "));

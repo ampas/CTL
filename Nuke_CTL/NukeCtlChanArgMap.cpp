@@ -6,8 +6,17 @@
 //  Copyright (c) 2013 ARRI Inc. All rights reserved.
 //
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#endif
+
 #include "NukeCtlChanArgMap.h"
 #include "Iex.h"
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 using namespace Ctl;
 using namespace DD::Image;
@@ -26,7 +35,6 @@ namespace NukeCtl
     argNameToChanName_["gOut"] = "g";
     argNameToChanName_["bOut"] = "b";
     argNameToChanName_["aOut"] = "a";
-    // We might be called multiple times if, say, execute() noticed that x and r had changed since a prior row was processed.
     chanToInArgData_.clear();
     outArgDataToChan_.clear();
     for (size_t i = 0, n = fn->numInputArgs(); i < n; ++i)
@@ -62,7 +70,7 @@ namespace NukeCtl
     }
   }
   
-  ChanArgMap::ChanArgMap(const ChanArgMap& c)
+  ChanArgMap::ChanArgMap(const ChanArgMap &c)
   : argNameToChanName_(c.argNameToChanName_),
     chanToInArgData_  (c.chanToInArgData_),
     outArgDataToChan_ (c.outArgDataToChan_)
@@ -70,7 +78,7 @@ namespace NukeCtl
   }
   
   ChanArgMap&
-  ChanArgMap::operator=(const ChanArgMap& rhs)
+  ChanArgMap::operator=(const ChanArgMap &rhs)
   {
     if (this != &rhs)
     {
@@ -82,25 +90,25 @@ namespace NukeCtl
   }
 
   void
-  ChanArgMap::copyInputRowToArgData(const DD::Image::Row& r, int x0, int x1)
+  ChanArgMap::copyInputRowToArgData(const DD::Image::Row &in, int x0, int x1)
   {
     for (map<Channel, char*>::const_iterator i = chanToInArgData_.begin(); i != chanToInArgData_.end(); ++i)
     {
       for (int j = x0, k = 0; j < x1; ++j, ++k)
       {
-        reinterpret_cast<half*>(i->second)[k] = r[i->first][j];
+        reinterpret_cast<half*>(i->second)[k] = in[i->first][j];
       }
     }
   }
   
   void
-  ChanArgMap::copyArgDataToOutputRow(int x0, int x1, DD::Image::Row& r)
+  ChanArgMap::copyArgDataToOutputRow(int x0, int x1, DD::Image::Row &out)
   {
     for (map<char*, Channel>::const_iterator i = outArgDataToChan_.begin(); i != outArgDataToChan_.end(); ++i)
     {
       for (int j = x0, k = 0; j < x1; ++j, ++k)
       {
-        r.writable(i->second)[j] = reinterpret_cast<half*>(i->first)[k];
+        out.writable(i->second)[j] = reinterpret_cast<half*>(i->first)[k];
       }
     }
   }

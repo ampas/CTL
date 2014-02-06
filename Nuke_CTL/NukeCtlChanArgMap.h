@@ -28,16 +28,16 @@ namespace NukeCtl
   public:
     ChanArgMap(Ctl::FunctionCallPtr fn);
     
-    ChanArgMap(const ChanArgMap& c);
+    ChanArgMap(const ChanArgMap &c);
     
     ChanArgMap&
-    operator=(const ChanArgMap& rhs);
+    operator=(const ChanArgMap &rhs);
     
     void
-    copyInputRowToArgData(const DD::Image::Row&, int x0, int x1);
+    copyInputRowToArgData(const DD::Image::Row &in, int x0, int x1);
     
     void
-    copyArgDataToOutputRow(int x0, int x1, DD::Image::Row&);
+    copyArgDataToOutputRow(int x0, int x1, DD::Image::Row &out);
     
   private:
     std::map<std::string, std::string> argNameToChanName_;
