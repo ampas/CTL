@@ -35,13 +35,13 @@ namespace NukeCtl
     Transform(const std::string &modulePath,
               const std::string &transformPath);
 
-    Transform(const Transform& transform);
+    Transform(const Transform &transform);
     
     Transform&
-    operator=(const Transform& rhs);
+    operator=(const Transform &rhs);
     
     void
-    execute(const DD::Image::Row& in, int l, int r, DD::Image::Row& out);
+    execute(const DD::Image::Row &in, int l, int r, DD::Image::Row &out);
   private:
     static
     const std::vector<std::string>
@@ -50,6 +50,18 @@ namespace NukeCtl
     static
     void
     verifyModuleName(const std::string &moduleName);
+    
+    static
+    bool
+    matchesCTLCannotFindFunctionExceptionText(const std::exception& e, const std::string &functionName);
+    
+    static
+    bool
+    matchesCTLCannotFindModuleExceptionText(const std::exception& e);
+    
+    static
+    const std::string
+    missingModuleFromException(const std::exception& e);
     
     Ctl::FunctionCallPtr
     topLevelFunctionInTransform();
