@@ -68,6 +68,27 @@ namespace NukeCtl
       return transform_.topLevelFunctionInTransform();
     }
     
+    static
+    bool
+    matchesCTLCannotFindFunctionExceptionText(const exception&e , const string &functionName)
+    {
+      return Transform::matchesCTLCannotFindFunctionExceptionText(e, functionName);
+    }
+    
+    static
+    bool
+    matchesCTLCannotFindModuleExceptionText(const exception &e)
+    {
+      return Transform::matchesCTLCannotFindModuleExceptionText(e);
+    }
+    
+    static
+    string
+    missingModuleFromException(const exception &e)
+    {
+      return Transform::missingModuleFromException(e);
+    }
+    
   private:
     Transform transform_;
   };
@@ -495,11 +516,64 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
   END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
 }
 
-- (void)testFindingTopLevelMainFunction
+- (void)testRecognizingCTLCannotFindFunctionExceptionText
+{
+  BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+  NSString* p = @"/tmp/genericFoo.ctl";
+  [self writeGenericTransformWithName:@"genericFoo" toPath:p];
+  SimdInterpreter interpreter;
+  interpreter.loadFile([p UTF8String]);
+  bool threwRecognizedError = false;
+  try {
+    FunctionCallPtr f = interpreter.newFunctionCall("main");
+  }
+  catch(const ArgExc& e)
+  {
+    threwRecognizedError = TransformFriend::matchesCTLCannotFindFunctionExceptionText(e, "main");
+  }
+  XCTAssert(threwRecognizedError, @"top-level function should not be found, neither as 'main' nor 'genericBaz'");
+  
+  END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+}
+
+- (void)testRecognizingCTLCannotFindModuleExceptionText
+{
+  BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+  bool threwRecognizedError = false;
+  try {
+    SimdInterpreter interpreter;
+    interpreter.loadModule("zzz");
+  }
+  catch(const ArgExc& e)
+  {
+    threwRecognizedError = TransformFriend::matchesCTLCannotFindModuleExceptionText(e);
+  }
+  XCTAssert(threwRecognizedError, @"Failure to find CTL module should throw recognizable error");
+  END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+}
+
+- (void)testExtractingCTLCannotFindModuleExceptionText
+{
+  BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+  bool threwRecognizedError = false;
+  try {
+    SimdInterpreter interpreter;
+    interpreter.loadModule("zzz");
+  }
+  catch(const ArgExc& e)
+  {
+    threwRecognizedError = TransformFriend::missingModuleFromException(e) == "zzz";
+  }
+  XCTAssert(threwRecognizedError, @"Failure to find CTL module should throw error from which we can extract module name");
+  END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+}
+
+- (void)testFindingTopLevelMainFunctionInGenericCode
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
   NSString* p = @"/tmp/genericMain.ctl";
   [self writeGenericTransformWithName:@"main" toPath:p];
+//  NSString* p = @"/usr/local/ctl/aces-dev/rrt/rrt.ctl";
   Transform transform("", [p UTF8String]);
   TransformFriend amigo(transform);
   FunctionCallPtr f = amigo.topLevelFunctionInTransform();
@@ -507,7 +581,7 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
   END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
 }
 
-- (void)testFindingTopLevelFooFunction
+- (void)testFindingTopLevelFooFunctionInGenericCode
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
   NSString* p = @"/tmp/genericFoo.ctl";
@@ -523,7 +597,7 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
   END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
 }
 
-- (void)testNotFindingTopLevelFunction
+- (void)testNotFindingTopLevelFunctionInGenericCode
 {
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
   NSString* p = @"/tmp/genericBar.ctl";
@@ -542,6 +616,42 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
   END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
 }
 
+- (void)testFindingRRTWhenModulePathSet
+{
+  BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+  NSString* p = @"/tmp/rrt.ctl";
+  bool threw = false;
+  try {
+  Transform transform("/tmp", [p UTF8String]);
+  TransformFriend amigo(transform);
+  FunctionCallPtr f = amigo.topLevelFunctionInTransform();
+  XCTAssert(f.refcount() != 0, @"top-level 'main' function should be visible");
+  }
+  catch(const BaseExc& e)
+  {
+    threw = true;
+  }
+  END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+}
+
+- (void)testFindingRRTWhenModulePathNotSet
+{
+  BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+  NSString* p = @"/tmp/rrt.ctl";
+  ofstream s([p UTF8String]);
+  bool threw = false;
+  try {
+    Transform transform("/var/tmp", [p UTF8String]);
+    TransformFriend amigo(transform);
+    FunctionCallPtr f = amigo.topLevelFunctionInTransform();
+  }
+  catch(const BaseExc& e)
+  {
+    threw = true;
+  }
+  XCTAssert(threw, @"RRT failing to find utilities modules should have been grounds for an exception, but none was thrown");
+  END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
+}
 
 - (void)testTopLevelFunctionNotReturningVoidThrows
 {
