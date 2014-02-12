@@ -85,7 +85,7 @@ namespace NukeCtl
     {
       for (int j = x0, k = 0; j < x1; ++j, ++k)
       {
-        reinterpret_cast<half*>(i->second)[k] = in[i->first][j];
+        reinterpret_cast<float*>(i->second)[k] = in[i->first][j];
       }
     }
   }
@@ -97,7 +97,7 @@ namespace NukeCtl
     {
       for (int j = x0, k = 0; j < x1; ++j, ++k)
       {
-        out.writable(i->second)[j] = reinterpret_cast<half*>(i->first)[k];
+        out.writable(i->second)[j] = reinterpret_cast<float*>(i->first)[k];
       }
     }
   }
