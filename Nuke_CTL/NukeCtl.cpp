@@ -95,19 +95,6 @@ void NukeCtlIop::pixel_engine(const Row& in, int y, int x, int r, ChannelMask ch
   }
 }
 
-void NukeCtlIop::knobs(Knob_Callback f) {
-  
-  modulePathEnabledKnob = Bool_knob(f, &modulePathEnabled, "enable_module_path", "Use Module Path");
-  modulePathKnob        = File_knob(f, &modulePath,        "module_path",        "Module Path");
-  modulePathKnob->enable(modulePathEnabled);
-	readKnob              = File_knob(f, &ctlPath,           "ctl_path",           "CTL file Path");
-  SetFlags(f, Knob::EARLY_STORE);
-  if (f.makeKnobs() && transform == NULL)
-  {
-    ;
-  }
-}
-
 void NukeCtlIop::load_transform(const char* const modulePath, const char* const ctlPath)
 {
   try
@@ -128,6 +115,19 @@ void NukeCtlIop::load_transform(const char* const modulePath, const char* const 
   }
 }
 
+void NukeCtlIop::knobs(Knob_Callback f) {
+  
+  modulePathEnabledKnob = Bool_knob(f, &modulePathEnabled, "enable_module_path", "Use Module Path");
+  modulePathKnob        = File_knob(f, &modulePath,        "module_path",        "Module Path");
+  modulePathKnob->enable(modulePathEnabled);
+	readKnob              = File_knob(f, &ctlPath,           "ctl_path",           "CTL file Path");
+  SetFlags(f, Knob::EARLY_STORE);
+  if (f.makeKnobs() && transform == NULL && strlen(ctlPath) > 0)
+  {
+    load_transform(modulePath, ctlPath);
+  }
+}
+
 // Knob state changed
 int NukeCtlIop::knob_changed(Knob *k) {
   if (k == &Knob::showPanel) {
@@ -143,14 +143,20 @@ int NukeCtlIop::knob_changed(Knob *k) {
   
   // if the module path is changed, make sure it is valid
 	if (k->is("module_path")) {
-    load_transform(modulePath, ctlPath);
+    if (strlen(ctlPath) > 0)
+    {
+      load_transform(modulePath, ctlPath);
+    }
 		return 1;
 	}
   
 	// If we read in a file, get the input parameters, display the ctl file to the text knob,
 	// and extract the user parameters from the input parameters.
 	if (k->is("ctl_path")) {
-    load_transform(modulePath, ctlPath);
+    if (strlen(ctlPath) > 0)
+    {
+      load_transform(modulePath, ctlPath);
+    }
 		return 1;
 	}
 	return Iop::knob_changed(k);
