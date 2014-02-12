@@ -28,10 +28,6 @@ namespace NukeCtl
   public:
     ChanArgMap(Ctl::FunctionCallPtr fn);
     
-    ChanArgMap(const ChanArgMap &c);
-    
-    ChanArgMap&
-    operator=(const ChanArgMap &rhs);
     
     void
     copyInputRowToArgData(const DD::Image::Row &in, int x0, int x1);
@@ -44,6 +40,13 @@ namespace NukeCtl
     
     std::map<DD::Image::Channel, char*> chanToInArgData_;
     std::map<char*, DD::Image::Channel> outArgDataToChan_;
+    
+    // These member functions are not implemented, but are declared to avoid the compiler
+    // from producing them for us automatically.
+    ChanArgMap(const ChanArgMap &c);
+    
+    ChanArgMap&
+    operator=(const ChanArgMap &rhs);
   };
 }
 

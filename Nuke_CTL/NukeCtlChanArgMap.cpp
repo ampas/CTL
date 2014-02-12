@@ -70,25 +70,6 @@ namespace NukeCtl
     }
   }
   
-  ChanArgMap::ChanArgMap(const ChanArgMap &c)
-  : argNameToChanName_(c.argNameToChanName_),
-    chanToInArgData_  (c.chanToInArgData_),
-    outArgDataToChan_ (c.outArgDataToChan_)
-  {
-  }
-  
-  ChanArgMap&
-  ChanArgMap::operator=(const ChanArgMap &rhs)
-  {
-    if (this != &rhs)
-    {
-      argNameToChanName_ = rhs.argNameToChanName_;
-      chanToInArgData_   = rhs.chanToInArgData_;
-      outArgDataToChan_  = rhs.outArgDataToChan_;
-    }
-    return *this;
-  }
-
   void
   ChanArgMap::copyInputRowToArgData(const DD::Image::Row &in, int x0, int x1)
   {
