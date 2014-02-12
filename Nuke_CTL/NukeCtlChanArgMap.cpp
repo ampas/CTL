@@ -60,6 +60,14 @@ namespace NukeCtl
     for (size_t i = 0, n = fn->numOutputArgs(); i < n; ++i)
     {
       FunctionArgPtr arg = fn->outputArg(i);
+      if (! arg)
+      {
+        THROW(LogicExc, "CTL function claims " << n << " output arguments but cannot get info for output arg " << i);
+      }
+      if (! arg->isVarying())
+      {
+        THROW(LogicExc, "CTL function output argument " << arg->name() << " is not a varying parameter");
+      }
       map<string, string>::const_iterator j = argNameToChanName_.find(arg->name());
       if (j == argNameToChanName_.end())
       {
