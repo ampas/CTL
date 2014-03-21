@@ -40,16 +40,17 @@ private:
 	const char *modulePath;
 	const char *ctlPath;
   NukeCtl::Transform* transform;
+  int reloadCount;
 public:
 	
   NukeCtlIop(Node* node) : PixelIop(node),
     modulePathEnabled(false), modulePath(""), ctlPath(""),
-    transform(NULL) {
+    transform(NULL), reloadCount(0) {
   }
   
   static const Iop::Description d;
   void in_channels(int input_number, ChannelSet& channels) const {
-    //channels = Mask_RGBA;
+    channels = Mask_RGBA;
   }
   
   void append(Hash& h) {
@@ -99,6 +100,11 @@ void NukeCtlIop::load_transform(const char* const modulePath, const char* const 
 {
   try
   {
+    if (transform != NULL)
+    {
+      delete transform;
+      transform = NULL;
+    }
     transform = new NukeCtl::Transform(modulePath, ctlPath);
   }
   catch (const Iex::BaseExc& e)
@@ -116,20 +122,25 @@ void NukeCtlIop::load_transform(const char* const modulePath, const char* const 
 }
 
 void NukeCtlIop::knobs(Knob_Callback f) {
-  
-  modulePathEnabledKnob = Bool_knob(f, &modulePathEnabled, "enable_module_path", "Use Module Path");
-  modulePathKnob        = File_knob(f, &modulePath,        "module_path",        "Module Path");
-  modulePathKnob->enable(modulePathEnabled);
+  Newline(f, "Module Path");
+  modulePathEnabledKnob = Bool_knob(f, &modulePathEnabled, "enable_module_path", "");
+  modulePathKnob        = File_knob(f, &modulePath,        "module_path",        "");
+  ClearFlags(f, Knob::STARTLINE);
 	readKnob              = File_knob(f, &ctlPath,           "ctl_path",           "CTL file Path");
   SetFlags(f, Knob::EARLY_STORE);
   if (f.makeKnobs() && transform == NULL && strlen(ctlPath) > 0)
   {
     load_transform(modulePath, ctlPath);
   }
+  Script_knob(f, "knob reload_count [expr [value reload_count] + 1]", "reload");
+  Int_knob(f, &reloadCount, "reload_count", INVISIBLE);
+  SetFlags(f, Knob::DO_NOT_WRITE);
+  Divider(f);
 }
 
 // Knob state changed
 int NukeCtlIop::knob_changed(Knob *k) {
+  
   if (k == &Knob::showPanel) {
     knob("module_path")->enable(modulePathEnabled);
     return 1;
@@ -149,10 +160,8 @@ int NukeCtlIop::knob_changed(Knob *k) {
     }
 		return 1;
 	}
-  
-	// If we read in a file, get the input parameters, display the ctl file to the text knob,
-	// and extract the user parameters from the input parameters.
-	if (k->is("ctl_path")) {
+
+	if (k->is("ctl_path") || k->is("reload")) {
     if (strlen(ctlPath) > 0)
     {
       load_transform(modulePath, ctlPath);
