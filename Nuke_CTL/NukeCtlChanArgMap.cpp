@@ -35,8 +35,8 @@ namespace NukeCtl
     argNameToChanName_["gOut"] = "g";
     argNameToChanName_["bOut"] = "b";
     argNameToChanName_["aOut"] = "a";
-    chanToInArgData_.clear();
-    outArgDataToChan_.clear();
+    chanToInArg_.clear();
+    outArgToChan_.clear();
     for (size_t i = 0, n = fn->numInputArgs(); i < n; ++i)
     {
       FunctionArgPtr arg = fn->inputArg(i);
@@ -55,7 +55,7 @@ namespace NukeCtl
       }
       Channel c = findChannel(j->second.c_str());
       // TODO: Find out what findChannel returns if you ask for something it doesn't have, and throw an appropriate error.
-      chanToInArgData_[c] = arg->data();
+      chanToInArg_[c] = arg;
     }
     for (size_t i = 0, n = fn->numOutputArgs(); i < n; ++i)
     {
@@ -74,31 +74,35 @@ namespace NukeCtl
         THROW(LogicExc, "Could not find expected Nuke channel name for CTL "
               "function output arg name '" << arg->name() << "'");
       }
-      outArgDataToChan_[arg->data()] = findChannel(j->second.c_str());
+      outArgToChan_[arg] = findChannel(j->second.c_str());
     }
   }
   
   void
   ChanArgMap::copyInputRowToArgData(const DD::Image::Row &in, int x0, int x1)
   {
-    for (map<Channel, char*>::const_iterator i = chanToInArgData_.begin(); i != chanToInArgData_.end(); ++i)
+    for (map<Channel, FunctionArgPtr>::const_iterator i = chanToInArg_.begin(); i != chanToInArg_.end(); ++i)
     {
-      for (int j = x0, k = 0; j < x1; ++j, ++k)
-      {
-        reinterpret_cast<float*>(i->second)[k] = in[i->first][j];
-      }
+      Channel channel = i->first;
+      FunctionArgPtr arg = i->second;
+      size_t src_stride = sizeof(float);
+      size_t dst_offset = 0;
+      size_t count = (x1 - x0) + 1;
+      arg->set(in[channel] + x0, src_stride, dst_offset, count);
     }
   }
   
   void
   ChanArgMap::copyArgDataToOutputRow(int x0, int x1, DD::Image::Row &out)
   {
-    for (map<char*, Channel>::const_iterator i = outArgDataToChan_.begin(); i != outArgDataToChan_.end(); ++i)
+    for (map<FunctionArgPtr, Channel>::const_iterator i = outArgToChan_.begin(); i != outArgToChan_.end(); ++i)
     {
-      for (int j = x0, k = 0; j < x1; ++j, ++k)
-      {
-        out.writable(i->second)[j] = reinterpret_cast<float*>(i->first)[k];
-      }
+      FunctionArgPtr arg = i->first;
+      Channel channel = i->second;
+      size_t dst_stride = sizeof(float);
+      size_t src_offset = 0;
+      size_t count = (x1 - x0) + 1;
+      arg->get(out.writable(channel) + x0, dst_stride, src_offset, count);
     }
   }
 
