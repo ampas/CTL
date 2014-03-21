@@ -13,11 +13,10 @@
 #include <CtlSimdInterpreter.h>
 #include <CtlFunctionCall.h>
 
-#include <vector>
-#include <string>
-
 #include "NukeCtlChanArgMap.h"
 
+#include <vector>
+#include <string>
 
 namespace NukeCtl
 {
@@ -63,24 +62,27 @@ namespace NukeCtl
     const std::string
     missingModuleFromException(const std::exception& e);
     
+    static
     Ctl::FunctionCallPtr
-    topLevelFunctionInTransform();
+    topLevelFunctionInTransform(SimdInterpreterPtr i, const std::string& p);
     
     void
     loadArgMap();
     
     std::vector<std::string>  modulePathComponents_;
+    
     // Keeping this in the heap makes it possible to share it between the Transform
     // and TransformFriend (which gets used in unit testing).
+     SimdInterpreterPtr        interpreter_;
+    
     // On the other hand, you do NOT want to try anything comparable for sharing
     // functional calls with Ctl::FunctionCallPtr. That sort of thing will work in
     // unit testing, which is single-threaded, but Nuke has multiple threads sharing
     // from a single Nuke Op.
-    SimdInterpreterPtr        interpreter_;
-
-    // Forensics
-    std::string               transformPath_;
     
+    // transformPath_ is not used at runtime but is handy for forensics
+    std::string               transformPath_;
+
   };
 }
 

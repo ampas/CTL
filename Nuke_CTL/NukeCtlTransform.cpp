@@ -85,43 +85,43 @@ namespace NukeCtl
   }
   
   FunctionCallPtr
-  Transform::topLevelFunctionInTransform()
+  Transform::topLevelFunctionInTransform(SimdInterpreterPtr i, const string& p)
   {
     FunctionCallPtr functionCall;
     try {
-      functionCall = interpreter_->newFunctionCall("main");
+      functionCall = i->newFunctionCall("main");
     } catch (const ArgExc &e) {
       // There is no CTL exception specific to this problem, so we use secret knowledge (i.e. we peek at the source)
       // to see exactly what the CTL interpreter would do if the module cannot be found. And what it does is throw
       // ArgExc with the what() string having the form "Cannot find CTL function <foo>."
       if (matchesCTLCannotFindFunctionExceptionText(e, "main"))
       {
-        string moduleName(modulenameFromFilename(filenameFromPathname(transformPath_)));
+        string moduleName(modulenameFromFilename(filenameFromPathname(p)));
         try {
-          functionCall = interpreter_->newFunctionCall(moduleName);
+          functionCall = i->newFunctionCall(moduleName);
         } catch (const exception &e) {
           if (matchesCTLCannotFindFunctionExceptionText(e, moduleName))
           {
-            THROW(ArgExc, "CTL file at '" << transformPath_ << "' has neither a main function nor one named '" << moduleName << "'");
+            THROW(ArgExc, "CTL file at '" << p << "' has neither a main function nor one named '" << moduleName << "'");
           } else if (matchesCTLCannotFindModuleExceptionText(e))
           {
             string missingModule(missingModuleFromException(e));
-            THROW(ArgExc, "Module '" << missingModule << "' not in the module path; referenced by " << moduleName << " function in CTL file '" << transformPath_ << "'");
+            THROW(ArgExc, "Module '" << missingModule << "' not in the module path; referenced by " << moduleName << " function in CTL file '" << p << "'");
           }
           else
           {
-            THROW(ArgExc, "Error searching for function 'main' and function '" << moduleName << "' in CTL file '" << transformPath_ << "': " << e.what());
+            THROW(ArgExc, "Error searching for function 'main' and function '" << moduleName << "' in CTL file '" << p << "': " << e.what());
           }
         }
       }
       else if (matchesCTLCannotFindModuleExceptionText(e))
       {
         string missingModule(missingModuleFromException(e));
-        THROW(ArgExc, "Module '" << missingModule << "' not in the module path; referenced by main function in CTL file '" << transformPath_ << "'");
+        THROW(ArgExc, "Module '" << missingModule << "' not in the module path; referenced by main function in CTL file '" << p << "'");
       }
       else
       {
-        THROW(ArgExc, "Error searching for function 'main' in CTL file '" << transformPath_ << "': " << e.what());
+        THROW(ArgExc, "Error searching for function 'main' in CTL file '" << p << "': " << e.what());
       }
     }
     return functionCall;
@@ -135,8 +135,18 @@ namespace NukeCtl
   {
     // be diligent about not having bad parameters or state crash all of Nuke.
     // TODO: Transform ctor should have separate 'wrapper' try/catch blocks around its various steps.
-    interpreter_->setUserModulePath(modulePathComponents_, modulePathComponents_.size() > 0);
-    interpreter_->loadFile(transformPath);
+    try {
+      interpreter_->setUserModulePath(modulePathComponents_, modulePathComponents_.size() > 0);
+    }
+    catch (const BaseExc& e)
+    {
+      THROW(ArgExc, "error setting CTL module path `" << modulePath << "': " << e.what());
+    }
+    try {
+      interpreter_->loadFile(transformPath_);
+    } catch (const BaseExc& e) {
+      THROW(ArgExc, "error loading CTL transform from path `" << transformPath_ << ": " << e.what());
+    }
   }
   
   Transform::Transform(const Transform &transform)
@@ -161,20 +171,41 @@ namespace NukeCtl
   void
   Transform::execute(const Row &in, int l, int r, Row &out)
   {
-    FunctionCallPtr functionCall = topLevelFunctionInTransform();
-    if (functionCall->returnValue()->type().cast<Ctl::VoidType>().refcount() == 0)
-    {
-      THROW(ArgExc, "top-level function of CTL file at '" << transformPath_
-            << "' returns other than void type");
+    // Although it doubtless looks tempting to create the function call and argument map
+    // just once, at transform ctor time, and avoid the expense on each call to this
+    // execute() function...you can't. As per page 17 of the CTL manual (24/07/2007 edition)
+    // function call objects are not thread-safe. Interpreters (or at least the reference
+    // SIMD interpreter) ARE thread-safe, so it's cool to stash an interpreter as CtlTransform
+    // member variable and share it...but stay away from FunctionCallPtr member variables in
+    // CtlTransform objects, and since they point into such objects, from ArgMap member
+    // variables as well.
+    
+    try {
+      FunctionCallPtr fn = topLevelFunctionInTransform(interpreter_, transformPath_);
+      if (fn->returnValue()->type().cast<Ctl::VoidType>().refcount() == 0)
+      {
+        THROW(ArgExc, "top-level function of CTL file at '" << transformPath_
+              << "' returns other than void type");
+      }
+      try {
+        ChanArgMap argMap(fn);
+        for (int x = l; x < r;)
+        {
+          int chunkSize = min(r - x, static_cast<int>(interpreter_->maxSamples()));
+          argMap.copyInputRowToArgData(in, x, x + chunkSize);
+          fn->callFunction(chunkSize);
+          argMap.copyArgDataToOutputRow(x, x + chunkSize, out);
+          x += chunkSize;
+        }
+      }
+      catch (const BaseExc& e)
+      {
+        THROW(LogicExc, "could not construct argument map for CTL transform loaded from path `" << transformPath_ << ": " << e.what());
+      }
     }
-    ChanArgMap argMap(functionCall);
-    for (int x = l; x < r;)
+    catch (const BaseExc& e)
     {
-      int chunkSize = min(r - x, static_cast<int>(interpreter_->maxSamples()));
-      argMap.copyInputRowToArgData(in, x, x + chunkSize);
-      functionCall->callFunction(chunkSize);
-      argMap.copyArgDataToOutputRow(x, x + chunkSize, out);
-      x += chunkSize;
+      THROW(ArgExc, "error finding top-level function in CTL transform loaded from path `" << transformPath_ << ": " << e.what());
     }
   }
   
