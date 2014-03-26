@@ -138,7 +138,6 @@ namespace NukeCtl
     transformPath_(transformPath)
   {
     // be diligent about not having bad parameters or state crash all of Nuke.
-    // TODO: Transform ctor should have separate 'wrapper' try/catch blocks around its various steps.
     try {
       interpreter_->setUserModulePath(modulePathComponents_, modulePathComponents_.size() > 0);
     }
@@ -183,7 +182,8 @@ namespace NukeCtl
         ChanArgMap argMap(fn);
         for (int x = l; x < r;)
         {
-          int chunkSize = min(r - x, static_cast<int>(interpreter_->maxSamples()));
+          int maxSamples = static_cast<int>(interpreter_->maxSamples());
+          int chunkSize = min(r - x, maxSamples);
           argMap.copyInputRowToArgData(in, x, x + chunkSize);
           fn->callFunction(chunkSize);
           argMap.copyArgDataToOutputRow(x, x + chunkSize, out);
