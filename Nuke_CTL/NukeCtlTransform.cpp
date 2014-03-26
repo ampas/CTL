@@ -84,48 +84,52 @@ namespace NukeCtl
     return exceptionText.substr(i, j-i);
   }
   
-  FunctionCallPtr
-  Transform::topLevelFunctionInTransform(SimdInterpreterPtr i, const string& p)
+  const string
+  Transform::topLevelFunctionNameInTransform()
   {
     FunctionCallPtr functionCall;
     try {
-      functionCall = i->newFunctionCall("main");
-    } catch (const ArgExc &e) {
+      functionCall = interpreter_->newFunctionCall("main");
+    }
+    catch (const ArgExc &e)
+    {
       // There is no CTL exception specific to this problem, so we use secret knowledge (i.e. we peek at the source)
       // to see exactly what the CTL interpreter would do if the module cannot be found. And what it does is throw
       // ArgExc with the what() string having the form "Cannot find CTL function <foo>."
       if (matchesCTLCannotFindFunctionExceptionText(e, "main"))
       {
-        string moduleName(modulenameFromFilename(filenameFromPathname(p)));
+        string moduleName(modulenameFromFilename(filenameFromPathname(transformPath_)));
         try {
-          functionCall = i->newFunctionCall(moduleName);
+          functionCall = interpreter_->newFunctionCall(moduleName);
+          return moduleName;
         } catch (const exception &e) {
           if (matchesCTLCannotFindFunctionExceptionText(e, moduleName))
           {
-            THROW(ArgExc, "CTL file at '" << p << "' has neither a main function nor one named '" << moduleName << "'");
+            THROW(ArgExc, "CTL file at '" << transformPath_ << "' has neither a main function nor one named '" << moduleName << "'");
           } else if (matchesCTLCannotFindModuleExceptionText(e))
           {
             string missingModule(missingModuleFromException(e));
-            THROW(ArgExc, "Module '" << missingModule << "' not in the module path; referenced by " << moduleName << " function in CTL file '" << p << "'");
+            THROW(ArgExc, "Module '" << missingModule << "' not in the module path; referenced by " << moduleName << " function in CTL file '" << transformPath_ << "'");
           }
           else
           {
-            THROW(ArgExc, "Error searching for function 'main' and function '" << moduleName << "' in CTL file '" << p << "': " << e.what());
+            THROW(ArgExc, "Error searching for function 'main' and function '" << moduleName << "' in CTL file '" << transformPath_ << "': " << e.what());
           }
         }
       }
       else if (matchesCTLCannotFindModuleExceptionText(e))
       {
         string missingModule(missingModuleFromException(e));
-        THROW(ArgExc, "Module '" << missingModule << "' not in the module path; referenced by main function in CTL file '" << p << "'");
+        THROW(ArgExc, "Module '" << missingModule << "' not in the module path; referenced by main function in CTL file '" << transformPath_ << "'");
       }
       else
       {
-        THROW(ArgExc, "Error searching for function 'main' in CTL file '" << p << "': " << e.what());
+        THROW(ArgExc, "Error searching for function 'main' in CTL file '" << transformPath_ << "': " << e.what());
       }
     }
-    return functionCall;
+    return "main";
   }
+
   
   Transform::Transform(const string &modulePath,
                        const string &transformPath)
@@ -144,8 +148,15 @@ namespace NukeCtl
     }
     try {
       interpreter_->loadFile(transformPath_);
+      try {
+        functionName_ = topLevelFunctionNameInTransform();
+      }
+      catch (const BaseExc& e)
+      {
+        THROW(ArgExc, "error finding top-level function name in transform at path 1" << transformPath_ << "': " << e.what());
+      }
     } catch (const BaseExc& e) {
-      THROW(ArgExc, "error loading CTL transform from path `" << transformPath_ << ": " << e.what());
+      THROW(ArgExc, "error loading CTL transform from path `" << transformPath_ << "': " << e.what());
     }
   }
   
@@ -162,7 +173,7 @@ namespace NukeCtl
     // variables as well.
     
     try {
-      FunctionCallPtr fn = topLevelFunctionInTransform(interpreter_, transformPath_);
+      FunctionCallPtr fn(interpreter_->newFunctionCall(functionName_));
       if (fn->returnValue()->type().cast<Ctl::VoidType>().refcount() == 0)
       {
         THROW(ArgExc, "top-level function of CTL file at '" << transformPath_

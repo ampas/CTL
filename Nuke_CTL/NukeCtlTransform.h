@@ -57,9 +57,8 @@ namespace NukeCtl
     const std::string
     missingModuleFromException(const std::exception& e);
     
-    static
-    Ctl::FunctionCallPtr
-    topLevelFunctionInTransform(SimdInterpreterPtr i, const std::string& p);
+    const std::string
+    topLevelFunctionNameInTransform();
     
     void
     loadArgMap();
@@ -77,6 +76,7 @@ namespace NukeCtl
     
     // transformPath_ is not used at runtime but is handy for forensics
     std::string               transformPath_;
+    std::string               functionName_;
 
     // Make this private, and don't implement them - that way we know that the compiler
     // isn't doing anything odd.
