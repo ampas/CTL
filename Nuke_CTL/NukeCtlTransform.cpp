@@ -149,25 +149,6 @@ namespace NukeCtl
     }
   }
   
-  Transform::Transform(const Transform &transform)
-  : modulePathComponents_(transform.modulePathComponents_),
-    interpreter_(transform.interpreter_),
-    transformPath_(transform.transformPath_)
-  {
-  }
-  
-  Transform&
-  Transform::operator=(const Transform &rhs)
-  {
-    if (this != &rhs)
-    {
-      modulePathComponents_ = rhs.modulePathComponents_;
-      interpreter_          = rhs.interpreter_;
-      transformPath_        = rhs.transformPath_;
-    }
-    return *this;
-  }
-
   void
   Transform::execute(const Row &in, int l, int r, Row &out)
   {

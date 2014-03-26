@@ -34,11 +34,6 @@ namespace NukeCtl
     Transform(const std::string &modulePath,
               const std::string &transformPath);
 
-    Transform(const Transform &transform);
-    
-    Transform&
-    operator=(const Transform &rhs);
-    
     void
     execute(const DD::Image::Row &in, int l, int r, DD::Image::Row &out);
   private:
@@ -83,6 +78,15 @@ namespace NukeCtl
     // transformPath_ is not used at runtime but is handy for forensics
     std::string               transformPath_;
 
+    // Make this private, and don't implement them - that way we know that the compiler
+    // isn't doing anything odd.
+    Transform(const Transform &transform);
+    
+    // Make this private, and don't implement them - that way we know that the compiler
+    // isn't doing anything odd.
+    Transform&
+    operator=(const Transform &rhs);
+    
   };
 }
 
