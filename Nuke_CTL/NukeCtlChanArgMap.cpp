@@ -87,7 +87,7 @@ namespace NukeCtl
       FunctionArgPtr arg = i->second;
       size_t src_stride = sizeof(float);
       size_t dst_offset = 0;
-      size_t count = (x1 - x0) + 1;
+      size_t count = x1 - x0;
       arg->set(in[channel] + x0, src_stride, dst_offset, count);
     }
   }
@@ -101,7 +101,7 @@ namespace NukeCtl
       Channel channel = i->second;
       size_t dst_stride = sizeof(float);
       size_t src_offset = 0;
-      size_t count = (x1 - x0) + 1;
+      size_t count = x1 - x0;
       arg->get(out.writable(channel) + x0, dst_stride, src_offset, count);
     }
   }
