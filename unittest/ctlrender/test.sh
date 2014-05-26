@@ -1,4 +1,5 @@
 #! /bin/bash
+CTLRENDER=$1
 
 mkdir output
 
@@ -7,10 +8,10 @@ for J in tiff8 tiff16 tiff32 dpx8 dpx10 dpx12 dpx16; do
 		name=`echo $I | sed -e 's/\..*//'`
 		ext=`echo $J | sed -e 's/[0-9]//g'`
 		echo ${I} '->' ${J}
-		ctlrender -ctl unity.ctl -format ${J} -force ${I} output/${name}_${J}.${ext}
+		$CTLRENDER -ctl unity.ctl -format ${J} -force ${I} output/${name}_${J}.${ext}
 	done
 	echo ${J} unity test
-	ctlrender -ctl unity.ctl -format ${J} -force bars_photoshop_32_be_planar.tif output/bars_tiff32_${J}.${ext}
-	ctlrender -ctl unity.ctl -format tiff32 -force output/bars_tiff32_${J}.${ext} output/bars_tiff32_${J}_tiff32.tiff
+	$CTLRENDER -ctl unity.ctl -format ${J} -force bars_photoshop_32_be_planar.tif output/bars_tiff32_${J}.${ext}
+	$CTLRENDER -ctl unity.ctl -format tiff32 -force output/bars_tiff32_${J}.${ext} output/bars_tiff32_${J}_tiff32.tiff
 done
 
