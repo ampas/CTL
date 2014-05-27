@@ -126,7 +126,29 @@ commands below.
             
     * Install OpenEXR
     
-            $ brew install openexr
+            $ brew install openexr                        
+
+__TIFF__
+
+If you want to use CTL together with the TIFF image file format, you should download libTiff. libTiff can be downloaded from http://www.remotesensing.org/libtiff/ or using one of the commands below.
+
+* Ubuntu
+
+        $ sudo apt-get install libtiff4
+
+* Redhat
+
+        $ yum install libtiff4
+
+* OS X
+
+    * Install homebrew if not already installed
+
+            $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+            
+    * Install OpenEXR
+    
+            $ brew install libtiff                        
 
 __ACES Container__
 
@@ -154,7 +176,7 @@ can be downloaded from https://github.com/ampas/aces_container
             
     * Install CTL
     
-        Homebrew will install all dependancies (cmake, ilmbase, opener, aces_container) automatically by default.  No need to install each manually.
+        Homebrew will install all dependancies (cmake, ilmbase, opener, aces_container, libtiff) automatically by default.  No need to install each manually.
     
             $ brew install ctl
 
