@@ -146,7 +146,7 @@ If you want to use CTL together with the TIFF image file format, you should down
 
             $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
             
-    * Install OpenEXR
+    * Install TIFF
     
             $ brew install libtiff                        
 
