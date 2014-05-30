@@ -26,22 +26,20 @@
 		594B4E4F18134E6B003C263C /* libGLEW.1.5.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E4B18134E6B003C263C /* libGLEW.1.5.8.dylib */; };
 		594B4E5018134E6B003C263C /* libRIPFramework.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E4C18134E6B003C263C /* libRIPFramework.dylib */; };
 		594B4E5118134E6B003C263C /* libtcmalloc_minimal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E4D18134E6B003C263C /* libtcmalloc_minimal.dylib */; };
-		594B4E5718134F86003C263C /* libHalf.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5218134F86003C263C /* libHalf.10.dylib */; };
-		594B4E5D18134FD6003C263C /* libIlmCtlMath.1.5.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5C18134FD6003C263C /* libIlmCtlMath.1.5.0.dylib */; };
-		594B4E6018134FF5003C263C /* libIlmCtl.1.5.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5E18134FF5003C263C /* libIlmCtl.1.5.0.dylib */; };
+		594B4E5718134F86003C263C /* libHalf.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5218134F86003C263C /* libHalf.11.dylib */; };
+		594B4E5D18134FD6003C263C /* libIlmCtlSimd.1.5.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5C18134FD6003C263C /* libIlmCtlSimd.1.5.0.dylib */; };
 		594B4E6118134FF5003C263C /* libIlmCtlSimd.1.5.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5F18134FF5003C263C /* libIlmCtlSimd.1.5.0.dylib */; };
-		594B4E661813519E003C263C /* libIex-2_0.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E621813519E003C263C /* libIex-2_0.10.dylib */; };
-		594B4E671813519E003C263C /* libIexMath-2_0.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E631813519E003C263C /* libIexMath-2_0.10.dylib */; };
-		594B4E681813519E003C263C /* libIlmThread-2_0.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E641813519E003C263C /* libIlmThread-2_0.10.dylib */; };
-		594B4E691813519E003C263C /* libImath-2_0.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E651813519E003C263C /* libImath-2_0.10.dylib */; };
-		594B4E6A181351EF003C263C /* libIex-2_0.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E621813519E003C263C /* libIex-2_0.10.dylib */; };
-		594B4E6B181351EF003C263C /* libIexMath-2_0.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E631813519E003C263C /* libIexMath-2_0.10.dylib */; };
-		594B4E6C181351EF003C263C /* libIlmThread-2_0.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E641813519E003C263C /* libIlmThread-2_0.10.dylib */; };
-		594B4E6D181351EF003C263C /* libImath-2_0.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E651813519E003C263C /* libImath-2_0.10.dylib */; };
-		594B4E6E181351EF003C263C /* libIlmCtl.1.5.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5E18134FF5003C263C /* libIlmCtl.1.5.0.dylib */; };
+		594B4E661813519E003C263C /* libIex-2_1.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E621813519E003C263C /* libIex-2_1.11.dylib */; };
+		594B4E671813519E003C263C /* libIexMath-2_1.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E631813519E003C263C /* libIexMath-2_1.11.dylib */; };
+		594B4E681813519E003C263C /* libIlmThread-2_1.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E641813519E003C263C /* libIlmThread-2_1.11.dylib */; };
+		594B4E691813519E003C263C /* libIlmCtl.1.5.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E651813519E003C263C /* libIlmCtl.1.5.0.dylib */; };
+		594B4E6A181351EF003C263C /* libIex-2_1.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E621813519E003C263C /* libIex-2_1.11.dylib */; };
+		594B4E6B181351EF003C263C /* libIexMath-2_1.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E631813519E003C263C /* libIexMath-2_1.11.dylib */; };
+		594B4E6C181351EF003C263C /* libIlmThread-2_1.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E641813519E003C263C /* libIlmThread-2_1.11.dylib */; };
+		594B4E6D181351EF003C263C /* libIlmCtl.1.5.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E651813519E003C263C /* libIlmCtl.1.5.0.dylib */; };
 		594B4E6F181351F0003C263C /* libIlmCtlSimd.1.5.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5F18134FF5003C263C /* libIlmCtlSimd.1.5.0.dylib */; };
-		594B4E70181351F0003C263C /* libIlmCtlMath.1.5.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5C18134FD6003C263C /* libIlmCtlMath.1.5.0.dylib */; };
-		594B4E71181351F0003C263C /* libHalf.10.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5218134F86003C263C /* libHalf.10.dylib */; };
+		594B4E70181351F0003C263C /* libIlmCtlSimd.1.5.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5C18134FD6003C263C /* libIlmCtlSimd.1.5.0.dylib */; };
+		594B4E71181351F0003C263C /* libHalf.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5218134F86003C263C /* libHalf.11.dylib */; };
 		594B4E72181351F0003C263C /* libDDImage.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E4A18134E6B003C263C /* libDDImage.dylib */; };
 		594B4E73181351F0003C263C /* libRIPFramework.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E4C18134E6B003C263C /* libRIPFramework.dylib */; };
 		594B4E74181351F0003C263C /* libGLEW.1.5.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E4B18134E6B003C263C /* libGLEW.1.5.8.dylib */; };
@@ -159,18 +157,17 @@
 		594B4E3C18134DF8003C263C /* NukeInputParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NukeInputParameters.h; path = ../../../Nuke_CTL/NukeInputParameters.h; sourceTree = "<group>"; };
 		594B4E3D18134DF8003C263C /* NukeTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NukeTransform.cpp; path = ../../../Nuke_CTL/NukeTransform.cpp; sourceTree = "<group>"; };
 		594B4E3E18134DF8003C263C /* NukeTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NukeTransform.h; path = ../../../Nuke_CTL/NukeTransform.h; sourceTree = "<group>"; };
-		594B4E4A18134E6B003C263C /* libDDImage.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libDDImage.dylib; path = ../../../../../../../Applications/Nuke8.0v1/Nuke8.0v1.app/Contents/MacOS/libDDImage.dylib; sourceTree = "<group>"; };
-		594B4E4B18134E6B003C263C /* libGLEW.1.5.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.5.8.dylib; path = ../../../../../../../Applications/Nuke8.0v1/Nuke8.0v1.app/Contents/MacOS/libGLEW.1.5.8.dylib; sourceTree = "<group>"; };
-		594B4E4C18134E6B003C263C /* libRIPFramework.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libRIPFramework.dylib; path = ../../../../../../../Applications/Nuke8.0v1/Nuke8.0v1.app/Contents/MacOS/libRIPFramework.dylib; sourceTree = "<group>"; };
-		594B4E4D18134E6B003C263C /* libtcmalloc_minimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtcmalloc_minimal.dylib; path = ../../../../../../../Applications/Nuke8.0v1/Nuke8.0v1.app/Contents/MacOS/libtcmalloc_minimal.dylib; sourceTree = "<group>"; };
-		594B4E5218134F86003C263C /* libHalf.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libHalf.10.dylib; path = ../../../../../../../Applications/Nuke8.0v1/Nuke8.0v1.app/Contents/MacOS/libHalf.10.dylib; sourceTree = "<group>"; };
-		594B4E5C18134FD6003C263C /* libIlmCtlMath.1.5.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIlmCtlMath.1.5.0.dylib; path = ../../../../../../../usr/local/Cellar/ctl/HEAD/lib/libIlmCtlMath.1.5.0.dylib; sourceTree = "<group>"; };
-		594B4E5E18134FF5003C263C /* libIlmCtl.1.5.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIlmCtl.1.5.0.dylib; path = ../../../../../../../usr/local/Cellar/ctl/HEAD/lib/libIlmCtl.1.5.0.dylib; sourceTree = "<group>"; };
-		594B4E5F18134FF5003C263C /* libIlmCtlSimd.1.5.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIlmCtlSimd.1.5.0.dylib; path = ../../../../../../../usr/local/Cellar/ctl/HEAD/lib/libIlmCtlSimd.1.5.0.dylib; sourceTree = "<group>"; };
-		594B4E621813519E003C263C /* libIex-2_0.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libIex-2_0.10.dylib"; path = "../../../../../../../usr/local/Cellar/ilmbase/2.0.1/lib/libIex-2_0.10.dylib"; sourceTree = "<group>"; };
-		594B4E631813519E003C263C /* libIexMath-2_0.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libIexMath-2_0.10.dylib"; path = "../../../../../../../usr/local/Cellar/ilmbase/2.0.1/lib/libIexMath-2_0.10.dylib"; sourceTree = "<group>"; };
-		594B4E641813519E003C263C /* libIlmThread-2_0.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libIlmThread-2_0.10.dylib"; path = "../../../../../../../usr/local/Cellar/ilmbase/2.0.1/lib/libIlmThread-2_0.10.dylib"; sourceTree = "<group>"; };
-		594B4E651813519E003C263C /* libImath-2_0.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libImath-2_0.10.dylib"; path = "../../../../../../../usr/local/Cellar/ilmbase/2.0.1/lib/libImath-2_0.10.dylib"; sourceTree = "<group>"; };
+		594B4E4A18134E6B003C263C /* libDDImage.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libDDImage.dylib; path = ../../../../../../../Applications/Nuke8.0v5b21/Nuke8.0v5b21.app/Contents/MacOS/libDDImage.dylib; sourceTree = "<group>"; };
+		594B4E4B18134E6B003C263C /* libGLEW.1.5.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.5.8.dylib; path = ../../../../../../../Applications/Nuke8.0v5b21/Nuke8.0v5b21.app/Contents/MacOS/libGLEW.1.5.8.dylib; sourceTree = "<group>"; };
+		594B4E4C18134E6B003C263C /* libRIPFramework.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libRIPFramework.dylib; path = ../../../../../../../Applications/Nuke8.0v5b21/Nuke8.0v5b21.app/Contents/MacOS/libRIPFramework.dylib; sourceTree = "<group>"; };
+		594B4E4D18134E6B003C263C /* libtcmalloc_minimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtcmalloc_minimal.dylib; path = ../../../../../../../Applications/Nuke8.0v5b21/Nuke8.0v5b21.app/Contents/MacOS/libtcmalloc_minimal.dylib; sourceTree = "<group>"; };
+		594B4E5218134F86003C263C /* libHalf.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libHalf.11.dylib; path = ../../../../../../../usr/local/Cellar/ilmbase/2.1.0/lib/libHalf.11.dylib; sourceTree = "<group>"; };
+		594B4E5C18134FD6003C263C /* libIlmCtlSimd.1.5.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIlmCtlSimd.1.5.0.dylib; path = ../../../../../../../usr/local/Cellar/ctl/1.5.1/lib/libIlmCtlSimd.1.5.0.dylib; sourceTree = "<group>"; };
+		594B4E5F18134FF5003C263C /* libIlmCtlSimd.1.5.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIlmCtlSimd.1.5.0.dylib; path = ../../../../../../../usr/local/Cellar/ctl/1.5.1/lib/libIlmCtlSimd.1.5.0.dylib; sourceTree = "<group>"; };
+		594B4E621813519E003C263C /* libIex-2_1.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libIex-2_1.11.dylib"; path = "../../../../../../../usr/local/Cellar/ilmbase/2.1.0/lib/libIex-2_1.11.dylib"; sourceTree = "<group>"; };
+		594B4E631813519E003C263C /* libIexMath-2_1.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libIexMath-2_1.11.dylib"; path = "../../../../../../../usr/local/Cellar/ilmbase/2.1.0/lib/libIexMath-2_1.11.dylib"; sourceTree = "<group>"; };
+		594B4E641813519E003C263C /* libIlmThread-2_1.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libIlmThread-2_1.11.dylib"; path = "../../../../../../../usr/local/Cellar/ilmbase/2.1.0/lib/libIlmThread-2_1.11.dylib"; sourceTree = "<group>"; };
+		594B4E651813519E003C263C /* libIlmCtl.1.5.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIlmCtl.1.5.0.dylib; path = ../../../../../../../usr/local/Cellar/ctl/1.5.1/lib/libIlmCtl.1.5.0.dylib; sourceTree = "<group>"; };
 		594E50D51852A4DA00FCE67C /* rrt.ctl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rrt.ctl; sourceTree = "<group>"; };
 		594E50D71852A52E00FCE67C /* utilities-aces.ctl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "utilities-aces.ctl"; sourceTree = "<group>"; };
 		594E50D81852A52E00FCE67C /* utilities-color.ctl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "utilities-color.ctl"; sourceTree = "<group>"; };
@@ -191,20 +188,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				594B4E6D181351EF003C263C /* libImath-2_0.10.dylib in Frameworks */,
+				594B4E6D181351EF003C263C /* libIlmCtl.1.5.0.dylib in Frameworks */,
 				594B4E0E18134B54003C263C /* Cocoa.framework in Frameworks */,
-				594B4E6C181351EF003C263C /* libIlmThread-2_0.10.dylib in Frameworks */,
+				594B4E6C181351EF003C263C /* libIlmThread-2_1.11.dylib in Frameworks */,
 				594B4E74181351F0003C263C /* libGLEW.1.5.8.dylib in Frameworks */,
-				594B4E6B181351EF003C263C /* libIexMath-2_0.10.dylib in Frameworks */,
+				594B4E6B181351EF003C263C /* libIexMath-2_1.11.dylib in Frameworks */,
 				594B4E75181351F0003C263C /* libtcmalloc_minimal.dylib in Frameworks */,
 				594B4E6F181351F0003C263C /* libIlmCtlSimd.1.5.0.dylib in Frameworks */,
 				594B4E7618135224003C263C /* NukeCtl.dylib in Frameworks */,
 				594B4E0D18134B54003C263C /* XCTest.framework in Frameworks */,
-				594B4E6E181351EF003C263C /* libIlmCtl.1.5.0.dylib in Frameworks */,
-				594B4E71181351F0003C263C /* libHalf.10.dylib in Frameworks */,
+				594B4E71181351F0003C263C /* libHalf.11.dylib in Frameworks */,
 				594B4E72181351F0003C263C /* libDDImage.dylib in Frameworks */,
-				594B4E70181351F0003C263C /* libIlmCtlMath.1.5.0.dylib in Frameworks */,
-				594B4E6A181351EF003C263C /* libIex-2_0.10.dylib in Frameworks */,
+				594B4E70181351F0003C263C /* libIlmCtlSimd.1.5.0.dylib in Frameworks */,
+				594B4E6A181351EF003C263C /* libIex-2_1.11.dylib in Frameworks */,
 				594B4E73181351F0003C263C /* libRIPFramework.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -213,17 +209,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				594B4E681813519E003C263C /* libIlmThread-2_0.10.dylib in Frameworks */,
+				594B4E681813519E003C263C /* libIlmThread-2_1.11.dylib in Frameworks */,
 				594B4E4E18134E6B003C263C /* libDDImage.dylib in Frameworks */,
-				594B4E5D18134FD6003C263C /* libIlmCtlMath.1.5.0.dylib in Frameworks */,
+				594B4E5D18134FD6003C263C /* libIlmCtlSimd.1.5.0.dylib in Frameworks */,
 				594B4E4F18134E6B003C263C /* libGLEW.1.5.8.dylib in Frameworks */,
-				594B4E671813519E003C263C /* libIexMath-2_0.10.dylib in Frameworks */,
-				594B4E5718134F86003C263C /* libHalf.10.dylib in Frameworks */,
-				594B4E691813519E003C263C /* libImath-2_0.10.dylib in Frameworks */,
+				594B4E671813519E003C263C /* libIexMath-2_1.11.dylib in Frameworks */,
+				594B4E5718134F86003C263C /* libHalf.11.dylib in Frameworks */,
+				594B4E691813519E003C263C /* libIlmCtl.1.5.0.dylib in Frameworks */,
 				594B4E5018134E6B003C263C /* libRIPFramework.dylib in Frameworks */,
-				594B4E661813519E003C263C /* libIex-2_0.10.dylib in Frameworks */,
+				594B4E661813519E003C263C /* libIex-2_1.11.dylib in Frameworks */,
 				594B4E6118134FF5003C263C /* libIlmCtlSimd.1.5.0.dylib in Frameworks */,
-				594B4E6018134FF5003C263C /* libIlmCtl.1.5.0.dylib in Frameworks */,
 				594B4E5118134E6B003C263C /* libtcmalloc_minimal.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -255,14 +250,13 @@
 		594B4DEC18134B54003C263C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				594B4E621813519E003C263C /* libIex-2_0.10.dylib */,
-				594B4E631813519E003C263C /* libIexMath-2_0.10.dylib */,
-				594B4E641813519E003C263C /* libIlmThread-2_0.10.dylib */,
-				594B4E651813519E003C263C /* libImath-2_0.10.dylib */,
-				594B4E5E18134FF5003C263C /* libIlmCtl.1.5.0.dylib */,
+				594B4E621813519E003C263C /* libIex-2_1.11.dylib */,
+				594B4E631813519E003C263C /* libIexMath-2_1.11.dylib */,
+				594B4E641813519E003C263C /* libIlmThread-2_1.11.dylib */,
+				594B4E651813519E003C263C /* libIlmCtl.1.5.0.dylib */,
 				594B4E5F18134FF5003C263C /* libIlmCtlSimd.1.5.0.dylib */,
-				594B4E5C18134FD6003C263C /* libIlmCtlMath.1.5.0.dylib */,
-				594B4E5218134F86003C263C /* libHalf.10.dylib */,
+				594B4E5C18134FD6003C263C /* libIlmCtlSimd.1.5.0.dylib */,
+				594B4E5218134F86003C263C /* libHalf.11.dylib */,
 				594B4E4A18134E6B003C263C /* libDDImage.dylib */,
 				594B4E4C18134E6B003C263C /* libRIPFramework.dylib */,
 				594B4E4B18134E6B003C263C /* libGLEW.1.5.8.dylib */,
@@ -669,11 +663,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NukeCtl/NukeCtl-Prefix.pch";
 				INFOPLIST_FILE = "NukeCtl/NukeCtl-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/usr/local/Cellar/ilmbase/2.0.1/lib,
-					/usr/local/Cellar/ctl/HEAD/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -691,11 +681,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "NukeCtl/NukeCtl-Prefix.pch";
 				INFOPLIST_FILE = "NukeCtl/NukeCtl-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/usr/local/Cellar/ilmbase/2.0.1/lib,
-					/usr/local/Cellar/ctl/HEAD/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -760,11 +746,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/usr/local/Cellar/ctl/HEAD/lib,
-					/usr/local/Cellar/ilmbase/2.0.1/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = NukeCtl;
 			};
 			name = Debug;
@@ -772,11 +754,7 @@
 		594B4E3118134BAF003C263C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/usr/local/Cellar/ctl/HEAD/lib,
-					/usr/local/Cellar/ilmbase/2.0.1/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = NukeCtl;
 			};
 			name = Release;
