@@ -66,11 +66,9 @@
 
 namespace NukeCtl
 {
-  class ChanArgMapFriend;
   
   class ChanArgMap
   {
-    friend class ChanArgMapFriend;
   public:
     ChanArgMap(Ctl::FunctionCallPtr fn);
     

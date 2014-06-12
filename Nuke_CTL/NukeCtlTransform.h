@@ -56,11 +56,12 @@
 #ifndef __IIF__NukeCtlTransform__
 #define __IIF__NukeCtlTransform__
 
+#include "DDImage/Channel.h"
+#include "DDImage/Row.h"
+
 #include <CtlRcPtr.h>
 #include <CtlSimdInterpreter.h>
 #include <CtlFunctionCall.h>
-
-#include "NukeCtlChanArgMap.h"
 
 #include <vector>
 #include <string>

@@ -58,6 +58,7 @@
 #pragma clang diagnostic ignored "-Wdeprecated-register"
 #endif
 
+#include "NukeCtlChanArgMap.h"
 #include "NukeCtlTransform.h"
 #include "NukeCtlUtils.h"
 
