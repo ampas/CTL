@@ -9,8 +9,19 @@
 #import <XCTest/XCTest.h>
 
 #import "NukeCtlUtils.h"
-#import "NukeCtlChanArgMap.h"
+
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#endif
+
 #import "NukeCtlTransform.h"
+// #import "NukeCtlChanArgMap.h"
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+
 using namespace NukeCtl;
 
 #include <fstream>
@@ -51,7 +62,7 @@ namespace NukeCtl
       return Transform::verifyModuleName(n);
     }
     
-    TransformFriend(const Transform& transform)
+    TransformFriend(Transform& transform)
     : transform_(transform)
     {
     }
@@ -65,7 +76,8 @@ namespace NukeCtl
     FunctionCallPtr
     topLevelFunctionInTransform()
     {
-      return transform_.topLevelFunctionInTransform();
+      string topLevelFunctionName(transform_.topLevelFunctionNameInTransform());
+      return interpreter()->newFunctionCall(topLevelFunctionName);
     }
     
     static
@@ -90,55 +102,7 @@ namespace NukeCtl
     }
     
   private:
-    Transform transform_;
-  };
-  
-  class ChanArgMapFriend {
-  public:
-    
-//    std::map<std::string, std::string>&
-//    chanNameToArgNameMap()
-//    {
-//      return chanArgMap_.chanNameToArgName_;
-//    }
-    
-    std::map<std::string, std::string>&
-    ArgNameToChanNameMap()
-    {
-      return chanArgMap_.argNameToChanName_;
-    }
-    
-    std::map<DD::Image::Channel, char*>&
-    chanToInArgDataMap()
-    {
-      return chanArgMap_.chanToInArgData_;
-    }
-    
-    std::map<char*, DD::Image::Channel>&
-    outArgDataToChanMap()
-    {
-      return chanArgMap_.outArgDataToChan_;
-    }
-    
-    ChanArgMapFriend(ChanArgMap& chanArgMap)
-    : chanArgMap_(chanArgMap)
-    {
-    }
-    
-    void
-    copyInputRowToArgData(const DD::Image::Row& in, int x, int r)
-    {
-      chanArgMap_.copyInputRowToArgData(in, x, r);
-    }
-    
-    void
-    copyArgDataToOutputRow(int x, int r, DD::Image::Row& out)
-    {
-      chanArgMap_.copyArgDataToOutputRow(x, r, out);
-    }
-    
-  private:
-    ChanArgMap chanArgMap_;
+    Transform& transform_;
   };
 }
 
@@ -573,7 +537,6 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
   BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
   NSString* p = @"/tmp/genericMain.ctl";
   [self writeGenericTransformWithName:@"main" toPath:p];
-//  NSString* p = @"/usr/local/ctl/aces-dev/rrt/rrt.ctl";
   Transform transform("", [p UTF8String]);
   TransformFriend amigo(transform);
   FunctionCallPtr f = amigo.topLevelFunctionInTransform();
@@ -673,107 +636,6 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
   END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
 }
 
-
-- (void)testNukeCTLArgAndResultCopyingSteps
-{
-  BEGIN_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-  NSString* p = @"/tmp/RGBASwap.ctl";
-  [self writeRGBASwappingTransformWithName:@"main" toPath:p];
-  try {
-    Transform transform("", [p UTF8String]);
-    int x = 0;
-    int r = 2880;
-    Row in(x, r);
-    ChannelMask mask = Mask_RGBA;
-    float   red_test_value = 0.125;
-    float green_test_value = 0.250;
-    float  blue_test_value = 2.0;
-    float alpha_test_value = 4.0;
-    foreach(z, mask)
-    {
-      switch (z) {
-        case Chan_Red:
-          (in.writable(z))[x] = red_test_value;
-          break;
-        case Chan_Green:
-          (in.writable(z))[x] = green_test_value;
-          break;
-        case Chan_Blue:
-          (in.writable(z))[x] = blue_test_value;
-          break;
-        case Chan_Alpha:
-          (in.writable(z))[x] = alpha_test_value;
-          break;
-        default:
-          break;
-      }
-    }
-    TransformFriend amigo(transform);
-    int rr = min(r - x, static_cast<int>(amigo.interpreter()->maxSamples()));
-    FunctionCallPtr functionCall = amigo.topLevelFunctionInTransform();
-    ChanArgMap argMap(functionCall);
-    argMap.copyInputRowToArgData(in, x, x + rr);
-    ChanArgMapFriend pal(argMap);
-    XCTAssert(pal.chanToInArgDataMap()[Chan_Red]   == functionCall->findInputArg("rIn")->data(), "Chan_Red not mapping to data buffer for rIn");
-    XCTAssert(pal.chanToInArgDataMap()[Chan_Green] == functionCall->findInputArg("gIn")->data(), "Chan_Green not mapping to data buffer for gIn");
-    XCTAssert(pal.chanToInArgDataMap()[Chan_Blue]  == functionCall->findInputArg("bIn")->data(), "Chan_Blue not mapping to data buffer for bIn");
-    XCTAssert(pal.chanToInArgDataMap()[Chan_Alpha] == functionCall->findInputArg("aIn")->data(), "Chan_Alpha not mapping to data buffer for aIn");
-    half*   inRedArgData = reinterpret_cast<half*>(pal.chanToInArgDataMap()[Chan_Red]);
-    half* inGreenArgData = reinterpret_cast<half*>(pal.chanToInArgDataMap()[Chan_Green]);
-    half*  inBlueArgData = reinterpret_cast<half*>(pal.chanToInArgDataMap()[Chan_Blue]);
-    half* inAlphaArgData = reinterpret_cast<half*>(pal.chanToInArgDataMap()[Chan_Alpha]);
-    XCTAssertEqualWithAccuracy(static_cast<float>(  inRedArgData[0]),   red_test_value, numeric_limits<half>::epsilon() * 4, "Red data from row not being copied to data buffer for rIn");
-    XCTAssertEqualWithAccuracy(static_cast<float>(inGreenArgData[0]), green_test_value, numeric_limits<half>::epsilon() * 4, "Green data from row not being copied to data buffer for gIn");
-    XCTAssertEqualWithAccuracy(static_cast<float>( inBlueArgData[0]),  blue_test_value, numeric_limits<half>::epsilon() * 4, "Blue channel from row not being copied to data buffer for bIn");
-    XCTAssertEqualWithAccuracy(static_cast<float>(inAlphaArgData[0]), alpha_test_value, numeric_limits<half>::epsilon() * 4, "Alpha channel from row not being copied to data buffer for aIn");
-    char*   outRedArgData = nullptr;
-    char* outGreenArgData = nullptr;
-    char*  outBlueArgData = nullptr;
-    char* outAlphaArgData = nullptr;
-    map<char*, Channel> outArgDataToChanMap = pal.outArgDataToChanMap();
-    for (map<char*, Channel>::iterator i = outArgDataToChanMap.begin(); i != outArgDataToChanMap.end(); ++i)
-    {
-      switch (i->second) {
-        case Chan_Red:
-          outRedArgData = i->first;
-          break;
-        case Chan_Green:
-          outGreenArgData = i->first;
-          break;
-        case Chan_Blue:
-          outBlueArgData = i->first;
-          break;
-        case Chan_Alpha:
-          outAlphaArgData = i->first;
-          break;
-        default:
-          cout << "Unexpected channel " << i->second << " in output arg to channel map" << endl;
-          break;
-      }
-    }
-    functionCall->callFunction(rr);
-    XCTAssertEqualWithAccuracy(reinterpret_cast<half*>(  outRedArgData)[0], static_cast<half>(alpha_test_value), numeric_limits<half>::epsilon() * 4, "aIn not swapping into rOut");
-    XCTAssertEqualWithAccuracy(reinterpret_cast<half*>(outGreenArgData)[0], static_cast<half>( blue_test_value), numeric_limits<half>::epsilon() * 4, "bIn not swapping into gOut");
-    XCTAssertEqualWithAccuracy(reinterpret_cast<half*>( outBlueArgData)[0], static_cast<half>(green_test_value), numeric_limits<half>::epsilon() * 4, "gIn not swapping into bOut");
-    XCTAssertEqualWithAccuracy(reinterpret_cast<half*>(outAlphaArgData)[0], static_cast<half>(  red_test_value), numeric_limits<half>::epsilon() * 4, "rIn not swapping into aOut");
-    XCTAssert(  outRedArgData == functionCall->findOutputArg("rOut")->data(), "data buffer for rOut not mapping to Chan_Red");
-    XCTAssert(outGreenArgData == functionCall->findOutputArg("gOut")->data(), "data buffer for gOut not mapping to Chan_Green");
-    XCTAssert( outBlueArgData == functionCall->findOutputArg("bOut")->data(), "data buffer for bOut not mapping to Chan_Blue");
-    XCTAssert(outAlphaArgData == functionCall->findOutputArg("aOut")->data(), "data buffer for aOut not mapping to Chan_Alpha");
-    Row out(x, r);
-    argMap.copyArgDataToOutputRow(x, x + rr, out);
-    functionCall->callFunction(rr);
-    XCTAssertEqualWithAccuracy(out[Chan_Red][x],   alpha_test_value, numeric_limits<half>::epsilon() * 4, "Chan_red   output value does not match Chan_alpha input");
-    XCTAssertEqualWithAccuracy(out[Chan_Green][x],  blue_test_value, numeric_limits<half>::epsilon() * 4, "Chan_green output value does not match Chan_blue  input");
-    XCTAssertEqualWithAccuracy(out[Chan_Blue][x],  green_test_value, numeric_limits<half>::epsilon() * 4, "Chan_blue  output value does not match Chan_green input");
-    XCTAssertEqualWithAccuracy(out[Chan_Alpha][x],   red_test_value, numeric_limits<half>::epsilon() * 4, "Chan_alpha output value does not match Chan_red   input");
-  } catch (const ArgExc &e) {
-    cout << "oops: " << e.what() << endl;
-    XCTFail("could not load argument map, execute, or extract results of RGBA-swapping top-level function");
-  }
-  END_WARINESS_OF_UNCAUGHT_EXCEPTIONS
-}
-
 // This is the short version. If this doesn't work, consider whether the long version works or not.
 - (void)testNukeCTLArgAndResult
 {
@@ -796,7 +658,6 @@ XCTFail(@"Failure due to uncaught exception (and one not based on std::exception
     Row out(x,r);
     TransformFriend amigo(transform);
     FunctionCallPtr functionCall = amigo.topLevelFunctionInTransform();
-    ChanArgMap argMap(functionCall);
     transform.execute(in, x, r, out);
     XCTAssertEqualWithAccuracy(out[Chan_Red][x],   alpha_test_value, numeric_limits<half>::epsilon() * 4, "Chan_red   output value does not match Chan_alpha input");
     XCTAssertEqualWithAccuracy(out[Chan_Green][x],  blue_test_value, numeric_limits<half>::epsilon() * 4, "Chan_green output value does not match Chan_blue  input");
