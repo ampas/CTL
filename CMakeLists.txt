@@ -3,7 +3,7 @@ project( CTL )
 
 set( CTL_MAJOR_VERSION 1 )
 set( CTL_MINOR_VERSION 5 )
-set( CTL_PATCH_VERSION 0 )
+set( CTL_PATCH_VERSION 3 )
 set( CTL_VERSION ${CTL_MAJOR_VERSION}.${CTL_MINOR_VERSION}.${CTL_PATCH_VERSION} )
 
 ## Make install directories overrideable
@@ -44,6 +44,8 @@ endforeach()
 
 option(ENABLE_SHARED "Enable Shared Libraries" ON)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -v -stdlib=libstdc++")
+
 if ( ENABLE_SHARED )
 set( DO_SHARED SHARED )
 else()
@@ -63,6 +65,7 @@ add_subdirectory(doc)
 add_subdirectory(lib)
 add_subdirectory(ctlrender)
 add_subdirectory(OpenEXR_CTL)
+add_subdirectory(Nuke_CTL)
 add_subdirectory(unittest EXCLUDE_FROM_ALL)
 
 # Add all targets to the build-tree export set
