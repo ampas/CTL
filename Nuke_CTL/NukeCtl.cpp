@@ -1,69 +1,107 @@
-// NukeCtl.C
+///////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2014 Academy of Motion Picture Arts and Sciences
+// ("A.M.P.A.S."). Portions contributed by others as indicated.
+// All rights reserved.
+//
+// A worldwide, royalty-free, non-exclusive right to copy, modify, create
+// derivatives, and use, in source and binary forms, is hereby granted,
+// subject to acceptance of this license. Performance of any of the
+// aforementioned acts indicates acceptance to be bound by the following
+// terms and conditions:
+//
+//  * Copies of source code, in whole or in part, must retain the
+//    above copyright notice, this list of conditions and the
+//    Disclaimer of Warranty.
+//
+//  * Use in binary form must retain the above copyright notice,
+//    this list of conditions and the Disclaimer of Warranty in the
+//    documentation and/or other materials provided with the distribution.
+//
+//  * Nothing in this license shall be deemed to grant any rights to
+//    trademarks, copyrights, patents, trade secrets or any other
+//    intellectual property of A.M.P.A.S. or any contributors, except
+//    as expressly stated herein.
+//
+//  * Neither the name "A.M.P.A.S." nor the name of any other
+//    contributors to this software may be used to endorse or promote
+//    products derivative of or based on this software without express
+//    prior written permission of A.M.P.A.S. or the contributors, as
+//    appropriate.
+//
+// This license shall be construed pursuant to the laws of the State of
+// California, and any disputes related thereto shall be subject to the
+// jurisdiction of the courts therein.
+//
+// Disclaimer of Warranty: THIS SOFTWARE IS PROVIDED BY A.M.P.A.S. AND
+// CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
+// BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT ARE DISCLAIMED. IN NO
+// EVENT SHALL A.M.P.A.S., OR ANY CONTRIBUTORS OR DISTRIBUTORS, BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, RESITUTIONARY,
+// OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+// THE POSSIBILITY OF SUCH DAMAGE.
+//
+// WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE ACADEMY
+// SPECIFICALLY DISCLAIMS ANY REPRESENTATIONS OR WARRANTIES WHATSOEVER
+// RELATED TO PATENT OR OTHER INTELLECTUAL PROPERTY RIGHTS IN THE ACADEMY
+// COLOR ENCODING SYSTEM, OR APPLICATIONS THEREOF, HELD BY PARTIES OTHER
+// THAN A.M.P.A.S., WHETHER DISCLOSED OR UNDISCLOSED.
+///////////////////////////////////////////////////////////////////////////
 
 const char* const HELP =
 "<p>Applies Ctl transforms onto an image.</p>";
+
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-register"
+#endif
 
 #include "DDImage/PixelIop.h"
 #include "DDImage/Row.h"
 #include "DDImage/Knobs.h"
 #include "DDImage/NukeWrapper.h"
 
-#include "NukeTransform.h"
-#include "NukeInputParameters.h"
+#include "NukeCtlUtils.h"
+#include "NukeCtlTransform.h"
+
+#include "Iex.h"
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
 using namespace DD::Image;
+using namespace Iex;
+using namespace std;
+using namespace NukeCtl;
 
 static const char* const CLASS = "NukeCtl";
 
 class NukeCtlIop : public PixelIop {
   
 private:
-  std::vector<std::string> user_module_paths;
-  std::vector<std::string> parseModulePath(const char*);
-  void checkModulePath();
-  char* readFile(const char*, std::string*);
-  void saveFile(const char*, const char*);
-  bool fileExists(const char*);
-  void getUserParameters(const char*, std::vector<std::string>*, std::vector<std::vector<float> >*, std::vector<int>);
-  
-  DD::Image::Knob* modSetKnob;
-	DD::Image::Knob* moduleKnob;
+  DD::Image::Knob* modulePathEnabledKnob;
+	DD::Image::Knob* modulePathKnob;
 	DD::Image::Knob* readKnob;
-	DD::Image::Knob* textKnob;
-	DD::Image::Knob* paramKnob;
-	DD::Image::Knob* writeKnob;
-  
-  const char *defaultModulePath;
-  bool moduleSet;
+  bool modulePathEnabled;
 	const char *modulePath;
-	const char *inFilename;
-	const char *ctlText;
-	const char *parameters;
-	const char *outFilename;
-	std::string parameterString;
-	
-	std::vector<std::string>         paramName;
-	std::vector<std::vector<float> > paramValues;
-	std::vector<int>                 paramSize;
-  
+	const char *ctlPath;
+  NukeCtl::Transform* transform;
+  int reloadCount;
 public:
 	
-  NukeCtlIop(Node* node) : PixelIop(node) {
-    const char *env = std::getenv ("CTL_MODULE_PATH");
-    defaultModulePath = env ? env : "";
-    moduleSet       = false;
-    modulePath      = "";
-    inFilename      = "";
-    outFilename     = "";
-    ctlText         = "";
-    parameters      = "";
-    parameterString = "";
-    user_module_paths.push_back("");
+  NukeCtlIop(Node* node) : PixelIop(node),
+    modulePathEnabled(false), modulePath(""), ctlPath(""),
+    transform(NULL), reloadCount(0) {
   }
   
   static const Iop::Description d;
   void in_channels(int input_number, ChannelSet& channels) const {
-    //channels = Mask_RGBA;
+    channels = Mask_RGBA;
   }
   
   void append(Hash& h) {
@@ -73,6 +111,7 @@ public:
   
   void pixel_engine(const Row &in, int y, int x, int r, ChannelMask, Row &);
   void knobs(Knob_Callback);
+  void load_transform(const char* const modulePath, const char* const ctlPath);
   int knob_changed(Knob*);
   const char* Class() const { return CLASS; }
   const char* node_help() const { return HELP; }
@@ -86,72 +125,100 @@ void NukeCtlIop::_validate(bool for_real) {
 
 // Called on each scanline
 void NukeCtlIop::pixel_engine(const Row& in, int y, int x, int r, ChannelMask channels, Row& out) {
-  
-  NukeTransform(in, y, x, r, channels, out, inFilename, paramName, paramValues, paramSize, user_module_paths, moduleSet);
+  if (transform != NULL)
+  {
+    try {
+      transform->execute(in, x, r, out);
+    }
+    catch (const BaseExc& e) {
+      error("Could not execute CTL argument transform: %s", e.what());
+    }
+    catch (const exception& e) {
+      error("Could not execute CTL argument transform: %s", e.what());
+    }
+    catch (...) // Something wicked this way comes
+    {
+      error("Could not execute CTL argument transform");
+    }
+  }
+  else
+  {
+    out.copy(in, channels, x, r);
+  }
+}
+
+void NukeCtlIop::load_transform(const char* const modulePath, const char* const ctlPath)
+{
+  try
+  {
+    if (transform != NULL)
+    {
+      delete transform;
+      transform = NULL;
+    }
+    transform = new NukeCtl::Transform(modulePath, ctlPath);
+  }
+  catch (const Iex::BaseExc& e)
+  {
+    error((string("Error instantiating CTL transform: ") + e.what()).c_str());
+  }
+  catch (const exception& e)
+  {
+    error((string("Error instantiating CTL transform: ") + e.what()).c_str());
+  }
+  catch (...)
+  {
+    error("Error instantiating CTL transform");
+  }
 }
 
 void NukeCtlIop::knobs(Knob_Callback f) {
-  
-  modSetKnob = Bool_knob(f, &moduleSet, "set_module_path", "Set Module Path");
-  moduleKnob = File_knob(f, &modulePath, "module_path", "Module Path");
-	readKnob   = File_knob(f, &inFilename, "read_ctl_file", "Read CTL File");
-	textKnob   = Multiline_String_knob(f, &ctlText, "ctl_text", "CTL Text");
-	paramKnob  = Multiline_String_knob(f, &parameters, "set_parameters", "Input Parameters");
-	writeKnob  = Write_File_knob(f, &outFilename, "write_ctl_file", "Write CTL File");
-  moduleKnob->enable(moduleSet);
-  checkModulePath();
+  Newline(f, "Module Path");
+  modulePathEnabledKnob = Bool_knob(f, &modulePathEnabled, "enable_module_path", "");
+  modulePathKnob        = File_knob(f, &modulePath,        "module_path",        "");
+  ClearFlags(f, Knob::STARTLINE);
+	readKnob              = File_knob(f, &ctlPath,           "ctl_path",           "CTL file Path");
+  SetFlags(f, Knob::EARLY_STORE);
+  if (f.makeKnobs() && transform == NULL && strlen(ctlPath) > 0)
+  {
+    load_transform(modulePath, ctlPath);
+  }
+  Script_knob(f, "knob reload_count [expr [value reload_count] + 1]", "reload");
+  Int_knob(f, &reloadCount, "reload_count", INVISIBLE);
+  SetFlags(f, Knob::DO_NOT_WRITE);
+  Divider(f);
 }
 
 // Knob state changed
 int NukeCtlIop::knob_changed(Knob *k) {
   
-	char *buffer;
-	
   if (k == &Knob::showPanel) {
-    knob("module_path")->enable(moduleSet);
+    knob("module_path")->enable(modulePathEnabled);
     return 1;
   }
 
   // if the box is checked, enable or disable the set module knob
-  if (k->is("set_module_path")) {
-    knob("module_path")->enable(moduleSet);
-    if (moduleSet)
-      checkModulePath();
+  if (k->is("enable_module_path")) {
+    knob("module_path")->enable(modulePathEnabled);
     return 1;
   }
   
   // if the module path is changed, make sure it is valid
 	if (k->is("module_path")) {
-		checkModulePath();
+    if (strlen(ctlPath) > 0)
+    {
+      load_transform(modulePath, ctlPath);
+    }
 		return 1;
 	}
-  
-	// If we read in a file, get the input parameters, display the ctl file to the text knob,
-	// and extract the user parameters from the input parameters.
-	if (k->is("read_ctl_file")) {
-		parameterString = inputParameters(inFilename, &paramName, &paramValues, &paramSize);
-		buffer = readFile(inFilename, &parameterString);
-		textKnob->set_text(buffer);
-		paramKnob->set_text(parameterString.c_str());
-		getUserParameters(parameterString.c_str(), &paramName, &paramValues, paramSize);
-		// prevent memory leak
-		delete(buffer);
+
+	if (k->is("ctl_path") || k->is("reload")) {
+    if (strlen(ctlPath) > 0)
+    {
+      load_transform(modulePath, ctlPath);
+    }
 		return 1;
 	}
-	
-	// If the write knob is clicked, save the file.
-	if (k->is("write_ctl_file")) {
-		saveFile(outFilename, textKnob->get_text());
-		return 1;
-	}
-  
-	// If the parameters are changed, extract the new information so that the changes
-	// can be displayed.
-	if (k->is("set_parameters")) {
-		getUserParameters(paramKnob->get_text(), &paramName, &paramValues, paramSize);
-		return 1;
-	}
-	
 	return Iop::knob_changed(k);
 }
 
@@ -161,201 +228,3 @@ static Iop* build(Node* node) {
 
 const Iop::Description NukeCtlIop::d(CLASS, "Color/NukeCtl", build);
 
-// parse the module path into an array of strings
-std::vector<std::string> NukeCtlIop::parseModulePath(const char* inPath) {
-  
-  std::vector<std::string> modPaths;
-  size_t pos = 0;
-  std::string path = std::string(inPath);
-  
-  while (pos < path.size())
-  {
-#if defined (WIN32) || defined (WIN64)
-    
-    size_t end = path.find (';', pos);
-    
-#else
-    
-    size_t end = path.find (':', pos);
-    
-#endif
-    
-    if (end == std::string::npos)
-      end = path.size();
-    
-    std::string pathItem = path.substr (pos, end - pos);
-    
-    if(find(modPaths.begin(), modPaths.end(), pathItem )
-       == modPaths.end())
-      modPaths.push_back(pathItem);
-    
-    pos = end + 1;
-  }
-  
-  return modPaths;
-  
-}
-
-// Make sure module path is a valid directory
-void NukeCtlIop::checkModulePath() {
-	struct stat buf;
-  int status;
-  const char *temp;
-  bool err = false;
-  
-  const char* candidatePath = moduleSet ? modulePath : defaultModulePath;
-  std::vector<std::string> paths = parseModulePath(candidatePath);
-  // if a path is not valid then give an error message
-  for(std::vector<std::string>::iterator it = paths.begin(); it != paths.end(); it++) {
-    temp = it->c_str();
-    status = stat(temp, &buf);
-    
-    if (status == -1 || !S_ISDIR(buf.st_mode)) {
-      err = true;
-    }
-    
-  }
-  
-	if (err) {
-    if (moduleSet)
-      error("Module path is not set to a valid directory: '%s'", candidatePath);
-    else
-      error("CTL_MODULE_PATH is not set to a valid directory: '%s'", candidatePath);
-    paths.clear();
-	}
-  
-  user_module_paths = paths;
-  
-	return;
-}
-
-
-// Read ctl file and copy to buffer
-char* NukeCtlIop::readFile(const char *filename, std::string *paramString) {
-	char *buffer;
-	size_t size = 0;
-	std::ifstream inf;
-	
-	inf.open(filename);
-	
-	// If the file is open read it, otherwise set the buffer to a zero character array
-	if (inf) {
-		// obtain file size:
-    inf.seekg (0, std::ios::end);
-    size = inf.tellg();
-    inf.seekg (0, std::ios::beg);
-    buffer = new char[size + 1];
-    // read file to buffer
-    inf.read(buffer, size);
-    buffer[size] = '\0';
-    
-		inf.close();
-    
-	}
-	else {
-		buffer = new char[size + 1];
-		buffer[size] = '\0';
-	}
-	
-	return buffer;
-}
-
-// write data in CTL Text
-void NukeCtlIop::saveFile(const char *filename, const char *ctlText) {
-	size_t size;
-	int write = 1;
-	std::ofstream outf;
-  
-	// Check if file exists so it isn't accidentally overwritten
-	if (fileExists(filename)) {
-    write = Op::message_f('?', "File already exists. Are you sure you would like to overwrite it?");
-  }
-  else {
-    return;
-  }
-  
-  if (write) {
-    size = strlen(ctlText);
-    outf.open(filename);
-    outf.write(ctlText, size);
-    outf.close();
-  }
-}
-
-
-// check to see if file exists
-bool NukeCtlIop::fileExists(const char *filename) {
-	struct stat buf;
-	if (stat(filename, &buf) != -1) {
-		return true;
-	}
-	return false;
-}
-
-
-// read in parameter text and extract names and values to be set for interpreter
-void NukeCtlIop::getUserParameters(const char* str, std::vector<std::string> *paramName, std::vector<std::vector<float> > *paramValues, std::vector<int> paramSize) {
-	std::vector<float> value;
-	std::string name;
-	std::string paramLine(str);
-	size_t pos = 0, len = paramLine.size();
-	std::string build;
-	bool isName = true;
-	size_t i, j;
-	
-	while (pos < len) {
-    
-		// Skip through spaces
-		if (paramLine[pos] == ' ' || paramLine[pos] == '\t' || paramLine[pos] == '\r') {
-			pos++;
-		}
-		// If we hit a newline the next value will be a name so isName is set to true.
-		else if (paramLine[pos] == '\n') {
-      
-			isName = true;
-			// If a newline is reached then values would have been read
-			// If values have been read then we push the name and value onto the vectors
-			if (value.size() > 0) {
-				for (i = 0; i < paramName->size(); i++) {
-					// find the correct parameter
-					if ((*paramName)[i] == name) {
-						for (j = 0; j < value.size(); j++) {
-							if (j < paramSize[i])
-								(*paramValues)[i][j] = value[j];
-						}
-					}
-				}
-        
-				value.clear();
-			}
-			pos++;
-		}
-		// If hit equals sign we expect floats so isName is set to false.
-		else if (paramLine[pos] == '=') {
-			isName = false;
-			pos++;
-		}
-		else {
-			// build the string
-			build = "";
-			while (pos < len && paramLine[pos] != ' ' && paramLine[pos] != '\r' && paramLine[pos] != '\t' && paramLine[pos] != '\n' && paramLine[pos] != '=') {
-				build += paramLine[pos++];
-			}
-			
-			if (isName) {
-				name = build;
-			}
-			else {
-				// Pushback float value to the vector since there can multiple values
-				value.push_back(std::atof(build.c_str()));
-			}
-		}
-		
-	}
-	
-	// If no newline on last iteration
-	if (value.size() > 0) {
-		paramName->push_back(name);
-		paramValues->push_back(value);
-	}
-}

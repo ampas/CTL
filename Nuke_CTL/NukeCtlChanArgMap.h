@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2013 Academy of Motion Picture Arts and Sciences
+// Copyright (c) 2014 Academy of Motion Picture Arts and Sciences
 // ("A.M.P.A.S."). Portions contributed by others as indicated.
 // All rights reserved.
 //
@@ -52,34 +52,57 @@
 // THAN A.M.P.A.S., WHETHER DISCLOSED OR UNDISCLOSED.
 ///////////////////////////////////////////////////////////////////////////
 
-#if !defined(CTL_UTIL_CTLRENDER_FORMAT_INCLUDE)
-#define CTL_UTIL_CTLRENDER_FORMAT_INCLUDE
+#ifndef __NukeCtl__NukeCtlChanArgMap__
+#define __NukeCtl__NukeCtlChanArgMap__
 
-#include <exception>
-#include <Iex.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/stat.h>
+#include "DDImage/Channel.h"
+#include "DDImage/Row.h"
+#include "CtlFunctionCall.h"
+#include "CtlRcPtr.h"
+#include "CtlStdType.h"
 
-#include <iostream>
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <vector>
+#include <map>
 
-#include <CtlRcPtr.h>
-#include <CtlFunctionCall.h>
-#include <CtlSimdInterpreter.h>
-#include <CtlStdType.h>
+namespace NukeCtl
+{
+  
+  class ChanArgMap
+  {
+  public:
+    ChanArgMap(Ctl::FunctionCallPtr fn);
+    
+    void
+    copyInputRowToArgData(const DD::Image::Row &in, int x0, int x1);
+    
+    void
+    copyArgDataToOutputRow(int x0, int x1, DD::Image::Row &out);
+    
+  private:
+    // Not implemented, and this guarantees the compiler will not improvise one for us.
+    ChanArgMap(const ChanArgMap &c);
+    
+    // Not implemented, and this guarantees the compiler will not improvise one for us.
+    ChanArgMap&
+    operator=(const ChanArgMap &rhs);
+    
+    std::map<std::string, std::string> argNameToChanName_;
+    
+    typedef std::map<DD::Image::Channel, Ctl::FunctionArgPtr> ChannelToFunctionArgPtrMap;
 
-std::string
-getInputParams(std::ifstream*);
+    // Without this being specified as a third arg to std::map below, outArgToChan_ will never have more than one member.
+    struct FunctionArgPtrLess:
+    public std::binary_function<const Ctl::FunctionArgPtr, const Ctl::FunctionArgPtr, bool> {
+        bool operator() (const Ctl::FunctionArgPtr pa1, const Ctl::FunctionArgPtr pa2) const
+      {
+        return pa1->name() < pa2->name();
+      }
+    };
+    typedef std::map<Ctl::FunctionArgPtr, DD::Image::Channel, FunctionArgPtrLess> FunctionArgPtrToChannelMap;
+    
+    ChannelToFunctionArgPtrMap chanToInArg_;
+    FunctionArgPtrToChannelMap outArgToChan_;
+  };
+}
 
-std::string
-inputParameters(const char*,
-                std::vector<std::string> *,
-                std::vector<std::vector<float> >*,
-                std::vector<int>*);
-
-#endif
+#endif /* defined(__NukeCtl__NukeCtlChanArgMap__) */
