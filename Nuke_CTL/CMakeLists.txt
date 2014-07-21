@@ -43,6 +43,8 @@ if(NUKE_FOUND)
     NukeCtlTransform.cpp
   )
 
+  set_target_properties(NukeCtl PROPERTIES PREFIX "")
+
   target_link_libraries( NukeCtl IlmCtl IlmCtlMath IlmCtlSimd IlmThread Half Iex )
   target_link_libraries( NukeCtl ${IlmBase_LIBRARIES} ${IlmBase_LDFLAGS_OTHER} )
   link_directories( ${NUKE_LIBRARY_DIR} )
