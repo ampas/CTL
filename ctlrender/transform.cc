@@ -180,7 +180,7 @@ void set_ctl_function_argument_from_ctl_results(Ctl::FunctionArgPtr *arg, const 
 		}
 		else
 		{
-			THROW(Iex::ArgExc, "CTL parameter '" << dst->name() << "' not specified on the command line and does not have a default value.");
+			THROW(Iex::ArgExc, "A value for the CTL input variable '" << dst->name() << "' does not exist, was not specified on the command line,\nand does not have a default value. A value can be provided at runtime using command line parameters. See '-help param'\n");
 			throw(std::exception());
 		}
 		return;
