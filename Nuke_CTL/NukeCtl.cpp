@@ -109,6 +109,14 @@ public:
     h.append(__TIME__);
   }
   
+  void expand_ctl_path(std::string& file) {
+    if (script_expand(knob("ctl_path")->get_text(&outputContext())) && script_result())
+      file = script_result();
+    else
+      file = "";
+    script_unlock();
+  }
+
   void pixel_engine(const Row &in, int y, int x, int r, ChannelMask, Row &);
   void knobs(Knob_Callback);
   void load_transform(const char* const modulePath, const char* const ctlPath);
@@ -179,10 +187,7 @@ void NukeCtlIop::knobs(Knob_Callback f) {
   ClearFlags(f, Knob::STARTLINE);
 	readKnob              = File_knob(f, &ctlPath,           "ctl_path",           "CTL file Path");
   SetFlags(f, Knob::EARLY_STORE);
-  if (f.makeKnobs() && transform == NULL && strlen(ctlPath) > 0)
-  {
-    load_transform(modulePath, ctlPath);
-  }
+  SetFlags(f, Knob::KNOB_CHANGED_ALWAYS);
   Script_knob(f, "knob reload_count [expr [value reload_count] + 1]", "reload");
   Int_knob(f, &reloadCount, "reload_count", INVISIBLE);
   SetFlags(f, Knob::DO_NOT_WRITE);
@@ -205,19 +210,19 @@ int NukeCtlIop::knob_changed(Knob *k) {
   
   // if the module path is changed, make sure it is valid
 	if (k->is("module_path")) {
-    if (strlen(ctlPath) > 0)
-    {
-      load_transform(modulePath, ctlPath);
-    }
-		return 1;
+      std::string file;
+      expand_ctl_path(file);
+      if (!file.empty())
+        load_transform(modulePath, file.c_str());
+      return 1;
 	}
 
 	if (k->is("ctl_path") || k->is("reload")) {
-    if (strlen(ctlPath) > 0)
-    {
-      load_transform(modulePath, ctlPath);
-    }
-		return 1;
+      std::string file;
+      expand_ctl_path(file);
+      if (!file.empty())
+        load_transform(modulePath, file.c_str());
+      return 1;
 	}
 	return Iop::knob_changed(k);
 }
