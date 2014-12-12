@@ -1,7 +1,7 @@
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/IlmCtl" "${PROJECT_SOURCE_DIR}/lib/IlmCtlMath" )
 
 add_executable( halfExpLogTable halfExpLogTable.cpp )
-target_link_libraries( halfExpLogTable Half )
+target_link_libraries( halfExpLogTable Half ${IlmBase_LDFLAGS_OTHER} )
 
 add_custom_command( OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h"
                     COMMAND halfExpLogTable "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h" "${CMAKE_CURRENT_BINARY_DIR}/halfExpLog.h"
