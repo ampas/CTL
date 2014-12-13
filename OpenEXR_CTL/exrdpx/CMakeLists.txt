@@ -24,4 +24,4 @@ install( TARGETS exrdpx DESTINATION ${INSTALL_BIN_DIR} )
 
 install( FILES transform_DPX_EXR.ctl transform_EXR_DPX.ctl DESTINATION ${INSTALL_LIB_DIR}/CTL )
 
-
+set_target_properties(exrdpx PROPERTIES install_rpath "@loader_path/../lib")

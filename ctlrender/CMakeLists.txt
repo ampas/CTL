@@ -47,3 +47,5 @@ target_link_libraries( ctlrender ${AcesContainer_LDFLAGS_OTHER} )
 endif()
 
 install( TARGETS ctlrender DESTINATION bin )
+
+set_target_properties(ctlrender PROPERTIES install_rpath "@loader_path/../lib")
