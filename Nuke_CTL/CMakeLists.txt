@@ -44,6 +44,7 @@ if(NUKE_FOUND)
   )
 
   set_target_properties(NukeCtl PROPERTIES PREFIX "")
+  set_target_properties(NukeCtl PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 
   target_link_libraries( NukeCtl IlmCtl IlmCtlMath IlmCtlSimd IlmThread Half Iex )
   target_link_libraries( NukeCtl ${IlmBase_LIBRARIES} ${IlmBase_LDFLAGS_OTHER} )

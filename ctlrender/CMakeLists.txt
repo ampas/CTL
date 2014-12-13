@@ -48,4 +48,6 @@ endif()
 
 install( TARGETS ctlrender DESTINATION bin )
 
-set_target_properties(ctlrender PROPERTIES INSTALL_RPATH "@loader_path/../lib")
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set_target_properties(ctlrender PROPERTIES INSTALL_RPATH "@loader_path/../lib")
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

@@ -744,6 +744,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				LD_RUNPATH_SEARCH_PATHS = "/usr/local/nuke-compatible/lib /usr/local/lib";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = NukeCtl;
 			};
@@ -752,6 +753,7 @@
 		594B4E3118134BAF003C263C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				LD_RUNPATH_SEARCH_PATHS = "/usr/local/nuke-compatible/lib /usr/local/lib";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = NukeCtl;
 			};
