@@ -48,4 +48,4 @@ endif()
 
 install( TARGETS ctlrender DESTINATION bin )
 
-set_target_properties(ctlrender PROPERTIES install_rpath "@loader_path/../lib")
+set_target_properties(ctlrender PROPERTIES INSTALL_RPATH "@loader_path/../lib")

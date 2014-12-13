@@ -24,4 +24,4 @@ install( TARGETS exr_ctl_exr DESTINATION ${INSTALL_BIN_DIR} )
 
 install( FILES change_saturation.ctl DESTINATION ${INSTALL_LIB_DIR}/CTL )
 
-set_target_properties(exr_ctl_exr PROPERTIES install_rpath "@loader_path/../lib")
+set_target_properties(exr_ctl_exr PROPERTIES INSTALL_RPATH "@loader_path/../lib")
