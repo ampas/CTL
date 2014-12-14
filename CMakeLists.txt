@@ -48,8 +48,6 @@ endforeach()
 
 option(ENABLE_SHARED "Enable Shared Libraries" ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -v -stdlib=libstdc++")
-
 if ( ENABLE_SHARED )
 set( DO_SHARED SHARED )
 else()
