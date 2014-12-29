@@ -7,7 +7,7 @@ add_library( IlmImfCtl ${DO_SHARED}
   ImfCtlCopyFunctionArg.cpp
 )
 
-target_link_libraries( IlmImfCtl IlmCtl IlmImf Iex IlmThread Half )
+target_link_libraries( IlmImfCtl IlmCtl ${OpenEXR_LIBRARY} ${IlmBase_LIBRARY} )
 
 install( FILES ImfCtlApplyTransforms.h DESTINATION include/OpenEXR )
 

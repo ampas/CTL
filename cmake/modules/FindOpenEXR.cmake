@@ -52,7 +52,18 @@ if(OpenEXR_INCLUDE_DIR AND EXISTS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h")
     endif()
 endif()
 
-find_library(OpenEXR_LIBRARY NAMES IlmImf libIlmImf HINTS ${_OpenEXR_HINT_LIB})
+if("${OpenEXR_VERSION}" VERSION_LESS "2.0.0")
+  set(IlmBase_ALL_LIBRARIES IlmImf libIlmImf)
+else()
+  # handle new library names for 2.0.0
+  string(REPLACE "." "_" _OpenEXR_VERSION ${OpenEXR_VERSION})
+  string(SUBSTRING ${_OpenEXR_VERSION} 0 3 _OpenEXR_VERSION )
+  set(IlmBase_ALL_LIBRARIES
+    IlmImf-${_OpenEXR_VERSION} 
+    libIlmImf-${_OpenEXR_VERSION})
+endif()
+
+find_library(OpenEXR_LIBRARY NAMES ${IlmBase_ALL_LIBRARIES} HINTS ${_OpenEXR_HINT_LIB})
 
 find_package(IlmBase QUIET)
 

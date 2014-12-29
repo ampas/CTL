@@ -52,7 +52,15 @@ endif()
 if("${IlmBase_VERSION}" VERSION_LESS "2.0.0")
   set(IlmBase_ALL_LIBRARIES Imath Half Iex IlmThread)
 else()
-  set(IlmBase_ALL_LIBRARIES Imath Half Iex IexMath IlmThread)
+  # handle new library names for 2.0.0
+  string(REPLACE "." "_" _IlmBase_VERSION ${IlmBase_VERSION})
+  string(SUBSTRING ${_IlmBase_VERSION} 0 3 _IlmBase_VERSION )
+  set(IlmBase_ALL_LIBRARIES
+    Half
+    Imath-${_IlmBase_VERSION} 
+    Iex-${_IlmBase_VERSION} 
+    IexMath-${_IlmBase_VERSION} 
+    IlmThread-${_IlmBase_VERSION})
 endif()
 foreach(ILMBASE_LIB ${IlmBase_ALL_LIBRARIES})
   string(TOUPPER ${ILMBASE_LIB} _upper_ilmbase_lib)
