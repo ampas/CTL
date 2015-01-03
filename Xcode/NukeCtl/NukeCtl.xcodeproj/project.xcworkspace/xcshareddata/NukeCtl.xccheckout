@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>D30E5D6A-2A05-4E42-82BF-66AD10BE245C</string>
+	<key>IDESourceControlProjectName</key>
+	<string>NukeCtl</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>678EA61BA214C8F83B78544D3E1FC9207E799CEE</key>
+		<string>https://github.com/JGoldstone/CTL.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Xcode/NukeCtl/NukeCtl.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>678EA61BA214C8F83B78544D3E1FC9207E799CEE</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/JGoldstone/CTL.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>678EA61BA214C8F83B78544D3E1FC9207E799CEE</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>678EA61BA214C8F83B78544D3E1FC9207E799CEE</string>
+			<key>IDESourceControlWCCName</key>
+			<string>CTL</string>
+		</dict>
+	</array>
+</dict>
+</plist>

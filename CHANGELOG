@@ -1,3 +1,6 @@
+Version 1.5.3:
+  * added Nuke_CTL
+
 Version 1.5:
   * added OpenEXR_CTL, ctlrender
   * changed build system to Cmake

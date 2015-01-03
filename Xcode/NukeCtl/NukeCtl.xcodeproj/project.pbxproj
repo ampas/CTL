@@ -1,0 +1,804 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		590A90891947D54700F23DE4 /* NukeCtlUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 594B4E3A18134DF8003C263C /* NukeCtlUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		594B4DEE18134B54003C263C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4DED18134B54003C263C /* Cocoa.framework */; };
+		594B4DF818134B54003C263C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 594B4DF618134B54003C263C /* InfoPlist.strings */; };
+		594B4DFA18134B54003C263C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 594B4DF918134B54003C263C /* main.m */; };
+		594B4DFE18134B54003C263C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 594B4DFC18134B54003C263C /* Credits.rtf */; };
+		594B4E0118134B54003C263C /* NCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 594B4E0018134B54003C263C /* NCAppDelegate.m */; };
+		594B4E0418134B54003C263C /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 594B4E0218134B54003C263C /* MainMenu.xib */; };
+		594B4E0618134B54003C263C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 594B4E0518134B54003C263C /* Images.xcassets */; };
+		594B4E0D18134B54003C263C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E0C18134B54003C263C /* XCTest.framework */; };
+		594B4E0E18134B54003C263C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4DED18134B54003C263C /* Cocoa.framework */; };
+		594B4E1618134B54003C263C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 594B4E1418134B54003C263C /* InfoPlist.strings */; };
+		594B4E3318134D7A003C263C /* NukeCtlTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 594B4E3218134D7A003C263C /* NukeCtlTests.mm */; };
+		594B4E3F18134DF8003C263C /* NukeCtl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 594B4E3418134DF8003C263C /* NukeCtl.cpp */; };
+		594B4E4018134DF8003C263C /* NukeCtlChanArgMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 594B4E3518134DF8003C263C /* NukeCtlChanArgMap.cpp */; };
+		594B4E4218134DF8003C263C /* NukeCtlTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 594B4E3718134DF8003C263C /* NukeCtlTransform.cpp */; };
+		594B4E4418134DF8003C263C /* NukeCtlUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 594B4E3918134DF8003C263C /* NukeCtlUtils.cpp */; };
+		594B4E4E18134E6B003C263C /* libDDImage.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E4A18134E6B003C263C /* libDDImage.dylib */; };
+		594B4E4F18134E6B003C263C /* libGLEW.1.5.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E4B18134E6B003C263C /* libGLEW.1.5.8.dylib */; };
+		594B4E5118134E6B003C263C /* libtcmalloc_minimal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E4D18134E6B003C263C /* libtcmalloc_minimal.dylib */; };
+		594B4E5718134F86003C263C /* libHalf.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5218134F86003C263C /* libHalf.11.dylib */; };
+		594B4E6118134FF5003C263C /* libIlmCtlSimd.1.5.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5F18134FF5003C263C /* libIlmCtlSimd.1.5.3.dylib */; };
+		594B4E661813519E003C263C /* libIex-2_1.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E621813519E003C263C /* libIex-2_1.11.dylib */; };
+		594B4E671813519E003C263C /* libIexMath-2_1.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E631813519E003C263C /* libIexMath-2_1.11.dylib */; };
+		594B4E681813519E003C263C /* libIlmThread-2_1.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E641813519E003C263C /* libIlmThread-2_1.11.dylib */; };
+		594B4E691813519E003C263C /* libIlmCtl.1.5.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E651813519E003C263C /* libIlmCtl.1.5.3.dylib */; };
+		594B4E6A181351EF003C263C /* libIex-2_1.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E621813519E003C263C /* libIex-2_1.11.dylib */; };
+		594B4E6B181351EF003C263C /* libIexMath-2_1.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E631813519E003C263C /* libIexMath-2_1.11.dylib */; };
+		594B4E6C181351EF003C263C /* libIlmThread-2_1.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E641813519E003C263C /* libIlmThread-2_1.11.dylib */; };
+		594B4E6D181351EF003C263C /* libIlmCtl.1.5.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E651813519E003C263C /* libIlmCtl.1.5.3.dylib */; };
+		594B4E6F181351F0003C263C /* libIlmCtlSimd.1.5.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5F18134FF5003C263C /* libIlmCtlSimd.1.5.3.dylib */; };
+		594B4E71181351F0003C263C /* libHalf.11.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E5218134F86003C263C /* libHalf.11.dylib */; };
+		594B4E72181351F0003C263C /* libDDImage.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E4A18134E6B003C263C /* libDDImage.dylib */; };
+		594B4E74181351F0003C263C /* libGLEW.1.5.8.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E4B18134E6B003C263C /* libGLEW.1.5.8.dylib */; };
+		594B4E75181351F0003C263C /* libtcmalloc_minimal.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E4D18134E6B003C263C /* libtcmalloc_minimal.dylib */; };
+		594B4E7618135224003C263C /* NukeCtl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E2518134BAF003C263C /* NukeCtl.dylib */; };
+		594E50D61852A4DA00FCE67C /* rrt.ctl in Resources */ = {isa = PBXBuildFile; fileRef = 594E50D51852A4DA00FCE67C /* rrt.ctl */; };
+		594E50DA1852A52E00FCE67C /* utilities-aces.ctl in Resources */ = {isa = PBXBuildFile; fileRef = 594E50D71852A52E00FCE67C /* utilities-aces.ctl */; };
+		594E50DB1852A52E00FCE67C /* utilities-color.ctl in Resources */ = {isa = PBXBuildFile; fileRef = 594E50D81852A52E00FCE67C /* utilities-color.ctl */; };
+		594E50DC1852A52E00FCE67C /* utilities.ctl in Resources */ = {isa = PBXBuildFile; fileRef = 594E50D91852A52E00FCE67C /* utilities.ctl */; };
+		594E50DE1852A59800FCE67C /* utilities-aces.ctl in CopyFiles */ = {isa = PBXBuildFile; fileRef = 594E50D71852A52E00FCE67C /* utilities-aces.ctl */; };
+		594E50DF1852A59800FCE67C /* utilities-color.ctl in CopyFiles */ = {isa = PBXBuildFile; fileRef = 594E50D81852A52E00FCE67C /* utilities-color.ctl */; };
+		594E50E01852A59800FCE67C /* utilities.ctl in CopyFiles */ = {isa = PBXBuildFile; fileRef = 594E50D91852A52E00FCE67C /* utilities.ctl */; };
+		594E50E11852A59800FCE67C /* rrt.ctl in CopyFiles */ = {isa = PBXBuildFile; fileRef = 594E50D51852A4DA00FCE67C /* rrt.ctl */; };
+		594E50E31852A98A00FCE67C /* NukeCtl.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 594B4E2518134BAF003C263C /* NukeCtl.dylib */; };
+		599F77FB185101C10051A510 /* NukeCtl.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 594B4E2518134BAF003C263C /* NukeCtl.dylib */; };
+		599F77FD185101F00051A510 /* NukeCtl.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 594B4E2518134BAF003C263C /* NukeCtl.dylib */; };
+		599F77FE185102870051A510 /* NukeCtl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 594B4E2518134BAF003C263C /* NukeCtl.dylib */; };
+		59BDB0821813556A00F32C47 /* libDDImage.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 594B4E4A18134E6B003C263C /* libDDImage.dylib */; };
+		59BDB0831813556D00F32C47 /* libGLEW.1.5.8.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 594B4E4B18134E6B003C263C /* libGLEW.1.5.8.dylib */; };
+		59BDB0851813557300F32C47 /* libtcmalloc_minimal.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 594B4E4D18134E6B003C263C /* libtcmalloc_minimal.dylib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		590A908A1947DEF100F23DE4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 594B4DE218134B54003C263C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 594B4E2418134BAF003C263C;
+			remoteInfo = NukeCtlLib;
+		};
+		590A908C1947DF7700F23DE4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 594B4DE218134B54003C263C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 594B4E2418134BAF003C263C;
+			remoteInfo = NukeCtlLib;
+		};
+		594B4E0F18134B54003C263C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 594B4DE218134B54003C263C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 594B4DE918134B54003C263C;
+			remoteInfo = NukeCtl;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		594E50DD1852A57D00FCE67C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /tmp;
+			dstSubfolderSpec = 0;
+			files = (
+				594E50DE1852A59800FCE67C /* utilities-aces.ctl in CopyFiles */,
+				594E50DF1852A59800FCE67C /* utilities-color.ctl in CopyFiles */,
+				594E50E01852A59800FCE67C /* utilities.ctl in CopyFiles */,
+				594E50E11852A59800FCE67C /* rrt.ctl in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		594E50E21852A97500FCE67C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /Users/jgoldstone/.nuke;
+			dstSubfolderSpec = 0;
+			files = (
+				594E50E31852A98A00FCE67C /* NukeCtl.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		599F77FC185101DC0051A510 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /Users/jgoldstone/.nuke;
+			dstSubfolderSpec = 0;
+			files = (
+				599F77FD185101F00051A510 /* NukeCtl.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		59BDB0811813555F00F32C47 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				59BDB0821813556A00F32C47 /* libDDImage.dylib in CopyFiles */,
+				59BDB0831813556D00F32C47 /* libGLEW.1.5.8.dylib in CopyFiles */,
+				59BDB0851813557300F32C47 /* libtcmalloc_minimal.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		594B4DEA18134B54003C263C /* NukeCtl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NukeCtl.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		594B4DED18134B54003C263C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		594B4DF018134B54003C263C /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		594B4DF118134B54003C263C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		594B4DF218134B54003C263C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		594B4DF518134B54003C263C /* NukeCtl-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NukeCtl-Info.plist"; sourceTree = "<group>"; };
+		594B4DF718134B54003C263C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		594B4DF918134B54003C263C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		594B4DFB18134B54003C263C /* NukeCtl-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NukeCtl-Prefix.pch"; sourceTree = "<group>"; };
+		594B4DFD18134B54003C263C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		594B4DFF18134B54003C263C /* NCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCAppDelegate.h; sourceTree = "<group>"; };
+		594B4E0018134B54003C263C /* NCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NCAppDelegate.m; sourceTree = "<group>"; };
+		594B4E0318134B54003C263C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		594B4E0518134B54003C263C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		594B4E0B18134B54003C263C /* NukeCtlTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NukeCtlTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		594B4E0C18134B54003C263C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		594B4E1318134B54003C263C /* NukeCtlTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "NukeCtlTests-Info.plist"; sourceTree = "<group>"; };
+		594B4E1518134B54003C263C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		594B4E2518134BAF003C263C /* NukeCtl.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = NukeCtl.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		594B4E2818134BAF003C263C /* NukeCtlLib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NukeCtlLib-Prefix.pch"; sourceTree = "<group>"; };
+		594B4E2918134BAF003C263C /* NukeCtlLibProj.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = NukeCtlLibProj.xcconfig; sourceTree = "<group>"; };
+		594B4E2A18134BAF003C263C /* NukeCtlLibTarget.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = NukeCtlLibTarget.xcconfig; sourceTree = "<group>"; };
+		594B4E3218134D7A003C263C /* NukeCtlTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NukeCtlTests.mm; sourceTree = "<group>"; };
+		594B4E3418134DF8003C263C /* NukeCtl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NukeCtl.cpp; path = ../../../Nuke_CTL/NukeCtl.cpp; sourceTree = "<group>"; };
+		594B4E3518134DF8003C263C /* NukeCtlChanArgMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NukeCtlChanArgMap.cpp; path = ../../../Nuke_CTL/NukeCtlChanArgMap.cpp; sourceTree = "<group>"; };
+		594B4E3618134DF8003C263C /* NukeCtlChanArgMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NukeCtlChanArgMap.h; path = ../../../Nuke_CTL/NukeCtlChanArgMap.h; sourceTree = "<group>"; };
+		594B4E3718134DF8003C263C /* NukeCtlTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NukeCtlTransform.cpp; path = ../../../Nuke_CTL/NukeCtlTransform.cpp; sourceTree = "<group>"; };
+		594B4E3818134DF8003C263C /* NukeCtlTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NukeCtlTransform.h; path = ../../../Nuke_CTL/NukeCtlTransform.h; sourceTree = "<group>"; };
+		594B4E3918134DF8003C263C /* NukeCtlUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NukeCtlUtils.cpp; path = ../../../Nuke_CTL/NukeCtlUtils.cpp; sourceTree = "<group>"; };
+		594B4E3A18134DF8003C263C /* NukeCtlUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NukeCtlUtils.h; path = ../../../Nuke_CTL/NukeCtlUtils.h; sourceTree = "<group>"; };
+		594B4E4A18134E6B003C263C /* libDDImage.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libDDImage.dylib; path = ../../../../../../../Applications/Nuke9.0v2/Nuke9.0v2.app/Contents/MacOS/libDDImage.dylib; sourceTree = "<group>"; };
+		594B4E4B18134E6B003C263C /* libGLEW.1.5.8.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.5.8.dylib; path = ../../../../../../../Applications/Nuke9.0v2/Nuke9.0v2.app/Contents/MacOS/libGLEW.1.5.8.dylib; sourceTree = "<group>"; };
+		594B4E4D18134E6B003C263C /* libtcmalloc_minimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtcmalloc_minimal.dylib; path = ../../../../../../../Applications/Nuke9.0v2/Nuke9.0v2.app/Contents/MacOS/libtcmalloc_minimal.dylib; sourceTree = "<group>"; };
+		594B4E5218134F86003C263C /* libHalf.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libHalf.11.dylib; path = "../../../../../../../usr/local/nuke-compatible/lib/libHalf.11.dylib"; sourceTree = "<group>"; };
+		594B4E5F18134FF5003C263C /* libIlmCtlSimd.1.5.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIlmCtlSimd.1.5.3.dylib; path = "../../../../../../../usr/local/nuke-compatible/lib/libIlmCtlSimd.1.5.3.dylib"; sourceTree = "<group>"; };
+		594B4E621813519E003C263C /* libIex-2_1.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libIex-2_1.11.dylib"; path = "../../../../../../../usr/local/nuke-compatible/lib/libIex-2_1.11.dylib"; sourceTree = "<group>"; };
+		594B4E631813519E003C263C /* libIexMath-2_1.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libIexMath-2_1.11.dylib"; path = "../../../../../../../usr/local/nuke-compatible/lib/libIexMath-2_1.11.dylib"; sourceTree = "<group>"; };
+		594B4E641813519E003C263C /* libIlmThread-2_1.11.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libIlmThread-2_1.11.dylib"; path = "../../../../../../../usr/local/nuke-compatible/lib/libIlmThread-2_1.11.dylib"; sourceTree = "<group>"; };
+		594B4E651813519E003C263C /* libIlmCtl.1.5.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libIlmCtl.1.5.3.dylib; path = "../../../../../../../usr/local/nuke-compatible/lib/libIlmCtl.1.5.3.dylib"; sourceTree = "<group>"; };
+		594E50D51852A4DA00FCE67C /* rrt.ctl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = rrt.ctl; sourceTree = "<group>"; };
+		594E50D71852A52E00FCE67C /* utilities-aces.ctl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "utilities-aces.ctl"; sourceTree = "<group>"; };
+		594E50D81852A52E00FCE67C /* utilities-color.ctl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "utilities-color.ctl"; sourceTree = "<group>"; };
+		594E50D91852A52E00FCE67C /* utilities.ctl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = utilities.ctl; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		594B4DE718134B54003C263C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				599F77FE185102870051A510 /* NukeCtl.dylib in Frameworks */,
+				594B4DEE18134B54003C263C /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		594B4E0818134B54003C263C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				594B4E6D181351EF003C263C /* libIlmCtl.1.5.3.dylib in Frameworks */,
+				594B4E0E18134B54003C263C /* Cocoa.framework in Frameworks */,
+				594B4E6C181351EF003C263C /* libIlmThread-2_1.11.dylib in Frameworks */,
+				594B4E74181351F0003C263C /* libGLEW.1.5.8.dylib in Frameworks */,
+				594B4E6B181351EF003C263C /* libIexMath-2_1.11.dylib in Frameworks */,
+				594B4E75181351F0003C263C /* libtcmalloc_minimal.dylib in Frameworks */,
+				594B4E6F181351F0003C263C /* libIlmCtlSimd.1.5.3.dylib in Frameworks */,
+				594B4E7618135224003C263C /* NukeCtl.dylib in Frameworks */,
+				594B4E0D18134B54003C263C /* XCTest.framework in Frameworks */,
+				594B4E71181351F0003C263C /* libHalf.11.dylib in Frameworks */,
+				594B4E72181351F0003C263C /* libDDImage.dylib in Frameworks */,
+				594B4E6A181351EF003C263C /* libIex-2_1.11.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		594B4E2218134BAF003C263C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				594B4E681813519E003C263C /* libIlmThread-2_1.11.dylib in Frameworks */,
+				594B4E4E18134E6B003C263C /* libDDImage.dylib in Frameworks */,
+				594B4E4F18134E6B003C263C /* libGLEW.1.5.8.dylib in Frameworks */,
+				594B4E671813519E003C263C /* libIexMath-2_1.11.dylib in Frameworks */,
+				594B4E5718134F86003C263C /* libHalf.11.dylib in Frameworks */,
+				594B4E691813519E003C263C /* libIlmCtl.1.5.3.dylib in Frameworks */,
+				594B4E661813519E003C263C /* libIex-2_1.11.dylib in Frameworks */,
+				594B4E6118134FF5003C263C /* libIlmCtlSimd.1.5.3.dylib in Frameworks */,
+				594B4E5118134E6B003C263C /* libtcmalloc_minimal.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		594B4DE118134B54003C263C = {
+			isa = PBXGroup;
+			children = (
+				594B4DF318134B54003C263C /* NukeCtl */,
+				594B4E1118134B54003C263C /* NukeCtlTests */,
+				594B4E2618134BAF003C263C /* NukeCtlLib */,
+				594B4DEC18134B54003C263C /* Frameworks */,
+				594B4DEB18134B54003C263C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		594B4DEB18134B54003C263C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				594B4DEA18134B54003C263C /* NukeCtl.app */,
+				594B4E0B18134B54003C263C /* NukeCtlTests.xctest */,
+				594B4E2518134BAF003C263C /* NukeCtl.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		594B4DEC18134B54003C263C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				594B4E621813519E003C263C /* libIex-2_1.11.dylib */,
+				594B4E631813519E003C263C /* libIexMath-2_1.11.dylib */,
+				594B4E641813519E003C263C /* libIlmThread-2_1.11.dylib */,
+				594B4E651813519E003C263C /* libIlmCtl.1.5.3.dylib */,
+				594B4E5F18134FF5003C263C /* libIlmCtlSimd.1.5.3.dylib */,
+				594B4E5218134F86003C263C /* libHalf.11.dylib */,
+				594B4E4A18134E6B003C263C /* libDDImage.dylib */,
+				594B4E4B18134E6B003C263C /* libGLEW.1.5.8.dylib */,
+				594B4E4D18134E6B003C263C /* libtcmalloc_minimal.dylib */,
+				594B4DED18134B54003C263C /* Cocoa.framework */,
+				594B4E0C18134B54003C263C /* XCTest.framework */,
+				594B4DEF18134B54003C263C /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		594B4DEF18134B54003C263C /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				594B4DF018134B54003C263C /* AppKit.framework */,
+				594B4DF118134B54003C263C /* CoreData.framework */,
+				594B4DF218134B54003C263C /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		594B4DF318134B54003C263C /* NukeCtl */ = {
+			isa = PBXGroup;
+			children = (
+				594B4DFF18134B54003C263C /* NCAppDelegate.h */,
+				594B4E0018134B54003C263C /* NCAppDelegate.m */,
+				594B4E0218134B54003C263C /* MainMenu.xib */,
+				594B4E0518134B54003C263C /* Images.xcassets */,
+				594B4DF418134B54003C263C /* Supporting Files */,
+			);
+			path = NukeCtl;
+			sourceTree = "<group>";
+		};
+		594B4DF418134B54003C263C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				594B4DF518134B54003C263C /* NukeCtl-Info.plist */,
+				594B4DF618134B54003C263C /* InfoPlist.strings */,
+				594B4DF918134B54003C263C /* main.m */,
+				594B4DFB18134B54003C263C /* NukeCtl-Prefix.pch */,
+				594B4DFC18134B54003C263C /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		594B4E1118134B54003C263C /* NukeCtlTests */ = {
+			isa = PBXGroup;
+			children = (
+				594B4E3218134D7A003C263C /* NukeCtlTests.mm */,
+				594B4E1218134B54003C263C /* Supporting Files */,
+			);
+			path = NukeCtlTests;
+			sourceTree = "<group>";
+		};
+		594B4E1218134B54003C263C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				594E50D71852A52E00FCE67C /* utilities-aces.ctl */,
+				594E50D81852A52E00FCE67C /* utilities-color.ctl */,
+				594E50D91852A52E00FCE67C /* utilities.ctl */,
+				594E50D51852A4DA00FCE67C /* rrt.ctl */,
+				594B4E1318134B54003C263C /* NukeCtlTests-Info.plist */,
+				594B4E1418134B54003C263C /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		594B4E2618134BAF003C263C /* NukeCtlLib */ = {
+			isa = PBXGroup;
+			children = (
+				594B4E3518134DF8003C263C /* NukeCtlChanArgMap.cpp */,
+				594B4E3618134DF8003C263C /* NukeCtlChanArgMap.h */,
+				594B4E3718134DF8003C263C /* NukeCtlTransform.cpp */,
+				594B4E3818134DF8003C263C /* NukeCtlTransform.h */,
+				594B4E3918134DF8003C263C /* NukeCtlUtils.cpp */,
+				594B4E3A18134DF8003C263C /* NukeCtlUtils.h */,
+				594B4E3418134DF8003C263C /* NukeCtl.cpp */,
+				594B4E2918134BAF003C263C /* NukeCtlLibProj.xcconfig */,
+				594B4E2A18134BAF003C263C /* NukeCtlLibTarget.xcconfig */,
+				594B4E2718134BAF003C263C /* Supporting Files */,
+			);
+			path = NukeCtlLib;
+			sourceTree = "<group>";
+		};
+		594B4E2718134BAF003C263C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				594B4E2818134BAF003C263C /* NukeCtlLib-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		594B4E2318134BAF003C263C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				590A90891947D54700F23DE4 /* NukeCtlUtils.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		594B4DE918134B54003C263C /* NukeCtl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 594B4E1B18134B54003C263C /* Build configuration list for PBXNativeTarget "NukeCtl" */;
+			buildPhases = (
+				594B4DE618134B54003C263C /* Sources */,
+				594B4DE718134B54003C263C /* Frameworks */,
+				594B4DE818134B54003C263C /* Resources */,
+				594E50E21852A97500FCE67C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				590A908B1947DEF100F23DE4 /* PBXTargetDependency */,
+			);
+			name = NukeCtl;
+			productName = NukeCtl;
+			productReference = 594B4DEA18134B54003C263C /* NukeCtl.app */;
+			productType = "com.apple.product-type.application";
+		};
+		594B4E0A18134B54003C263C /* NukeCtlTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 594B4E1E18134B54003C263C /* Build configuration list for PBXNativeTarget "NukeCtlTests" */;
+			buildPhases = (
+				594B4E0718134B54003C263C /* Sources */,
+				594B4E0818134B54003C263C /* Frameworks */,
+				594B4E0918134B54003C263C /* Resources */,
+				59BDB0811813555F00F32C47 /* CopyFiles */,
+				594E50DD1852A57D00FCE67C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				590A908D1947DF7700F23DE4 /* PBXTargetDependency */,
+				594B4E1018134B54003C263C /* PBXTargetDependency */,
+			);
+			name = NukeCtlTests;
+			productName = NukeCtlTests;
+			productReference = 594B4E0B18134B54003C263C /* NukeCtlTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		594B4E2418134BAF003C263C /* NukeCtlLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 594B4E2F18134BAF003C263C /* Build configuration list for PBXNativeTarget "NukeCtlLib" */;
+			buildPhases = (
+				594B4E2118134BAF003C263C /* Sources */,
+				594B4E2218134BAF003C263C /* Frameworks */,
+				594B4E2318134BAF003C263C /* Headers */,
+				599F77FC185101DC0051A510 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NukeCtlLib;
+			productName = NukeCtlLib;
+			productReference = 594B4E2518134BAF003C263C /* NukeCtl.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		594B4DE218134B54003C263C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = NC;
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "ARRI Inc.";
+				TargetAttributes = {
+					594B4DE918134B54003C263C = {
+						DevelopmentTeam = N735C88KRN;
+					};
+					594B4E0A18134B54003C263C = {
+						TestTargetID = 594B4DE918134B54003C263C;
+					};
+				};
+			};
+			buildConfigurationList = 594B4DE518134B54003C263C /* Build configuration list for PBXProject "NukeCtl" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 594B4DE118134B54003C263C;
+			productRefGroup = 594B4DEB18134B54003C263C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				594B4DE918134B54003C263C /* NukeCtl */,
+				594B4E0A18134B54003C263C /* NukeCtlTests */,
+				594B4E2418134BAF003C263C /* NukeCtlLib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		594B4DE818134B54003C263C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				594B4DF818134B54003C263C /* InfoPlist.strings in Resources */,
+				594B4E0618134B54003C263C /* Images.xcassets in Resources */,
+				599F77FB185101C10051A510 /* NukeCtl.dylib in Resources */,
+				594B4DFE18134B54003C263C /* Credits.rtf in Resources */,
+				594B4E0418134B54003C263C /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		594B4E0918134B54003C263C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				594E50DB1852A52E00FCE67C /* utilities-color.ctl in Resources */,
+				594E50D61852A4DA00FCE67C /* rrt.ctl in Resources */,
+				594E50DC1852A52E00FCE67C /* utilities.ctl in Resources */,
+				594B4E1618134B54003C263C /* InfoPlist.strings in Resources */,
+				594E50DA1852A52E00FCE67C /* utilities-aces.ctl in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		594B4DE618134B54003C263C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				594B4DFA18134B54003C263C /* main.m in Sources */,
+				594B4E0118134B54003C263C /* NCAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		594B4E0718134B54003C263C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				594B4E3318134D7A003C263C /* NukeCtlTests.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		594B4E2118134BAF003C263C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				594B4E4418134DF8003C263C /* NukeCtlUtils.cpp in Sources */,
+				594B4E4018134DF8003C263C /* NukeCtlChanArgMap.cpp in Sources */,
+				594B4E3F18134DF8003C263C /* NukeCtl.cpp in Sources */,
+				594B4E4218134DF8003C263C /* NukeCtlTransform.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		590A908B1947DEF100F23DE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 594B4E2418134BAF003C263C /* NukeCtlLib */;
+			targetProxy = 590A908A1947DEF100F23DE4 /* PBXContainerItemProxy */;
+		};
+		590A908D1947DF7700F23DE4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 594B4E2418134BAF003C263C /* NukeCtlLib */;
+			targetProxy = 590A908C1947DF7700F23DE4 /* PBXContainerItemProxy */;
+		};
+		594B4E1018134B54003C263C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 594B4DE918134B54003C263C /* NukeCtl */;
+			targetProxy = 594B4E0F18134B54003C263C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		594B4DF618134B54003C263C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				594B4DF718134B54003C263C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		594B4DFC18134B54003C263C /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				594B4DFD18134B54003C263C /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		594B4E0218134B54003C263C /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				594B4E0318134B54003C263C /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		594B4E1418134B54003C263C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				594B4E1518134B54003C263C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		594B4E1918134B54003C263C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/foundry/include,
+					"/usr/local/nuke-compatible/include/CTL",
+					"/usr/local/nuke-compatible/include/OpenEXR",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/foundry/lib,
+					"/usr/local/nuke-compatible/lib",
+				);
+				MACOSX_DEPLOYMENT_TARGET = "";
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		594B4E1A18134B54003C263C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/foundry/include,
+					"/usr/local/nuke-compatible/include/CTL",
+					"/usr/local/nuke-compatible/include/OpenEXR",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/foundry/lib,
+					"/usr/local/nuke-compatible/lib",
+				);
+				MACOSX_DEPLOYMENT_TARGET = "";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		594B4E1C18134B54003C263C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NukeCtl/NukeCtl-Prefix.pch";
+				INFOPLIST_FILE = "NukeCtl/NukeCtl-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MACOSX_DEPLOYMENT_TARGET = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		594B4E1D18134B54003C263C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NukeCtl/NukeCtl-Prefix.pch";
+				INFOPLIST_FILE = "NukeCtl/NukeCtl-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				MACOSX_DEPLOYMENT_TARGET = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		594B4E1F18134B54003C263C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/NukeCtl.app/Contents/MacOS/NukeCtl";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NukeCtl/NukeCtl-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "NukeCtlTests/NukeCtlTests-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		594B4E2018134B54003C263C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/NukeCtl.app/Contents/MacOS/NukeCtl";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NukeCtl/NukeCtl-Prefix.pch";
+				INFOPLIST_FILE = "NukeCtlTests/NukeCtlTests-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+		594B4E3018134BAF003C263C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				LD_RUNPATH_SEARCH_PATHS = "/usr/local/nuke-compatible/lib /usr/local/lib";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = NukeCtl;
+			};
+			name = Debug;
+		};
+		594B4E3118134BAF003C263C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD_RUNPATH_SEARCH_PATHS = "/usr/local/nuke-compatible/lib /usr/local/lib";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = NukeCtl;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		594B4DE518134B54003C263C /* Build configuration list for PBXProject "NukeCtl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				594B4E1918134B54003C263C /* Debug */,
+				594B4E1A18134B54003C263C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		594B4E1B18134B54003C263C /* Build configuration list for PBXNativeTarget "NukeCtl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				594B4E1C18134B54003C263C /* Debug */,
+				594B4E1D18134B54003C263C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		594B4E1E18134B54003C263C /* Build configuration list for PBXNativeTarget "NukeCtlTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				594B4E1F18134B54003C263C /* Debug */,
+				594B4E2018134B54003C263C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		594B4E2F18134BAF003C263C /* Build configuration list for PBXNativeTarget "NukeCtlLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				594B4E3018134BAF003C263C /* Debug */,
+				594B4E3118134BAF003C263C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 594B4DE218134B54003C263C /* Project object */;
+}

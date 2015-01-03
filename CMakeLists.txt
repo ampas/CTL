@@ -3,7 +3,7 @@ project( CTL )
 
 set( CTL_MAJOR_VERSION 1 )
 set( CTL_MINOR_VERSION 5 )
-set( CTL_PATCH_VERSION 0 )
+set( CTL_PATCH_VERSION 3 )
 set( CTL_VERSION ${CTL_MAJOR_VERSION}.${CTL_MINOR_VERSION}.${CTL_PATCH_VERSION} )
 
 ## Make install directories overrideable
@@ -18,21 +18,27 @@ else()
 endif()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Install directory for project CMake files" )
 
-# use, i.e. don't skip the full RPATH for the build tree
-SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
-# when building, don't use the install RPATH already
-# (but later on when installing)
-SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
-#SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-# add the automatically determined parts of the RPATH
-# which point to directories outside the build tree to the install RPATH
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-# the RPATH to be used when installing, but only if it's not a system directory
-LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
-IF("${isSystemDir}" STREQUAL "-1")
-  SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-ENDIF("${isSystemDir}" STREQUAL "-1")
-
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  SET(CMAKE_MACOSX_RPATH TRUE)
+  # Don't set this at build time; set it at install time with each target's INSTALL_RPATH property
+  # (again, only on Darwin)
+  SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+ELSE()
+  # use, i.e. don't skip the full RPATH for the build tree
+  SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+  # when building, don't use the install RPATH already
+  # (but later on when installing)
+  SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
+  #SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+  # add the automatically determined parts of the RPATH
+  # which point to directories outside the build tree to the install RPATH
+  SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  # the RPATH to be used when installing, but only if it's not a system directory
+  LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+  IF("${isSystemDir}" STREQUAL "-1")
+    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+  ENDIF("${isSystemDir}" STREQUAL "-1")
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 ## convert install paths to absolute
 foreach( p LIB BIN INCLUDE CMAKE DOC)
@@ -63,6 +69,7 @@ add_subdirectory(doc)
 add_subdirectory(lib)
 add_subdirectory(ctlrender)
 add_subdirectory(OpenEXR_CTL)
+add_subdirectory(Nuke_CTL)
 add_subdirectory(unittest EXCLUDE_FROM_ALL)
 
 # Add all targets to the build-tree export set

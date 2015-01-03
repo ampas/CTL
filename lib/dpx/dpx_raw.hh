@@ -53,7 +53,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #if !defined(CTL_DPX_RAW_INTERNAL_INCLUDE)
-#define CRL_DPX_RAW_INTERNAL_INCLUDE
+#define CTL_DPX_RAW_INTERNAL_INCLUDE
 
 namespace ctl {
 

@@ -13,6 +13,10 @@ set_target_properties( IlmCtlMath PROPERTIES
   SOVERSION ${CTL_VERSION}
 )
 
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set_target_properties(IlmCtlMath PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 install( FILES
   CtlColorSpace.h
   CtlLookupTable.h
