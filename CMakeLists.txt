@@ -19,8 +19,10 @@ endif()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Install directory for project CMake files" )
 
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  SET(CMAKE_MACOSX_RPATH 1)
-  SET(BUILD_WITH_INSTALL_RPATH 1)
+  SET(CMAKE_MACOSX_RPATH TRUE)
+  # Don't set this at build time; set it at install time with each target's INSTALL_RPATH property
+  # (again, only on Darwin)
+  SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 ELSE()
   # use, i.e. don't skip the full RPATH for the build tree
   SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
