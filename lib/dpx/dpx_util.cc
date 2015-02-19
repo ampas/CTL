@@ -55,7 +55,9 @@
 #include "dpx_util.hh"
 #include <stdarg.h>
 #include <stdio.h>
+#ifndef WIN32
 #include <alloca.h>
+#endif
 #include <string.h>
 
 namespace ctl {

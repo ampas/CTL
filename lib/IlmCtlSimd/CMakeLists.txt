@@ -1,19 +1,26 @@
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/IlmCtl" "${PROJECT_SOURCE_DIR}/lib/IlmCtlMath" )
 
-if(WIN32)
-  add_definitions( -DOPENEXR_DLL )
-endif(WIN32)
 
 
 add_executable( halfExpLogTable halfExpLogTable.cpp )
 target_link_libraries( halfExpLogTable ${IlmBase_LDFLAGS_OTHER} )
 target_link_libraries( halfExpLogTable Iex-2_2 Imath-2_2 IexMath-2_2 IlmThread-2_2 Half )
 
+if( win32 )
+get_filename_component(OpenEXR_PATH ${OpenEXR_LIBRARY} PATH)
+file( COPY "${OpenEXR_PATH}/Half.dll"  
+      	   DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/" )
+endif(win32)
+
 add_custom_command( OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h"
                     COMMAND halfExpLogTable "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h" "${CMAKE_CURRENT_BINARY_DIR}/halfExpLog.h"
                     DEPENDS halfExpLogTable )
 
 include_directories( "${CMAKE_CURRENT_BINARY_DIR}" )
+
+if(WIN32)
+  add_definitions( -DOPENEXR_DLL )
+endif(WIN32)
 
 add_library( IlmCtlSimd ${DO_SHARED}
 	CtlSimdAddr.cpp

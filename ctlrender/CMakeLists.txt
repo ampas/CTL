@@ -1,4 +1,5 @@
 
+
 if (TIFF_FOUND)
 add_definitions( -DHAVE_LIBTIFF=1 )
 include_directories( ${TIFF_INCLUDE_DIRS} )
@@ -6,6 +7,9 @@ link_directories( ${TIFF_LIBRARY_DIRS} )
 endif()
 
 if ( OpenEXR_FOUND )
+if(win32)
+  add_definitions( -DOPENEXR_DLL  )
+endif(win32)
 add_definitions( -DHAVE_OPENEXR=1 )
 include_directories( ${OpenEXR_INCLUDE_DIRS} )
 link_directories( ${OpenEXR_LIBRARY_DIRS} )
