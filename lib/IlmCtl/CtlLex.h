@@ -68,6 +68,16 @@
 #include <CtlTokens.h>
 #include <string>
 
+#ifdef _WIN32
+#include <locale.h>
+#include <stdlib.h>
+#define locale_t _locale_t
+#else
+#include <locale.h>
+#include <xlocale.h>
+#endif
+
+
 namespace Ctl {
 
 
@@ -83,6 +93,10 @@ class Lex
 
      Lex (LContext &lcontext);
 
+    //-----------------------------------------------------------------
+    // Destructor: frees resources
+    //-----------------------------------------------------------------
+    ~Lex();
 
     //-----------------------------------------------------------------
     // Advance to the text token:
@@ -163,6 +177,7 @@ class Lex
     int			_tokenIntValue;
     float		_tokenFloatValue;
     std::string		_tokenStringValue;
+    locale_t            _loc;
 };
 
 

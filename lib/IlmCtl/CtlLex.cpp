@@ -65,7 +65,11 @@
 #include <iomanip>
 #include <cassert>
 #include <cstdlib>
+#include <cstring>
 
+#ifdef _WIN32
+#  define strtod_l _strtod_l
+#endif
 
 #if 0
     #include <iostream>
@@ -162,9 +166,28 @@ Lex::Lex (LContext &lcontext):
 	   "(this = " << this << ", "
 	   "lcontext = \"" << &lcontext << "\")");
 
+#ifdef _WIN32
+    // The following line should in theory work, but it doesn't
+    // _loc = _create_locale( LC_ALL, "en-US" );
+    // We instead use a full name
+    _loc = _create_locale( LC_ALL, "English" );
+#else
+    locale_t empty;
+    memset( &empty, 0, sizeof(locale_t) );
+    _loc = newlocale( LC_ALL, "en_US.UTF-8", empty );
+#endif
+
     next();
 }
 
+Lex::~Lex()
+{
+#ifdef _WIN32
+    _free_locale( _loc );
+#else
+    freelocale( _loc );
+#endif
+}
 
 void	
 Lex::next ()
@@ -827,7 +850,7 @@ Lex::getIntOrFloatLiteral (bool decimalPointSeen)
 	const char *b = _tokenStringValue.c_str();
 	char *e;
 
-	_tokenFloatValue = strtod (b, &e);
+	_tokenFloatValue = (float) strtod_l (b, &e, _loc);
 
 	if (e - b != (int)_tokenStringValue.size())
 	{
