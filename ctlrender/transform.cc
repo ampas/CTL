@@ -57,6 +57,11 @@
 #include "tiff_file.hh"
 #include "exr_file.hh"
 #include "aces_file.hh"
+#ifdef WIN32
+#include <stdlib.h>
+#define strcasecmp stricmp
+#define snprintf _snprintf
+#endif
 #include <dpx.hh>
 #include <CtlRcPtr.h>
 #include <CtlFunctionCall.h>

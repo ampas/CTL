@@ -1,3 +1,4 @@
+
 ///////////////////////////////////////////////////////////////////////////
 // Copyright (c) 2013 Academy of Motion Picture Arts and Sciences 
 // ("A.M.P.A.S."). Portions contributed by others as indicated.
@@ -56,7 +57,11 @@
 #define CTL_UTIL_CTLRENDER_MAIN_INCLUDE
 
 #include <stdint.h>
+#ifdef WIN32
+#include <windows.h>
+#else
 #include <unistd.h>
+#endif
 #include <format.hh>
 #include <compression.hh>
 
