@@ -43,9 +43,9 @@ foreach( p LIB BIN INCLUDE CMAKE DOC)
 endforeach()
 
 if(WIN32)
-option(ENABLE_SHARED "Enable Shared Libraries" ON)
-else(WIN32)
 option(ENABLE_SHARED "Enable Shared Libraries" OFF)
+else(WIN32)
+option(ENABLE_SHARED "Enable Shared Libraries" ON)
 endif(WIN32)
 
 if ( ENABLE_SHARED )
