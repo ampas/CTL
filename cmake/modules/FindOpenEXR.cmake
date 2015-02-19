@@ -52,7 +52,7 @@ if(OpenEXR_INCLUDE_DIR AND EXISTS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h")
     endif()
 endif()
 
-find_library(OpenEXR_LIBRARY NAMES IlmImf libIlmImf HINTS ${_OpenEXR_HINT_LIB})
+find_library(OpenEXR_LIBRARY NAMES IlmImf-2_2 libIlmImf HINTS ${_OpenEXR_HINT_LIB})
 
 find_package(IlmBase QUIET)
 
