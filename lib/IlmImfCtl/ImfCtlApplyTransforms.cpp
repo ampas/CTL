@@ -60,6 +60,12 @@
 //
 //-----------------------------------------------------------------------------
 
+#include <cstdio>
+#define __STDC_FORMAT_MACROS
+#define __STDC_LIMIT_MACROS
+#include <inttypes.h>
+
+
 #include <ImfCtlApplyTransforms.h>
 #include <ImfCtlCopyFunctionArg.h>
 #include <ImfHeader.h>
@@ -263,8 +269,9 @@ callFunctions
 	//
 	// Call the function
 	//
-
+        debug( "callFunction with numSamples = " << numSamples );
 	func->callFunction (numSamples);
+        debug( "calledFunction with numSamples = " << numSamples );
 
 	//
 	// Return output argument values to the caller.
@@ -423,7 +430,24 @@ CallFunctionsTask::execute()
 	FunctionList funcs;
 
 	for (size_t i = 0; i < _transformNames.size(); ++i)
-	    funcs.push_back (_interpreter.newFunctionCall (_transformNames[i]));
+        {
+            FunctionCallPtr fn;
+            try
+            {
+                fn = _interpreter.newFunctionCall( std::string("main") );
+                funcs.push_back( fn );
+            }
+            catch (const Iex::ArgExc &e)
+            {
+                // XXX CTL library needs to be changed so that we have a better
+                // XXX 'function not exists' exception.
+            }
+
+            if ( fn.refcount() == 0 )
+            {
+                funcs.push_back (_interpreter.newFunctionCall (_transformNames[i]));
+            }
+        }
 
 	//
 	// Repeatedly call the transform functions, breaking the
@@ -481,7 +505,7 @@ applyTransforms
     //
 
     for (size_t i = 0; i < transformNames.size(); ++i)
-	interpreter.loadModule (transformNames[i]);
+        interpreter.loadModule(transformNames[i]);
 
     //
     // Determine how many samples we will process.
