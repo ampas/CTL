@@ -53,9 +53,15 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include <CtlExc.h>
-#include <stdarg.h>
 #include <stdio.h>
-#include <alloca.h>
+#include <stdarg.h>
+#ifdef WIN32
+#  ifndef va_copy
+#    define va_copy( a, b ) a = b
+#  endif
+#else
+#  include <alloca.h>
+#endif
 #include <string.h>
 
 namespace Ctl {
@@ -87,7 +93,7 @@ void CtlExc::_explain(const char *text, va_list _ap) {
 	operator=(ptr);
 }
 
-CtlExc::CtlExc(const char *format, ...) throw() {
+CtlExc::CtlExc(const char *format, ...) throw() : Iex::BaseExc() {
 	va_list ap;
 
 	va_start(ap, format);

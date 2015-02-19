@@ -64,7 +64,12 @@
 #include <half.h>
 #include <CtlExc.h>
 #include <string.h>
-#include <alloca.h>
+#ifdef WIN32
+#  include <stdlib.h>
+#  define strtof strtod
+#else
+#  include <alloca.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
