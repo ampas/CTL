@@ -7,9 +7,9 @@ link_directories( ${TIFF_LIBRARY_DIRS} )
 endif()
 
 if ( OpenEXR_FOUND )
-if(win32)
+if(WIN32)
   add_definitions( -DOPENEXR_DLL  )
-endif(win32)
+endif(WIN32)
 add_definitions( -DHAVE_OPENEXR=1 )
 include_directories( ${OpenEXR_INCLUDE_DIRS} )
 link_directories( ${OpenEXR_LIBRARY_DIRS} )
@@ -35,7 +35,13 @@ add_executable( ctlrender
   compression.cc
 )
 
-target_link_libraries( ctlrender IlmCtlSimd IlmCtlMath IlmCtl ctldpx ${IlmBase_LIBRARIES} )
+if(WIN32)
+   set( OS_LIBRARIES Winmm )
+else(WIN32)
+   set( OS_LIBRARIES "" )
+endif(WIN32)
+
+target_link_libraries( ctlrender IlmCtlSimd IlmCtlMath IlmCtl ctldpx ${IlmBase_LIBRARIES} ${OS_LIBRARIES} )
 target_link_libraries( ctlrender ${IlmBase_LDFLAGS_OTHER} )
 if (TIFF_FOUND)
 target_link_libraries( ctlrender ${TIFF_LIBRARIES} )

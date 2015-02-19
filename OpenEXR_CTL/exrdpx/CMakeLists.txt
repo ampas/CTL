@@ -1,4 +1,8 @@
 
+if(WIN32)
+  add_definitions( -DOPENEXR_DLL )
+endif(WIN32)
+
 include_directories( ${OpenEXR_INCLUDE_DIRS} )
 link_directories( ${OpenEXR_LIBRARY_DIRS} )
 
