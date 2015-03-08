@@ -60,6 +60,7 @@
 #include <cctype>
 #include <cfloat>
 #include <climits>
+#include <cstdlib>
 
 
 #if 0

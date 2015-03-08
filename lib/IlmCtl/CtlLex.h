@@ -86,11 +86,6 @@ class Lex
      Lex (LContext &lcontext);
 
     //-----------------------------------------------------------------
-    // Destructor: frees resources
-    //-----------------------------------------------------------------
-    ~Lex();
-
-    //-----------------------------------------------------------------
     // Advance to the text token:
     //
     // next() reads characters from the program text until the end of
