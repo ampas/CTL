@@ -159,7 +159,7 @@ convertMantissa (const char *&nextChar, double &mantissa, int &exponentBias)
     // m = 123, b = -2.
     //
     // We ensure that m does not become larger than about 10/DBL_EPSILON,
-    // but we do allow b to become arbitraryly large.  Once m is larger
+    // but we do allow b to become arbitrarily large.  Once m is larger
     // than 10/DBL_EPSILON the numerical result of multiplying m by 10 and
     // adding another digit to it is no different than what we get from
     // leaving m alone and adjusting the exponent bias instead.
