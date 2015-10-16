@@ -57,8 +57,16 @@
 
 #include <dpx.hh>
 #include "main.hh"
+#include <vector>
+#include <map>
 
 bool dpx_read(const char *name, float scale,
+              ctl::dpx::fb<float> *pixels,
+              format_t *format);
+std::map<const char *, uint32_t> dpx_read_details_for_adx_int(const char *name, float scale,
+              ctl::dpx::fb<float> *pixels,
+              format_t *format);
+std::map<const char *, float32_t> dpx_read_details_for_adx_float(const char *name, float scale,
               ctl::dpx::fb<float> *pixels,
               format_t *format);
 void dpx_write(const char *name, float scale,

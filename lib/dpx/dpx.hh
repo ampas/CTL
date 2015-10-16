@@ -352,6 +352,7 @@ struct dpx {
 				// channel (set descriptor==0 if the data has already been
 				// formatted into RGBA or YA).
 				void swizzle(uint8_t descriptor, bool squish_alpha);
+                void channelAdjust(uint8_t descriptor);
 		
 				// Indicates if the data has an alpha channel.	
 				bool alpha() const;
@@ -624,8 +625,8 @@ struct dpx {
 		static std::string descriptor_to_string(uint8_t id);
 };
 
-#include <dpx.tcc>
-
+//#include <dpx.tcc>
+#include "dpx.tcc"
 }
 
 

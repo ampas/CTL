@@ -17,7 +17,7 @@ include_directories( ${AcesContainer_INCLUDE_DIRS} )
 link_directories( ${AcesContainer_LIBRARY_DIRS} )
 endif()
 
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/IlmCtl" "${PROJECT_SOURCE_DIR}/lib/IlmCtlMath" "${PROJECT_SOURCE_DIR}/lib/IlmCtlSimd" "${PROJECT_SOURCE_DIR}/lib/dpx" )
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/IlmCtl" "${PROJECT_SOURCE_DIR}/lib/IlmCtlMath" "${PROJECT_SOURCE_DIR}/lib/IlmCtlSimd" "${PROJECT_SOURCE_DIR}/lib/dpx" "${PROJECT_SOURCE_DIR}/lib/adx")
 
 add_executable( ctlrender
   main.cc
@@ -25,6 +25,7 @@ add_executable( ctlrender
   usage.cc
   aces_file.cc
   dpx_file.cc
+  adx_file.cc
   exr_file.cc
   tiff_file.cc
   format.cc
@@ -32,6 +33,7 @@ add_executable( ctlrender
 )
 
 target_link_libraries( ctlrender IlmCtlSimd IlmCtlMath IlmCtl ctldpx ${IlmBase_LIBRARIES} )
+target_link_libraries( ctlrender IlmCtlSimd IlmCtlMath IlmCtl ctladx ${IlmBase_LIBRARIES} )
 target_link_libraries( ctlrender ${IlmBase_LDFLAGS_OTHER} )
 if (TIFF_FOUND)
 target_link_libraries( ctlrender ${TIFF_LIBRARIES} )

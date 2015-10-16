@@ -209,6 +209,8 @@ void dpx::fb<T>::swizzle(uint8_t descriptor, bool squish_alpha) {
 					t=i[2];
 					o[2]=i[1];
 					o[1]=t;
+					i=i+4;
+					o=o+4;
 				}
 				_depth=3;
 			} else {
@@ -223,6 +225,74 @@ void dpx::fb<T>::swizzle(uint8_t descriptor, bool squish_alpha) {
 					o=o+4;
 				}
 			}
+			break;
+	}
+}
+template <class T>
+void ctl::dpx::fb<T>::channelAdjust(uint8_t descriptor){
+	uint64_t u, count;
+	T *i, *o;
+	T t;
+
+	count=width()*height();
+
+	i=_data;
+	o=_data;
+
+	switch(descriptor) {
+		case 0:   // user defined
+		case 6:   // luminance
+		case 157: // XYZ
+		case 158: // luminance, alpha
+			break;
+
+		case 50:  
+			break;
+
+		case 51: // RGBA
+			for(u=0; u<count; u++) {
+				*(o++)=*(i++);
+				*(o++)=*(i++);
+				*(o++)=*(i++);
+				i++;
+			}
+			_depth=3;
+			break;
+
+		case 53: //BGR
+			for(u=0; u<count; u++) {
+				t=i[0];
+				i[0]=i[2];
+				i[2]=t;
+
+				t=t+3;
+				i=i+3;
+			}
+			break;
+
+		case 52: //ABGR
+			for(u=0; u<count; u++) {
+				t=i[0];
+				o[0]=i[3];
+				o[3]=t;
+				t=i[1];
+				o[1]=i[2];
+				o[2]=t;
+
+				i=i+4;
+				o=o+4;
+			}
+
+			i=_data;
+			o=_data;
+
+			for(u=0; u<count; u++){
+				*(o++)=*(i++);
+				*(o++)=*(i++);
+				*(o++)=*(i++);
+				i++;
+			}
+			_depth=3;
 			break;
 	}
 }

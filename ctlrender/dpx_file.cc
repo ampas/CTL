@@ -77,6 +77,82 @@ bool dpx_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
 	return 1;
 }
 
+std::map<const char *, uint32_t> dpx_read_details_for_adx_int(const char *name,
+                                                              float scale,
+                                                              ctl::dpx::fb<float> *pixels,
+                                                              format_t *format) {
+	std::ifstream file;
+	ctl::dpx dpxheader;
+	std::map<const char *, uint32_t> M;
+
+	file.open(name);
+	
+	dpxheader.read(&file);	
+	dpxheader.read(&file, 0, pixels, scale);
+
+	M["18"] = static_cast<uint32_t>(dpxheader.number_of_elements);
+	M["21.1"] = static_cast<uint32_t>(dpxheader.elements[0].data_sign);
+	M["21.2"] = static_cast<uint32_t>(dpxheader.elements[0].ref_low_data_code);
+	M["21.4"] = static_cast<uint32_t>(dpxheader.elements[0].ref_high_data_code);
+	M["21.6"] = static_cast<uint32_t>(dpxheader.elements[0].descriptor);
+	M["21.7"] = static_cast<uint32_t>(dpxheader.elements[0].transfer_characteristic);
+	M["21.8"] = static_cast<uint32_t>(dpxheader.elements[0].colorimetric_characteristic);
+	M["21.9"] = static_cast<uint32_t>(dpxheader.elements[0].bits_per_sample);
+	M["21.10"] = static_cast<uint32_t>(dpxheader.elements[0].packing);
+
+	if (static_cast<uint32_t>(dpxheader.number_of_elements) > 1){
+		M["22.1"] = static_cast<uint32_t>(dpxheader.elements[1].data_sign);
+		M["21.2"] = static_cast<uint32_t>(dpxheader.elements[1].ref_low_data_code);
+		M["21.4"] = static_cast<uint32_t>(dpxheader.elements[1].ref_high_data_code);
+		M["22.6"] = static_cast<uint32_t>(dpxheader.elements[1].descriptor);
+		M["22.7"] = static_cast<uint32_t>(dpxheader.elements[1].transfer_characteristic);
+		M["22.8"] = static_cast<uint32_t>(dpxheader.elements[1].colorimetric_characteristic);
+		M["22.9"] = static_cast<uint32_t>(dpxheader.elements[1].bits_per_sample);
+		M["22.10"] = static_cast<uint32_t>(dpxheader.elements[1].packing);
+	}
+
+	M["60"] = static_cast<uint32_t>(dpxheader.interlace);
+	M["61"] = static_cast<uint32_t>(dpxheader.field_number);
+	M["62"] = static_cast<uint32_t>(dpxheader.video_standard);
+
+	return M;
+}
+
+std::map<const char *, float32_t> dpx_read_details_for_adx_float(const char *name,
+                                                                 float scale,
+                                                                 ctl::dpx::fb<float> *pixels,
+                                                                 format_t *format) {
+	std::ifstream file;
+	ctl::dpx dpxheader;
+	std::map<const char *, float32_t> M;
+
+	file.open(name);
+	
+	dpxheader.read(&file);	
+	dpxheader.read(&file, 0, pixels, scale);
+
+	M["21.3"] = static_cast<float32_t>(dpxheader.elements[0].ref_low_quantity);
+	M["21.5"] = static_cast<float32_t>(dpxheader.elements[0].ref_high_quantity);
+
+	if (static_cast<uint32_t>(dpxheader.number_of_elements) > 1){
+		M["22.3"] = static_cast<float32_t>(dpxheader.elements[1].ref_low_quantity);
+		M["22.5"] = static_cast<float32_t>(dpxheader.elements[1].ref_high_quantity);
+	}
+
+	M["64"] = static_cast<float32_t>(dpxheader.horizontal_sampling_rate);
+	M["65"] = static_cast<float32_t>(dpxheader.vertical_sampling_rate);
+	M["66"] = static_cast<float32_t>(dpxheader.temporal_sampling_rate);
+	M["67"] = static_cast<float32_t>(dpxheader.time_offset_sync_to_first_pixel);
+	M["68"] = static_cast<float32_t>(dpxheader.gamma);
+	M["69"] = static_cast<float32_t>(dpxheader.black_level_code);
+	M["70"] = static_cast<float32_t>(dpxheader.black_gain);
+	M["71"] = static_cast<float32_t>(dpxheader.breakpoint);
+	M["72"] = static_cast<float32_t>(dpxheader.white_level_code);
+	M["73"] = static_cast<float32_t>(dpxheader.integration_time);
+
+	return M;
+}
+
 void dpx_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
                format_t *format) {
 	std::ofstream file;
@@ -86,6 +162,11 @@ void dpx_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
 
 	dpxheader.elements[0].data_sign=0;
 	dpxheader.elements[0].bits_per_sample=format->bps;
+
+	// std::cout << " I am here dpx" << std::endl;
+	// std::cout << format->bps << std::endl;
+	// std::cout << dpxheader.elements[0].bits_per_sample << std::endl;
+
 	dpxheader.write(&file, 0, pixels, scale);
 	dpxheader.write(&file);	
 }
