@@ -49,3 +49,6 @@ target_link_libraries( ctlrender ${AcesContainer_LDFLAGS_OTHER} )
 endif()
 
 install( TARGETS ctlrender DESTINATION bin )
+install( TARGETS ctlrender DESTINATION lib EXPORT ctlrendertargets)
+
+
