@@ -120,19 +120,24 @@ ctl::dpx::fb<T>* prepareADX(const char *inputFile,
                 "WARNING: adx 22.3 Reference Low Quality shall be Undefined\n");
     }
     
-    if(MI["21.9"] != 16 && MI["21.9"] != 10){
-        fprintf(stderr,
-                "ERROR: The Program is Currently Supporting ADX with Bit Depth \n"
-                "         of 10 and 16(The First Element) \n");
+    if(MI["21.9"] != 16 && MI["21.9"] != 10) {
+        THROW(Iex::ArgExc, "ERROR: The Program is Currently Supporting ADX with Bit Depth \n"
+                "         of 10 and 16 on the First Element) \n");
     }
+    
     if(MI["18"] > 1
-       && MI["22.9"] != 16
-       && MI["22.9"] != 10
-       && MI["22.9"] != 8
-       && MI["22.9"] != 1){
-        fprintf(stderr,
-                "WARNING: The Program is Currently Supporting ADX with Bit Depth of \n"
-                "1, 8, 10 and 16(The Second Element) \n");
+       && MI["22.6"] != 4) {
+        THROW(Iex::ArgExc, "ERROR: The Program is Currently Supporting Alpha/Matte \n"
+                "         on the Second Element");
+    }
+    else if(MI["18"] > 1
+            && MI["22.6"] == 4
+            && MI["22.9"] != 16
+            && MI["22.9"] != 10
+            && MI["22.9"] != 8
+            && MI["22.9"] != 1){
+        THROW(Iex::ArgExc, "ERROR: The Program is Currently Supporting ADX with Bit Depth of \n"
+                "         1, 8, 10 and 16 on the Second Element) \n");
     }
     
     if (MI["21.4"] != 65535

@@ -578,7 +578,6 @@ void adx::write(std::ostream *os)
     else {
         adxi::write_uint16(os, elements[0].packing, _need_byteswap);
     }
-	
 
 	adxi::write_uint16(os, elements[0].encoding, _need_byteswap);
 	adxi::write_uint32(os, elements[0].offset_to_data, _need_byteswap);
@@ -587,7 +586,6 @@ void adx::write(std::ostream *os)
 	adxi::write_string(os, elements[0].description,
                        sizeof(elements[0].description));
 
-    
     // The Second Element
     if (number_of_elements > 1) {
         // adx 22.1 Data Sign shall be Unsigned
@@ -649,6 +647,7 @@ void adx::write(std::ostream *os)
         // adx 22.6 Channel Descriptor shall be Alpha (matte) / 4
         if (static_cast<uint32_t>(elements[1].descriptor) != 0x4){
             this->_constraint_ok = FALSE;
+            exit(1);
         }
         adxi::write_uint8(os, 0x4, _need_byteswap);
 
@@ -665,7 +664,8 @@ void adx::write(std::ostream *os)
         adxi::write_uint8(os, 0x0, _need_byteswap);
 
         // adx 22.9 Bit Depth shall be 1, 8, 10, or 16
-        if (elements[1].bits_per_sample != 16
+        if (static_cast<uint32_t>(elements[1].descriptor) == 0x4
+            && elements[1].bits_per_sample != 16
             && elements[1].bits_per_sample != 10
             && elements[1].bits_per_sample != 8
             && elements[1].bits_per_sample != 1) {
