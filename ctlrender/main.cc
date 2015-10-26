@@ -139,7 +139,7 @@ file_format_t allowed_formats[] =
 	{ "dpx10",  format_t("dpx",  10) },
 	{ "dpx12",  format_t("dpx",  12) },
 	{ "dpx16",  format_t("dpx",  16) },
-	{ "adx",    format_t("adx",   0) },
+	{ "adx",    format_t("adx",  10) },
 	{ "adx10",  format_t("adx",  10) },
 	{ "adx16",  format_t("adx",  16) },
 	{ "tif",    format_t("tif",   0) },

@@ -850,7 +850,10 @@ void transform(const char *inputFile, const char *outputFile,
 	else if (!strncmp(image_format->ext, "adx", 3))
 	{
 		// Preparing adx
-        ctl::dpx::fb<float>* image_buffer_adx = prepareADX(inputFile, input_scale, &image_buffer, image_format);
+        ctl::dpx::fb<float>* image_buffer_adx = prepareADX(inputFile,
+                                                           input_scale,
+                                                           &image_buffer,
+                                                           image_format);
 		adx_write(outputFile, output_scale, *image_buffer_adx, image_format);
 	}
 	else

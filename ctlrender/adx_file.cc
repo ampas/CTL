@@ -122,7 +122,7 @@ ctl::dpx::fb<T>* prepareADX(const char *inputFile,
     
     if(MI["21.9"] != 16 && MI["21.9"] != 10){
         fprintf(stderr,
-                "WARNING: The Program is Currently Supporting ADX with Bit Depth \n"
+                "ERROR: The Program is Currently Supporting ADX with Bit Depth \n"
                 "         of 10 and 16(The First Element) \n");
     }
     if(MI["18"] > 1
@@ -267,10 +267,6 @@ void adx_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
 
 	adxheader.elements[0].data_sign=0;
 	adxheader.elements[0].bits_per_sample=format->bps;
-
-	// std::cout << " I am here adx" << std::endl;
-	// std::cout << (int)format->bps << std::endl;
-	// std::cout << (int)(adxheader.elements[0].bits_per_sample) << std::endl;
     
 	adxheader.write(&file, 0, pixels, scale);
 	adxheader.write(&file);

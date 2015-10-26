@@ -32,8 +32,7 @@ add_executable( ctlrender
   compression.cc
 )
 
-target_link_libraries( ctlrender IlmCtlSimd IlmCtlMath IlmCtl ctldpx ${IlmBase_LIBRARIES} )
-target_link_libraries( ctlrender IlmCtlSimd IlmCtlMath IlmCtl ctladx ${IlmBase_LIBRARIES} )
+target_link_libraries( ctlrender IlmCtlSimd IlmCtlMath IlmCtl ctldpx ctladx ${IlmBase_LIBRARIES} )
 target_link_libraries( ctlrender ${IlmBase_LDFLAGS_OTHER} )
 if (TIFF_FOUND)
 target_link_libraries( ctlrender ${TIFF_LIBRARIES} )
