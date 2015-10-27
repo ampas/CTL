@@ -73,6 +73,12 @@ ctl::dpx::fb<T>* prepareADX(const char *inputFile,
     unsigned long nan_f = static_cast<unsigned long>(ctl::adx::udf32f);
     float32_t nan_vf = *(float32_t *)&nan_f;
     
+    if (MI["18"] > 2 ) {
+        fprintf(stderr,
+                "WARNING: This Image May Contain More than 2 Elments"
+                "Elements Beyond the 2nd One Will be Removed! \n");
+    }
+    
     if (MI["18"] >= 1){
         if (MI["21.6"] != 50
             && MI["21.6"] != 51
@@ -88,7 +94,6 @@ ctl::dpx::fb<T>* prepareADX(const char *inputFile,
             
         }
         image_buffer->channelAdjust(uint8_t(MI["21.6"]));
-        
     }
     
     if (MI["21.1"] != 0x0 && MI["21.1"]) {
@@ -140,41 +145,40 @@ ctl::dpx::fb<T>* prepareADX(const char *inputFile,
                 "         1, 8, 10 and 16 on the Second Element) \n");
     }
     
-    if (MI["21.4"] != 65535
-        && MI["21.4"]
+    if (MI["21.4"]
+        && MI["21.4"] != 65535
         && MI["21.9"] == 16) {
         fprintf(stderr,
                 "WARNING: adx 21.4 Reference high data for ADX16 shall be 65535\n");
     }
-    if (MI["21.4"] != 1023
-        && MI["21.4"]
+    if (MI["21.4"]
+        && MI["21.4"] != 1023
         && MI["21.9"] == 10) {
         fprintf(stderr,
                 "WARNING: adx 21.4 Reference high data for ADX10 shall be 1023\n");
     }
-    if (MI["18"] > 1
-        && MI["22.4"] != 65535
-        && MI["22.9"] == 16) {
-        fprintf(stderr,
-                "WARNING: adx 22.4 Reference high data for ADX16 shall be 65535\n");
-    }
-    if (MI["18"] > 1
-        && MI["22.4"] != 1023
-        && MI["22.9"] == 10) {
-        fprintf(stderr,
-                "WARNING: adx 22.4 Reference high data for ADX10 shall be 1023\n");
-    }
-    if (MI["18"] > 1
-        && MI["22.4"] != 255
-        && MI["22.9"] == 8) {
-        fprintf(stderr,
-                "WARNING: adx 22.4 Reference high data for ADX8 shall be 255\n");
-    }
-    if (MI["18"] > 1
-        && MI["22.4"] != 1
-        && MI["22.9"] == 1) {
-        fprintf(stderr,
-                "WARNING: adx 22.4 Reference high data for ADX1 shall be 1\n");
+    
+    if (MI["18"] == 2) {
+        if( MI["22.9"] == 16
+            && MI["22.4"] != 65535) {
+           fprintf(stderr,
+                   "WARNING: adx 22.4 Reference high data for ADX16 shall be 65535\n");
+        }
+        if ( MI["22.9"] == 10
+             && MI["22.4"] != 1023) {
+            fprintf(stderr,
+                    "WARNING: adx 22.4 Reference high data for ADX10 shall be 1023\n");
+        }
+        if ( MI["22.9"] == 8
+             && MI["22.4"] != 255) {
+            fprintf(stderr,
+                    "WARNING: adx 22.4 Reference high data for ADX8 shall be 255\n");
+        }
+        if ( MI["22.9"] == 1
+             && MI["22.4"] != 1) {
+            fprintf(stderr,
+                    "WARNING: adx 22.4 Reference high data for ADX1 shall be 1\n");
+        }
     }
     
     if (MF["21.5"] != nan_vf
@@ -206,26 +210,28 @@ ctl::dpx::fb<T>* prepareADX(const char *inputFile,
                 "WARNING: adx 22.2 Colorimetric characteristic shall be User-defined\n");
     }
     
-    if (MI["21.10"] != 0x0
-        && MI["21.10"]
+    if (MI["21.10"]
+        && MI["21.10"] != 0x0
         && MI["21.9"] == 16) {
         fprintf(stderr,
                 "WARNING: adx 21.10 Packing for ADX16 shall be 0\n");
     }
-    else if (MI["21.10"] != 0x1
-             && MI["21.10"]
+    else if (MI["21.10"]
+             && MI["21.10"] != 0x1
              && MI["21.9"] == 10) {
         fprintf(stderr,
                 "WARNING: adx 21.10 Packing for ADX10 shall be 1\n");
     }
     
-    if (MI["18"] > 1
+    if (MI["18"] == 2
         && MI["22.10"] != 0x0
-        && (MI["22.9"] == 16 || MI["22.9"] == 8 || MI["22.9"] == 1)) {
+        && (MI["22.9"] == 16
+            || MI["22.9"] == 8
+            || MI["22.9"] == 1)) {
         fprintf(stderr,
                 "WARNING: adx 22.10 Packing for ADX16/8/1 shall be 0\n");
     }
-    else if (MI["18"] > 1
+    else if (MI["18"] == 2
              && MF["22.10"] != 0x1
              && MF["22.9"] == 10) {
         fprintf(stderr,

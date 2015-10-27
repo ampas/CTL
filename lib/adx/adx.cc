@@ -109,7 +109,6 @@ void adx::clear(void) {
 	nullify(&pixels_per_line);
 	nullify(&lines_per_element);
 
-	// adx field 18 -> Image Elements shall be 1 or 2 ?
 	for(i=0; i<8; i++) {
 		nullify(&(elements[i].data_sign));
 		nullify(&(elements[i].ref_low_data_code));

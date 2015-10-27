@@ -54,7 +54,6 @@
 
 #if !defined(CTL_ADX_RAW_INTERNAL_INCLUDE)
 #define CTL_ADX_RAW_INTERNAL_INCLUDE
-// #define CRL_ADX_RAW_INTERNAL_INCLUDE
 
 #include "../dpx/dpx.hh"
 
