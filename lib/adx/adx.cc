@@ -536,7 +536,10 @@ void adx::write(std::ostream *os)
     adxi::write_uint8(os, 0xD, _need_byteswap);
 
     // adx 21.9 Bit Depth shall be 16 for ADX16 and 10 for ADX10
-    adxi::write_uint8(os, elements[0].bits_per_sample, _need_byteswap);
+    if (static_cast<uint32_t>(elements[0].bits_per_sample) == 10
+        || static_cast<uint32_t>(elements[0].bits_per_sample) == 16){
+        adxi::write_uint8(os, elements[0].bits_per_sample, _need_byteswap);
+    }
     
     // adx 21.10 Packing shall be 0 for ADX16 and the datum shall be packed sequentially 
     // 16 bits per sample (i.e. no padding shall be used) Packing shall be 1 for ADX10 and 
@@ -564,7 +567,6 @@ void adx::write(std::ostream *os)
     adxi::write_uint32(os, elements[0].eoi_padding, _need_byteswap);
     adxi::write_string(os, elements[0].description,
                        sizeof(elements[0].description));
-
 
 
     // The Second Element
@@ -692,7 +694,6 @@ void adx::write(std::ostream *os)
     }
     
     for(i=0; i<8; i++) {
-        
         nullify(&(elements[i].data_sign));
         nullify(&(elements[i].ref_low_data_code));
         nullify(&(elements[i].ref_low_quantity));
