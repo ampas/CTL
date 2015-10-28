@@ -410,7 +410,6 @@ void adx::write(std::ostream *os)
 	// struct tm creation_time_tm;
 	// time_t creation_time_time;
 
-	// os->seekp(header_start);
 	os->seekp(header_start, std::ios::beg);
 
 	if(header_version[0]==0) {
@@ -446,7 +445,8 @@ void adx::write(std::ostream *os)
     
     // adx field 18 -> Image Elements shall be 1 or 2
     // Don't change the actual data
-    if(static_cast<uint32_t>(number_of_elements) != 1 && static_cast<uint32_t>(number_of_elements) != 2){
+    if(static_cast<uint32_t>(number_of_elements) != 1
+       && static_cast<uint32_t>(number_of_elements) != 2){
         this->_constraint_ok = FALSE;
     }
 
@@ -460,28 +460,16 @@ void adx::write(std::ostream *os)
 
 	adxi::write_uint32(os, pixels_per_line, _need_byteswap);
 	adxi::write_uint32(os, lines_per_element, _need_byteswap);
-
-    // adx field 18 -> Image Elements / number_of_elements shall be 1 or 2 here
-    // but dpx::read() may read in 8 elements at most
+    
+    uint8_t alphaElement = 1;
+    bool hasAlphaElement = 0;
 	for(i=0; i<8; i++) {
-		if(i>=number_of_elements) {
-			nullify(&(elements[i].data_sign));
-			nullify(&(elements[i].ref_low_data_code));
-			nullify(&(elements[i].ref_low_quantity));
-			nullify(&(elements[i].ref_high_data_code));
-			nullify(&(elements[i].ref_high_quantity));
-			nullify(&(elements[i].descriptor));
-			nullify(&(elements[i].transfer_characteristic));
-			nullify(&(elements[i].colorimetric_characteristic));
-			nullify(&(elements[i].bits_per_sample));
-			nullify(&(elements[i].packing));
-			nullify(&(elements[i].encoding));
-			nullify(&(elements[i].offset_to_data));
-			nullify(&(elements[i].eol_padding));
-			nullify(&(elements[i].eoi_padding));
-			memset(elements[i].description, 0,
-			sizeof(elements[i].description));
-		}
+        if (static_cast<uint32_t>(elements[i].descriptor) == 13) {
+            hasAlphaElement = 1;
+            alphaElement = i;
+        }
+        
+        break;
     };
     
     // the First Element
@@ -507,7 +495,7 @@ void adx::write(std::ostream *os)
     adxi::write_float32(os, nan_vf, _need_byteswap);
 
     // adx 21.4 Reference high data code value for ADX16 shall be 65535 / 0xFFFF
-    // 			Reference high data code value for ADX10 shall be 1023 / 0x3FF
+    //          Reference high data code value for ADX10 shall be 1023 / 0x3FF
     if (elements[0].ref_high_data_code != 0xFFFF
         && elements[0].ref_high_data_code != 0x3FF) {
         this->_constraint_ok = FALSE;
@@ -520,7 +508,7 @@ void adx::write(std::ostream *os)
         adxi::write_uint32(os, 0xFFFF, _need_byteswap);
     }
     else {
-        adxi::write_uint32(os, elements[0].bits_per_sample, _need_byteswap);
+        exit(1);
     }
 
     // adx 21.5 Reference high quantity represented shall be Undefined
@@ -529,35 +517,26 @@ void adx::write(std::ostream *os)
     }
     adxi::write_float32(os, nan_vf, _need_byteswap);
 
-
-    // adx 21.6 Channel Descriptor shall be R, G, B / 50/0x32
+    // adx 21.6 Channel Descriptor shall be R, G, B /50(0x32)
     if (static_cast<uint32_t>(elements[0].descriptor) != 0x32){
         this->_constraint_ok = FALSE;
     }
     adxi::write_uint8(os, 0x32, _need_byteswap);
     
-    // adx 21.7 Transfer characteristic shall be ADX/13/0xD
+    // adx 21.7 Transfer characteristic shall be ADX/13(0xD)
     if (static_cast<uint32_t>(elements[0].transfer_characteristic) != 0xD){
         this->_constraint_ok = FALSE;
     }
     adxi::write_uint8(os, 0xD, _need_byteswap);
 
-    // adx 21.8 Colorimetric specification shall be ADX/13/0xD
+    // adx 21.8 Colorimetric specification shall be ADX/13(0xD)
     if (static_cast<uint32_t>(elements[0].colorimetric_characteristic) != 0xD) {
         this->_constraint_ok = FALSE;
     }
     adxi::write_uint8(os, 0xD, _need_byteswap);
 
     // adx 21.9 Bit Depth shall be 16 for ADX16 and 10 for ADX10
-    if (static_cast<uint32_t>(elements[0].bits_per_sample) != 16
-        && static_cast<uint32_t>(elements[0].bits_per_sample) != 10) {
-        this->_constraint_ok = FALSE;
-        exit(1);
-    }
-    else {
-        adxi::write_uint8(os, elements[0].bits_per_sample, _need_byteswap);
-    };
-    
+    adxi::write_uint8(os, elements[0].bits_per_sample, _need_byteswap);
     
     // adx 21.10 Packing shall be 0 for ADX16 and the datum shall be packed sequentially 
     // 16 bits per sample (i.e. no padding shall be used) Packing shall be 1 for ADX10 and 
@@ -578,29 +557,32 @@ void adx::write(std::ostream *os)
         adxi::write_uint16(os, elements[0].packing, _need_byteswap);
     }
 
-	adxi::write_uint16(os, elements[0].encoding, _need_byteswap);
-	adxi::write_uint32(os, elements[0].offset_to_data, _need_byteswap);
-	adxi::write_uint32(os, elements[0].eol_padding, _need_byteswap);
-	adxi::write_uint32(os, elements[0].eoi_padding, _need_byteswap);
-	adxi::write_string(os, elements[0].description,
+    
+    adxi::write_uint16(os, elements[0].encoding, _need_byteswap);
+    adxi::write_uint32(os, elements[0].offset_to_data, _need_byteswap);
+    adxi::write_uint32(os, elements[0].eol_padding, _need_byteswap);
+    adxi::write_uint32(os, elements[0].eoi_padding, _need_byteswap);
+    adxi::write_string(os, elements[0].description,
                        sizeof(elements[0].description));
 
+
+
     // The Second Element
-    if (number_of_elements > 1) {
+    if (hasAlphaElement) {
         // adx 22.1 Data Sign shall be Unsigned
-        if (elements[1].data_sign != 0x0){
+        if (elements[alphaElement].data_sign != 0x0){
             this->_constraint_ok = FALSE;
         }
         adxi::write_uint32(os, 0x0, _need_byteswap);
         
         // adx 22.2 Reference low data code shall be 0
-        if (elements[1].ref_low_data_code != 0x0) {
+        if (elements[alphaElement].ref_low_data_code != 0x0) {
             this->_constraint_ok = FALSE;
         }
         adxi::write_uint32(os, 0x0, _need_byteswap);
 
         // adx 22.3 Reference low quantity represented shall be Undefined
-        if (elements[1].ref_low_quantity != nan_vf) {
+        if (elements[alphaElement].ref_low_quantity != nan_vf) {
             this->_constraint_ok = FALSE;
         }
         adxi::write_float32(os, nan_vf, _need_byteswap);
@@ -609,26 +591,26 @@ void adx::write(std::ostream *os)
         // 			Reference high data code value for ADX10 shall be 1023   / 0x3FF for 10
         // 			Reference high data code value for ADX10 shall be 255      / 0xFF for 8
         // 			Reference high data code value for ADX10 shall be 1         / 0x1 for 1
-        if (elements[1].bits_per_sample == 16){
-            if (elements[1].ref_high_data_code != 0xFFFF) {
+        if (elements[alphaElement].bits_per_sample == 16){
+            if (elements[alphaElement].ref_high_data_code != 0xFFFF) {
                 this->_constraint_ok = FALSE;
             }
             adxi::write_uint32(os, 0xFFFF, _need_byteswap);
         }
-        else if (elements[1].bits_per_sample == 10){
-            if (elements[1].ref_high_data_code != 0x3FF) {
+        else if (elements[alphaElement].bits_per_sample == 10){
+            if (elements[alphaElement].ref_high_data_code != 0x3FF) {
                 this->_constraint_ok = FALSE;
             }
             adxi::write_uint32(os, 0x3FF, _need_byteswap);
         }
-        else if (elements[1].bits_per_sample == 8){
-            if (elements[1].ref_high_data_code != 0xFF) {
+        else if (elements[alphaElement].bits_per_sample == 8){
+            if (elements[alphaElement].ref_high_data_code != 0xFF) {
                 this->_constraint_ok = FALSE;
             }
             adxi::write_uint32(os, 0xFF, _need_byteswap);
         }
-        else if (elements[1].bits_per_sample == 1){
-            if (elements[1].ref_high_data_code != 0x1) {
+        else if (elements[alphaElement].bits_per_sample == 1){
+            if (elements[alphaElement].ref_high_data_code != 0x1) {
                 this->_constraint_ok = FALSE;
             }
             adxi::write_uint32(os, 0x1, _need_byteswap);
@@ -638,80 +620,96 @@ void adx::write(std::ostream *os)
         }
 
         // adx 22.5 Reference high quantity represented shall be Undefined
-        if (elements[1].ref_high_quantity != nan_vf) {
+        if (elements[alphaElement].ref_high_quantity != nan_vf) {
             this->_constraint_ok = FALSE;
         }
         adxi::write_float32(os, nan_vf, _need_byteswap);
 
         // adx 22.6 Channel Descriptor shall be Alpha (matte) / 4
-        if (static_cast<uint32_t>(elements[1].descriptor) != 0x4){
-            this->_constraint_ok = FALSE;
+        if (static_cast<uint32_t>(elements[alphaElement].descriptor) != 0x4){
             exit(1);
         }
         adxi::write_uint8(os, 0x4, _need_byteswap);
 
         // adx 22.7 Transfer characteristic shall be User defined/0
-        if (static_cast<uint32_t>(elements[1].transfer_characteristic) != 0x0){
+        if (static_cast<uint32_t>(elements[alphaElement].transfer_characteristic) != 0x0){
             this->_constraint_ok = FALSE;
         }
         adxi::write_uint8(os, 0x0, _need_byteswap);
 
         // adx 22.8 Colorimetric specification shall be User defined/0
-        if (static_cast<uint32_t>(elements[1].colorimetric_characteristic) != 0x0) {
+        if (static_cast<uint32_t>(elements[alphaElement].colorimetric_characteristic) != 0x0) {
             this->_constraint_ok = FALSE;
         }
         adxi::write_uint8(os, 0x0, _need_byteswap);
 
         // adx 22.9 Bit Depth shall be 1, 8, 10, or 16
-        if (static_cast<uint32_t>(elements[1].descriptor) == 0x4
-            && elements[1].bits_per_sample != 16
-            && elements[1].bits_per_sample != 10
-            && elements[1].bits_per_sample != 8
-            && elements[1].bits_per_sample != 1) {
-
-            this->_constraint_ok = FALSE;
-            exit(1);
+        if (elements[alphaElement].bits_per_sample == 16
+            || elements[alphaElement].bits_per_sample == 10
+            || elements[alphaElement].bits_per_sample == 8
+            || elements[alphaElement].bits_per_sample == 1) {
+            adxi::write_uint8(os, elements[alphaElement].bits_per_sample, _need_byteswap);
         }
         else {
-            adxi::write_uint8(os, elements[1].bits_per_sample, _need_byteswap);
+            exit(1);
         }
         
         // adx 22.10 Padding shall be 0 when the value of 22.9 is 1, 8, or 16.
         // Padding shall be 1 when the value of 22.9 is 10 and the datum shall 
         // be packed three samples into a 32-bit word with 2 pad bits located in LSB.
-        if (static_cast<uint32_t>(elements[1].bits_per_sample) == 16) {
-            if (elements[1].packing != 0x0) {
+        if (static_cast<uint32_t>(elements[alphaElement].bits_per_sample) == 16) {
+            if (elements[alphaElement].packing != 0x0) {
                 this->_constraint_ok = FALSE;
             }
             adxi::write_uint16(os, 0x0, _need_byteswap);
         }
-        else if (static_cast<uint32_t>(elements[1].bits_per_sample) == 8) {
-            if (elements[1].packing != 0x0) {
+        else if (static_cast<uint32_t>(elements[alphaElement].bits_per_sample) == 8) {
+            if (elements[alphaElement].packing != 0x0) {
                 this->_constraint_ok = FALSE;
             }
             adxi::write_uint16(os, 0x0, _need_byteswap);
         }
-        else if (static_cast<uint32_t>(elements[1].bits_per_sample) == 1) {
-            if (elements[1].packing != 0x0) {
+        else if (static_cast<uint32_t>(elements[alphaElement].bits_per_sample) == 1) {
+            if (elements[alphaElement].packing != 0x0) {
                 this->_constraint_ok = FALSE;
             }
             adxi::write_uint16(os, 0x0, _need_byteswap);
         }
-        else if (static_cast<uint32_t>(elements[1].bits_per_sample) == 10) {
-            if (elements[1].packing != 0x1) {
+        else if (static_cast<uint32_t>(elements[alphaElement].bits_per_sample) == 10) {
+            if (elements[alphaElement].packing != 0x1) {
                 this->_constraint_ok = FALSE;
             }
             adxi::write_uint16(os, 0x1, _need_byteswap);
         }
 
-        adxi::write_uint16(os, elements[1].encoding, _need_byteswap);
-        adxi::write_uint32(os, elements[1].offset_to_data, _need_byteswap);
-        adxi::write_uint32(os, elements[1].eol_padding, _need_byteswap);
-        adxi::write_uint32(os, elements[1].eoi_padding, _need_byteswap);
-        adxi::write_string(os, elements[1].description,
-                           sizeof(elements[1].description));
+        adxi::write_uint16(os, elements[alphaElement].encoding, _need_byteswap);
+        adxi::write_uint32(os, elements[alphaElement].offset_to_data, _need_byteswap);
+        adxi::write_uint32(os, elements[alphaElement].eol_padding, _need_byteswap);
+        adxi::write_uint32(os, elements[alphaElement].eoi_padding, _need_byteswap);
+        adxi::write_string(os, elements[alphaElement].description,
+                           sizeof(elements[alphaElement].description));
 
     }
+    
+    for(i=0; i<8; i++) {
+        
+        nullify(&(elements[i].data_sign));
+        nullify(&(elements[i].ref_low_data_code));
+        nullify(&(elements[i].ref_low_quantity));
+        nullify(&(elements[i].ref_high_data_code));
+        nullify(&(elements[i].ref_high_quantity));
+        nullify(&(elements[i].descriptor));
+        nullify(&(elements[i].transfer_characteristic));
+        nullify(&(elements[i].colorimetric_characteristic));
+        nullify(&(elements[i].bits_per_sample));
+        nullify(&(elements[i].packing));
+        nullify(&(elements[i].encoding));
+        nullify(&(elements[i].offset_to_data));
+        nullify(&(elements[i].eol_padding));
+        nullify(&(elements[i].eoi_padding));
+        memset(elements[i].description, 0,
+               sizeof(elements[i].description));
+    };
 
 	adxi::write_fill(os, 0x00, 52);
 	adxi::write_uint32(os, x_offset, _need_byteswap);
@@ -767,6 +765,7 @@ void adx::write(std::ostream *os)
 
 	adxi::write_uint32(os, smpte_timecode, _need_byteswap);
 	adxi::write_uint32(os, smpte_userbits, _need_byteswap);
+    
 
     // Constraints for ADX 60-62
     if (static_cast<uint32_t>(interlace) != udf8) {
