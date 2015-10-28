@@ -52,25 +52,120 @@
 // THAN A.M.P.A.S., WHETHER DISCLOSED OR UNDISCLOSED.
 ///////////////////////////////////////////////////////////////////////////
 
-#if !defined(CTL_UTIL_CTLRENDER_DPX_INCLUDE)
-#define CTL_UTIL_CTLRENDER_DPX_INCLUDE
+#if !defined(CTL_ADX_RAW_INTERNAL_INCLUDE)
+#define CTL_ADX_RAW_INTERNAL_INCLUDE
 
-#include <dpx.hh>
-#include "main.hh"
-#include <vector>
-#include <map>
+#include "../dpx/dpx.hh"
 
-bool dpx_read(const char *name, float scale,
-              ctl::dpx::fb<float> *pixels,
-              format_t *format);
-std::map<const char *, uint32_t> dpx_read_details_for_adx_int(const char *name, float scale,
-              ctl::dpx::fb<float> *pixels,
-              format_t *format);
-std::map<const char *, float32_t> dpx_read_details_for_adx_float(const char *name, float scale,
-              ctl::dpx::fb<float> *pixels,
-              format_t *format);
-void dpx_write(const char *name, float scale,
-               const ctl::dpx::fb<float> &pixels,
-               format_t *format);
+namespace ctl {
+
+namespace adxi {
+
+inline void swap64(void *_s) {
+	uint64_t s=*((uint64_t*)_s);
+
+	s=(((s&0xffffffff00000000LL)>>32) | ((s&0x00000000ffffffffLL)<<32));
+	s=(((s&0xffff0000ffff0000LL)>>16) | ((s&0x0000ffff0000ffffLL)<<16));
+	s=(((s&0xff00ff00ff00ff00LL)>>8)  | ((s&0x00ff00ff00ff00ffLL)<<8));
+
+	*((uint64_t*)_s)=s;
+}
+	
+inline void swap32(void *_s) {
+	uint32_t s=*((uint32_t*)_s);
+
+	s=(((s&0xffff0000)>>16) | ((s&0x0000ffff)<<16));
+	s=(((s&0xff00ff00)>>8)  | ((s&0x00ff00ff)<<8));
+
+	*((uint32_t*)_s)=s;
+}
+	
+inline void swap16(void *_s) {
+	uint16_t s=*((uint16_t*)_s);
+
+	s=(((s&0xff00)>>8)  | ((s&0x00ff)<<8));
+
+	*((uint16_t*)_s)=s;
+}
+
+template <class T>
+void read_ptr(std::istream *i, T *data, uint64_t count, bool swap) {
+	uint64_t u;
+	T *s;
+
+	s=data;
+
+	i->read((char *)s, sizeof(T)*count);
+
+	if(swap && sizeof(T)==2) {
+		for(u=0; u<count; u++) {
+			swap16(s++);
+		}
+	} else if(swap && sizeof(T)==4) {
+		for(u=0; u<count; u++) {
+			swap32(s++);
+		}
+	} else if(swap && sizeof(T)==8) {
+		for(u=0; u<count; u++) {
+			swap64(s++);
+		}
+	}
+}
+
+template <class T>
+void write_ptr(std::ostream *o, const T *_data, uint64_t count, bool swap) {
+	uint64_t u;
+	ctl::dpx::fb<uint8_t> data;
+	T *s;
+
+	data.init(count*sizeof(T), 1, 1);
+
+	if(swap && sizeof(T)!=1) {
+		data.init(count*sizeof(T), 1, 1);
+		memcpy(data, _data, count*sizeof(T));
+		s=(T *)data.ptr();
+		switch(sizeof(T)) {
+			case 2:
+				for(u=0; u<count; u++) {
+					swap16(s++);	
+				}
+				break;
+
+			case 4:
+				for(u=0; u<count; u++) {
+					swap32(s++);	
+				}
+				break;
+
+			case 8:
+				for(u=0; u<count; u++) {
+					swap64(s++);	
+				}
+				break;
+			case 1:
+				break;
+		}
+		_data=(const T *)data.ptr();
+	}
+
+	o->write((const char *)_data, count*sizeof(T));
+}
+
+uint8_t read_uint8(std::istream *is, bool need_byteswap);
+uint16_t read_uint16(std::istream *is, bool need_byteswap);
+uint32_t read_uint32(std::istream *is, bool need_byteswap);
+float32_t read_float32(std::istream *is, bool need_byteswap);
+void read_string(std::istream *is, char *bytes, int len_plus_one);
+
+void write_uint8(std::ostream *os, uint8_t i, bool need_byteswap);
+void write_uint16(std::ostream *os, uint16_t i, bool need_byteswap);
+void write_uint32(std::ostream *os, uint32_t i, bool need_byteswap);
+void write_float32(std::ostream *os, float32_t f, bool need_byteswap);
+void write_string(std::ostream *os, char *bytes, int len_plus_one);
+void write_fill(std::ostream *os, char b, int count);
+
+}
+
+}
 
 #endif

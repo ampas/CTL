@@ -7,6 +7,8 @@ add_subdirectory( IlmImfCtl )
 endif()
 
 add_subdirectory( dpx )
+add_subdirectory( adx )
+
 
 add_custom_target( CTL DEPENDS IlmCtl IlmCtlMath IlmCtlSimd )
 

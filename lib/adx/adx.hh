@@ -52,8 +52,8 @@
 // THAN A.M.P.A.S., WHETHER DISCLOSED OR UNDISCLOSED.
 ///////////////////////////////////////////////////////////////////////////
 
-#if !defined(AMPAS_CTL_DPX_INCLUDE)
-#define AMPAS_CTL_DPX_INCLUDE
+#if !defined(AMPAS_CTL_ADX_INCLUDE)
+#define AMPAS_CTL_ADX_INCLUDE
 
 #include <string>
 #include <istream>
@@ -61,8 +61,11 @@
 #include <stdexcept>
 #include <stdint.h>
 #include <math.h>
+#include <vector>
+#include <Iex.h>
 
 #include <half.h>
+#include "../dpx/dpx.hh"
 
 #if !defined(TRUE)
 #define TRUE 1
@@ -77,13 +80,13 @@ typedef float float32_t;
 typedef double float64_t;
 
 namespace ctl {
-// The dpxi namespace is for various internals that are not actually
-// class methods to keep the dpx header down to a sane size...
-namespace dpxi {
-struct rwinfo;
-};
+    // The adxi namespace is for various internals that are not actually
+    // class methods to keep the adx header down to a sane size...
+    namespace adxi {
+        struct rwinfo;
+    };
 
-struct dpx {
+    struct adx : public dpx {
 	// This class can read and write DPX 1.0, 2.0, and 3.0 files (in so
 	// far as the DPX 3.0 specification is complete). It should have no
 	// difficulty reading any extant DPX file, and can write all common
@@ -100,33 +103,9 @@ struct dpx {
 	// has not been set (i.e. first character is a numeric 0) on write,
 	// then the field is decomposed back into a character array.
 	public:                                  // specification field number
-		uint32_t magic;                      // 1 *
-		uint32_t data_offset;                // 2 *
-		char header_version[9];              // 3 *
-		uint32_t total_file_size;            // 4
-		uint32_t ditto_key;                  // 5 *
-		uint32_t generic_header_length;      // 6
-		uint32_t industry_header_length;     // 7
-		uint32_t user_header_length;         // 8
-
-		char filename[101];                  // 9
-		char creation_time[25];              // 10
-		struct tm creation_time_tm;          // 10a **
-		char creator[101];                   // 12 (no field 11 in dpx spec)
-		char project_name[201];              // 13
-		char copyright[201];                 // 14
-		uint32_t encryption_key;             // 15 *
-
-		// skip 104 bytes                    // 16
-
-		uint16_t image_orientation;          // 17
-		uint16_t number_of_elements;         // 18
-		uint32_t pixels_per_line;            // 19
-		uint32_t lines_per_element;          // 20
-
-		struct element_t {
-			friend class dpxi::rwinfo;
-			friend class dpx;
+        struct element_t {
+			friend class adxi::rwinfo;
+			friend class adx;
 			uint32_t data_sign;              // 21.1 *
 			uint32_t ref_low_data_code;      // 21.2 *
 			float32_t ref_low_quantity;      // 21.3 *
@@ -144,41 +123,42 @@ struct dpx {
 			char description[33];            // 21.15
 
 			private:
-				uint16_t actual_packing;         // see dpx_validate.cc
-		} elements[8];                       // 21-28
-
-		// skip 52 bytes                     // 29
-
-		uint32_t x_offset;                   // 30 *
-		uint32_t y_offset;                   // 31 *
-		float32_t x_center;                  // 32 *
-		float32_t y_center;                  // 33 *
-		uint32_t x_origional_size;           // 34 *
-		uint32_t y_origional_size;           // 35 *
-
-		char source_filename[101];           // 36
-		char source_creation_time[25];       // 37
-		struct tm source_creation_time_tm;   // 37a **
-		char input_device[33];               // 38
-		char input_device_serial_number[33]; // 39
-
-		uint16_t xl_border_validity;         // 40a
-		uint16_t xr_border_validity;         // 40b
-		uint16_t yt_border_validity;         // 40c
-		uint16_t yb_border_validity;         // 40d
-		uint32_t horizonal_par;              // 41a 
-		uint32_t vertical_par;               // 41b 
-
-		float32_t x_scanned_size;            // 42.1
-		float32_t y_scanned_size;            // 42.2
-
-		// skip 20 bytes                     // 42.3
+				uint16_t actual_packing;         // see adx_validate.cc
+		} elements[2];                       // 21-28
+		// elements[8] for dpx
+        
+        // skip 52 bytes                     // 29
+        
+        uint32_t x_offset;                   // 30 *
+        uint32_t y_offset;                   // 31 *
+        float32_t x_center;                  // 32 *
+        float32_t y_center;                  // 33 *
+        uint32_t x_origional_size;           // 34 *
+        uint32_t y_origional_size;           // 35 *
+        
+        char source_filename[101];           // 36
+        char source_creation_time[25];       // 37
+        struct tm source_creation_time_tm;   // 37a **
+        char input_device[33];               // 38
+        char input_device_serial_number[33]; // 39
+        
+        uint16_t xl_border_validity;         // 40a
+        uint16_t xr_border_validity;         // 40b
+        uint16_t yt_border_validity;         // 40c
+        uint16_t yb_border_validity;         // 40d
+        uint32_t horizonal_par;              // 41a
+        uint32_t vertical_par;               // 41b
+        
+        float32_t x_scanned_size;            // 42.1
+        float32_t y_scanned_size;            // 42.2
+        
+        // skip 20 bytes                     // 42.3
 
 		// film information header...
 		char keycode_film_id[3];             // 43
 		char keycode_film_type_char[3];      // 44
 		char keycode_perf_offset_char[3];    // 45 *
-		char keycode_prefix[7];              // 47 (no field 46 in dpx)
+		char keycode_prefix[7];              // 47 (no field 46 in adx)
 		char keycode_count_char[5];          // 48
 
 		char format[33];                     // 49
@@ -220,47 +200,31 @@ struct dpx {
 		} keycode;                           // 57a **
 
 		// skip 21 bytes (less than original, taken up by 57.x above)
+        
+        // video information header...
+        uint32_t smpte_timecode;             // 58
+        uint32_t smpte_userbits;             // 59
+        uint8_t interlace;                   // 60
+        uint8_t field_number;                // 61
+        uint8_t video_standard;              // 62
+        // skip 1 byte                       // 63
+        float32_t horizontal_sampling_rate;  // 64
+        float32_t vertical_sampling_rate;    // 65
+        float32_t temporal_sampling_rate;    // 66
+        float32_t time_offset_sync_to_first_pixel; // 67
+        float32_t gamma;                     // 68
+        float32_t black_level_code;          // 69
+        float32_t black_gain;                // 70
+        float32_t breakpoint;                // 71
+        float32_t white_level_code;          // 72
+        float32_t integration_time;          // 73
+        // skip 76 bytes                     // 74
+        
+        // we should be at byte 2048 at this point...
+        char user_id[33];                    // 75
+        
+        // end of header
 
-		// video information header...
-		uint32_t smpte_timecode;             // 58
-		uint32_t smpte_userbits;             // 59
-		uint8_t interlace;                   // 60
-		uint8_t field_number;                // 61
-		uint8_t video_standard;              // 62
-		// skip 1 byte                       // 63
-		float32_t horizontal_sampling_rate;  // 64
-		float32_t vertical_sampling_rate;    // 65
-		float32_t temporal_sampling_rate;    // 66
-		float32_t time_offset_sync_to_first_pixel; // 67
-		float32_t gamma;                     // 68
-		float32_t black_level_code;          // 69
-		float32_t black_gain;                // 70
-		float32_t breakpoint;                // 71
-		float32_t white_level_code;          // 72
-		float32_t integration_time;          // 73
-		// skip 76 bytes                     // 74
-
-		// we should be at byte 2048 at this point...
-		char user_id[33];                    // 75
-
-		// end of header
-
-		// Set on read() to either little_endian or big_endian based on
-		// the file byte order. Used on write to determine if bytes
-		// are to be written either in the native mode (0), always swapped (1),
-		// swapped if not on a little endian architecture (2), swapped if
-		// not on a big endian architecture (3).
-		//
-		// It is strongly suggested that this value be set to 'big_endian'
-		// for all writes, since Cinepaint can only deal with network order
-		// (big endian) dpx files.
-		enum endian_mode_e {
-			default_endian_mode=0,
-			native=1,
-			swapped=2,
-			little_endian=3,
-			big_endian=4,
-		} endian_mode;
 
 		// This field is used to control any alternate interpretation
 		// of fields that may need to happen to read a file (or write a 
@@ -269,9 +233,19 @@ struct dpx {
 		//
 		enum compliance_e {
 			automatic =0,
-			dpx1      =0x10000000,
-			dpx3      =0x20000000,
+			adx1      =0x10000000,
+			adx3      =0x20000000,
 		} compliance;
+
+		// Section 4.2 a group of "Undefined" values
+		enum undefine_v {
+			udf8 = 0xFF,
+			udf16 = 0xFFFF,
+			udf32 = 0xFFFFFFFF,
+			udf32f = 0xFFFFFFFF,
+			udfasc = NULL
+		} undefined;
+
 
 		// Some helper functions to determine if a field is 'NULL' or
 		// to set a field to NULL.
@@ -292,20 +266,24 @@ struct dpx {
 
 	private:
 		bool _need_byteswap;
-		friend class dpxi::rwinfo;
+		bool _constraint_ok;
+		friend class adxi::rwinfo;
 		std::ostream *current_ostream;
 		compliance_e current_compliance;
 		endian_mode_e current_endian_mode;
+        // std::vector<std::string> consMsg;
 
 		std::istream::streampos header_start;
 
 	public:
-		virtual ~dpx();
-		dpx();
+		virtual ~adx();
+		adx();
 
 		// read and write only the header...
 		void read(std::istream *io);
 		void write(std::ostream *io);
+        // use this to check the complaints with the constraint
+		bool check_constraint(void);
 
 		static bool check_magic(std::istream *io);
 
@@ -354,17 +332,21 @@ struct dpx {
 				void swizzle(uint8_t descriptor, bool squish_alpha);
                 void channelAdjust(uint8_t descriptor);
 		
-				// Indicates if the data has an alpha channel.	
+				// Indicates if the data has an alpha channel.
 				bool alpha() const;
 				// Set the alpha channel to the specified value (creates
 				// alpha channel if it does not exist).
 				void alpha(const T &value);
+                std::vector<std::string> getConsMsg(void);
 
 				T *ptr(void);
 				const T *ptr(void) const;
 				operator T *();
 				operator const T *() const;
+            
 		};
+    
+        std::vector<std::string> consMsg;
 
 		// Exception classes...
 		class exception : std::exception {};
@@ -388,19 +370,19 @@ struct dpx {
 			normal=0,
 			unformatted=1
 		};
-		void read(std::istream *io, uint8_t element, fb<half> *buffer,
+		void read(std::istream *io, uint8_t element, ctl::dpx::fb<half> *buffer,
 		          float64_t scale=0.0);
-		void read(std::istream *io, uint8_t element, fb<float32_t> *buffer,
+		void read(std::istream *io, uint8_t element, ctl::dpx::fb<float32_t> *buffer,
 		          float64_t scale=0.0);
-		void read(std::istream *io, uint8_t element, fb<float64_t> *buffer,
+		void read(std::istream *io, uint8_t element, ctl::dpx::fb<float64_t> *buffer,
 		          float64_t scale=0.0);
-		void read(std::istream *io, uint8_t element, fb<uint8_t> *buffer,
+		void read(std::istream *io, uint8_t element, ctl::dpx::fb<uint8_t> *buffer,
 		          float64_t scale=0.0, intmode_e mode=normal);
-		void read(std::istream *io, uint8_t element, fb<uint16_t> *buffer,
+		void read(std::istream *io, uint8_t element, ctl::dpx::fb<uint16_t> *buffer,
 		          float64_t scale=0.0, intmode_e mode=normal);
-		void read(std::istream *io, uint8_t element, fb<uint32_t> *buffer,
+		void read(std::istream *io, uint8_t element, ctl::dpx::fb<uint32_t> *buffer,
 		          float64_t scale=0.0, intmode_e mode=normal);
-		void read(std::istream *io, uint8_t element, fb<uint64_t> *buffer,
+		void read(std::istream *io, uint8_t element, ctl::dpx::fb<uint64_t> *buffer,
 		          float64_t scale=0.0, intmode_e mode=normal);
 
 		//
@@ -475,22 +457,22 @@ struct dpx {
 		// to the point it was at when the write(...) method was called.
 		//
 		void write(std::ostream *o, uint8_t element,
-		           const fb<half> &buffer, float64_t scale=0.0);
+		           const ctl::dpx::fb<half> &buffer, float64_t scale=0.0);
 		void write(std::ostream *o, uint8_t element,
-		           const fb<float32_t> &buffer, float64_t scale=0.0);
+		           const ctl::dpx::fb<float32_t> &buffer, float64_t scale=0.0);
 		void write(std::ostream *o, uint8_t element,
-		           const fb<float64_t> &buffer, float64_t scale=0.0);
+		           const ctl::dpx::fb<float64_t> &buffer, float64_t scale=0.0);
 		void write(std::ostream *o, uint8_t element,
-		           const fb<uint8_t> &buffer, float64_t scale=0.0,
+		           const ctl::dpx::fb<uint8_t> &buffer, float64_t scale=0.0,
 		           intmode_e mode=normal);
 		void write(std::ostream *o, uint8_t element,
-		           const fb<uint16_t> &buffer, float64_t scale=0.0,
+		           const ctl::dpx::fb<uint16_t> &buffer, float64_t scale=0.0,
 		           intmode_e mode=normal);
 		void write(std::ostream *o, uint8_t element,
-		           const fb<uint32_t> &buffer, float64_t scale=0.0,
+		           const ctl::dpx::fb<uint32_t> &buffer, float64_t scale=0.0,
 		           intmode_e mode=normal);
 		void write(std::ostream *o, uint8_t element,
-		           const fb<uint64_t> &buffer, float64_t scale=0.0,
+		           const ctl::dpx::fb<uint64_t> &buffer, float64_t scale=0.0,
 		           intmode_e mode=normal);
 
 		// Can perform pretty much perform every imaginable conversion
@@ -625,8 +607,7 @@ struct dpx {
 		static std::string descriptor_to_string(uint8_t id);
 };
 
-//#include <dpx.tcc>
-#include "dpx.tcc"
+#include <adx.tcc>
 }
 
 
