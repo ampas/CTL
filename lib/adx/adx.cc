@@ -462,13 +462,34 @@ void adx::write(std::ostream *os)
 	adxi::write_uint32(os, lines_per_element, _need_byteswap);
     
     uint8_t alphaElement = 1;
+    bool hasAlphaElement = 0;
 	for(i=0; i<8; i++) {
         if (static_cast<uint32_t>(elements[i].descriptor) == 13) {
+            hasAlphaElement = 1;
             alphaElement = i;
         }
         
         break;
     };
+    
+//    for(i=0; i<8; i++) {
+//        nullify(&(elements[i].data_sign));
+//        nullify(&(elements[i].ref_low_data_code));
+//        nullify(&(elements[i].ref_low_quantity));
+//        nullify(&(elements[i].ref_high_data_code));
+//        nullify(&(elements[i].ref_high_quantity));
+//        nullify(&(elements[i].descriptor));
+//        nullify(&(elements[i].transfer_characteristic));
+//        nullify(&(elements[i].colorimetric_characteristic));
+//        nullify(&(elements[i].bits_per_sample));
+//        nullify(&(elements[i].packing));
+//        nullify(&(elements[i].encoding));
+//        nullify(&(elements[i].offset_to_data));
+//        nullify(&(elements[i].eol_padding));
+//        nullify(&(elements[i].eoi_padding));
+//        memset(elements[i].description, 0,
+//               sizeof(elements[i].description));
+//    };
     
     // the First Element
     // adx 21.1 Data Sign shall be Unsigned
@@ -506,7 +527,6 @@ void adx::write(std::ostream *os)
         adxi::write_uint32(os, 0xFFFF, _need_byteswap);
     }
     else {
-        this->_constraint_ok = FALSE;
         exit(1);
     }
 
@@ -566,7 +586,7 @@ void adx::write(std::ostream *os)
                        sizeof(elements[0].description));
 
     // The Second Element
-    if (number_of_elements > 1 && alphaElement != 1) {
+    if (hasAlphaElement) {
         // adx 22.1 Data Sign shall be Unsigned
         if (elements[alphaElement].data_sign != 0x0){
             this->_constraint_ok = FALSE;
@@ -692,26 +712,6 @@ void adx::write(std::ostream *os)
                            sizeof(elements[alphaElement].description));
 
     }
-    
-    for(i=0; i<8; i++) {
-        
-        nullify(&(elements[i].data_sign));
-        nullify(&(elements[i].ref_low_data_code));
-        nullify(&(elements[i].ref_low_quantity));
-        nullify(&(elements[i].ref_high_data_code));
-        nullify(&(elements[i].ref_high_quantity));
-        nullify(&(elements[i].descriptor));
-        nullify(&(elements[i].transfer_characteristic));
-        nullify(&(elements[i].colorimetric_characteristic));
-        nullify(&(elements[i].bits_per_sample));
-        nullify(&(elements[i].packing));
-        nullify(&(elements[i].encoding));
-        nullify(&(elements[i].offset_to_data));
-        nullify(&(elements[i].eol_padding));
-        nullify(&(elements[i].eoi_padding));
-        memset(elements[i].description, 0,
-               sizeof(elements[i].description));
-    };
 
 	adxi::write_fill(os, 0x00, 52);
 	adxi::write_uint32(os, x_offset, _need_byteswap);
