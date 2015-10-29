@@ -260,7 +260,7 @@ void write(std::ostream *o, adx *h, uint8_t element, const ctl::dpx::fb<T> &buff
 
 	rwinfo::write_init(o, h);
 
-	if (element >= 1) {
+	if (element >=2 ) {
 		fprintf(stderr,
                 "Existing ........\n"
                  "The ADX format should have \n"

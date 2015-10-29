@@ -96,6 +96,9 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
                       uint8_t bps, uint8_t channels, uint64_t width,
                       uint64_t height) {
 
+    unsigned long nan_f = static_cast<unsigned long>(adx::udf32f);
+    float32_t nan_vf = *(float32_t *)&nan_f;
+    
 	// Make sure that all of the fields are filled out correctly...
 	if(adx::isnull(h->image_orientation)) {
 		h->image_orientation=0;
@@ -126,53 +129,27 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 		h->elements[element].bits_per_sample=bps;
 	}
 	else {
-		// if(element == 0) {
-		// 	if (h->elements[element].bits_per_sample != 16
-		// 		&& h->elements[element].bits_per_sample != 10){
-		// 		h->_constraint_ok = FALSE;
-		//     }
-		// }
-		// else if(element == 1) {
-		// 	if (h->elements[element].bits_per_sample != 16
-		// 		&& h->elements[element].bits_per_sample != 10
-		// 		&& h->elements[element].bits_per_sample != 8
-		// 		&& h->elements[element].bits_per_sample != 1){
-		// 		h->_constraint_ok = FALSE;
-		//     }
-		// }
+		 if(element == 0) {
+		 	if (h->elements[element].bits_per_sample != 16
+		 		&& h->elements[element].bits_per_sample != 10){
+                THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
+                exit(1);		     }
+		 }
+		 else if(element == 1) {
+		 	if (h->elements[element].bits_per_sample != 16
+		 		&& h->elements[element].bits_per_sample != 10
+		 		&& h->elements[element].bits_per_sample != 8
+		 		&& h->elements[element].bits_per_sample != 1){
+                THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
+                exit(1);		     }
+		 }
 
-		// h->elements[element].bits_per_sample=bps;
+//        std::cout << sizeof(((adx::element_t *) 0)->bits_per_sample) << std::endl;
 	}
     
-	if(adx::isnull(h->elements[element].data_sign)) {
-		h->elements[element].data_sign=datatype;
-	}
-	else {
-		if(h->elements[element].data_sign != 0x0) {
-			h->elements[element].data_sign = 0x0;
-		}
-	}
-
-	if(adx::isnull(h->elements[element].ref_low_data_code)) {
-        h->elements[element].ref_low_data_code = 0x0;
-	}
-	else {
-		if(h->elements[element].ref_low_data_code != 0x0){
-	    	h->elements[element].ref_low_data_code = 0x0;
-		}
-	}
-
-	unsigned long nan_f = static_cast<unsigned long>(adx::udf32f);
-    float32_t nan_vf = *(float32_t *)&nan_f;
-
-	if(adx::isnull(h->elements[element].ref_low_quantity)) {
-        h->elements[element].ref_low_quantity = nan_vf;
-	}
-	else {
-		if (h->elements[element].ref_low_quantity != nan_vf){
-	        h->elements[element].ref_low_quantity = nan_vf;
-		}
-	}
+    h->elements[element].data_sign = 0x0;
+    h->elements[element].ref_low_data_code = 0x0;
+    h->elements[element].ref_low_quantity = nan_vf;
 
 	if (adx::isnull(h->elements[element].ref_high_data_code)){
 		if(h->elements[element].bits_per_sample == 16){
@@ -219,14 +196,8 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 		}
 	}
 
-	if(adx::isnull(h->elements[element].ref_high_quantity)) {
-        h->elements[element].ref_high_quantity = nan_vf;
-	}
-	else {
-		if (h->elements[element].ref_high_quantity != nan_vf){
-	        h->elements[element].ref_high_quantity = nan_vf;
-		}
-	}
+	
+    h->elements[element].ref_high_quantity = nan_vf;
 
 	if(adx::isnull(h->elements[element].descriptor)) {
 		switch(channels) {
@@ -234,49 +205,13 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 				if (element == 1) {
 					h->elements[element].descriptor = 4; // Alpha
                 }
-				else {
-                    THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
-                    exit(1);
-				}
 				break;
-
-			// case 2:
-			// 	if(h->compliance==adx::adx1) {
-			// 		h->elements[element].descriptor=150; // user def 2 channels
-			// 	} else {
-			// 		h->elements[element].descriptor=158; // Luminance + Alpha
-			// 	}
-			// 	break;
 
 			case 3:
 				if (element == 0) {
 					h->elements[element].descriptor = 50; // RGB
 				}
-				else {
-                    THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
-        			exit(1);
-				}
 				break;
-
-			// case 4:
-			// 	h->elements[element].descriptor=51; // RGBA
-			// 	break;
-
-			// case 5:
-			// 	h->elements[element].descriptor=153; // user def 5 channels
-			// 	break;
-
-			// case 6:
-			// 	h->elements[element].descriptor=154; // user def 6 channels
-			// 	break;
-
-			// case 7:
-			// 	h->elements[element].descriptor=155; // user def 7 channels
-			// 	break;
-
-			// case 8:
-			// 	h->elements[element].descriptor=156; // user def 8 channels
-			// 	break;
 
 			default:
 				// XXX unsupported
@@ -286,11 +221,13 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 	else {
 		if(static_cast<uint32_t>(element) == 0 
 			&& static_cast<uint32_t>(h->elements[element].descriptor) != 0x32) {
-			h->elements[element].descriptor = 0x32;
+            THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
+            exit(1);
 		}
 		else if(static_cast<uint32_t>(element) == 1 
 			&& static_cast<uint32_t>(h->elements[element].descriptor) != 0x4) {
-			h->elements[element].descriptor = 0x4;
+            THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
+            exit(1);
 		}
 	}
 
@@ -313,20 +250,8 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 		}
 	}
 
-	if(adx::isnull(h->elements[element].colorimetric_characteristic)) {
-		h->elements[element].colorimetric_characteristic=
-		h->elements[element].transfer_characteristic;
-	}
-	else {
-		if(element == 0 
-			&& static_cast<uint32_t>(h->elements[element].colorimetric_characteristic) != 0xD) {
-			h->elements[element].colorimetric_characteristic = 0xD;
-		}
-		else if(element == 1 
-			&& static_cast<uint32_t>(h->elements[element].colorimetric_characteristic )!= 0x0) {
-			h->elements[element].colorimetric_characteristic = 0x0;
-		}
-	}
+    h->elements[element].colorimetric_characteristic=
+    h->elements[element].transfer_characteristic;
 
 	// We have an 'actual_packing'Field which drives the writer to
 	// specify where the byte swaps occur, and a 'packing' field which
@@ -337,25 +262,23 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 			packing_for_bps(h->elements[element].bits_per_sample,
 			                &(h->elements[element].actual_packing),
 			                &(h->elements[element].packing));
-		} else {
-			if(h->elements[element].bits_per_sample==16) {
-				// historic reasons... If we don't do this we'll
-				// break every dpx 1.0 reader known to man
-				h->elements[element].packing=0;
-			} else if(h->elements[element].bits_per_sample==10) 
-			{
-				h->elements[element].packing=1;
-			} else if(h->elements[element].bits_per_sample==8
-					&& element == 1) {
-				h->elements[element].packing=0;
-			} else if(h->elements[element].bits_per_sample==1
-					&& element == 1) {
-				h->elements[element].packing=0;
-			} else {
-				// XXX
-			}
-		}
-	}
+        }
+    }
+    else if(h->elements[element].bits_per_sample==16) {
+        // historic reasons... If we don't do this we'll
+        // break every dpx 1.0 reader known to man
+        h->elements[element].packing=0;
+    } else if(h->elements[element].bits_per_sample==10) {
+        h->elements[element].packing=1;
+    } else if(h->elements[element].bits_per_sample==8
+              && element == 1) {
+        h->elements[element].packing=0;
+    } else if(h->elements[element].bits_per_sample==1
+              && element == 1) {
+        h->elements[element].packing=0;
+    } else {
+        // XXX
+    }
 
 	if(adx::isnull(h->elements[element].actual_packing)) {
 		h->elements[element].actual_packing=h->elements[element].packing;
@@ -425,124 +348,21 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 	}
 
     // Constraints for ADX 60-62
-	if (adx::isnull(h->interlace)) {
-		h->interlace = static_cast<uint8_t>(adx::udf8);
-    }
-    else {
-    	if (static_cast<uint32_t>(h->interlace) != adx::udf8) {
-        	h->interlace = static_cast<uint8_t>(adx::udf8);
-    	}
-    }
 
-    if (adx::isnull(h->field_number)) {
-		h->field_number = static_cast<uint8_t>(adx::udf8);
-    }
-    else {
-    	if (static_cast<uint32_t>(h->field_number) != adx::udf8) {
-        	h->field_number = static_cast<uint8_t>(adx::udf8);
-    	}
-    }
-
-    if (adx::isnull(h->video_standard)) {
-		h->video_standard = static_cast<uint8_t>(adx::udf8);
-    }
-    else {
-    	if (static_cast<uint32_t>(h->video_standard) != adx::udf8) {
-        	h->video_standard = static_cast<uint8_t>(adx::udf8);
-    	}
-    }
+    h->interlace = static_cast<uint8_t>(adx::udf8);
+    h->field_number = static_cast<uint8_t>(adx::udf8);
+    h->video_standard = static_cast<uint8_t>(adx::udf8);
 
     // Constraints for ADX 64-73
-    if (adx::isnull(h->horizontal_sampling_rate)) {
-		h->horizontal_sampling_rate = nan_vf;
-    }
-    else {
-    	if (h->horizontal_sampling_rate != nan_vf) {
-        	h->horizontal_sampling_rate = nan_vf;
-    	}
-    }
-
-    if (adx::isnull(h->vertical_sampling_rate)) {
-		h->vertical_sampling_rate = nan_vf;
-    }
-    else {
-    	if (h->vertical_sampling_rate != nan_vf) {
-        	h->vertical_sampling_rate = nan_vf;
-    	}
-    }
-
-    if (adx::isnull(h->temporal_sampling_rate)) {
-		h->temporal_sampling_rate = nan_vf;
-    }
-    else {
-    	if (h->temporal_sampling_rate != nan_vf) {
-        	h->temporal_sampling_rate = nan_vf;
-    	}
-    }
-
-    if (adx::isnull(h->time_offset_sync_to_first_pixel)) {
-		h->time_offset_sync_to_first_pixel = nan_vf;
-    }
-    else {
-    	if (h->time_offset_sync_to_first_pixel != nan_vf) {
-        	h->time_offset_sync_to_first_pixel = nan_vf;
-    	}
-    }
-
-    if (adx::isnull(h->gamma)) {
-		h->gamma = nan_vf;
-    }
-    else {
-    	if (h->gamma != nan_vf) {
-        	h->gamma = nan_vf;
-    	}
-    }
-
-    if (adx::isnull(h->black_level_code)) {
-		h->black_level_code = nan_vf;
-    }
-    else {
-    	if (h->black_level_code != nan_vf) {
-        	h->black_level_code = nan_vf;
-    	}
-    }
-
-    if (adx::isnull(h->black_gain)) {
-		h->black_gain = nan_vf;
-    }
-    else {
-    	if (h->black_gain != nan_vf) {
-        	h->black_gain = nan_vf;
-    	}
-    }
-   
-    if (adx::isnull(h->breakpoint)) {
-		h->breakpoint = nan_vf;
-    }
-    else {
-    	if (h->breakpoint != nan_vf) {
-        	h->breakpoint = nan_vf;
-    	}
-    }
-
-    if (adx::isnull(h->white_level_code)) {
-		h->white_level_code = nan_vf;
-    }
-    else {
-    	if (h->white_level_code != nan_vf) {
-        	h->white_level_code = nan_vf;
-    	}
-    }
-
-    if (adx::isnull(h->integration_time)) {
-		h->integration_time = nan_vf;
-    }
-    else {
-    	if (h->integration_time != nan_vf) {
-        	h->integration_time = nan_vf;
-    	}
-    }
-
+    h->horizontal_sampling_rate = nan_vf;
+    h->temporal_sampling_rate = nan_vf;
+    h->time_offset_sync_to_first_pixel = nan_vf;
+    h->gamma = nan_vf;
+    h->black_level_code = nan_vf;
+    h->black_gain = nan_vf;
+    h->breakpoint = nan_vf;
+    h->white_level_code = nan_vf;
+    h->integration_time = nan_vf;
 }
 
 void rwinfo::validate_adx_strict(adx *h, uint8_t element) {

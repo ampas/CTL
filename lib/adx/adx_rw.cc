@@ -98,29 +98,11 @@ void rwinfo::set(const adx *that, uint8_t e, float64_t _scale,
 
 	datatype=that->elements[e].data_sign;
 
-	if(descriptor<50) {
+	if(descriptor==4) {
 		// I don't quite get how the Color difference is supposed to work.
 		channels=1;
-	} else if(descriptor==50 || descriptor==53 || descriptor==157) {
-		channels=3;
-	} else if(descriptor==51 || descriptor==52) {
-		channels=4;
-	} else if(descriptor<100) {
-		channels=3; // Probably... There can be RGBA variants in this space.
-	} else if(descriptor==102) {
-		channels=3;
-	} else if(descriptor==101 || descriptor==103) {
-		channels=4;
-	} else if(descriptor==101) {
-		channels=5;
-	} else if(descriptor<150) {
-		channels=3; // Probably... There can be YCrCbA variants in this space.
-	} else if(descriptor>=150 && descriptor<=156) {
-		channels=2+descriptor-150;
-	} else if(descriptor==157) {
-		channels=3;
-	} else if(descriptor==158) {
-		channels=2;
+	} else if(descriptor==50){
+        channels=3;
 	} else {
 		channels=0;
 		// who knows...
