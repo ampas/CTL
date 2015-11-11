@@ -88,7 +88,7 @@ std::map<const char *, uint32_t> dpx_read_details_for_adx_int(const char *name,
 	file.open(name);
 	
 	dpxheader.read(&file);	
-	dpxheader.read(&file, 0, pixels, scale);
+//	dpxheader.read(&file, 0, pixels, scale);
 
 	M["18"] = static_cast<uint32_t>(dpxheader.number_of_elements);
 	M["21.1"] = static_cast<uint32_t>(dpxheader.elements[0].data_sign);
@@ -129,7 +129,7 @@ std::map<const char *, float32_t> dpx_read_details_for_adx_float(const char *nam
 	file.open(name);
 	
 	dpxheader.read(&file);	
-	dpxheader.read(&file, 0, pixels, scale);
+//	dpxheader.read(&file, 0, pixels, scale);
 
 	M["21.3"] = static_cast<float32_t>(dpxheader.elements[0].ref_low_quantity);
 	M["21.5"] = static_cast<float32_t>(dpxheader.elements[0].ref_high_quantity);
@@ -162,10 +162,6 @@ void dpx_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
 
 	dpxheader.elements[0].data_sign=0;
 	dpxheader.elements[0].bits_per_sample=format->bps;
-
-	// std::cout << " I am here dpx" << std::endl;
-	// std::cout << format->bps << std::endl;
-	// std::cout << dpxheader.elements[0].bits_per_sample << std::endl;
 
 	dpxheader.write(&file, 0, pixels, scale);
 	dpxheader.write(&file);	

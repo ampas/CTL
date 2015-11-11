@@ -112,7 +112,8 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 		h->lines_per_element=height;
 	}
 
-	if(adx::isnull(h->number_of_elements) || h->number_of_elements<=element) {
+	if(adx::isnull(h->number_of_elements)
+       || h->number_of_elements<=element) {
 		h->number_of_elements=element+1;
 	}
 
@@ -120,8 +121,8 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 		// XXX too many elements...
 		h->_constraint_ok = FALSE;
 		fprintf(stderr,
-                "WARNING: adx field 18 -> Image Elements shall be\n"
-                "1 or 2\n");
+                "WARNING: adx field 18 -> Image Elements shall be"
+                "1 or 2. \n");
 		h->number_of_elements = 2;
 	}
 
@@ -132,7 +133,8 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 		 if(element == 0) {
 		 	if (h->elements[element].bits_per_sample != 16
 		 		&& h->elements[element].bits_per_sample != 10){
-                THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
+                THROW(Iex::ArgExc,
+                      "Error: The Program does not Currently Support This Format");
                 exit(1);		     }
 		 }
 		 else if(element == 1) {
@@ -140,11 +142,10 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 		 		&& h->elements[element].bits_per_sample != 10
 		 		&& h->elements[element].bits_per_sample != 8
 		 		&& h->elements[element].bits_per_sample != 1){
-                THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
+                THROW(Iex::ArgExc,
+                      "Error: The Program does not Currently Support This Format");
                 exit(1);		     }
 		 }
-
-//        std::cout << sizeof(((adx::element_t *) 0)->bits_per_sample) << std::endl;
 	}
     
     h->elements[element].data_sign = 0x0;

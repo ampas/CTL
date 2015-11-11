@@ -75,7 +75,7 @@ ctl::dpx::fb<T>* prepareADX(const char *inputFile,
     
     if (MI["18"] > 2 ) {
         fprintf(stderr,
-                "WARNING: This Image May Contain More than 2 Elments"
+                "WARNING: This Image May Contain More than 2 Elments\n"
                 "Elements Beyond the 2nd One Will be Removed! \n");
     }
     
@@ -84,11 +84,14 @@ ctl::dpx::fb<T>* prepareADX(const char *inputFile,
             && MI["21.6"] != 51
             && MI["21.6"] != 52
             && MI["21.6"] != 53) {
-            THROW(Iex::ArgExc, "The Program does not Currently Support This Format.\n");
+//            THROW(Iex::ArgExc, "Error: The Program does not Currently Support This Format.\n");
+            fprintf(stderr,
+                    "WARNING: The Program does not Currently Support This Format.\n");
+
         }
         else if(MI["21.6"] == 157){
             fprintf(stderr,
-                    "The Image is Currently in XYZ Space\n"
+                    "WARNING: The Image is Currently in XYZ Space\n"
                     ", ctlrender will Treat and Process  \n"
                     "it as it was in RGB Space.\n");
             
@@ -126,14 +129,20 @@ ctl::dpx::fb<T>* prepareADX(const char *inputFile,
     }
     
     if(MI["21.9"] != 16 && MI["21.9"] != 10) {
-        THROW(Iex::ArgExc, "ERROR: The Program is Currently Supporting ADX with Bit Depth \n"
-                "         of 10 and 16 on the First Element) \n");
+//        THROW(Iex::ArgExc, "ERROR: The Program is Currently Supporting ADX with Bit Depth "
+//                           "of 10 and 16 on the First Element) \n");
+        fprintf(stderr,
+                "WARNING: The Program is Currently Supporting ADX with Bit Depth "
+                "of 10 and 16 on the First Element. \n");
     }
     
     if(MI["18"] > 1
        && MI["22.6"] != 4) {
-        THROW(Iex::ArgExc, "ERROR: The Program is Currently Supporting Alpha/Matte \n"
-                "         on the Second Element");
+//        THROW(Iex::ArgExc, "ERROR: The Program is Currently Supporting Alpha/Matte "
+//                "on the Second Element. \n");
+        fprintf(stderr,
+                "WARNING: The Program is Currently Supporting Alpha/Matte "
+                "on the Second Element. \n");
     }
     else if(MI["18"] > 1
             && MI["22.6"] == 4
