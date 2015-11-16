@@ -182,9 +182,10 @@ void rwinfo::set(const dpx *that, uint8_t e, float64_t _scale,
 uint64_t rwinfo::words_for_raw(uint8_t swap_boundary) const {
 	uint32_t samples_per_word;
 	uint64_t samples;
-
+    
 	samples_per_word=(swap_boundary*8)/bps;
 	samples=channels*width;
+    
 	return ((samples+samples_per_word-1)/samples_per_word)*height;
 }
 

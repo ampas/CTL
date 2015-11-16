@@ -74,7 +74,7 @@ void pack(dpx::fb<O> *out, const dpx::fb<I> &in, const rwinfo &ri) {
 	const I *i=in.ptr();
 
 	out->init(ri.words_for_raw<O>(), 1, 1);
-
+    
 	o=out->ptr();
 
 #if 1
@@ -151,7 +151,12 @@ void write_fb(std::ostream *o, const dpx::fb<T> &buf, const rwinfo &wi) {
 	dpx::fb<uint32_t>    fbu32;
 	dpx::fb<uint16_t>    fbu16;
 	dpx::fb<uint8_t>     fbu8;
-		
+    
+//    std::cout << "I am here." << std::endl;
+//    std::cout << fbu32.count() << std::endl;
+//    std::cout << (uint32_t)wi.bps << std::endl;
+//    std::cout << (uint32_t)wi.pack << std::endl;
+    
 	if(wi.pack<8) {
 		if(wi.bps==32) {
 			write_ptr(o, buf.ptr(), buf.count(), wi.need_byteswap);

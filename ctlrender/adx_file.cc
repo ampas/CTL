@@ -72,7 +72,7 @@ ctl::dpx::fb<T>* prepareADX(const char *inputFile,
     
     unsigned long nan_f = static_cast<unsigned long>(ctl::adx::udf32f);
     float32_t nan_vf = *(float32_t *)&nan_f;
-    
+
     if (MI["18"] > 2 ) {
         fprintf(stderr,
                 "WARNING: This Image May Contain More than 2 Elments\n"

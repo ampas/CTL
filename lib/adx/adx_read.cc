@@ -158,8 +158,6 @@ void read(ctl::dpx::fb<O> *out, const I *in, const rwinfo &ri) {
 	ctl::dpx::fb<uint16_t>  upfbu16;	
 	ctl::dpx::fb<uint8_t>   upfbu8;	
 
-	// std::cout << "I am here in adx read" << std::endl;
-
 	if(ri.bps<=sizeof(I)*8) {
 		// not good...
 	}

@@ -72,7 +72,7 @@ void pack(ctl::dpx::fb<O> *out, const ctl::dpx::fb<I> &in, const rwinfo &ri) {
 	O t;
 	O *o;
 	const I *i=in.ptr();
-
+    
 	out->init(ri.words_for_raw<O>(), 1, 1);
 
 	o=out->ptr();
@@ -151,7 +151,7 @@ void write_fb(std::ostream *o, const ctl::dpx::fb<T> &buf, const rwinfo &wi) {
 	ctl::dpx::fb<uint32_t>    fbu32;
 	ctl::dpx::fb<uint16_t>    fbu16;
 	ctl::dpx::fb<uint8_t>     fbu8;
-		
+    
 	if(wi.pack<8) {
 		if(wi.bps==32) {
 			write_ptr(o, buf.ptr(), buf.count(), wi.need_byteswap);
@@ -202,6 +202,7 @@ void write(std::ostream *o, const ctl::dpx::fb<T> &buf, const rwinfo &wi) {
 	ctl::dpx::fb<float16_t>   fbf16;
 	ctl::dpx::fb<float32_t>   fbf32;
 	ctl::dpx::fb<float64_t>   fbf64;
+    
 
 	if(wi.datatype==0) {
 		if(wi.bps<=8) {
@@ -284,11 +285,11 @@ void write(std::ostream *o, adx *h, uint8_t element, const ctl::dpx::fb<T> &buff
 		rwinfo::find_home(h, element, wi.bytes_for_raw());
 		o->seekp(start+((std::streamoff)h->elements[element].offset_to_data));
 		adxi::write(o, buffer, wi);
+
 	}
 
 	o->seekp(start);
 }
-
 };
 
 void adx::write(std::ostream *o, uint8_t element, const ctl::dpx::fb<half> &buffer,

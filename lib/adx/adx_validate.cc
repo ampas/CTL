@@ -135,7 +135,8 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 		 		&& h->elements[element].bits_per_sample != 10){
                 THROW(Iex::ArgExc,
                       "Error: The Program does not Currently Support This Format");
-                exit(1);		     }
+                exit(1);
+            }
 		 }
 		 else if(element == 1) {
 		 	if (h->elements[element].bits_per_sample != 16
@@ -200,37 +201,81 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 	
     h->elements[element].ref_high_quantity = nan_vf;
 
-	if(adx::isnull(h->elements[element].descriptor)) {
-		switch(channels) {
-			case 1:
-				if (element == 1) {
-					h->elements[element].descriptor = 4; // Alpha
+//	if(adx::isnull(h->elements[element].descriptor)) {
+//		switch(channels) {
+//			case 1:
+//				if (element == 1) {
+//					h->elements[element].descriptor = 4; // Alpha
+//                }
+//				break;
+//
+//			case 3:
+//				if (element == 0) {
+//					h->elements[element].descriptor = 50; // RGB
+//				}
+//				break;
+//
+//			default:
+//				// XXX unsupported
+//				break;
+//		}
+//	}
+//	else {
+//		if(static_cast<uint32_t>(element) == 0 
+//			&& static_cast<uint32_t>(h->elements[element].descriptor) != 0x32) {
+//            THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
+//            exit(1);
+//		}
+//		else if(static_cast<uint32_t>(element) == 1 
+//			&& static_cast<uint32_t>(h->elements[element].descriptor) != 0x4) {
+//            THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
+//            exit(1);
+//		}
+//	}
+    
+    if(adx::isnull(h->elements[element].descriptor)) {
+        switch(channels) {
+            case 1:
+                h->elements[element].descriptor=6; // Luminance
+                break;
+                
+            case 2:
+                if(h->compliance==dpx::dpx1) {
+                    h->elements[element].descriptor=150; // user def 2 channels
+                } else {
+                    h->elements[element].descriptor=158; // Luminance + Alpha
                 }
-				break;
-
-			case 3:
-				if (element == 0) {
-					h->elements[element].descriptor = 50; // RGB
-				}
-				break;
-
-			default:
-				// XXX unsupported
-				break;
-		}
-	}
-	else {
-		if(static_cast<uint32_t>(element) == 0 
-			&& static_cast<uint32_t>(h->elements[element].descriptor) != 0x32) {
-            THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
-            exit(1);
-		}
-		else if(static_cast<uint32_t>(element) == 1 
-			&& static_cast<uint32_t>(h->elements[element].descriptor) != 0x4) {
-            THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
-            exit(1);
-		}
-	}
+                break;
+                
+            case 3:
+                h->elements[element].descriptor=50; // RGB
+                break;
+                
+            case 4:
+                h->elements[element].descriptor=51; // RGBA
+                break;
+                
+            case 5:
+                h->elements[element].descriptor=153; // user def 5 channels
+                break;
+                
+            case 6:
+                h->elements[element].descriptor=154; // user def 6 channels
+                break;
+                
+            case 7:
+                h->elements[element].descriptor=155; // user def 7 channels
+                break;
+                
+            case 8:
+                h->elements[element].descriptor=156; // user def 8 channels
+                break;
+                
+            default:
+                // XXX unsupported
+                break;
+        }
+    }
 
 	if(adx::isnull(h->elements[element].transfer_characteristic)) {
 		if(element == 0) {
