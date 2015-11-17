@@ -209,7 +209,7 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 				break;
 
 			case 3:
-            case 4:
+			case 4:
 				if (element == 0) {
 					h->elements[element].descriptor = 50; // RGB
 				}
@@ -223,12 +223,12 @@ void rwinfo::validate(adx *h, uint8_t element, uint8_t datatype,
 	}
 	else {
 		if(static_cast<uint32_t>(element) == 0 
-			&& static_cast<uint32_t>(h->elements[element].descriptor) != 0x32) {
+		   && static_cast<uint32_t>(h->elements[element].descriptor) != 0x32) {
             THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
             exit(1);
 		}
 		else if(static_cast<uint32_t>(element) == 1 
-			&& static_cast<uint32_t>(h->elements[element].descriptor) != 0x4) {
+			   && static_cast<uint32_t>(h->elements[element].descriptor) != 0x4) {
             THROW(Iex::ArgExc, "The Program does not Currently Support This Format");
             exit(1);
 		}
