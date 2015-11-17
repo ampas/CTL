@@ -54,10 +54,12 @@
 
 #include "transform.hh"
 #include "dpx_file.hh"
+#include "adx_file.hh"
 #include "tiff_file.hh"
 #include "exr_file.hh"
 #include "aces_file.hh"
 #include <dpx.hh>
+#include <adx.hh>
 #include <CtlRcPtr.h>
 #include <CtlFunctionCall.h>
 #include <CtlSimdInterpreter.h>
@@ -334,7 +336,6 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
 
 	try
 	{
-
 		name = (char *) alloca(strlen(ctl_operation.filename)+1);
 		memset(name, 0, strlen(ctl_operation.filename) + 1);
 		strcpy(name, ctl_operation.filename);
@@ -756,6 +757,7 @@ void transform(const char *inputFile, const char *outputFile,
 	}
 
 	if (!dpx_read(inputFile, input_scale, &image_buffer, image_format) &&
+        !adx_read(inputFile, input_scale, &image_buffer, image_format) &&
 		!exr_read(inputFile, input_scale, &image_buffer, image_format) &&
 		!tiff_read(inputFile, input_scale, &image_buffer, image_format))
 	{
@@ -827,20 +829,15 @@ void transform(const char *inputFile, const char *outputFile,
 		image_buffer.swizzle(0, TRUE);
 	}
 
-//    std::cout << image_format->ext << std::endl;
-  if (!strncmp(image_format->ext, "aces", 3))
-  {
-      aces_write(outputFile, output_scale,
-                 image_buffer.width(), image_buffer.height(), image_buffer.depth(),
-                 image_buffer.ptr(), image_format);
-  }
-  else if (!strncmp(image_format->ext, "exr", 3))
+    if (!strncmp(image_format->ext, "aces", 3))
+    {
+        aces_write(outputFile, output_scale,
+                   image_buffer.width(), image_buffer.height(), image_buffer.depth(),
+                   image_buffer.ptr(), image_format);
+    }
+    else if (!strncmp(image_format->ext, "exr", 3))
 	{
 		exr_write(outputFile, output_scale, image_buffer, image_format, compression);
-	}
-	else if (!strncmp(image_format->ext, "adx", 3))
-	{
-		dpx_write(outputFile, output_scale, image_buffer, image_format);
 	}
 	else if (!strncmp(image_format->ext, "dpx", 3))
 	{
@@ -849,6 +846,15 @@ void transform(const char *inputFile, const char *outputFile,
 	else if (!strncmp(image_format->ext, "tiff", 3))
 	{
 		tiff_write(outputFile, output_scale, image_buffer, image_format);
+	}
+	else if (!strncmp(image_format->ext, "adx", 3))
+	{
+		// Preparing adx
+        ctl::dpx::fb<float>* image_buffer_adx = prepareADX(inputFile,
+                                                           input_scale,
+                                                           &image_buffer,
+                                                           image_format);
+		adx_write(outputFile, output_scale, *image_buffer_adx, image_format);
 	}
 	else
 	{

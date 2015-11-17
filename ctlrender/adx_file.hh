@@ -52,25 +52,22 @@
 // THAN A.M.P.A.S., WHETHER DISCLOSED OR UNDISCLOSED.
 ///////////////////////////////////////////////////////////////////////////
 
-#if !defined(CTL_UTIL_CTLRENDER_DPX_INCLUDE)
-#define CTL_UTIL_CTLRENDER_DPX_INCLUDE
+#if !defined(CTL_UTIL_CTLRENDER_ADX_INCLUDE)
+#define CTL_UTIL_CTLRENDER_ADX_INCLUDE
 
-#include <dpx.hh>
+#include <dpx_file.hh>
+#include <adx.hh>
 #include "main.hh"
-#include <vector>
-#include <map>
 
-bool dpx_read(const char *name, float scale,
+template <class T>
+ctl::dpx::fb<T>* prepareADX(const char *inputFile,
+                            float input_scale,
+                            ctl::dpx::fb<T> *image_buffer,
+                            format_t *image_format);
+bool adx_read(const char *name, float scale,
               ctl::dpx::fb<float> *pixels,
               format_t *format);
-std::map<const char *, uint32_t> dpx_read_details_for_adx_int(const char *name, float scale,
-              ctl::dpx::fb<float> *pixels,
-              format_t *format);
-std::map<const char *, float32_t> dpx_read_details_for_adx_float(const char *name, float scale,
-              ctl::dpx::fb<float> *pixels,
-              format_t *format);
-void dpx_write(const char *name, float scale,
+void adx_write(const char *name, float scale,
                const ctl::dpx::fb<float> &pixels,
                format_t *format);
-
 #endif

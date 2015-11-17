@@ -480,6 +480,8 @@ void dpx::write(std::ostream *os)
 			dpxi::write_uint16(os, elements[i].packing, _need_byteswap);
 		}
 		dpxi::write_uint16(os, elements[i].encoding, _need_byteswap);
+
+		// offset to the image data
 		dpxi::write_uint32(os, elements[i].offset_to_data, _need_byteswap);
 		dpxi::write_uint32(os, elements[i].eol_padding, _need_byteswap);
 		dpxi::write_uint32(os, elements[i].eoi_padding, _need_byteswap);

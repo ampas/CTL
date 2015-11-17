@@ -54,7 +54,7 @@
 
 
 template <class T>
-dpx::fb<T>::fb() {
+adx::fb<T>::fb() {
 	_data=NULL;
 	_width=0;
 	_height=0;
@@ -63,7 +63,7 @@ dpx::fb<T>::fb() {
 }
 
 template <class T>
-dpx::fb<T>::~fb() {
+adx::fb<T>::~fb() {
 	delete [] _data;
 	_data=NULL;
 	_width=0;
@@ -73,7 +73,7 @@ dpx::fb<T>::~fb() {
 }
 
 template <class T>
-void dpx::fb<T>::init(uint32_t width, uint32_t height, uint32_t depth) {
+void adx::fb<T>::init(uint32_t width, uint32_t height, uint32_t depth) {
 	_width=width;
 	_height=height;
 	_depth=depth; 
@@ -86,57 +86,57 @@ void dpx::fb<T>::init(uint32_t width, uint32_t height, uint32_t depth) {
 }
 
 template <class T>
-uint32_t dpx::fb<T>::width(void) const {
+uint32_t adx::fb<T>::width(void) const {
 	return _width;
 }
 
 template <class T>
-uint32_t dpx::fb<T>::height(void) const {
+uint32_t adx::fb<T>::height(void) const {
 	return _height;
 }
 
 template <class T>
-uint32_t dpx::fb<T>::depth(void) const {
+uint32_t adx::fb<T>::depth(void) const {
 	return _depth;
 }
 
 template <class T>
-uint64_t dpx::fb<T>::length(void) const {
+uint64_t adx::fb<T>::length(void) const {
 	return _length;
 }
 
 template <class T>
-uint64_t dpx::fb<T>::count(void) const {
+uint64_t adx::fb<T>::count(void) const {
 	return _width*_height*_depth;
 }
 
 template <class T>
-uint64_t dpx::fb<T>::pixels(void) const {
+uint64_t adx::fb<T>::pixels(void) const {
 	return _width*_height;
 }
 
 template <class T>
-T *dpx::fb<T>::ptr(void) {
+T *adx::fb<T>::ptr(void) {
 	return _data;
 }
 
 template <class T>
-const T *dpx::fb<T>::ptr(void) const {
+const T *adx::fb<T>::ptr(void) const {
 	return _data;
 }
 
 template <class T>
-dpx::fb<T>::operator T *() {
+adx::fb<T>::operator T *() {
 	return _data;
 }
 
 template <class T>
-dpx::fb<T>::operator const T *() const {
+adx::fb<T>::operator const T *() const {
 	return _data;
 }
 
 template <class T>
-void dpx::fb<T>::swizzle(uint8_t descriptor, bool squish_alpha) {
+void adx::fb<T>::swizzle(uint8_t descriptor, bool squish_alpha) {
 	uint64_t u, count;
 	T *i, *o;
 	T t;
@@ -209,8 +209,6 @@ void dpx::fb<T>::swizzle(uint8_t descriptor, bool squish_alpha) {
 					t=i[2];
 					o[2]=i[1];
 					o[1]=t;
-					i=i+4;
-					o=o+4;
 				}
 				_depth=3;
 			} else {
@@ -228,8 +226,9 @@ void dpx::fb<T>::swizzle(uint8_t descriptor, bool squish_alpha) {
 			break;
 	}
 }
+
 template <class T>
-void ctl::dpx::fb<T>::channelAdjust(uint8_t descriptor){
+void ctl::adx::fb<T>::channelAdjust(uint8_t descriptor){
 	uint64_t u, count;
 	T *i, *o;
 	T t;
@@ -298,12 +297,12 @@ void ctl::dpx::fb<T>::channelAdjust(uint8_t descriptor){
 }
 
 template <class T>
-bool ctl::dpx::fb<T>::alpha() const {
+bool ctl::adx::fb<T>::alpha() const {
 	return (_depth==2 || _depth==4);
 }
 
 template <class T>
-void ctl::dpx::fb<T>::alpha(const T &value) {
+void ctl::adx::fb<T>::alpha(const T &value) {
 	uint64_t u;
 	fb<T> new_fb;
 	T *i, *o;
@@ -338,13 +337,13 @@ void ctl::dpx::fb<T>::alpha(const T &value) {
 }
 
 
-namespace dpxi {
+namespace adxi {
 
 extern const uint64_t max_int_for_bits[];
 
 //
 // Various functions to perform conversions between different types and
-// significant bit counts. This is the seedy underbelly of the dpx
+// significant bit counts. This is the seedy underbelly of the adx
 // library. Hopefully you haven't found yourself here because of a bug.
 //
 // This code preferrs accuracy over speed. This is not so much a problem
@@ -417,10 +416,10 @@ void ftu_one(O *out, const uint8_t &osb, const I *_in, const uint8_t &isb,
 	uint64_t msb;
 
 	if(osb==64) {
-		imax=dpxi::max_int_for_bits[osb-1];
+		imax=adxi::max_int_for_bits[osb-1];
 		in=in/2.0;
 	} else {
-		imax=dpxi::max_int_for_bits[osb];
+		imax=adxi::max_int_for_bits[osb];
 	}
 	fmax=imax;
 	// We get to do this hinky scale by half thing here when dealing with
@@ -452,13 +451,13 @@ void ftu_zero(O *out, const uint8_t &osb, const I *_in, const uint8_t &isb,
 	float64_t in=*_in;
 	float64_t fmax;
 
-	fmax=dpxi::max_int_for_bits[osb];
+	fmax=adxi::max_int_for_bits[osb];
 
 	if(in<0) {
 		*out=0;
 		return;
 	} else if(in>1.0) {
-		*out=dpxi::max_int_for_bits[osb];
+		*out=adxi::max_int_for_bits[osb];
 		return;
 	}
 
@@ -499,7 +498,7 @@ void utf_zero(O *out, const uint8_t &osb, const I *in, const uint8_t &isb,
 	uint64_t imax;
 	float64_t fmax;
 
-	imax=dpxi::max_int_for_bits[isb];
+	imax=adxi::max_int_for_bits[isb];
 	fmax=imax;
 
 	if((*in)>imax) {
@@ -516,7 +515,7 @@ void utf_one(O *out, const uint8_t &osb, const I *in, const uint8_t &isb,
 	uint64_t imax;
 	float64_t fmax;
 
-	imax=dpxi::max_int_for_bits[isb];
+	imax=adxi::max_int_for_bits[isb];
 	fmax=imax;
 
 	if((*in)>imax) {
@@ -551,8 +550,8 @@ void utu_zero(O *out, const uint8_t &osb, const I *in, const uint8_t &isb,
 	if(osb<isb) {
 		shift=osb-isb;
 		*out=((*in)>>shift);
-		if((*out)>=dpxi::max_int_for_bits[osb]) {
-			*out=dpxi::max_int_for_bits[osb];
+		if((*out)>=adxi::max_int_for_bits[osb]) {
+			*out=adxi::max_int_for_bits[osb];
 		}
 		return;
 	} else {
@@ -560,8 +559,8 @@ void utu_zero(O *out, const uint8_t &osb, const I *in, const uint8_t &isb,
 		count=sigbits-osb;
 
 		result=*in;
-		if(result>=dpxi::max_int_for_bits[isb]) {
-			result=dpxi::max_int_for_bits[isb];
+		if(result>=adxi::max_int_for_bits[isb]) {
+			result=adxi::max_int_for_bits[isb];
 		}
 		// When we scale up we do it in such a way that we don't leave
 		// all of the LSB zero by copying parts out of the MSB. For some
@@ -572,7 +571,7 @@ void utu_zero(O *out, const uint8_t &osb, const I *in, const uint8_t &isb,
 		// the looping version is used.
 		if(count<=sigbits) {
 			deltabits=count;
-			bits=dpxi::max_int_for_bits[deltabits];
+			bits=adxi::max_int_for_bits[deltabits];
 			bits=bits<<(sigbits-deltabits);
 			bits=result&bits;
 			bits=bits>>(sigbits-deltabits);
@@ -585,7 +584,7 @@ void utu_zero(O *out, const uint8_t &osb, const I *in, const uint8_t &isb,
 					deltabits=sigbits;
 				}
 	
-				bits=dpxi::max_int_for_bits[deltabits];
+				bits=adxi::max_int_for_bits[deltabits];
 				bits=bits<<(sigbits-deltabits);
 				bits=result&bits;
 				bits=bits>>(sigbits-deltabits);
@@ -612,8 +611,8 @@ void utu_one(O *out, const uint8_t &osb, const I *in, const uint8_t &isb,
 
 	*out=(*in)>>shift;
 
-	if(*out>=dpxi::max_int_for_bits[osb]) {
-		*out=dpxi::max_int_for_bits[osb];
+	if(*out>=adxi::max_int_for_bits[osb]) {
+		*out=adxi::max_int_for_bits[osb];
 	}
 }
 
@@ -775,7 +774,7 @@ void convertlut(O *o, uint8_t osb, const float16_t *in, uint8_t isb,
 		if(h.isNan()) {
 			lut[u]=0;
 		} else if(h.isInfinity() &&  h.isNegative()) {
-			lut[u]=dpxi::max_int_for_bits[osb];
+			lut[u]=adxi::max_int_for_bits[osb];
 		} else if(h.isInfinity() && !h.isNegative()) {
 			lut[u]=0;
 		} else {
@@ -832,46 +831,46 @@ void convertfb(dpx::fb<O> *out, uint8_t osb, const I *in,
 }
 
 template <class O, class I>
-void dpx::convert(O *o, uint8_t osb, const I *i, uint8_t isb,
+void adx::convert(O *o, uint8_t osb, const I *i, uint8_t isb,
                   float64_t scale, uint64_t count) {
-	dpxi::convert(o, osb, i, isb, scale, count);
+	adxi::convert(o, osb, i, isb, scale, count);
 }
 
 template <class O, class I>
-void dpx::convert(O *o, const I *i, uint64_t count) {
-	dpxi::convert(o, sizeof(O)*8, i, sizeof(I)*8, 0.0, count);
+void adx::convert(O *o, const I *i, uint64_t count) {
+	adxi::convert(o, sizeof(O)*8, i, sizeof(I)*8, 0.0, count);
 }
 
 template <class O, class I>
-void dpx::convert(O *o, const I *i, float64_t scale, uint64_t count) {
-	dpxi::convert(o, sizeof(O)*8, i, sizeof(I)*8, scale, count);
+void adx::convert(O *o, const I *i, float64_t scale, uint64_t count) {
+	adxi::convert(o, sizeof(O)*8, i, sizeof(I)*8, scale, count);
 }
 
 template <class O, class I>
-void dpx::convert(O *o, uint8_t osb, const I *i, uint64_t count) {
-	dpxi::convert(o, osb, i, sizeof(I)*8, 0.0, count);
+void adx::convert(O *o, uint8_t osb, const I *i, uint64_t count) {
+	adxi::convert(o, osb, i, sizeof(I)*8, 0.0, count);
 }
 
 template <class O, class I>
-void dpx::convert(O *o, uint8_t osb, const I *i, float64_t scale,
+void adx::convert(O *o, uint8_t osb, const I *i, float64_t scale,
                   uint64_t count) {
-	dpxi::convert(o, osb, i, sizeof(I)*8, scale, count);
+	adxi::convert(o, osb, i, sizeof(I)*8, scale, count);
 }
 
 template <class O, class I>
-void dpx::convert(O *o, const I *i, uint8_t isb, uint64_t count) {
-	dpxi::convert(o, sizeof(O)*8, i, isb, 0.0, count);
+void adx::convert(O *o, const I *i, uint8_t isb, uint64_t count) {
+	adxi::convert(o, sizeof(O)*8, i, isb, 0.0, count);
 }
 
 template <class O, class I>
-void dpx::convert(O *o, const I *i, uint8_t isb, float64_t scale,
+void adx::convert(O *o, const I *i, uint8_t isb, float64_t scale,
                   uint64_t count) {
-	dpxi::convert(o, sizeof(O)*8, i, isb, scale, count);
+	adxi::convert(o, sizeof(O)*8, i, isb, scale, count);
 }
 
 template <class O, class I>
-void dpx::convert(O *o, uint8_t osb, const I *i, uint8_t isb,
+void adx::convert(O *o, uint8_t osb, const I *i, uint8_t isb,
                   uint64_t count) {
-	dpxi::convert(o, osb, i, isb, 0.0, count);
+	adxi::convert(o, osb, i, isb, 0.0, count);
 }
 
