@@ -11,3 +11,4 @@ add_library( ctldpx
  dpx_rw.cc
 )
 
+target_link_libraries( ctldpx ${IlmBase_LIBRARIES} )

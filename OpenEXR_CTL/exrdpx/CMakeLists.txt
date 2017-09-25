@@ -20,8 +20,8 @@ target_link_libraries( exrdpx IlmCtlSimd IlmCtlMath IlmCtl IlmImfCtl )
 target_link_libraries( exrdpx ${IlmBase_LIBRARIES} ${IlmBase_LDFLAGS_OTHER} )
 target_link_libraries( exrdpx ${OpenEXR_LIBRARIES} ${OpenEXR_LDFLAGS_OTHER} )
 
-install( TARGETS exrdpx DESTINATION ${INSTALL_BIN_DIR} )
+install( TARGETS exrdpx DESTINATION ${CMAKE_INSTALL_BINDIR} )
 
-install( FILES transform_DPX_EXR.ctl transform_EXR_DPX.ctl DESTINATION ${INSTALL_LIB_DIR}/CTL )
+install( FILES transform_DPX_EXR.ctl transform_EXR_DPX.ctl DESTINATION ${CMAKE_INSTALL_LIBDIR}/CTL )
 
 
