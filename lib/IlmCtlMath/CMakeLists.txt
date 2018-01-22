@@ -18,8 +18,8 @@ install( FILES
   CtlLookupTable.h
   CtlRbfInterpolator.h
   CtlSparseMatrix.h
- DESTINATION include/CTL )
+ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CTL )
 
-install( TARGETS IlmCtlMath DESTINATION lib )
+install( TARGETS IlmCtlMath DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 
 # TODO Add Imath and Iex libadd dependency and version info

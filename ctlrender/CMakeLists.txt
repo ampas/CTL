@@ -16,7 +16,7 @@ add_definitions( -DHAVE_ACESFILE=1 )
 include_directories( ${AcesContainer_INCLUDE_DIRS} )
 link_directories( ${AcesContainer_LIBRARY_DIRS} )
 endif()
-
+ 
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/IlmCtl" "${PROJECT_SOURCE_DIR}/lib/IlmCtlMath" "${PROJECT_SOURCE_DIR}/lib/IlmCtlSimd" "${PROJECT_SOURCE_DIR}/lib/dpx" )
 
 add_executable( ctlrender
@@ -46,4 +46,4 @@ target_link_libraries( ctlrender ${AcesContainer_LIBRARIES} )
 target_link_libraries( ctlrender ${AcesContainer_LDFLAGS_OTHER} )
 endif()
 
-install( TARGETS ctlrender DESTINATION bin )
+install( TARGETS ctlrender DESTINATION ${CMAKE_INSTALL_BINDIR} )
