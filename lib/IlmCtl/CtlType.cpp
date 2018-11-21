@@ -58,6 +58,7 @@
 //
 //-----------------------------------------------------------------------------
 
+#define _CRT_NO_VA_START_VALIDATION
 #include <CtlType.h>
 #include <CtlSyntaxTree.h>
 #include <CtlMessage.h>

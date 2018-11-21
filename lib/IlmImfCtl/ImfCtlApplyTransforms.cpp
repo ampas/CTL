@@ -75,6 +75,10 @@
 #include <IlmThreadMutex.h>
 #include <Iex.h>
 
+#if defined(_WIN32) || defined(_WIN64) 
+#  include <windows.h>
+#endif
+
 using namespace std;
 using namespace Iex;
 using namespace Imath;
