@@ -50,7 +50,7 @@ if(IlmBase_INCLUDE_DIR AND EXISTS "${IlmBase_INCLUDE_DIR}/IlmBaseConfig.h")
 endif()
 
 if("${IlmBase_VERSION}" VERSION_LESS "2.0.0")
-  set(IlmBase_ALL_LIBRARIES Imath-2_2 Half Iex-2_3 IexMath-2_3 IlmThread-2_3)
+  set(IlmBase_ALL_LIBRARIES Imath-2_3 Half Iex-2_3 IexMath-2_3 IlmThread-2_3)
 else()
   set(IlmBase_ALL_LIBRARIES Imath-2_3 Half Iex-2_3 IexMath-2_3 IlmThread-2_3)
 endif()
