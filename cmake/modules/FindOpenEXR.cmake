@@ -37,22 +37,22 @@ else()
 endif()
 
 find_path(OpenEXR_INCLUDE_DIR OpenEXRConfig.h
-          HINTS ${_OpenEXR_HINT_INCLUDE}
-          PATH_SUFFIXES OpenEXR )
+	  HINTS ${_OpenEXR_HINT_INCLUDE}
+	  PATH_SUFFIXES OpenEXR )
 if(OpenEXR_INCLUDE_DIR AND EXISTS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h")
     set(OpenEXR_VERSION ${PC_OPENEXR_VERSION})
 
     if("${OpenEXR_VERSION}" STREQUAL "")
       file(STRINGS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h" openexr_version_str
-           REGEX "^#define[\t ]+OPENEXR_VERSION_STRING[\t ]+\".*")
+	   REGEX "^#define[\t ]+OPENEXR_VERSION_STRING[\t ]+\".*")
 
       string(REGEX REPLACE "^#define[\t ]+OPENEXR_VERSION_STRING[\t ]+\"([^ \\n]*)\".*"
-             "\\1" OpenEXR_VERSION "${openexr_version_str}")
+	     "\\1" OpenEXR_VERSION "${openexr_version_str}")
       unset(openexr_version_str)
     endif()
 endif()
 
-find_library(OpenEXR_LIBRARY NAMES IlmImf-2_3 libIlmImf HINTS ${_OpenEXR_HINT_LIB})
+find_library(OpenEXR_LIBRARY NAMES IlmImf-2_4 libIlmImf HINTS ${_OpenEXR_HINT_LIB})
 
 find_package(IlmBase QUIET)
 
@@ -75,9 +75,9 @@ include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set OpenEXR_FOUND to TRUE
 # if all listed variables are TRUE
 find_package_handle_standard_args(OpenEXR
-                                  REQUIRED_VARS OpenEXR_LIBRARY OpenEXR_INCLUDE_DIR
-                                  VERSION_VAR OpenEXR_VERSION
-                                  FAIL_MESSAGE "Unable to find OpenEXR library" )
+				  REQUIRED_VARS OpenEXR_LIBRARY OpenEXR_INCLUDE_DIR
+				  VERSION_VAR OpenEXR_VERSION
+				  FAIL_MESSAGE "Unable to find OpenEXR library" )
 
 # older versions of cmake don't support FOUND_VAR to find_package_handle
 # so just do it the hard way...

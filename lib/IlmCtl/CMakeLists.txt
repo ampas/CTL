@@ -26,7 +26,7 @@ add_library( IlmCtl ${DO_SHARED}
 )
 
 target_link_libraries( IlmCtl ${IlmBase_LDFLAGS_OTHER} )
-target_link_libraries( IlmCtl Iex-2_3 Imath-2_3 IexMath-2_3 IlmThread-2_3 Half-2_3 )
+target_link_libraries( IlmCtl Iex-2_4 Imath-2_4 IexMath-2_4 IlmThread-2_4 Half-2_4 )
 
 set_target_properties( IlmCtl PROPERTIES
   VERSION ${CTL_VERSION}

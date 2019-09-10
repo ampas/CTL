@@ -4,17 +4,17 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/Il
 
 add_executable( halfExpLogTable halfExpLogTable.cpp )
 target_link_libraries( halfExpLogTable ${IlmBase_LDFLAGS_OTHER} )
-target_link_libraries( halfExpLogTable Iex-2_3 Imath-2_3 IexMath-2_3 IlmThread-2_3 Half-2_3 )
+target_link_libraries( halfExpLogTable Iex-2_4 Imath-2_4 IexMath-2_4 IlmThread-2_4 Half-2_4 )
 
 if( WIN32 )
 get_filename_component(OpenEXR_PATH ${OpenEXR_LIBRARY} PATH)
-file( COPY "${OpenEXR_PATH}/Half.dll"  
-      	   DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/" )
+file( COPY "${OpenEXR_PATH}/Half.dll"
+	   DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/" )
 endif(WIN32)
 
 add_custom_command( OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h"
-                    COMMAND halfExpLogTable "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h" "${CMAKE_CURRENT_BINARY_DIR}/halfExpLog.h"
-                    DEPENDS halfExpLogTable )
+		    COMMAND halfExpLogTable "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h" "${CMAKE_CURRENT_BINARY_DIR}/halfExpLog.h"
+		    DEPENDS halfExpLogTable )
 
 include_directories( "${CMAKE_CURRENT_BINARY_DIR}" )
 
