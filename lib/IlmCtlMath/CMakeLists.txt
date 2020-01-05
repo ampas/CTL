@@ -7,6 +7,7 @@ add_library( IlmCtlMath ${DO_SHARED}
 )
 
 target_link_libraries( IlmCtlMath IlmCtl )
+target_link_libraries( IlmCtlMath Imath )
 
 set_target_properties( IlmCtlMath PROPERTIES
   VERSION ${CTL_VERSION}
