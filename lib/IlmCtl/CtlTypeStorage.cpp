@@ -392,7 +392,7 @@ void _set_spam(char *out, const char *in,
 
 void TypeStorage::_set(const char *src, CDataType_e src_type,
 	                   size_t src_stride, size_t dst_offset, size_t count,
-                       const std::string &path, va_list ap) {
+                       const std::string path, va_list ap) {
 	const char *in;
 	char *out;
 	size_t u;
@@ -476,7 +476,7 @@ void TypeStorage::_set(const char *src, CDataType_e src_type,
 
 void TypeStorage::_get(char *dst, CDataType_e dst_type,
 	                   size_t dst_stride, size_t src_offset, size_t count,
-                       const std::string &path, va_list ap) {
+                       const std::string path, va_list ap) {
 	const char *in;
 	char *out;
 	size_t u;
@@ -672,7 +672,7 @@ void TypeStorage::copy(const TypeStoragePtr &src, size_t src_offset,
 }
 
 void TypeStorage::set(const bool *src, size_t src_stride, size_t dst_offset,
-	                 size_t count, const std::string &path, ...) {
+	                 size_t count, const std::string path, ...) {
 	va_list ap;
 
 	va_start(ap, path);
@@ -681,13 +681,13 @@ void TypeStorage::set(const bool *src, size_t src_stride, size_t dst_offset,
 }
 
 void TypeStorage::setv(const bool *src, size_t src_stride, size_t dst_offset,
-                       size_t count, const std::string &path, va_list ap) {
+                       size_t count, const std::string path, va_list ap) {
 	_set((const char *)src, BoolTypeEnum, src_stride, dst_offset, count, path,
 	     ap);
 }
 
 void TypeStorage::set(const int *src, size_t src_stride, size_t dst_offset,
-	                 size_t count, const std::string &path, ...) {
+	                 size_t count, const std::string path, ...) {
 	va_list ap;
 
 	va_start(ap, path);
@@ -696,14 +696,14 @@ void TypeStorage::set(const int *src, size_t src_stride, size_t dst_offset,
 }
 
 void TypeStorage::setv(const int *src, size_t src_stride, size_t dst_offset,
-                       size_t count, const std::string &path, va_list ap) {
+                       size_t count, const std::string path, va_list ap) {
 	_set((const char *)src, IntTypeEnum, src_stride, dst_offset, count, path,
 	     ap);
 }
 
 void TypeStorage::set(const unsigned int *src, size_t src_stride,
 	                 size_t dst_offset, size_t count,
-	                 const std::string &path, ...) {
+	                 const std::string path, ...) {
 	va_list ap;
 
 	va_start(ap, path);
@@ -713,13 +713,13 @@ void TypeStorage::set(const unsigned int *src, size_t src_stride,
 
 void TypeStorage::setv(const unsigned int *src, size_t src_stride,
                        size_t dst_offset, size_t count,
-                       const std::string &path, va_list ap) {
+                       const std::string path, va_list ap) {
 	_set((const char *)src, UIntTypeEnum, src_stride, dst_offset, count, path,
 	     ap);
 }
 
 void TypeStorage::set(const half *src, size_t src_stride, size_t dst_offset,
-	                 size_t count, const std::string &path,
+	                 size_t count, const std::string path,
 	                 ...) {
 	va_list ap;
 
@@ -729,7 +729,7 @@ void TypeStorage::set(const half *src, size_t src_stride, size_t dst_offset,
 }
 
 void TypeStorage::setv(const half *src, size_t src_stride, size_t dst_offset,
-                       size_t count, const std::string &path,
+                       size_t count, const std::string path,
                        va_list ap) {
 	_set((const char *)src, HalfTypeEnum, src_stride, dst_offset, count, path,
 	     ap);
@@ -737,7 +737,7 @@ void TypeStorage::setv(const half *src, size_t src_stride, size_t dst_offset,
 
 void TypeStorage::set(const float *src, size_t src_stride,
 	                 size_t dst_offset, size_t count,
-	                 const std::string &path, ...) {
+	                 const std::string path, ...) {
 	va_list ap;
 
 	va_start(ap, path);
@@ -747,14 +747,14 @@ void TypeStorage::set(const float *src, size_t src_stride,
 
 void TypeStorage::setv(const float *src, size_t src_stride,
                        size_t dst_offset, size_t count,
-                       const std::string &path, va_list ap) {
+                       const std::string path, va_list ap) {
 	_set((const char *)src, FloatTypeEnum, src_stride, dst_offset, count,
 	     path, ap);
 }
 
 void TypeStorage::set(const std::string *src, size_t src_stride,
 	                 size_t dst_offset, size_t count,
-	                 const std::string &path, ...) {
+	                 const std::string path, ...) {
 	va_list ap;
 
 	va_start(ap, path);
@@ -764,14 +764,14 @@ void TypeStorage::set(const std::string *src, size_t src_stride,
 
 void TypeStorage::setv(const std::string *src, size_t src_stride,
                        size_t dst_offset, size_t count,
-                       const std::string &path, va_list ap) {
+                       const std::string path, va_list ap) {
 	_set((const char *)src, StringTypeEnum, src_stride, dst_offset, count,
 	     path, ap);
 }
 
 
 void TypeStorage::get(const bool *dst, size_t dst_stride, size_t src_offset,
-	                 size_t count, const std::string &path,
+	                 size_t count, const std::string path,
 	                 ...) {
 	va_list ap;
 
@@ -781,13 +781,13 @@ void TypeStorage::get(const bool *dst, size_t dst_stride, size_t src_offset,
 }
 
 void TypeStorage::getv(const bool *dst, size_t dst_stride, size_t src_offset,
-                       size_t count, const std::string &path,
+                       size_t count, const std::string path,
                        va_list ap) {
 	_get((char *)dst, BoolTypeEnum, dst_stride, src_offset, count, path, ap);
 }
 
 void TypeStorage::get(const int *dst, size_t dst_stride, size_t src_offset,
-	                 size_t count, const std::string &path,
+	                 size_t count, const std::string path,
 	                 ...) {
 	va_list ap;
 
@@ -797,14 +797,14 @@ void TypeStorage::get(const int *dst, size_t dst_stride, size_t src_offset,
 }
 
 void TypeStorage::getv(const int *dst, size_t dst_stride, size_t src_offset,
-                       size_t count, const std::string &path,
+                       size_t count, const std::string path,
                        va_list ap) {
 	_get((char *)dst, IntTypeEnum, dst_stride, src_offset, count, path, ap);
 }
 
 void TypeStorage::get(const unsigned int *dst, size_t dst_stride,
 	                 size_t src_offset, size_t count,
-	                 const std::string &path, ...) {
+	                 const std::string path, ...) {
 	va_list ap;
 
 	va_start(ap, path);
@@ -814,12 +814,12 @@ void TypeStorage::get(const unsigned int *dst, size_t dst_stride,
 
 void TypeStorage::getv(const unsigned int *dst, size_t dst_stride,
                        size_t src_offset, size_t count,
-                       const std::string &path, va_list ap) {
+                       const std::string path, va_list ap) {
 	_get((char *)dst, UIntTypeEnum, dst_stride, src_offset, count, path, ap);
 }
 
 void TypeStorage::get(const half *dst, size_t dst_stride, size_t src_offset,
-	                 size_t count, const std::string &path, ...) {
+	                 size_t count, const std::string path, ...) {
 	va_list ap;
 
 	va_start(ap, path);
@@ -828,13 +828,13 @@ void TypeStorage::get(const half *dst, size_t dst_stride, size_t src_offset,
 }
 
 void TypeStorage::getv(const half *dst, size_t dst_stride, size_t src_offset,
-                       size_t count, const std::string &path, va_list ap) {
+                       size_t count, const std::string path, va_list ap) {
 	_get((char *)dst, HalfTypeEnum, dst_stride, src_offset, count, path, ap);
 }
 
 void TypeStorage::get(const float *dst, size_t dst_stride,
 	                 size_t src_offset, size_t count,
-	                 const std::string &path, ...) {
+	                 const std::string path, ...) {
 	va_list ap;
 
 	va_start(ap, path);
@@ -844,13 +844,13 @@ void TypeStorage::get(const float *dst, size_t dst_stride,
 
 void TypeStorage::getv(const float *dst, size_t dst_stride,
                        size_t src_offset, size_t count,
-                       const std::string &path, va_list ap) {
+                       const std::string path, va_list ap) {
 	_get((char *)dst, FloatTypeEnum, dst_stride, src_offset, count, path, ap);
 }
 
 void TypeStorage::get(const std::string *dst, size_t dst_stride,
                       size_t src_offset, size_t count,
-                      const std::string &path, ...) {
+                      const std::string path, ...) {
 	va_list ap;
 
 	va_start(ap, path);
@@ -860,7 +860,7 @@ void TypeStorage::get(const std::string *dst, size_t dst_stride,
 
 void TypeStorage::getv(const std::string *dst, size_t dst_stride,
                        size_t src_offset, size_t count,
-                       const std::string &path, va_list ap) {
+                       const std::string path, va_list ap) {
 	_get((char *)dst, StringTypeEnum, dst_stride, src_offset, count, path, ap);
 }
 
