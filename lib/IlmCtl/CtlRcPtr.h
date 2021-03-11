@@ -228,7 +228,7 @@ RcPtr<T>::ref ()
 {
     if (_p)
     {
-	IlmThread::Lock lock (rcPtrMutex (_p));
+	IlmThread::Lock lock (rcPtrMutex ((RcObject*)_p));
 	(_p->_n)++;
     }
 }
@@ -243,7 +243,7 @@ RcPtr<T>::unref ()
 	unsigned long n;
 
 	{
-	    IlmThread::Lock lock (rcPtrMutex (_p));
+	    IlmThread::Lock lock (rcPtrMutex ((RcObject*)_p));
 	    n = --(_p->_n);
 	}
 
