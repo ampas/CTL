@@ -189,9 +189,9 @@ SimdInst::executePath (SimdBoolMask &mask, SimdXContext &xcontext) const
 	    REPLACE_EXC
 		(e, "\n" <<
 		 xcontext.fileName() << ":" <<
-		 inst->lineNumber() << ": " << e);
+		 inst->lineNumber() << ": " << e.what());
 
-	    throw e;
+	    throw;
 	}
 	catch (std::exception &e)
 	{
