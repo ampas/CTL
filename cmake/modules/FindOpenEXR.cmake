@@ -1,84 +1,102 @@
-#
-# A simple cmake find module for OpenEXR
-#
+# Module to find OpenEXR or to build it if unavailable
 
-find_package(PkgConfig QUIET)
-if(PKG_CONFIG_FOUND)
-  pkg_check_modules(PC_OPENEXR QUIET OpenEXR)
+find_package(OpenEXR QUIET CONFIG)
+if (TARGET OpenEXR::OpenEXR)
+	return()
 endif()
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  # Under Mac OS, if the user has installed using brew, the package config
-  # information is not entirely accurate in that it refers to the
-  # true install path but brew maintains links to /usr/local for you
-  # which they want you to use
-  if(PC_OPENEXR_FOUND AND "${PC_OPENEXR_INCLUDEDIR}" MATCHES ".*/Cellar/.*")
-    set(_OpenEXR_HINT_INCLUDE /usr/local/include)
-    set(_OpenEXR_HINT_LIB /usr/local/lib)
-  endif()
-endif()
+# If we got to here, then we need to build OpenEXR
+find_package(ZLIB QUIET REQUIRED)
+include(GNUInstallDirs)
+include(ExternalProject)
+add_library(OpenEXR::OpenEXR STATIC IMPORTED GLOBAL)
+add_library(OpenEXR::Iex STATIC IMPORTED GLOBAL)
+add_library(OpenEXR::IlmThread STATIC IMPORTED GLOBAL)
+set(OPENEXR_MAJOR_VERSION "2")
+set(OPENEXR_MINOR_VERSION "5")
+set(OPENEXR_PATCH_VERSION "5")
+set(OPENEXR_VERSION "${OPENEXR_MAJOR_VERSION}.${OPENEXR_MINOR_VERSION}.${OPENEXR_PATCH_VERSION}")
 
-if(PC_OPENEXR_FOUND)
-  set(OpenEXR_CFLAGS ${PC_OPENEXR_CFLAGS_OTHER})
-  set(OpenEXR_LIBRARY_DIRS ${PC_OPENEXR_LIBRARY_DIRS})
-  set(OpenEXR_LDFLAGS ${PC_OPENEXR_LDFLAGS_OTHER})
-  if("${_OpenEXR_HINT_INCLUDE}" STREQUAL "")
-    set(_OpenEXR_HINT_INCLUDE ${PC_OPENEXR_INCLUDEDIR} ${PC_OPENEXR_INCLUDE_DIRS})
-    set(_OpenEXR_HINT_LIB ${PC_OPENEXR_LIBDIR} ${PC_OPENEXR_LIBRARY_DIRS})
-  endif()
-else()
-  if(UNIX)
-    set(OpenEXR_CFLAGS "-pthread")
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    else()
-      set(OpenEXR_LDFLAGS "-pthread")
-    endif()
-  endif()
-endif()
+set(EXT_DIST_ROOT "${CMAKE_BINARY_DIR}/ext/dist")
+set(EXT_BUILD_ROOT "${CMAKE_BINARY_DIR}/ext/build")
 
-find_path(OpenEXR_INCLUDE_DIR OpenEXRConfig.h
-          HINTS ${_OpenEXR_HINT_INCLUDE}
-          PATH_SUFFIXES OpenEXR )
-if(OpenEXR_INCLUDE_DIR AND EXISTS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h")
-    set(OpenEXR_VERSION ${PC_OPENEXR_VERSION})
+set(OPENEXR_INCLUDE_DIR "${EXT_DIST_ROOT}/include/OpenEXR")
+set(OPENEXR_LIB_PREFIX "${EXT_DIST_ROOT}/${CMAKE_INSTALL_LIBDIR}/${CMAKE_STATIC_LIBRARY_PREFIX}")
+set(OPENEXR_LIB_SUFFIX "-${OPENEXR_MAJOR_VERSION}_${OPENEXR_MINOR_VERSION}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+set(OPENEXR_LIB_SUFFIX_DEBUG "-${OPENEXR_MAJOR_VERSION}_${OPENEXR_MINOR_VERSION}_d${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
-    if("${OpenEXR_VERSION}" STREQUAL "")
-      file(STRINGS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h" openexr_version_str
-           REGEX "^#define[\t ]+OPENEXR_VERSION_STRING[\t ]+\".*")
+set(OPENEXR_LIBRARY "${OPENEXR_LIB_PREFIX}IlmImf${OPENEXR_LIB_SUFFIX}")
+set(OPENEXR_LIBRARY_DEBUG "${OPENEXR_LIB_PREFIX}IlmImf${OPENEXR_LIB_SUFFIX_DEBUG}")
+set(IEX_LIBRARY "${OPENEXR_LIB_PREFIX}Iex${OPENEXR_LIB_SUFFIX}")
+set(IEX_LIBRARY_DEBUG "${OPENEXR_LIB_PREFIX}Iex${OPENEXR_LIB_SUFFIX_DEBUG}")
+set(ILMTHREAD_LIBRARY "${OPENEXR_LIB_PREFIX}IlmThread${OPENEXR_LIB_SUFFIX}")
+set(ILMTHREAD_LIBRARY_DEBUG "${OPENEXR_LIB_PREFIX}IlmThread${OPENEXR_LIB_SUFFIX_DEBUG}")
 
-      string(REGEX REPLACE "^#define[\t ]+OPENEXR_VERSION_STRING[\t ]+\"([^ \\n]*)\".*"
-             "\\1" OpenEXR_VERSION "${openexr_version_str}")
-      unset(openexr_version_str)
-    endif()
-endif()
+set(OPENEXR_CMAKE_ARGS
+	-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+	#-DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
+	-DCMAKE_INSTALL_PREFIX=${EXT_DIST_ROOT}
+	-DBUILD_SHARED_LIBS=OFF
+	-DBUILD_TESTING=OFF
+	-DPYILMBASE_ENABLE=OFF
+)
+file(MAKE_DIRECTORY ${OPENEXR_INCLUDE_DIR})
 
-find_library(OpenEXR_LIBRARY NAMES IlmImf libIlmImf HINTS ${_OpenEXR_HINT_LIB})
+ExternalProject_Add(OPENEXR_BUILD
+	GIT_REPOSITORY "https://github.com/AcademySoftwareFoundation/openexr.git"
+	GIT_TAG "v${OPENEXR_VERSION}"
+	GIT_SHALLOW TRUE
+	PREFIX "${EXT_BUILD_ROOT}/openexr"
+	CMAKE_ARGS ${OPENEXR_CMAKE_ARGS}
+	UPDATE_COMMAND "" # Skip re-checking the tag every build
+	BUILD_COMMAND
+		${CMAKE_COMMAND} --build .
+						 --config $<CONFIG>
+						 --target IlmImf
+	COMMAND
+		${CMAKE_COMMAND} --build .
+						 --config $<CONFIG>
+						 --target Iex
+	COMMAND
+		${CMAKE_COMMAND} --build .
+						 --config $<CONFIG>
+						 --target IlmThread
+	INSTALL_COMMAND
+		${CMAKE_COMMAND} -DBUILD_TYPE=$<CONFIG> -P "OpenEXR/IlmImf/cmake_install.cmake"
+	COMMAND
+		${CMAKE_COMMAND} -DBUILD_TYPE=$<CONFIG> -P "OpenEXR/config/cmake_install.cmake"
+	COMMAND
+		${CMAKE_COMMAND} -DBUILD_TYPE=$<CONFIG> -P "IlmBase/Iex/cmake_install.cmake"
+	COMMAND
+		${CMAKE_COMMAND} -DBUILD_TYPE=$<CONFIG> -P "IlmBase/IlmThread/cmake_install.cmake"
+	COMMAND
+		${CMAKE_COMMAND} -DBUILD_TYPE=$<CONFIG> -P "IlmBase/config/cmake_install.cmake"
+	EXCLUDE_FROM_ALL TRUE
+)
+add_dependencies(OPENEXR_BUILD ZLIB::ZLIB)
 
-find_package(IlmBase QUIET)
-
-unset(_OpenEXR_HINT_INCLUDE)
-unset(_OpenEXR_HINT_LIB)
-
-set(OpenEXR_LIBRARIES ${OpenEXR_LIBRARY} ${IlmBase_LIBRARIES} )
-set(OpenEXR_INCLUDE_DIRS ${OpenEXR_INCLUDE_DIR} )
-
-if(NOT PC_OPENEXR_FOUND)
-get_filename_component(OpenEXR_LDFLAGS_OTHER ${OpenEXR_LIBRARY} PATH)
-set(OpenEXR_LDFLAGS_OTHER -L${OpenEXR_LDFLAGS_OTHER})
-endif()
-
-include(FindPackageHandleStandardArgs)
-# handle the QUIETLY and REQUIRED arguments and set OpenEXR_FOUND to TRUE
-# if all listed variables are TRUE
-find_package_handle_standard_args(OpenEXR
-                                  REQUIRED_VARS OpenEXR_LIBRARY OpenEXR_INCLUDE_DIR
-                                  VERSION_VAR OpenEXR_VERSION
-                                  FAIL_MESSAGE "Unable to find OpenEXR library" )
-
-# older versions of cmake don't support FOUND_VAR to find_package_handle
-# so just do it the hard way...
-if(OPENEXR_FOUND AND NOT OpenEXR_FOUND)
-  set(OpenEXR_FOUND 1)
-endif()
-
-mark_as_advanced(OpenEXR_INCLUDE_DIR OpenEXR_LIBRARY )
+add_dependencies(OpenEXR::OpenEXR OPENEXR_BUILD)
+set_target_properties(OpenEXR::OpenEXR
+	PROPERTIES
+		IMPORTED_LOCATION ${OPENEXR_LIBRARY}
+		IMPORTED_LOCATION_DEBUG ${OPENEXR_LIBRARY_DEBUG}
+		INTERFACE_INCLUDE_DIRECTORIES ${OPENEXR_INCLUDE_DIR}
+)
+target_link_libraries(OpenEXR::OpenEXR
+	INTERFACE
+	ZLIB::ZLIB
+)
+add_dependencies(OpenEXR::Iex OPENEXR_BUILD)
+set_target_properties(OpenEXR::Iex
+	PROPERTIES
+		IMPORTED_LOCATION ${IEX_LIBRARY}
+		IMPORTED_LOCATION_DEBUG ${IEX_LIBRARY_DEBUG}
+		INTERFACE_INCLUDE_DIRECTORIES ${OPENEXR_INCLUDE_DIR}
+)
+add_dependencies(OpenEXR::IlmThread OPENEXR_BUILD)
+set_target_properties(OpenEXR::IlmThread
+	PROPERTIES
+		IMPORTED_LOCATION ${ILMTHREAD_LIBRARY}
+		IMPORTED_LOCATION_DEBUG ${ILMTHREAD_LIBRARY_DEBUG}
+		INTERFACE_INCLUDE_DIRECTORIES ${OPENEXR_INCLUDE_DIR}
+)

@@ -1,27 +1,20 @@
-
-add_executable(IlmCtlMathTest 
-    main.cpp
-    testAffineRec.cpp
-    testGaussRec.cpp
+set(SOURCES
+	main.cpp
+	testAffineRec.cpp
+	testGaussRec.cpp
 )
 
-include_directories( ${OpenEXR_INCLUDE_DIRS} )
-link_directories( ${OpenEXR_LIBRARY_DIRS} )
+add_executable(IlmCtlMathTest ${SOURCES})
 
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" 
-                     "${PROJECT_SOURCE_DIR}/lib/IlmCtlMath" )
-                     
-target_link_libraries( IlmCtlMathTest IlmCtlMath )
-target_link_libraries( IlmCtlMathTest ${IlmBase_LIBRARIES} ${IlmBase_LDFLAGS_OTHER} )
+target_include_directories(IlmCtlMathTest
+	PRIVATE
+		${CMAKE_CURRENT_SOURCE_DIR}
+)
 
-add_test( IlmCtlMath IlmCtlMathTest )
-add_dependencies(check IlmCtlMathTest)
+target_link_libraries(IlmCtlMathTest
+	PRIVATE
+		IlmCtlMath
+		IlmCtl
+)
 
-
-
-
-
-#LDADD =	@ILMBASE_LIBS@ -L$(top_builddir)/IlmCtlMath \
-#	-lIlmCtlMath -lImath -lIex -lHalf -lpthread -lm
-
-
+add_test(IlmCtlMath IlmCtlMathTest)

@@ -1,16 +1,29 @@
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/IlmCtl" "${PROJECT_SOURCE_DIR}/lib/IlmCtlMath" "${PROJECT_SOURCE_DIR}/lib/IlmCtlSimd" )
-include_directories( ${OpenEXR_INCLUDE_DIRS} )
-link_directories( ${OpenEXR_LIBRARY_DIRS} )
-
-add_library( IlmImfCtl ${DO_SHARED}
+set(SOURCES
   ImfCtlApplyTransforms.cpp
   ImfCtlCopyFunctionArg.cpp
 )
 
-target_link_libraries( IlmImfCtl IlmCtl IlmImf Iex IlmThread Half )
+add_library(IlmImfCtl ${SOURCES})
 
-install( FILES ImfCtlApplyTransforms.h DESTINATION include/OpenEXR )
+target_include_directories(IlmImfCtl
+	PUBLIC
+		${CMAKE_CURRENT_SOURCE_DIR}
+)
 
-export( TARGETS IlmImfCtl IlmCtl FILE "${PROJECT_BINARY_DIR}/CTLLibraryDepends.cmake" )
+target_link_libraries(IlmImfCtl
+	PUBLIC
+		IlmCtl
+	PRIVATE
+		OpenEXR::OpenEXR
+		OpenEXR::Iex
+		OpenEXR::IlmThread
+		Imath::Half
+)
 
-install( TARGETS IlmImfCtl DESTINATION lib )
+install(FILES
+	ImfCtlApplyTransforms.h
+DESTINATION
+	${CMAKE_INSTALL_LIBDIR}/OpenEXR
+)
+
+install(TARGETS IlmImfCtl DESTINATION ${CMAKE_INSTALL_LIBDIR})

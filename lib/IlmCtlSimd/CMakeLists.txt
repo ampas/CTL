@@ -1,15 +1,18 @@
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/IlmCtl" "${PROJECT_SOURCE_DIR}/lib/IlmCtlMath" )
+# Build the halfExpLogTable.h file
+add_executable(halfExpLogTable halfExpLogTable.cpp)
+target_link_libraries(halfExpLogTable
+	PRIVATE
+		Imath::Half
+)
+set(HALF_TABLE "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h")
+set(HALF_EXPFUNCS "${CMAKE_CURRENT_BINARY_DIR}/halfExpLog.h")
 
-add_executable( halfExpLogTable halfExpLogTable.cpp )
-target_link_libraries( halfExpLogTable Half )
+add_custom_command( OUTPUT "${HALF_TABLE}" "${HALF_EXPFUNCS}"
+	COMMAND halfExpLogTable "${HALF_TABLE}" "${HALF_EXPFUNCS}"
+	DEPENDS halfExpLogTable
+)
 
-add_custom_command( OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h"
-                    COMMAND halfExpLogTable "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h" "${CMAKE_CURRENT_BINARY_DIR}/halfExpLog.h"
-                    DEPENDS halfExpLogTable )
-
-include_directories( "${CMAKE_CURRENT_BINARY_DIR}" )
-
-add_library( IlmCtlSimd ${DO_SHARED}
+set(SOURCES
 	CtlSimdAddr.cpp
 	CtlSimdFunctionCall.cpp
 	CtlSimdHalfExpLog.cpp
@@ -30,16 +33,30 @@ add_library( IlmCtlSimd ${DO_SHARED}
 	CtlSimdSyntaxTree.cpp
 	CtlSimdType.cpp
 	CtlSimdXContext.cpp
-	"${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h"
+	${HALF_TABLE}
+	${HALF_EXPFUNCS}
+)
+add_library(IlmCtlSimd ${SOURCES})
+
+target_include_directories(IlmCtlSimd
+	PRIVATE
+		${CMAKE_CURRENT_BINARY_DIR}
+	PUBLIC
+		${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_libraries( IlmCtlSimd IlmCtlMath IlmCtl )
-
-set_target_properties( IlmCtlSimd PROPERTIES
-  VERSION ${CTL_VERSION}
-  SOVERSION ${CTL_VERSION}
+target_link_libraries(IlmCtlSimd
+	PUBLIC
+		IlmCtlMath
+		IlmCtl
 )
 
-install( FILES CtlSimdInterpreter.h DESTINATION include/CTL )
+set_target_properties(IlmCtlSimd
+	PROPERTIES
+		VERSION ${CTL_VERSION}
+		SOVERSION ${CTL_VERSION}
+)
 
-install( TARGETS IlmCtlSimd DESTINATION lib )
+install(FILES CtlSimdInterpreter.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CTL)
+
+install(TARGETS IlmCtlSimd DESTINATION ${CMAKE_INSTALL_LIBDIR})
