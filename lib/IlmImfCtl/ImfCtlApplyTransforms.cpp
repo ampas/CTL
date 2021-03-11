@@ -68,6 +68,7 @@
 #include <IlmThreadPool.h>
 #include <IlmThreadMutex.h>
 #include <Iex.h>
+#include <algorithm>
 
 using namespace std;
 using namespace Iex;
@@ -438,7 +439,7 @@ CallFunctionsTask::execute()
 	
 	while (begin < end)
 	{
-	    size_t numSamples = min (end - begin, maxSamples);
+	    size_t numSamples = std::min (end - begin, maxSamples);
 
 	    callFunctions (funcs, _transformWindow,
 			   begin, numSamples,
@@ -512,7 +513,7 @@ applyTransforms
     {
 	TaskGroup taskGroup;
 
-	numThreads = max (numThreads, 1);
+	numThreads = std::max (numThreads, 1);
 
 	for (int i = 0; i < numThreads; ++i)
 	{
