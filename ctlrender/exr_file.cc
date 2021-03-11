@@ -54,7 +54,6 @@
 
 #include "exr_file.hh"
 
-#if defined(HAVE_OPENEXR)
 #include <ImfInputFile.h>
 #include <ImfOutputFile.h>
 #include <ImfRgbaFile.h>
@@ -252,20 +251,4 @@ void exr_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
         THROW(Iex::ArgExc, "EXR files only support 16 or 32 bps at the moment.");
     }
 }
-
-#else
-
-bool exr_read(const char *name, float scale,
-              ctl::dpx::fb<float> *pixels,
-              format_t *bpp) {
-	return FALSE;
-}
-
-void exr_write(const char *name, float scale,
-               const ctl::dpx::fb<float> &pixels,
-               format_t *format) {
-}
-
-#endif
-
 
