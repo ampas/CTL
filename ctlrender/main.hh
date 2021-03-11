@@ -56,7 +56,6 @@
 #define CTL_UTIL_CTLRENDER_MAIN_INCLUDE
 
 #include <stdint.h>
-#include <unistd.h>
 #include <format.hh>
 #include <compression.hh>
 
