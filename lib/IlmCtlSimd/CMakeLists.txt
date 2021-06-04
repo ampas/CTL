@@ -4,7 +4,7 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/Il
 
 add_executable( halfExpLogTable halfExpLogTable.cpp )
 target_link_libraries( halfExpLogTable ${IlmBase_LDFLAGS_OTHER} )
-target_link_libraries( halfExpLogTable Iex-2_4 Imath-2_4 IexMath-2_4 IlmThread-2_4 Half-2_4 )
+target_link_libraries( halfExpLogTable ${OPENEXR_LIBRARIES} )
 
 if( WIN32 )
 get_filename_component(OpenEXR_PATH ${OpenEXR_LIBRARY} PATH)
