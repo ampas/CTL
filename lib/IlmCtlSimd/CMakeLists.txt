@@ -47,7 +47,7 @@ add_library( IlmCtlSimd ${DO_SHARED}
 )
 
 target_link_libraries( IlmCtlSimd ${IlmBase_LDFLAGS_OTHER} )
-target_link_libraries( IlmCtlSimd IlmCtlMath IlmCtl )
+target_link_libraries( IlmCtlSimd IlmCtlMath IlmCtl ${OPENEXR_LIBRARIES} )
 
 set_target_properties( IlmCtlSimd PROPERTIES
   VERSION ${CTL_VERSION}

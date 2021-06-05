@@ -52,14 +52,14 @@ if(OpenEXR_INCLUDE_DIR AND EXISTS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h")
     endif()
 endif()
 
-find_library(OpenEXR_LIBRARY NAMES IlmImf-2_4 libIlmImf HINTS ${_OpenEXR_HINT_LIB})
-
+find_library(OpenEXR_LIBRARY NAMES IlmImf-3_1 IlmImf-3_0 IlmImf-2_5 IlmImf-2_4 libIlmImf HINTS ${_OpenEXR_HINT_LIB})
+find_library(IlmImfUtil NAMES IlmImfUtil-3_1 IlmImfUtil-3_0 IlmImfUtil-2_5 IlmImfUtil-2_4 libIlmImfUtil HINTS ${_OpenEXR_HINT_LIB})
 find_package(IlmBase QUIET)
 
 unset(_OpenEXR_HINT_INCLUDE)
 unset(_OpenEXR_HINT_LIB)
 
-set(OpenEXR_LIBRARIES ${OpenEXR_LIBRARY} ${IlmBase_LIBRARIES} )
+set(OpenEXR_LIBRARIES ${OpenEXR_LIBRARY} ${IlmImfUtil} ${IlmBase_LIBRARIES} )
 set(OpenEXR_INCLUDE_DIRS ${OpenEXR_INCLUDE_DIR} )
 
 if(NOT PC_OPENEXR_FOUND)
