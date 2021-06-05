@@ -26,7 +26,7 @@ add_library( IlmCtl ${DO_SHARED}
 )
 
 target_link_libraries( IlmCtl ${IlmBase_LDFLAGS_OTHER} )
-target_link_libraries( IlmCtl ${OPENEXR_LIBRARIES})
+target_link_libraries( IlmCtl ${OpenEXR_LIBRARIES})
 
 set_target_properties( IlmCtl PROPERTIES
   VERSION ${CTL_VERSION}

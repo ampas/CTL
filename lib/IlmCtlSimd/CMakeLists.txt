@@ -1,10 +1,10 @@
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/IlmCtl" "${PROJECT_SOURCE_DIR}/lib/IlmCtlMath" )
 
-
+find_package( OpenEXR REQUIRED )
 
 add_executable( halfExpLogTable halfExpLogTable.cpp )
 target_link_libraries( halfExpLogTable ${IlmBase_LDFLAGS_OTHER} )
-target_link_libraries( halfExpLogTable ${OPENEXR_LIBRARIES} )
+target_link_libraries( halfExpLogTable ${OpenEXR_LIBRARIES} )
 
 if( WIN32 )
 get_filename_component(OpenEXR_PATH ${OpenEXR_LIBRARY} PATH)
