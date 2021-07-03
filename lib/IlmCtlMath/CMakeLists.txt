@@ -1,4 +1,10 @@
-include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/IlmCtl" )
+
+if(WIN32)
+  add_definitions( -DOPENEXR_DLL )
+endif(WIN32)
+
+
+include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}/lib/IlmCtl" )
 
 add_library( IlmCtlMath ${DO_SHARED}
   CtlColorSpace.cpp

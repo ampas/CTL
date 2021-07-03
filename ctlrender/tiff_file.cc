@@ -58,10 +58,13 @@
 #if defined(HAVE_LIBTIFF)
 #include <tiff.h>
 #include <tiffio.h>
+#ifdef WIN32
+#else
 #include <sys/param.h>
+#include <alloca.h>
+#endif
 #include <math.h>
 #include <Iex.h>
-#include <alloca.h>
 
 void tiff_read_multiplane(TIFF *t, float scale, ctl::dpx::fb<float> * pixels);
 void tiff_read_interleaved(TIFF *t, float scale, ctl::dpx::fb<float> * pixels);

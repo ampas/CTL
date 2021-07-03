@@ -1,5 +1,9 @@
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" )
 
+if(WIN32)
+  add_definitions( -DOPENEXR_DLL )
+endif(WIN32)
+
 add_library( IlmCtl ${DO_SHARED}
  CtlAddr.cpp
  CtlAlign.cpp
@@ -22,7 +26,7 @@ add_library( IlmCtl ${DO_SHARED}
 )
 
 target_link_libraries( IlmCtl ${IlmBase_LDFLAGS_OTHER} )
-target_link_libraries( IlmCtl Iex IlmThread Half )
+target_link_libraries( IlmCtl ${OpenEXR_LIBRARIES})
 
 set_target_properties( IlmCtl PROPERTIES
   VERSION ${CTL_VERSION}

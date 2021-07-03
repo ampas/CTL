@@ -56,7 +56,17 @@
 #include <exception>
 #include <list>
 #include <sys/stat.h>
+#ifdef WIN32
+#include <io.h>
+#define MAXPATHLEN 1024
+#define strtof strtod
+#define S_ISDIR(mode)  (((mode) & S_IFMT) == S_IFDIR)
+#define S_ISREG(mode)  (((mode) & S_IFMT) == S_IFREG)
+#define F_OK    0       /* Test for existence.  */
+#define access _access
+#else
 #include <sys/param.h>
+#endif
 #include <errno.h>
 #include "transform.hh"
 #include <Iex.h>

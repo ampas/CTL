@@ -37,43 +37,47 @@ else()
 endif()
 
 find_path(OpenEXR_INCLUDE_DIR OpenEXRConfig.h
-          HINTS ${_OpenEXR_HINT_INCLUDE}
-          PATH_SUFFIXES OpenEXR )
+	  HINTS ${_OpenEXR_HINT_INCLUDE}
+	  PATH_SUFFIXES OpenEXR )
 if(OpenEXR_INCLUDE_DIR AND EXISTS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h")
     set(OpenEXR_VERSION ${PC_OPENEXR_VERSION})
 
     if("${OpenEXR_VERSION}" STREQUAL "")
       file(STRINGS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h" openexr_version_str
-           REGEX "^#define[\t ]+OPENEXR_VERSION_STRING[\t ]+\".*")
+	   REGEX "^#define[\t ]+OPENEXR_VERSION_STRING[\t ]+\".*")
 
       string(REGEX REPLACE "^#define[\t ]+OPENEXR_VERSION_STRING[\t ]+\"([^ \\n]*)\".*"
-             "\\1" OpenEXR_VERSION "${openexr_version_str}")
+	     "\\1" OpenEXR_VERSION "${openexr_version_str}")
       unset(openexr_version_str)
     endif()
 endif()
 
-find_library(OpenEXR_LIBRARY NAMES IlmImf libIlmImf HINTS ${_OpenEXR_HINT_LIB})
-
+find_library(OpenEXR_LIBRARY NAMES IlmImf-3_1 IlmImf-3_0 IlmImf-2_5 IlmImf-2_4 libIlmImf HINTS ${_OpenEXR_HINT_LIB})
+find_library(IlmImfUtil NAMES IlmImfUtil-3_1 IlmImfUtil-3_0 IlmImfUtil-2_5 IlmImfUtil-2_4 libIlmImfUtil HINTS ${_OpenEXR_HINT_LIB})
 find_package(IlmBase QUIET)
 
 unset(_OpenEXR_HINT_INCLUDE)
 unset(_OpenEXR_HINT_LIB)
 
-set(OpenEXR_LIBRARIES ${OpenEXR_LIBRARY} ${IlmBase_LIBRARIES} )
+set(OpenEXR_LIBRARIES ${OpenEXR_LIBRARY} ${IlmImfUtil} ${IlmBase_LIBRARIES} )
 set(OpenEXR_INCLUDE_DIRS ${OpenEXR_INCLUDE_DIR} )
 
 if(NOT PC_OPENEXR_FOUND)
 get_filename_component(OpenEXR_LDFLAGS_OTHER ${OpenEXR_LIBRARY} PATH)
+if(WIN32)
+set(OpenEXR_LDFLAGS_OTHER -LIBPATH:${OpenEXR_LDFLAGS_OTHER})
+else(WIN32)
 set(OpenEXR_LDFLAGS_OTHER -L${OpenEXR_LDFLAGS_OTHER})
+endif(WIN32)
 endif()
 
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set OpenEXR_FOUND to TRUE
 # if all listed variables are TRUE
 find_package_handle_standard_args(OpenEXR
-                                  REQUIRED_VARS OpenEXR_LIBRARY OpenEXR_INCLUDE_DIR
-                                  VERSION_VAR OpenEXR_VERSION
-                                  FAIL_MESSAGE "Unable to find OpenEXR library" )
+				  REQUIRED_VARS OpenEXR_LIBRARY OpenEXR_INCLUDE_DIR
+				  VERSION_VAR OpenEXR_VERSION
+				  FAIL_MESSAGE "Unable to find OpenEXR library" )
 
 # older versions of cmake don't support FOUND_VAR to find_package_handle
 # so just do it the hard way...

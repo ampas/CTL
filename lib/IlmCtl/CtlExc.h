@@ -72,22 +72,22 @@ class CtlExc : public Iex::BaseExc {
 	public:
 		void _explain(const char *text, va_list ap);
 		CtlExc(const char *format=0, ...) throw();
-		CtlExc(const std::string &text) throw(): Iex::BaseExc(text) {};
-		CtlExc(std::stringstream &text) throw(): Iex::BaseExc(text) {};
+		CtlExc(const std::string &text) throw() : Iex::BaseExc(text) {};
+		CtlExc(std::stringstream &text) throw() : Iex::BaseExc(text) {};
 };
 
 #define CTL_DEFINE_EXC(name, base)                              \
     class name : public base                                    \
     {                                                           \
       public:                                                   \
-        name (const char* text=0, ...) throw() {                \
+      name(const char* text=0, ... ) throw() : base(text) {		\
             va_list ap;                                         \
             va_start(ap, text);                                 \
             _explain(text, ap);                                 \
             va_end(ap);                                         \
         };                                                      \
-        name (const std::string &text) throw(): base (text) {}  \
-        name (std::stringstream &text) throw(): base (text) {}  \
+        name(const std::string &text) throw(): base (text) {}  \
+        name(std::stringstream &text) throw(): base (text) {}  \
     };
 
 

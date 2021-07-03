@@ -53,6 +53,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include <CtlStdType.h>
+#include <CtlSyntaxTree.h>
 #include <cassert>
 #include <CtlErrors.h>
 #include <half.h>

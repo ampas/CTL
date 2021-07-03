@@ -52,6 +52,10 @@
 // THAN A.M.P.A.S., WHETHER DISCLOSED OR UNDISCLOSED.
 ///////////////////////////////////////////////////////////////////////////
 
+#ifdef WIN32
+#include "math.h"
+#define llrint(x) int(x + ((x >= 0.0) ? 0.5 : -0.5));
+#endif
 
 template <class T>
 dpx::fb<T>::fb() {
