@@ -194,6 +194,28 @@ can be downloaded from https://github.com/ampas/aces_container
 
         $ sudo make check
 
+* Docker
+
+    build docker
+
+        $ docker build --rm -f Dockerfile -t ctl:latest .
+        
+    run docker image (in isolated container)
+
+        $ docker run -it --rm ctl:latest
+
+    run docker image (mapping C:\temp on Windows host to /tmp in container)
+
+        $ docker run -it --rm -v C:\\temp:/tmp/ ctl:latest
+
+    run docker image (mapping /mnt/c/temp on Linux host to /tmp in container)
+
+        $ docker run -it --rm -v /mnt/c/temp:/tmp/ ctl:latest
+
+    run ctlrender
+        
+        $ ctlrender -help 
+
 ## License ##
  
 Color Transformation Language is distributed under the following license:
