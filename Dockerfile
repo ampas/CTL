@@ -5,7 +5,6 @@ RUN apt-get update
 # disable interactive install 
 ENV DEBIAN_FRONTEND noninteractive
 
-#RUN apt-get -y install git
 RUN apt-get -y install cmake
 RUN apt-get -y install g++
 
