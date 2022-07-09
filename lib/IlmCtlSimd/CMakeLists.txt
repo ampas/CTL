@@ -1,7 +1,7 @@
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/IlmCtl" "${PROJECT_SOURCE_DIR}/lib/IlmCtlMath" )
 
 add_executable( halfExpLogTable halfExpLogTable.cpp )
-target_link_libraries( halfExpLogTable Half )
+target_link_libraries( halfExpLogTable Half ${IlmBase_LDFLAGS_OTHER} )
 
 add_custom_command( OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h"
                     COMMAND halfExpLogTable "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h" "${CMAKE_CURRENT_BINARY_DIR}/halfExpLog.h"
@@ -39,6 +39,10 @@ set_target_properties( IlmCtlSimd PROPERTIES
   VERSION ${CTL_VERSION}
   SOVERSION ${CTL_VERSION}
 )
+
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set_target_properties(IlmCtlSimd PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 install( FILES CtlSimdInterpreter.h DESTINATION include/CTL )
 

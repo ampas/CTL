@@ -46,4 +46,8 @@ target_link_libraries( ctlrender ${AcesContainer_LIBRARIES} )
 target_link_libraries( ctlrender ${AcesContainer_LDFLAGS_OTHER} )
 endif()
 
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set_target_properties(ctlrender PROPERTIES INSTALL_RPATH "@loader_path/../lib")
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 install( TARGETS ctlrender DESTINATION bin )

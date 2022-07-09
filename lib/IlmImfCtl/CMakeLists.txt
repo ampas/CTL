@@ -11,6 +11,10 @@ target_link_libraries( IlmImfCtl IlmCtl IlmImf Iex IlmThread Half )
 
 install( FILES ImfCtlApplyTransforms.h DESTINATION include/OpenEXR )
 
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set_target_properties(IlmImfCtl PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 export( TARGETS IlmImfCtl IlmCtl FILE "${PROJECT_BINARY_DIR}/CTLLibraryDepends.cmake" )
 
 install( TARGETS IlmImfCtl DESTINATION lib )

@@ -47,6 +47,7 @@ The CTL source code contains the following:
 * `ctlrender/` - an application that allows for application of CTL transforms to
   an image using one or more CTL scripts, potentially converting the file format
   in the process.
+* `Nuke_CTL/` - a Nuke plugin allowing the use of CTL transforms in a Nuke node.
 * `config/` - CMake configuration files
 * `unittest/` - unit test files
 
