@@ -181,7 +181,7 @@ class PointTree
 	    double bl = (_points[b] - _center).length2();
 
 	    volatile double delta = fabs (al - bl);
-	    const double eps = 2.0 * Imath::limits<double>::epsilon();
+	    const double eps = 2.0 * std::numeric_limits<double>::epsilon();
 
     	    //
 	    // Impose strict weak ordering... if the lengths are the same,
