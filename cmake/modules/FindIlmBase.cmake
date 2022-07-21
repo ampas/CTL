@@ -38,7 +38,7 @@ endif()
 
 find_path(IlmBase_INCLUDE_DIR ImathConfig.h HINTS ${_IlmBase_HINT_INCLUDE} PATH_SUFFIXES Imath )
 if(IlmBase_INCLUDE_DIR AND EXISTS "${IlmBase_INCLUDE_DIR}/ImathConfig.h")
-    set(IlmBase_VERSION ${PC_ILMBASE_VERSION})
+    #set(IlmBase_VERSION ${PC_ILMBASE_VERSION})
     if("${IlmBase_VERSION}" STREQUAL "")
       file(STRINGS "${IlmBase_INCLUDE_DIR}/ImathConfig.h" ilmbase_version_str
 	   REGEX "^#define[\t ]+IMATH_VERSION_STRING[\t ]+\".*")

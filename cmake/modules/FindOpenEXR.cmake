@@ -40,7 +40,7 @@ find_path(OpenEXR_INCLUDE_DIR OpenEXRConfig.h
 	  HINTS ${_OpenEXR_HINT_INCLUDE}
 	  PATH_SUFFIXES OpenEXR )
 if(OpenEXR_INCLUDE_DIR AND EXISTS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h")
-    set(OpenEXR_VERSION ${PC_OPENEXR_VERSION})
+    #set(OpenEXR_VERSION ${PC_OPENEXR_VERSION})
 
     if("${OpenEXR_VERSION}" STREQUAL "")
       file(STRINGS "${OpenEXR_INCLUDE_DIR}/OpenEXRConfig.h" openexr_version_str
