@@ -1,10 +1,10 @@
 #
-# A simple cmake find module for IlmBase
+# A simple cmake find module for Imath
 #
 
 find_package(PkgConfig QUIET)
 if(PKG_CONFIG_FOUND)
-  pkg_check_modules(PC_ILMBASE QUIET IlmBase)
+  pkg_check_modules(PC_ILMBASE QUIET Imath)
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -28,6 +28,8 @@ if(PC_ILMBASE_FOUND)
   endif()
 else()
   if(UNIX)
+    set(_IlmBase_HINT_INCLUDE ${CMAKE_PREFIX_PATH}/include )
+    set(_IlmBase_HINT_LIB ${CMAKE_PREFIX_PATH}/lib ${CMAKE_PREFIX_PATH}/lib64 )
     set(IlmBase_CFLAGS "-pthread")
     if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     else()
@@ -62,6 +64,7 @@ foreach(ILMBASE_LIB ${IlmBase_ALL_LIBRARIES})
   )
   if(IlmBase_${_upper_ilmbase_lib}_LIBRARY)
     set(IlmBase_LIBRARY ${IlmBase_LIBRARY} ${IlmBase_${_upper_ilmbase_lib}_LIBRARY})
+    message( STATUS "ILMBASE LIB=${IlmBase_LIBRARY}" )
     mark_as_advanced(IlmBase_${_upper_ilmbase_lib}_LIBRARY)
   endif()
 endforeach()
@@ -72,7 +75,7 @@ set(IlmBase_LIBRARIES ${IlmBase_LIBRARY} )
 set(IlmBase_INCLUDE_DIRS ${IlmBase_INCLUDE_DIR} )
 
 if(NOT PC_ILMBASE_FOUND)
-get_filename_component(IlmBase_LDFLAGS_OTHER ${IlmBase_HALF_LIBRARY} PATH)
+get_filename_component(IlmBase_LDFLAGS_OTHER ${IlmBase_IEX-3_1_LIBRARY} PATH)
 if(WIN32)
 	set(IlmBase_LDFLAGS_OTHER -LIBPATH:${IlmBase_LDFLAGS_OTHER})
 else(WIN32)
@@ -87,6 +90,7 @@ find_package_handle_standard_args(IlmBase
 				  REQUIRED_VARS IlmBase_LIBRARY IlmBase_INCLUDE_DIR
 				  VERSION_VAR IlmBase_VERSION
 				  FAIL_MESSAGE "Unable to find IlmBase libraries" )
+
 
 # older versions of cmake don't support FOUND_VAR to find_package_handle
 # so just do it the hard way...
