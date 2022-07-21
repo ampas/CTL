@@ -52,9 +52,9 @@ if(IlmBase_INCLUDE_DIR AND EXISTS "${IlmBase_INCLUDE_DIR}/ImathConfig.h")
 endif()
 
 if("${IlmBase_VERSION}" VERSION_LESS "2.0.0")
-  set(IlmBase_ALL_LIBRARIES Imath-3_2 Iex-3_2 IlmThread-3_2 IlmThread-3_1)
+  set(IlmBase_ALL_LIBRARIES Imath-3_2 Iex-3_1 IlmThread-3_2 IlmThread-3_1)
 else()
-  set(IlmBase_ALL_LIBRARIES Imath-3_2 Iex-3_2 IlmThread-3_2 IlmThread-3_1)
+  set(IlmBase_ALL_LIBRARIES Imath-3_2 Iex-3_1 IlmThread-3_2 IlmThread-3_1)
 endif()
 foreach(ILMBASE_LIB ${IlmBase_ALL_LIBRARIES})
   string(TOUPPER ${ILMBASE_LIB} _upper_ilmbase_lib)
@@ -72,7 +72,7 @@ endforeach()
 unset(_IlmBase_HINT_INCLUDE)
 unset(_IlmBase_HINT_LIB)
 set(IlmBase_LIBRARIES ${IlmBase_LIBRARY} )
-set(IlmBase_INCLUDE_DIRS ${IlmBase_INCLUDE_DIR} 
+set(IlmBase_INCLUDE_DIRS ${IlmBase_INCLUDE_DIR}
 			 ${CMAKE_PREFIX_PATH}/include/OpenEXR )
 
 if(NOT PC_ILMBASE_FOUND)
