@@ -6,11 +6,6 @@ add_executable( halfExpLogTable halfExpLogTable.cpp )
 target_link_libraries( halfExpLogTable ${IlmBase_LDFLAGS_OTHER} )
 target_link_libraries( halfExpLogTable ${OpenEXR_LIBRARIES} )
 
-if( WIN32 )
-get_filename_component(OpenEXR_PATH ${OpenEXR_LIBRARY} PATH)
-file( COPY "${OpenEXR_PATH}/Half.dll"
-	   DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/" )
-endif(WIN32)
 
 add_custom_command( OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h"
 		    COMMAND halfExpLogTable "${CMAKE_CURRENT_BINARY_DIR}/halfExpLogTable.h" "${CMAKE_CURRENT_BINARY_DIR}/halfExpLog.h"
