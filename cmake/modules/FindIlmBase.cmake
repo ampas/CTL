@@ -76,7 +76,7 @@ set(IlmBase_INCLUDE_DIRS ${IlmBase_INCLUDE_DIR}
 			 ${CMAKE_PREFIX_PATH}/include/OpenEXR )
 
 if(NOT PC_ILMBASE_FOUND)
-get_filename_component(IlmBase_LDFLAGS_OTHER ${IlmBase_IMATH-3_2_LIBRARY} PATH)
+       get_filename_component(IlmBase_LDFLAGS_OTHER ${IlmBase_IMATH-3_1_LIBRARY} PATH)
 if(WIN32)
 	set(IlmBase_LDFLAGS_OTHER -LIBPATH:${IlmBase_LDFLAGS_OTHER})
 else(WIN32)
