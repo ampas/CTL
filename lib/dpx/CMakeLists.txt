@@ -5,7 +5,7 @@ endif(WIN32)
 
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" )
 
-add_library( ctldpx
+add_library( ctldpx ${DO_SHARED}
  dpx.cc
  dpx_raw.cc
  dpx_read.cc
@@ -16,3 +16,5 @@ add_library( ctldpx
  dpx_rw.cc
 )
 
+add_definitions( -DIMATH_DLL -DOPENEXR_DLL )
+target_link_libraries( ctldpx ${OPENEXR_LIBRARIES} ${IlmBase_LIBRARIES} )

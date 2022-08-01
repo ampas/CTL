@@ -62,6 +62,8 @@ include( configure.cmake )
 include_directories( "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}" )
 # implement find library stuff...
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 add_definitions( -DPACKAGE="CTL" -DVERSION="${CTL_VERSION}" )
 add_subdirectory(doc)
 add_subdirectory(lib)
