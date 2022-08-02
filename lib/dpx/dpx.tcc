@@ -57,7 +57,7 @@
 #define llrint(x) int(x + ((x >= 0.0) ? 0.5 : -0.5));
 #endif
 
-#include "dpx_exports.h"
+#include "dpx_exports.hh"
 
 template <class T>
 dpx::fb<T>::fb() {
