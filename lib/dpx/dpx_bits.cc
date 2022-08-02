@@ -122,7 +122,7 @@ const uint64_t max_int_for_bits[]={ 0x0000000000000000ULL,
                                     0x3fffffffffffffffULL,
                                     0x7fffffffffffffffULL,
                                     0xffffffffffffffffULL
-                                  };
+};
 
 };
 

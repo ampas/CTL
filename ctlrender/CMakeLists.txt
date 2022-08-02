@@ -21,6 +21,9 @@ include_directories( ${AcesContainer_INCLUDE_DIRS} )
 link_directories( ${AcesContainer_LIBRARY_DIRS} )
 endif()
 
+add_definitions( -DDPX_DLL )
+
+
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/IlmCtl" "${PROJECT_SOURCE_DIR}/lib/IlmCtlMath" "${PROJECT_SOURCE_DIR}/lib/IlmCtlSimd" "${PROJECT_SOURCE_DIR}/lib/dpx" )
 
 add_executable( ctlrender

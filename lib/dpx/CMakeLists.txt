@@ -1,11 +1,8 @@
 
-if(WIN32)
-  add_definitions( -DOPENEXR_DLL )
-endif(WIN32)
 
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" )
 
-add_library( ctldpx ${DO_SHARED}
+add_library( ctldpx
  dpx.cc
  dpx_raw.cc
  dpx_read.cc

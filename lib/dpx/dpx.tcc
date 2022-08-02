@@ -57,6 +57,8 @@
 #define llrint(x) int(x + ((x >= 0.0) ? 0.5 : -0.5));
 #endif
 
+#include "dpx_exports.h"
+
 template <class T>
 dpx::fb<T>::fb() {
 	_data=NULL;
@@ -274,7 +276,7 @@ void ctl::dpx::fb<T>::alpha(const T &value) {
 
 namespace dpxi {
 
-extern const uint64_t max_int_for_bits[];
+extern DPX_EXPORT const uint64_t max_int_for_bits[];
 
 //
 // Various functions to perform conversions between different types and
