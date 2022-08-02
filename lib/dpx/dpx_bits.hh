@@ -59,7 +59,7 @@
 #include <limits>
 #include <stdint.h>
 
-#include "dpx_exports.h"
+#include "dpx_exports.hh"
 
 
 namespace ctl {
