@@ -3,8 +3,9 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/lib/Il
 find_package( OpenEXR REQUIRED )
 
 
-FILE( COPY ${CMAKE_INSTALL_PREFIX}/bin/Imath-3_1.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
-
+if( WIN32 )
+  FILE( COPY ${CMAKE_INSTALL_PREFIX}/bin/Imath-3_1.dll DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+endif()
 
 add_executable( halfExpLogTable halfExpLogTable.cpp )
 target_link_libraries( halfExpLogTable ${IlmBase_LDFLAGS_OTHER} )
