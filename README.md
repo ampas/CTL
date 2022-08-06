@@ -134,7 +134,7 @@ If you want to use CTL together with the TIFF image file format, you should down
 
 * Ubuntu
 
-        $ sudo apt-get install libtiff4
+        $ sudo apt-get install libtiff-dev
 
 * Redhat
 
