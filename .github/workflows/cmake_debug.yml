@@ -64,6 +64,9 @@ jobs:
 
     steps:
 
+    - name: install dependencies
+      run: sudo apt-get -y install valgrind
+
     - uses: actions/checkout@v3
 
     - name: Configure CMake
