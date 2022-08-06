@@ -64,6 +64,7 @@
 #include <limits>
 #include <half.h>
 #include <testVarying.h>
+#include <string.h>
 
 using namespace Ctl;
 using namespace Imath;
