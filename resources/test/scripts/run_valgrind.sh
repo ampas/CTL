@@ -6,7 +6,7 @@ set -u
 # get initial path before changing it
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
-cd ../../../unittest/IlmCtl/
+cd ./unittest/IlmCtl/
 valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ./IlmCtlTest
 test_01_status=$? 
 test_01_label="IlmCtlTest"
