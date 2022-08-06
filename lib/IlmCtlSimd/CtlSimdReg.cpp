@@ -87,7 +87,7 @@ SimdReg::SimdReg (bool varying, size_t elementSize)
   _varying(varying), 
   _oVarying(false),
   _offsets(zeroOffset),
-  _data (new char [ varying ? MAX_REG_SIZE * _eSize : _eSize]),
+  _data (new char [ varying ? MAX_REG_SIZE * _eSize : _eSize]()),
   _ref(0)
 {
 }
