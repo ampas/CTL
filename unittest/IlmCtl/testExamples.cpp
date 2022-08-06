@@ -56,6 +56,7 @@
 #include <CtlFunctionCall.h>
 #include <CtlType.h>
 #include <assert.h>
+#include <string.h>
 
 
 using namespace Ctl;
