@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -x
-set -u
+set -u 
 
 # get initial path before changing it
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
