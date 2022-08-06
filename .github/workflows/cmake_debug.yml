@@ -81,13 +81,13 @@ jobs:
         cd ${{ github.workspace }}
         cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Make Unittests
+    - name: Make unit tests
       working-directory: ${{github.workspace}}/build
       run: make check 
     
-    - name: Run Valgrind script
+    - name: Run Valgrind on unit tests
       working-directory: ${{github.workspace}}/build
       # Run valgrind using a bash script  
-      run: pwd && ls && && bash ../resources/test/scripts/run_valgrind.sh    
+      run: pwd && ls && bash ../resources/test/scripts/run_valgrind.sh    
 
   
