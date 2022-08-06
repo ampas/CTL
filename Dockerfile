@@ -9,6 +9,9 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get -y install cmake
 RUN apt-get -y install g++
 
+# install developement debugging tools
+RUN apt-get -y install valgrind
+
 # install CTL dependencies
 RUN apt-get -y install libilmbase-dev
 RUN apt-get -y install libopenexr-dev
