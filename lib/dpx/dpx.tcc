@@ -52,6 +52,12 @@
 // THAN A.M.P.A.S., WHETHER DISCLOSED OR UNDISCLOSED.
 ///////////////////////////////////////////////////////////////////////////
 
+#ifdef WIN32
+#include "math.h"
+#define llrint(x) int(x + ((x >= 0.0) ? 0.5 : -0.5));
+#endif
+
+#include "dpx_exports.hh"
 
 template <class T>
 dpx::fb<T>::fb() {
@@ -270,7 +276,7 @@ void ctl::dpx::fb<T>::alpha(const T &value) {
 
 namespace dpxi {
 
-extern const uint64_t max_int_for_bits[];
+extern DPX_EXPORT const uint64_t max_int_for_bits[];
 
 //
 // Various functions to perform conversions between different types and

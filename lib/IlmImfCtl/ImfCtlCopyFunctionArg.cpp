@@ -315,11 +315,12 @@ copyFunctionArg
 		y += 1;
 		x = transformWindow.min.x;
 	    }
+
 	}
 
 	break;
 
-	  case Imf::FLOAT:
+        case Imf::FLOAT:
 
 	if (!src->type().cast<FloatType>())
 	    throwDstSliceTypeMismatch (src, "FLOAT");

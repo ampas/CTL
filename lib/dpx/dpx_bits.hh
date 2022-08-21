@@ -58,10 +58,14 @@
 #include <math.h>
 #include <limits>
 #include <stdint.h>
+
+#include "dpx_exports.hh"
+
+
 namespace ctl {
 namespace dpxi {
 
-extern const uint64_t max_int_for_bits[];
+extern DPX_EXPORT const uint64_t max_int_for_bits[];
 
 }
 }

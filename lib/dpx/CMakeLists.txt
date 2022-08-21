@@ -11,3 +11,8 @@ add_library( ctldpx
  dpx_rw.cc
 )
 
+if( WIN32 )
+  add_definitions( -DIMATH_DLL -DOPENEXR_DLL )
+endif()
+
+target_link_libraries( ctldpx ${OPENEXR_LIBRARIES} ${IlmBase_LIBRARIES} )

@@ -42,7 +42,11 @@ foreach( p LIB BIN INCLUDE CMAKE DOC)
   endif()
 endforeach()
 
+if(WIN32)
 option(ENABLE_SHARED "Enable Shared Libraries" ON)
+else(WIN32)
+option(ENABLE_SHARED "Enable Shared Libraries" ON)
+endif(WIN32)
 
 if ( ENABLE_SHARED )
 set( DO_SHARED SHARED )
@@ -57,6 +61,8 @@ include( configure.cmake )
 # to add to include path
 include_directories( "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}" )
 # implement find library stuff...
+
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 add_definitions( -DPACKAGE="CTL" -DVERSION="${CTL_VERSION}" )
 add_subdirectory(doc)

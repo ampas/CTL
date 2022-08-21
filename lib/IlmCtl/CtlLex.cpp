@@ -1,55 +1,48 @@
 ///////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2013 Academy of Motion Picture Arts and Sciences 
+//
+// Copyright (c) 2006 Academy of Motion Picture Arts and Sciences
 // ("A.M.P.A.S."). Portions contributed by others as indicated.
 // All rights reserved.
 // 
-// A worldwide, royalty-free, non-exclusive right to copy, modify, create
-// derivatives, and use, in source and binary forms, is hereby granted, 
-// subject to acceptance of this license. Performance of any of the 
-// aforementioned acts indicates acceptance to be bound by the following 
-// terms and conditions:
-//
-//  * Copies of source code, in whole or in part, must retain the 
-//    above copyright notice, this list of conditions and the 
-//    Disclaimer of Warranty.
-//
-//  * Use in binary form must retain the above copyright notice, 
-//    this list of conditions and the Disclaimer of Warranty in the
-//    documentation and/or other materials provided with the distribution.
-//
-//  * Nothing in this license shall be deemed to grant any rights to 
-//    trademarks, copyrights, patents, trade secrets or any other 
-//    intellectual property of A.M.P.A.S. or any contributors, except 
-//    as expressly stated herein.
-//
-//  * Neither the name "A.M.P.A.S." nor the name of any other 
-//    contributors to this software may be used to endorse or promote 
-//    products derivative of or based on this software without express 
-//    prior written permission of A.M.P.A.S. or the contributors, as 
-//    appropriate.
+// A world-wide, royalty-free, non-exclusive right to distribute, copy,
+// modify, create derivatives, and use, in source and binary forms, is
+// hereby granted, subject to acceptance of this license. Performance of
+// any of the aforementioned acts indicates acceptance to be bound by the
+// following terms and conditions:
 // 
-// This license shall be construed pursuant to the laws of the State of 
-// California, and any disputes related thereto shall be subject to the 
-// jurisdiction of the courts therein.
+//   * Redistributions of source code must retain the above copyright
+//     notice, this list of conditions and the Disclaimer of Warranty.
+// 
+//   * Redistributions in binary form must reproduce the above copyright
+//     notice, this list of conditions and the Disclaimer of Warranty
+//     in the documentation and/or other materials provided with the
+//     distribution.
+// 
+//   * Nothing in this license shall be deemed to grant any rights to
+//     trademarks, copyrights, patents, trade secrets or any other
+//     intellectual property of A.M.P.A.S. or any contributors, except
+//     as expressly stated herein, and neither the name of A.M.P.A.S.
+//     nor of any other contributors to this software, may be used to
+//     endorse or promote products derived from this software without
+//     specific prior written permission of A.M.P.A.S. or contributor,
+//     as appropriate.
+// 
+// This license shall be governed by the laws of the State of California,
+// and subject to the jurisdiction of the courts therein.
+// 
+// Disclaimer of Warranty: THIS SOFTWARE IS PROVIDED BY A.M.P.A.S. AND
+// CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
+// BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT ARE DISCLAIMED. IN NO
+// EVENT SHALL A.M.P.A.S., ANY CONTRIBUTORS OR DISTRIBUTORS BE LIABLE FOR
+// ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+// GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+// IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+// IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Disclaimer of Warranty: THIS SOFTWARE IS PROVIDED BY A.M.P.A.S. AND 
-// CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, 
-// BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS 
-// FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT ARE DISCLAIMED. IN NO 
-// EVENT SHALL A.M.P.A.S., OR ANY CONTRIBUTORS OR DISTRIBUTORS, BE LIABLE 
-// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, RESITUTIONARY, 
-// OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
-// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
-// THE POSSIBILITY OF SUCH DAMAGE.
-//
-// WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE ACADEMY 
-// SPECIFICALLY DISCLAIMS ANY REPRESENTATIONS OR WARRANTIES WHATSOEVER 
-// RELATED TO PATENT OR OTHER INTELLECTUAL PROPERTY RIGHTS IN THE ACADEMY 
-// COLOR ENCODING SYSTEM, OR APPLICATIONS THEREOF, HELD BY PARTIES OTHER 
-// THAN A.M.P.A.S., WHETHER DISCLOSED OR UNDISCLOSED.
 ///////////////////////////////////////////////////////////////////////////
 
 
@@ -64,6 +57,9 @@
 #include <CtlLContext.h>
 #include <iomanip>
 #include <cassert>
+#include <cctype>
+#include <cfloat>
+#include <climits>
 #include <cstdlib>
 
 
@@ -141,6 +137,341 @@ getLine (istream &is, string &str)
 
 	str += c;
     }
+}
+
+
+//
+// Helper functions for stringToDouble()
+//
+
+void
+convertMantissa (const char *&nextChar, double &mantissa, int &exponentBias)
+{
+    //
+    // Parse and convert the "mantissa" of our number, that is, the digits
+    // and the optional decimal point to the left of the 'e' or end the end
+    // of the string.  (Examples: the mantissa in "-1.23e-45" is "1.23", and
+    // the mantissa in "123" is "123".)
+    //
+    // Convert the mantissa to a (potentially rather large) integer, m, and
+    // compute an "exponent bias," b, such that m*pow(10,b) yields the correct
+    // numerical value for the mantissa.  For example "1.23" is converted to
+    // m = 123, b = -2.
+    //
+    // We ensure that m does not become larger than about 10/DBL_EPSILON,
+    // but we do allow b to become arbitrarily large.  Once m is larger
+    // than 10/DBL_EPSILON the numerical result of multiplying m by 10 and
+    // adding another digit to it is no different than what we get from
+    // leaving m alone and adjusting the exponent bias instead.
+    //
+
+    //
+    // Consume leading zeros, keep track of the decimal point.
+    //
+
+    bool afterDecimalPoint = false;
+    mantissa = 0;
+    exponentBias = 0;
+
+    while (*nextChar == '0')
+        ++nextChar;
+
+    if (*nextChar == '.')
+    {
+        afterDecimalPoint = true;
+        ++nextChar;
+
+        while (*nextChar == '0')
+        {
+            --exponentBias;
+            ++nextChar;
+        }
+    }
+
+    //
+    // Consume remaining digits, again, keeping track of the decimal point.
+    //
+
+    while (isdigit (*nextChar) || *nextChar == '.')
+    {
+        if (*nextChar == '.')
+        {
+            if (afterDecimalPoint)
+                break;
+
+            afterDecimalPoint = true;
+        }
+        else
+        {
+            if (afterDecimalPoint)
+            {
+                if (mantissa <= 1 / DBL_EPSILON)
+                {
+                    mantissa = mantissa * 10 + (*nextChar - '0');
+                    --exponentBias;
+                }
+            }
+            else
+            {
+                if (mantissa <= 1 / DBL_EPSILON)
+                    mantissa = mantissa * 10 + (*nextChar - '0');
+                else
+                    ++exponentBias;
+            }
+        }
+
+        ++nextChar;
+    }
+}
+
+
+void
+convertExponent (const char *&nextChar, int &exponent)
+{
+    //
+    // Parse and convert the "exponent" of our number, that is, the digits
+    // to the right of the 'e' and an optional sign. (Example: the exponent
+    // in "-1.23e-45" is "45".)
+    //
+    // We do not allow the exponent to exceed INT_MAX.
+    // 
+
+    exponent = 0;
+
+    while (isdigit (*nextChar))
+    {
+        if (exponent <= INT_MAX / 10)
+        {
+            exponent = exponent * 10 + (*nextChar - '0');
+            ++nextChar;
+        }
+        else
+        {
+            exponent = INT_MAX;
+
+            while (isdigit (*nextChar))
+                ++nextChar;
+
+            return;
+        }
+    }
+}
+
+
+void
+convertSignMantissaExponent
+    (const char *&nextChar, double &sign, double &mantissa, int &exponent)
+{
+    //
+    // Consume leading whitespace.
+    //
+
+    while (isspace (*nextChar))
+        ++nextChar;
+
+    //
+    // Sign
+    //
+
+    sign = 1;
+
+    while (*nextChar == '+' || *nextChar == '-')
+    {
+        if (*nextChar == '-')
+            sign = -sign;
+
+        ++nextChar;
+    }
+
+    //
+    // Mantissa and exponent bias.
+    //
+
+    int exponentBias;
+    convertMantissa (nextChar, mantissa, exponentBias);
+
+    //
+    // Exponent sign and exponent.
+    //
+
+    if (*nextChar == 'e' || *nextChar == 'E')
+    {
+        ++nextChar;
+
+        int exponentSign = 1;
+
+        while (*nextChar == '+' || *nextChar == '-')
+        {
+            if (*nextChar == '-')
+                exponentSign = -exponentSign;
+
+            ++nextChar;
+        }
+
+        convertExponent (nextChar, exponent);
+        exponent *= exponentSign;
+    }
+    else
+    {
+        exponent = 0;
+    }
+
+    //
+    // Adjust the exponent by adding the exponent bias to it.
+    // If the correct result would overflow or underflow, then
+    // set the exponent INT_MAX or -INT_MAX respectively.
+    //
+
+    if (exponent > 0)
+    {
+        if (exponentBias <= 0 || exponent <= INT_MAX - exponentBias)
+            exponent += exponentBias;
+        else
+            exponent = INT_MAX;
+    }
+    else
+    {
+        if (exponentBias >= 0 || exponent >= -INT_MAX - exponentBias)
+            exponent += exponentBias;
+        else
+            exponent = -INT_MAX;
+    }
+}
+
+
+double
+pow10 (int n)
+{
+    //
+    // Compute pow(10,n), assuming that the calculation will not overflow.
+    //
+
+    if (n < 0)
+        return 1 / pow10 (-n);
+
+    assert (n <= DBL_MAX_10_EXP);
+
+    double x = 1;
+    double y = 10;
+
+    while (n > 0)
+    {
+        if (n & 1)
+            x *= y;
+
+        y = y * y;
+        n >>= 1;
+    }
+
+    return x;
+}
+
+
+double
+mantissaTimesPow10OfExponent (double mantissa, int exponent)
+{
+    //
+    // Compute
+    //
+    //      mantissa * pow(10,exponent)
+    //
+    // and return the correct result as long as it is representable
+    // as a double, even if pow(10,exponent) by itself would overflow
+    // or underflow.
+    //
+
+    assert (mantissa >= 0);
+
+    if (exponent > 0)
+    {
+        while (exponent > DBL_MAX_10_EXP)
+        {
+            double scale = pow10 (DBL_MAX_10_EXP);
+
+            if (mantissa > DBL_MAX / scale)
+                return DBL_MAX;
+
+            mantissa *= scale;
+            exponent -= DBL_MAX_10_EXP;
+        }
+
+        double scale = pow10 (exponent);
+
+        if (mantissa > DBL_MAX / scale)
+            return DBL_MAX;
+
+        mantissa *= scale;
+    }
+    else
+    {
+        while (exponent < DBL_MIN_10_EXP)
+        {
+            mantissa *= pow10 (DBL_MIN_10_EXP);
+            exponent -= DBL_MIN_10_EXP;
+
+            if (mantissa == 0)
+                return 0;
+        }
+
+        mantissa *= pow10 (exponent);
+    }
+
+    return mantissa;
+}
+
+
+double
+stringToDouble (const char string[], const char **endptr)
+{
+    //
+    // stringToDouble() converts a null-terminated text string to a double-
+    // precision floating-point number.  The string must consist of optional
+    // leading white space, followed by an optional '+' or '-' sign, a sequence
+    // of digits that may contain an optional decimal point, and an optional
+    // exponent.  The exponent consists of an 'E' or 'e', followed by an
+    // optional '+' or '-' sign and a sequence of digits.
+    //
+    // Examples of valid strings:
+    //
+    //    0
+    //    123
+    //    -0.03
+    //    +.576
+    //    1.456e-10
+    //    4e+5
+    //    
+    // Strings that do not fit the pattern indicated above are converted
+    // to 0.0.  Text after the part of the string that represents the number
+    // is ignored.  For example, "." and "hello" are converted to 0.0, and
+    // "15 rabbits" is converted to 15.0.
+    //
+    // If the number represented by the string is too large to be represented
+    // as a double-precision floating-point number, then stringToDouble()
+    // returns DBL_MAX, or -DBL_MAX, depending on the sign of the number.
+    //
+    // Note that there are some pathological cases such as writing 1.0 as "1"
+    // followed by 500 zeros and "e-500" ("100000...0000000e-500"), or writing
+    // 0.1 as "0." followed by 500 zeros and "1e500" ("0.00000...00000001e500").
+    // Even though those should be rare in practice, stringToDouble() will
+    // produce the correct numerical result. However, stringToDouble() will
+    // fail and produce an incorrect result if the input string approches
+    // INT_MAX (about 2 billion) digits.
+    //
+    // If endptr is not null, then stringToDouble() sets *endptr to point to
+    // the first character after the part of the string that was converted
+    // to a double.
+    //
+
+    double sign;
+    double mantissa;
+    int exponent;
+
+    convertSignMantissaExponent (string, sign, mantissa, exponent);
+
+    if (endptr)
+        *endptr = string;
+
+    return sign * mantissaTimesPow10OfExponent (mantissa, exponent);
 }
 
 
@@ -225,7 +556,7 @@ Lex::nextLine ()
 inline bool
 Lex::atEndOfLine () const
 {
-    return _currentCharIndex >= (int)_currentLine.size();
+    return _currentCharIndex >= _currentLine.size();
 }
 
 
@@ -620,7 +951,7 @@ Lex::getAtKeyword()
     int errorValue = -1;
     errorValue = strtol (b, &e, 0);
 
-    if (e - b != (int)_tokenStringValue.size())
+    if (e - b != _tokenStringValue.size())
     {
 	printCurrentLine();
 	MESSAGE_LE (_lcontext, ERR_AT_SYNTAX, _currentLineNumber, 
@@ -755,7 +1086,7 @@ Lex::getIntOrFloatLiteral (bool decimalPointSeen)
 
 	    _tokenIntValue = strtol (b, &e, 0);
 
-	    if (e - b != (int)_tokenStringValue.size())
+	    if (e - b != _tokenStringValue.size())
 	    {
 		_tokenIntValue = 0;
 
@@ -825,11 +1156,11 @@ Lex::getIntOrFloatLiteral (bool decimalPointSeen)
     if (isFloat)
     {
 	const char *b = _tokenStringValue.c_str();
-	char *e;
+	const char *e;
 
-	_tokenFloatValue = strtod (b, &e);
+	_tokenFloatValue = stringToDouble (b, &e);
 
-	if (e - b != (int)_tokenStringValue.size())
+	if (e - b != _tokenStringValue.size())
 	{
 	    _tokenFloatValue = 0;
 
@@ -866,7 +1197,7 @@ Lex::getIntOrFloatLiteral (bool decimalPointSeen)
 
 	_tokenIntValue = strtol (b, &e, 0);
 
-	if (e - b != (int)_tokenStringValue.size())
+	if (e - b != _tokenStringValue.size())
 	{
 	    _tokenIntValue = 0;
 

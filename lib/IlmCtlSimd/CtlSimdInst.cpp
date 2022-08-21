@@ -68,7 +68,7 @@ namespace {
 
 #if 0
     #include <iostream>
-    #define debug(x) (cout << x << endl)
+    #define debug(x) (cerr << x << endl)
     #define debug_only(x) x
 #else
     #define debug(x)
@@ -174,8 +174,8 @@ SimdInst::executePath (SimdBoolMask &mask, SimdXContext &xcontext) const
 
 	xcontext.setLineNumber(inst->lineNumber());
 
-	debug_only(cout << xcontext.lineNumber() << " ");
-	debug_only(cout << "fp=" << xcontext.stack().fp()
+	debug_only(cerr << xcontext.lineNumber() << " ");
+	debug_only(cerr << "fp=" << xcontext.stack().fp()
 		   << " sp=" << xcontext.stack().sp() << " ");
 	debug_only(inst->print(0));
 
