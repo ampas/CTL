@@ -174,7 +174,9 @@ SimdInst::executePath (SimdBoolMask &mask, SimdXContext &xcontext) const
 
 	xcontext.setLineNumber(inst->lineNumber());
 
-	debug_only(cout << xcontext.lineNumber() << " ");
+	debug_only(cout << "fileName=" << xcontext.fileName() << " ");
+	debug_only(cout << "lineNumber=" << xcontext.lineNumber() << " ");
+	debug_only(cout << "module=" << (xcontext.module() ? xcontext.module()->name() : "(global)") << " ");
 	debug_only(cout << "fp=" << xcontext.stack().fp()
 		   << " sp=" << xcontext.stack().sp() << " ");
 	debug_only(inst->print(0));
