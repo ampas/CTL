@@ -7,10 +7,10 @@ add_library( IlmImfCtl ${DO_SHARED}
   ImfCtlCopyFunctionArg.cpp
 )
 
-target_link_libraries( IlmImfCtl IlmCtl IlmImf Iex IlmThread Half )
+target_link_libraries( IlmImfCtl IlmCtl ${OpenEXR_LIBRARIES} ${IlmBase_LIBRARIES} )
 
-install( FILES ImfCtlApplyTransforms.h DESTINATION include/OpenEXR )
+install( FILES ImfCtlApplyTransforms.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/OpenEXR )
 
 export( TARGETS IlmImfCtl IlmCtl FILE "${PROJECT_BINARY_DIR}/CTLLibraryDepends.cmake" )
 
-install( TARGETS IlmImfCtl DESTINATION lib )
+install( TARGETS IlmImfCtl DESTINATION ${CMAKE_INSTALL_LIBDIR} )

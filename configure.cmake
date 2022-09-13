@@ -1,10 +1,7 @@
-# Until we get some of these modules into the upstream packages, put them here
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_INSTALL_PREFIX}/share/CMake")
+# Make Pkg-Config required.
+find_package( PkgConfig )
 
-find_package( PkgConfig QUIET )
-
-find_package( IlmBase QUIET )
+PKG_CHECK_MODULES ( IlmBase REQUIRED IlmBase )
 if(IlmBase_FOUND)
   message( STATUS "found IlmBase, version ${IlmBase_VERSION}" )
   ###
@@ -13,11 +10,11 @@ if(IlmBase_FOUND)
   ###
   include_directories( ${IlmBase_INCLUDE_DIRS} )
   link_directories( ${IlmBase_LIBRARY_DIRS} )
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${IlmBase_CFLAGS}" )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${IlmBase_CFLAGS}" )
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${IlmBase_LDFLAGS}" )
-  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${IlmBase_LDFLAGS}" )
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${IlmBase_LDFLAGS}" )
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${IlmBase_CFLAGS_OTHER}" )
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${IlmBase_CFLAGS_OTHER}" )
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${IlmBase_LDFLAGS_OTHER}" )
+  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${IlmBase_LDFLAGS_OTHER}" )
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${IlmBase_LDFLAGS_OTHER}" )
 else()
   message( SEND_ERROR "IlmBase not found, please set the include and library paths manually" )
 endif()
@@ -39,7 +36,7 @@ else()
   endif()
 endif()
 
-find_package( OpenEXR QUIET )
+PKG_CHECK_MODULES ( OpenEXR REQUIRED OpenEXR )
 if (OpenEXR_FOUND)
   message( STATUS "Found OpenEXR, version ${OpenEXR_VERSION}" )
 else()
