@@ -258,12 +258,17 @@ void exr_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
 bool exr_read(const char *name, float scale,
               ctl::dpx::fb<float> *pixels,
               format_t *bpp) {
+//    fprintf(stderr, "WARNING on line %d of file %s in function %s(): exr_read() function was called but OpenEXR library was not found\n",
+//    __LINE__, __FILE__, __FUNCTION__);
 	return FALSE;
 }
 
 void exr_write(const char *name, float scale,
                const ctl::dpx::fb<float> &pixels,
-               format_t *format) {
+               format_t *format,
+               Compression *compression) {
+//    fprintf(stderr, "WARNING on line %d of file %s in function %s(): exr_write() function was called but OpenEXR library was not found\n",
+//    __LINE__, __FILE__, __FUNCTION__);
 }
 
 #endif
