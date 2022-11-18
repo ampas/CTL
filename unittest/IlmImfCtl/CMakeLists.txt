@@ -1,3 +1,7 @@
+if ( NOT OpenEXR_FOUND )
+    message(WARNING "OpenEXR not found, skipping IlmImfCtl unit test")
+    return()
+endif()
 
 include_directories( ${OpenEXR_INCLUDE_DIRS} )
 link_directories( ${OpenEXR_LIBRARY_DIRS} )

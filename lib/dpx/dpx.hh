@@ -297,7 +297,7 @@ struct dpx {
 		compliance_e current_compliance;
 		endian_mode_e current_endian_mode;
 
-		std::istream::streampos header_start;
+		std::streampos header_start;
 
 	public:
 		virtual ~dpx();

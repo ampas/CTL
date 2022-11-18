@@ -134,7 +134,7 @@ If you want to use CTL together with the TIFF image file format, you should down
 
 * Ubuntu
 
-        $ sudo apt-get install libtiff4
+        $ sudo apt-get install libtiff-dev
 
 * Redhat
 
@@ -193,6 +193,28 @@ can be downloaded from https://github.com/ampas/aces_container
     to run the optional unit tests:
 
         $ sudo make check
+
+* Docker
+
+    build docker
+
+        $ docker build --rm -f Dockerfile -t ctl:latest .
+        
+    run docker image (in isolated container)
+
+        $ docker run -it --rm ctl:latest
+
+    run docker image (mapping C:\temp on Windows host to /tmp in container)
+
+        $ docker run -it --rm -v C:\\temp:/tmp/ ctl:latest
+
+    run docker image (mapping /mnt/c/temp on Linux host to /tmp in container)
+
+        $ docker run -it --rm -v /mnt/c/temp:/tmp/ ctl:latest
+
+    run ctlrender
+        
+        $ ctlrender -help 
 
 ## License ##
  

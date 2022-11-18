@@ -174,7 +174,9 @@ SimdInst::executePath (SimdBoolMask &mask, SimdXContext &xcontext) const
 
 	xcontext.setLineNumber(inst->lineNumber());
 
-	debug_only(cout << xcontext.lineNumber() << " ");
+	debug_only(cout << "fileName=" << xcontext.fileName() << " ");
+	debug_only(cout << "lineNumber=" << xcontext.lineNumber() << " ");
+	debug_only(cout << "module=" << (xcontext.module() ? xcontext.module()->name() : "(global)") << " ");
 	debug_only(cout << "fp=" << xcontext.stack().fp()
 		   << " sp=" << xcontext.stack().sp() << " ");
 	debug_only(inst->print(0));
@@ -189,7 +191,7 @@ SimdInst::executePath (SimdBoolMask &mask, SimdXContext &xcontext) const
 	    REPLACE_EXC
 		(e, "\n" <<
 		 xcontext.fileName() << ":" <<
-		 inst->lineNumber() << ": " << e);
+		 inst->lineNumber() << ": " << e.what());
 
 	    throw e;
 	}
@@ -265,13 +267,23 @@ SimdBranchInst::execute (SimdBoolMask &mask, SimdXContext &xcontext) const
 	if (takeTruePath)
 	{
 	    tryToMakeUniform (trueMask, xcontext);
-	    _truePath->executePath (trueMask, xcontext);
+		if( 0 != _truePath )
+	    	_truePath->executePath (trueMask, xcontext);
+		else
+		{
+			debug_only(cout << " skipping call to executePath() when _truePath=0" << endl );
+		}
 	}
 
 	if (takeFalsePath)
 	{
 	    tryToMakeUniform (falseMask, xcontext);
-	    _falsePath->executePath (falseMask, xcontext);
+		if( 0 != _falsePath )
+	    	_falsePath->executePath (falseMask, xcontext);
+		else
+		{
+			debug_only(cout << " skipping call to executePath() when _falsePath=0" << endl );
+		}
 	}
 	if (takeTruePath || takeFalsePath)
 	    updateMask(mask, mask, xcontext.returnMask(), xcontext);
@@ -314,9 +326,23 @@ SimdBranchInst::execute (SimdBoolMask &mask, SimdXContext &xcontext) const
 	xcontext.stack().pop (1);
 
 	if (takeTruePath)
-	    _truePath->executePath (mask, xcontext);
+	{
+		if( 0 != _truePath )
+			_truePath->executePath (mask, xcontext);
+		else
+		{
+			debug_only(cout << " skipping call to executePath() when _truePath=0" << endl );
+		}
+	}  
 	else
-	    _falsePath->executePath (mask, xcontext);
+	{
+		if( 0 != _falsePath )
+			_falsePath->executePath (mask, xcontext);
+		else
+		{
+			debug_only(cout << " skipping call to executePath() when _falsePath=0" << endl );
+		}
+	}
 
 	updateMask(mask, mask, xcontext.returnMask(), xcontext);
     }
@@ -444,8 +470,14 @@ SimdCallInst::execute (SimdBoolMask &mask, SimdXContext &xcontext) const
     {
 	StackFrame stackFrame (xcontext);
 	SimdBoolMask callMask(mask, xcontext.regSize());
-	
-	_callPath->executePath (callMask, xcontext);
+	if( 0 != _callPath ) 
+	{
+		_callPath->executePath (callMask, xcontext);
+	}
+	else
+	{
+		debug_only(cout << " skipping call to executePath() when _callPath=0" << endl );
+	}
     }
 
     if( _numParameters > 0)
