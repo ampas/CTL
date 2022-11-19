@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project( CTL )
 
+set( CMAKE_MACOSX_RPATH 1 )
 set( CTL_MAJOR_VERSION 1 )
 set( CTL_MINOR_VERSION 5 )
 set( CTL_PATCH_VERSION 0 )
@@ -88,6 +89,7 @@ install( FILES
   "${PROJECT_BINARY_DIR}/CTLConfig.cmake"
   "${PROJECT_BINARY_DIR}/CTLConfigVersion.cmake"
   DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
-install(FILES "${PROJECT_BINARY_DIR}/CTLLibraryDepends.cmake" DESTINATION
-  "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+# install(FILES "${PROJECT_BINARY_DIR}/CTLLibraryDepends.cmake" DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
 
+install(EXPORT ctlrendertargets DESTINATION
+  "${INSTALL_CMAKE_DIR}" COMPONENT dev)

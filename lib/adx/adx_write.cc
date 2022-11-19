@@ -52,29 +52,29 @@
 // THAN A.M.P.A.S., WHETHER DISCLOSED OR UNDISCLOSED.
 ///////////////////////////////////////////////////////////////////////////
 
-#include <dpx.hh>
+#include <adx.hh>
 
 #include <string.h>
-#include "dpx_raw.hh"
+#include "adx_raw.hh"
 #include <half.h>
 #include <math.h>
-#include "dpx_bits.hh"
-#include "dpx_rw.hh"
+#include "adx_bits.hh"
+#include "adx_rw.hh"
 
 namespace ctl {
-namespace dpxi {
+namespace adxi {
 
 template <class O, class I>
-void pack(dpx::fb<O> *out, const dpx::fb<I> &in, const rwinfo &ri) {
+void pack(ctl::dpx::fb<O> *out, const ctl::dpx::fb<I> &in, const rwinfo &ri) {
 	uint64_t u, v;
 	uint8_t pad, onbit;
 	O mask;
 	O t;
 	O *o;
 	const I *i=in.ptr();
-
-	out->init(ri.words_for_raw<O>(), 1, 1);
     
+	out->init(ri.words_for_raw<O>(), 1, 1);
+
 	o=out->ptr();
 
 #if 1
@@ -146,16 +146,11 @@ void pack(dpx::fb<O> *out, const dpx::fb<I> &in, const rwinfo &ri) {
 }
 
 template <class T>
-void write_fb(std::ostream *o, const dpx::fb<T> &buf, const rwinfo &wi) {
-	dpx::fb<uint64_t>    fbu64;
-	dpx::fb<uint32_t>    fbu32;
-	dpx::fb<uint16_t>    fbu16;
-	dpx::fb<uint8_t>     fbu8;
-    
-//    std::cout << "I am here." << std::endl;
-//    std::cout << fbu32.count() << std::endl;
-//    std::cout << (uint32_t)wi.bps << std::endl;
-//    std::cout << (uint32_t)wi.pack << std::endl;
+void write_fb(std::ostream *o, const ctl::dpx::fb<T> &buf, const rwinfo &wi) {
+	ctl::dpx::fb<uint64_t>    fbu64;
+	ctl::dpx::fb<uint32_t>    fbu32;
+	ctl::dpx::fb<uint16_t>    fbu16;
+	ctl::dpx::fb<uint8_t>     fbu8;
     
 	if(wi.pack<8) {
 		if(wi.bps==32) {
@@ -199,14 +194,15 @@ void write_fb(std::ostream *o, const dpx::fb<T> &buf, const rwinfo &wi) {
 }
 
 template <class T>
-void write(std::ostream *o, const dpx::fb<T> &buf, const rwinfo &wi) {
-	dpx::fb<uint64_t>    fbu64;
-	dpx::fb<uint32_t>    fbu32;
-	dpx::fb<uint16_t>    fbu16;
-	dpx::fb<uint8_t>     fbu8;
-	dpx::fb<float16_t>   fbf16;
-	dpx::fb<float32_t>   fbf32;
-	dpx::fb<float64_t>   fbf64;
+void write(std::ostream *o, const ctl::dpx::fb<T> &buf, const rwinfo &wi) {
+	ctl::dpx::fb<uint64_t>    fbu64;
+	ctl::dpx::fb<uint32_t>    fbu32;
+	ctl::dpx::fb<uint16_t>    fbu16;
+	ctl::dpx::fb<uint8_t>     fbu8;
+	ctl::dpx::fb<float16_t>   fbf16;
+	ctl::dpx::fb<float32_t>   fbf32;
+	ctl::dpx::fb<float64_t>   fbf64;
+    
 
 	if(wi.datatype==0) {
 		if(wi.bps<=8) {
@@ -256,8 +252,8 @@ void write(std::ostream *o, const dpx::fb<T> &buf, const rwinfo &wi) {
 }
 
 template <class T>
-void write(std::ostream *o, dpx *h, uint8_t element, const dpx::fb<T> &buffer,
-           float64_t scale, dpx::intmode_e mode) {
+void write(std::ostream *o, adx *h, uint8_t element, const ctl::dpx::fb<T> &buffer,
+           float64_t scale, adx::intmode_e mode) {
 	std::ostream::pos_type start;
 	rwinfo wi;
 
@@ -265,7 +261,15 @@ void write(std::ostream *o, dpx *h, uint8_t element, const dpx::fb<T> &buffer,
 
 	rwinfo::write_init(o, h);
 
-	if(mode!=dpx::unformatted) {
+	if (element >=2 ) {
+		fprintf(stderr,
+                "Existing ........\n"
+                 "The ADX format should have \n"
+                 "at most two elements\n");
+        exit(1);
+	}
+
+	if(mode!=adx::unformatted) {
 		rwinfo::validate(h, element, 2*!(std::numeric_limits<T>::is_integer),
 		                   sizeof(T)*8, buffer.depth(), buffer.width(),
 		                   buffer.height());
@@ -273,54 +277,54 @@ void write(std::ostream *o, dpx *h, uint8_t element, const dpx::fb<T> &buffer,
 
 	wi.set(h, element, scale, mode, FALSE);
 
-	if(mode==dpx::unformatted || wi.direct) {
+	if(mode==adx::unformatted || wi.direct) {
 		rwinfo::find_home(h, element, buffer.length());
 		o->seekp(start+((std::streamoff)h->elements[element].offset_to_data));
-		dpxi::write_ptr(o, buffer.ptr(), buffer.count(), wi.need_byteswap);
+		adxi::write_ptr(o, buffer.ptr(), buffer.count(), wi.need_byteswap);
 	} else {
 		rwinfo::find_home(h, element, wi.bytes_for_raw());
 		o->seekp(start+((std::streamoff)h->elements[element].offset_to_data));
-		dpxi::write(o, buffer, wi);
+		adxi::write(o, buffer, wi);
+
 	}
 
 	o->seekp(start);
 }
-
 };
 
-void dpx::write(std::ostream *o, uint8_t element, const fb<half> &buffer,
+void adx::write(std::ostream *o, uint8_t element, const ctl::dpx::fb<half> &buffer,
                 float64_t scale) {
-	dpxi::write(o, this, element, buffer, scale, dpx::normal);
+	adxi::write(o, this, element, buffer, scale, adx::normal);
 }
 
-void dpx::write(std::ostream *o, uint8_t element, const fb<float32_t> &buffer,
+void adx::write(std::ostream *o, uint8_t element, const ctl::dpx::fb<float32_t> &buffer,
                 float64_t scale) {
-	dpxi::write(o, this, element, buffer, scale, dpx::normal);
+	adxi::write(o, this, element, buffer, scale, adx::normal);
 }
 
-void dpx::write(std::ostream *o, uint8_t element, const fb<float64_t> &buffer,
+void adx::write(std::ostream *o, uint8_t element, const ctl::dpx::fb<float64_t> &buffer,
                 float64_t scale) {
-	dpxi::write(o, this, element, buffer, scale, dpx::normal);
+	adxi::write(o, this, element, buffer, scale, adx::normal);
 }
 
-void dpx::write(std::ostream *o, uint8_t element, const fb<uint8_t> &buffer,
+void adx::write(std::ostream *o, uint8_t element, const ctl::dpx::fb<uint8_t> &buffer,
                 float64_t scale, intmode_e mode) {
-	dpxi::write(o, this, element, buffer, scale, mode);
+	adxi::write(o, this, element, buffer, scale, mode);
 }
 
-void dpx::write(std::ostream *o, uint8_t element, const fb<uint16_t> &buffer,
+void adx::write(std::ostream *o, uint8_t element, const ctl::dpx::fb<uint16_t> &buffer,
                 float64_t scale, intmode_e mode) {
-	dpxi::write(o, this, element, buffer, scale, mode);
+	adxi::write(o, this, element, buffer, scale, mode);
 }
 
-void dpx::write(std::ostream *o, uint8_t element, const fb<uint32_t> &buffer,
+void adx::write(std::ostream *o, uint8_t element, const ctl::dpx::fb<uint32_t> &buffer,
                 float64_t scale, intmode_e mode) {
-	dpxi::write(o, this, element, buffer, scale, mode);
+	adxi::write(o, this, element, buffer, scale, mode);
 }
 
-void dpx::write(std::ostream *o, uint8_t element, const fb<uint64_t> &buffer,
+void adx::write(std::ostream *o, uint8_t element, const ctl::dpx::fb<uint64_t> &buffer,
                 float64_t scale, intmode_e mode) {
-	dpxi::write(o, this, element, buffer, scale, mode);
+	adxi::write(o, this, element, buffer, scale, mode);
 }
 
 };

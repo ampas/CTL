@@ -52,25 +52,41 @@
 // THAN A.M.P.A.S., WHETHER DISCLOSED OR UNDISCLOSED.
 ///////////////////////////////////////////////////////////////////////////
 
-#if !defined(CTL_UTIL_CTLRENDER_DPX_INCLUDE)
-#define CTL_UTIL_CTLRENDER_DPX_INCLUDE
+#include "adx_util.hh"
+#include <stdarg.h>
+#include <stdio.h>
+#include <alloca.h>
+#include <string.h>
 
-#include <dpx.hh>
-#include "main.hh"
-#include <vector>
-#include <map>
+namespace ctl {
 
-bool dpx_read(const char *name, float scale,
-              ctl::dpx::fb<float> *pixels,
-              format_t *format);
-std::map<const char *, uint32_t> dpx_read_details_for_adx_int(const char *name, float scale,
-              ctl::dpx::fb<float> *pixels,
-              format_t *format);
-std::map<const char *, float32_t> dpx_read_details_for_adx_float(const char *name, float scale,
-              ctl::dpx::fb<float> *pixels,
-              format_t *format);
-void dpx_write(const char *name, float scale,
-               const ctl::dpx::fb<float> &pixels,
-               format_t *format);
+namespace adxi {
 
-#endif
+std::string strprintf(const char *fmt, ...) {
+	char *ptr;
+	int length=1024;
+	int need_len;
+	va_list ap;
+
+	while(1) {
+		va_start(ap, fmt);
+		ptr=(char *)alloca(length);
+		memset(ptr, 0, length);
+		need_len=vsnprintf(ptr, length, fmt, ap);
+		va_end(ap);
+		if(need_len<length && need_len!=-1) {
+			break;
+		}
+		if(need_len==-1) {
+			length=length*2;
+		} else {
+			length=need_len+2;
+		}
+	}
+
+	return std::string(ptr);
+}
+
+}
+
+}

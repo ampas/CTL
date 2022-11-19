@@ -139,6 +139,9 @@ file_format_t allowed_formats[] =
 	{ "dpx10",  format_t("dpx",  10) },
 	{ "dpx12",  format_t("dpx",  12) },
 	{ "dpx16",  format_t("dpx",  16) },
+	{ "adx",    format_t("adx",  10) },
+	{ "adx10",  format_t("adx",  10) },
+	{ "adx16",  format_t("adx",  16) },
 	{ "tif",    format_t("tif",   0) },
 	{ "tiff",   format_t("tiff",  0) },
 	{ "tiff32", format_t("tiff", 32) },
@@ -293,8 +296,8 @@ int main(int argc, const char **argv)
 							"the -format option requires an additional "
 							"argument specifying the destination file\nformat. "
 							"this may be one of the following: 'dpx10', 'dpx16', "
-							"'aces', 'tiff8',\n'tiff16', or 'exr'.\nSee '-help "
-							"format' for more details.\n");
+							"'adx10', 'adx16', 'aces', 'tiff8', 'tiff16', "
+                            "or 'exr'.\nSee '-help format' for more details.\n");
 					exit(1);
 				}
 				desired_format = find_format(argv[1]," for parameter '-format'.\nSee '-help format' for more details.");
@@ -560,8 +563,13 @@ int main(int argc, const char **argv)
 					// HACK aces format file type check
                     const char *ext = desired_format.ext;
                     static const char exrext[] = "exr";
+                    static const char dpxext[] = "dpx";
+
                     if (!strcmp(ext, "aces"))
                         ext = exrext;
+                    if (!strcmp(ext, "adx"))
+                        ext = dpxext;
+                    
                     if (strcmp(ext, dot + 1) && !force_overwrite_output_file)
 					{
 						fprintf(stderr,

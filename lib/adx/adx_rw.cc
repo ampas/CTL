@@ -53,18 +53,18 @@
 ///////////////////////////////////////////////////////////////////////////
 
 
-#include "dpx_rw.hh"
+#include "adx_rw.hh"
 #include <string.h>
 
 namespace ctl {
-namespace dpxi {
+namespace adxi {
 
 rwinfo::rwinfo() {
 	clear();
 }
 
-rwinfo::rwinfo(const dpx *that, uint8_t e, float64_t _scale,
-               dpx::intmode_e _mode, bool is_integer) {
+rwinfo::rwinfo(const adx *that, uint8_t e, float64_t _scale,
+               adx::intmode_e _mode, bool is_integer) {
 	set(that, e, _scale, _mode, is_integer);
 }
 
@@ -82,11 +82,11 @@ void rwinfo::clear(void) {
 	direct=0;
 	scale=0;
 	need_byteswap=0;
-	mode=dpx::normal;
+	mode=adx::normal;
 }
 
-void rwinfo::set(const dpx *that, uint8_t e, float64_t _scale,
-                 dpx::intmode_e _mode, bool is_integer) {
+void rwinfo::set(const adx *that, uint8_t e, float64_t _scale,
+                 adx::intmode_e _mode, bool is_integer) {
 	bps=that->elements[e].bits_per_sample;
 	pack=that->elements[e].actual_packing;
 	descriptor=that->elements[e].descriptor;
@@ -97,34 +97,34 @@ void rwinfo::set(const dpx *that, uint8_t e, float64_t _scale,
 	scale=_scale;
 
 	datatype=that->elements[e].data_sign;
-
-	if(descriptor<50) {
-		// I don't quite get how the Color difference is supposed to work.
-		channels=1;
-	} else if(descriptor==50 || descriptor==53 || descriptor==157) {
-		channels=3;
-	} else if(descriptor==51 || descriptor==52) {
-		channels=4;
-	} else if(descriptor<100) {
-		channels=3; // Probably... There can be RGBA variants in this space.
-	} else if(descriptor==102) {
-		channels=3;
-	} else if(descriptor==101 || descriptor==103) {
-		channels=4;
-	} else if(descriptor==101) {
-		channels=5;
-	} else if(descriptor<150) {
-		channels=3; // Probably... There can be YCrCbA variants in this space.
-	} else if(descriptor>=150 && descriptor<=156) {
-		channels=2+descriptor-150;
-	} else if(descriptor==157) {
-		channels=3;
-	} else if(descriptor==158) {
-		channels=2;
-	} else {
-		channels=0;
-		// who knows...
-	}
+    
+    if(descriptor<50) {
+        // I don't quite get how the Color difference is supposed to work.
+        channels=1;
+    } else if(descriptor==50 || descriptor==53 || descriptor==157) {
+        channels=3;
+    } else if(descriptor==51 || descriptor==52) {
+        channels=4;
+    } else if(descriptor<100) {
+        channels=3; // Probably... There can be RGBA variants in this space.
+    } else if(descriptor==102) {
+        channels=3;
+    } else if(descriptor==101 || descriptor==103) {
+        channels=4;
+    } else if(descriptor==101) {
+        channels=5;
+    } else if(descriptor<150) {
+        channels=3; // Probably... There can be YCrCbA variants in this space.
+    } else if(descriptor>=150 && descriptor<=156) {
+        channels=2+descriptor-150;
+    } else if(descriptor==157) {
+        channels=3;
+    } else if(descriptor==158) {
+        channels=2;
+    } else {
+        channels=0;
+        // who knows...
+    }
 
 	if(!strncasecmp(that->header_version, "V3.0", 2)) {
 		version=0x30;
@@ -138,7 +138,7 @@ void rwinfo::set(const dpx *that, uint8_t e, float64_t _scale,
 		version=0x10;
 	}
 
-	if(dpx::isnull(pack)) {
+	if(adx::isnull(pack)) {
 		// This happens on read (since on write the actual_packing is set
 		// by the validate function for writes)
 		if(version==0x30) {
@@ -182,7 +182,7 @@ void rwinfo::set(const dpx *that, uint8_t e, float64_t _scale,
 uint64_t rwinfo::words_for_raw(uint8_t swap_boundary) const {
 	uint32_t samples_per_word;
 	uint64_t samples;
-    
+
 	samples_per_word=(swap_boundary*8)/bps;
 	samples=channels*width;
     
@@ -193,7 +193,7 @@ uint64_t rwinfo::bytes_for_raw(void) const {
 	return words_for_raw(bytes_per_swap)*bytes_per_swap;
 }
 
-void rwinfo::write_init(std::ostream *o, dpx *h) {
+void rwinfo::write_init(std::ostream *o, adx *h) {
 	uint32_t foo;
 	bool arch_is_little_endian;
 
@@ -210,36 +210,36 @@ void rwinfo::write_init(std::ostream *o, dpx *h) {
 
 	if(h->current_ostream==NULL) {
 		h->current_ostream=o;
-		if(h->compliance==dpx::automatic) {
-			h->compliance=dpx::dpx1;
+		if(h->compliance==adx::automatic) {
+			h->compliance=adx::adx1;
 		}
-		if(h->endian_mode==dpx::default_endian_mode) {
-			h->endian_mode=dpx::big_endian;
+		if(h->endian_mode==adx::default_endian_mode) {
+			h->endian_mode=adx::big_endian;
 		}
 		h->current_compliance=h->compliance;
 		h->current_endian_mode=h->endian_mode;
 		h->_need_byteswap=FALSE;
 		switch(h->endian_mode) {
-			case dpx::default_endian_mode:
-				h->endian_mode=dpx::big_endian;
+			case adx::default_endian_mode:
+				h->endian_mode=adx::big_endian;
 				// FALL THROUGH
 			
-			case dpx::big_endian:
+			case adx::big_endian:
 				if(arch_is_little_endian) {
 					h->_need_byteswap=TRUE;
 				}
 				break;
 
-			case dpx::little_endian:
+			case adx::little_endian:
 				if(!arch_is_little_endian) {
 					h->_need_byteswap=TRUE;
 				}
 				break;
 
-			case dpx::native:
+			case adx::native:
 				break;
 
-			case dpx::swapped:
+			case adx::swapped:
 				h->_need_byteswap=TRUE;
 				break;
 		}
@@ -248,7 +248,7 @@ void rwinfo::write_init(std::ostream *o, dpx *h) {
 		h->total_file_size=0;
 		h->generic_header_length=1664;
 		h->industry_header_length=384;
-		dpx::nullify(&(h->data_offset));
+		adx::nullify(&(h->data_offset));
 	}
 
 	if(h->current_ostream!=o) {
@@ -263,7 +263,7 @@ void rwinfo::write_init(std::ostream *o, dpx *h) {
 	}
 }
 
-void rwinfo::find_home(dpx *h, uint8_t element, uint64_t size) {
+void rwinfo::find_home(adx *h, uint8_t element, uint64_t size) {
 	uint8_t i;
 	rwinfo info;
 	uint64_t eof;
@@ -276,7 +276,7 @@ void rwinfo::find_home(dpx *h, uint8_t element, uint64_t size) {
 	memset(actual_lengths, 0, sizeof(actual_lengths));
 	memset(lengths, 0, sizeof(lengths));
 
-	if(!dpx::isnull(h->elements[element].offset_to_data) &&
+	if(!adx::isnull(h->elements[element].offset_to_data) &&
 	   h->elements[element].offset_to_data!=0) {
 		// The user set this himself... He gets to slit his own throat...
 		return;
@@ -284,14 +284,14 @@ void rwinfo::find_home(dpx *h, uint8_t element, uint64_t size) {
 
 	// If the offset to data has not been set. Same as above. The user
 	// should only set this if he *really* knows what he's doing.
-	if(dpx::isnull(h->data_offset)) {
+	if(adx::isnull(h->data_offset)) {
 		h->data_offset=1<<14;
 	}
 
 	for(i=0; i<h->number_of_elements; i++) {
 		// The last three parameters are only used for determining
 		// conversion attributes. We just want to get the size.
-		info.set(h, element, 0.0, dpx::normal, 0);
+		info.set(h, element, 0.0, adx::normal, 0);
 
 		actual_lengths[i]=info.bytes_for_raw();
 		// And round things up to 16k boundaries.
