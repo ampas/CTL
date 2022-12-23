@@ -1,93 +1,100 @@
-cmake_minimum_required(VERSION 2.8)
-project( CTL )
+cmake_minimum_required(VERSION 3.1)
+project(CTL VERSION 1.5.2)
+enable_testing()
+include(GNUInstallDirs)
 
-set( CTL_MAJOR_VERSION 1 )
-set( CTL_MINOR_VERSION 5 )
-set( CTL_PATCH_VERSION 0 )
-set( CTL_VERSION ${CTL_MAJOR_VERSION}.${CTL_MINOR_VERSION}.${CTL_PATCH_VERSION} )
+set(CMAKE_MODULE_PATH
+	"${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules"
+	${CMAKE_MODULE_PATH}
+)
 
-## Make install directories overrideable
-set( INSTALL_LIB_DIR lib CACHE PATH "Install directory for libraries" )
-set( INSTALL_BIN_DIR bin CACHE PATH "Install directory for executable binaries" )
-set( INSTALL_INCLUDE_DIR include CACHE PATH "Install directory for public header files" )
-set( INSTALL_DOC_DIR doc CACHE PATH "Install directory for documentation" )
-if( WIN32 AND NOT CYGWIN )
-  set(DEF_INSTALL_CMAKE_DIR CMake)
-else()
-  set(DEF_INSTALL_CMAKE_DIR lib/CMake/CTL)
-endif()
-set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Install directory for project CMake files" )
+add_definitions( -DPACKAGE="${PROJECT_NAME}" -DVERSION="${PROJECT_VERSION}" )
 
-# use, i.e. don't skip the full RPATH for the build tree
-SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
-# when building, don't use the install RPATH already
-# (but later on when installing)
-SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
-#SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-# add the automatically determined parts of the RPATH
-# which point to directories outside the build tree to the install RPATH
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-# the RPATH to be used when installing, but only if it's not a system directory
-LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
-IF("${isSystemDir}" STREQUAL "-1")
-  SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
-ENDIF("${isSystemDir}" STREQUAL "-1")
+option(CTL_BUILD_TESTS "Build the unit tests" ON)
+option(CTL_BUILD_TOOLS "Build the utility commands (ctlrender, etc)" ON)
 
 set(CMAKE_CXX_FLAGS_ASAN
-    "-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1"
-    CACHE STRING "Flags used by the C++ compiler during AddressSanitizer builds."
-    FORCE)
+  "-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1"
+  CACHE STRING "Flags used by the C++ compiler during AddressSanitizer builds."
+  FORCE)
 
-## convert install paths to absolute
-foreach( p LIB BIN INCLUDE CMAKE DOC)
-  set( var INSTALL_${p}_DIR )
-  if( NOT IS_ABSOLUTE "${${var}}" )
-    set( ${var} "${CMAKE_INSTALL_PREFIX}/${${var}}" )
-  endif()
-endforeach()
-
-option(ENABLE_SHARED "Enable Shared Libraries" ON)
-
-if ( ENABLE_SHARED )
-set( DO_SHARED SHARED )
+if( NOT DEFINED CMAKE_BUILD_TYPE )
+  MESSAGE( STATUS "To use AddressSanitizer, use \"cmake .. -DCMAKE_BUILD_TYPE=asan\"" )
+elseif( CMAKE_BUILD_TYPE STREQUAL "asan" )
+  MESSAGE( STATUS "Using AddressSanitizer - CMAKE_BUILD_TYPE : \"${CMAKE_BUILD_TYPE}\"")
 else()
-set( DO_SHARED STATIC )
+  MESSAGE( STATUS "CMAKE_BUILD_TYPE : \"${CMAKE_BUILD_TYPE}\"")
+  MESSAGE( STATUS "To use AddressSanitizer, use \"cmake .. -DCMAKE_BUILD_TYPE=asan\"" )
 endif()
 
-# Find packages and set up global settings
-include( configure.cmake )
+find_package(Imath CONFIG)
 
-# generated config files end up in binary dir so to find them, need
-# to add to include path
-include_directories( "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}" )
-# implement find library stuff...
+if (NOT TARGET Imath::Imath)
+  message( STATUS " Couldn't find Imath::Imath, maybe it's older and has IlmBase?")
+  find_package(IlmBase CONFIG)
+  if(NOT IlmBase_FOUND)
+    message( STATUS " Couldn't find IlmBase with find_package(IlmBase CONFIG), trying find_package(IlmBase QUIET)")
+    find_package(IlmBase QUIET)
+  endif()
+  if( IlmBase_FOUND)
+    message( STATUS "found IlmBase, version ${IlmBase_VERSION}" )
+  else()
+    message( SEND_ERROR "IlmBase not found, please set the include and library paths manually" )
+  endif()
+else()
+  message( STATUS "found Imath, version ${Imath_VERSION}" )
+  message( STATUS "      Imath_FOUND : ${Imath_FOUND}" )
+  message( STATUS "      Imath_LIBRARY : ${Imath_LIBRARY}" )
+  message( STATUS "      Imath_INCLUDE_DIR : ${Imath_INCLUDE_DIR}" )
+  #find_package(IlmBase CONFIG)
+  #if(NOT IlmBase_FOUND)
+  #  message( STATUS " Couldn't find IlmBase with find_package(IlmBase CONFIG), trying find_package(IlmBase QUIET)")
+  #  find_package(IlmBase QUIET)
+  #endif()
+  #if( IlmBase_FOUND)
+  #  message( STATUS "found IlmBase, version ${IlmBase_VERSION}" )
+  #endif()
+endif ()
 
-add_definitions( -DPACKAGE="CTL" -DVERSION="${CTL_VERSION}" )
-add_subdirectory(doc)
+if(IlmBase_FOUND)
+  message( STATUS "IlmBase_INCLUDE_DIR : ${IlmBase_INCLUDE_DIR}" )
+  #find_package(OpenEXR QUIET CONFIG)
+  find_package(OpenEXR CONFIG)
+  if(NOT OpenEXR_FOUND)
+    message( STATUS " Couldn't find OpenEXR with find_package(OpenEXR CONFIG), trying find_package(OpenEXR QUIET)")
+    find_package(OpenEXR QUIET)
+  endif()
+else()
+  find_package(OpenEXR QUIET CONFIG REQUIRED)
+  if(${OpenEXR_VERSION} VERSION_GREATER_EQUAL 3.0)
+    message( STATUS " IlmBase not found and OpenEXR_VERSION: ${OpenEXR_VERSION} is greater than or equal to 3.0, we don't need IlmBase")
+  else()
+    message( STATUS " IlmBase not found and OpenEXR_VERSION: ${OpenEXR_VERSION} is not greater than or equal to 3.0, we need IlmBase")
+    find_package(IlmBase CONFIG)
+    if(NOT IlmBase_FOUND)
+      message( STATUS " Couldn't find IlmBase with find_package(IlmBase CONFIG), trying find_package(IlmBase QUIET)")
+      find_package(IlmBase QUIET)
+    endif()
+    if( IlmBase_FOUND)
+      message( STATUS "found IlmBase, version ${IlmBase_VERSION}" )
+    endif()
+  endif()
+endif()
+
+if( OpenEXR_FOUND )
+  message( STATUS "found OpenEXR, version ${OpenEXR_VERSION}" )
+else()
+  message( SEND_ERROR "OpenEXR not found, this is a required dependency" )
+endif()
+
 add_subdirectory(lib)
-add_subdirectory(ctlrender)
-add_subdirectory(OpenEXR_CTL)
-add_subdirectory(unittest EXCLUDE_FROM_ALL)
-
-# Add all targets to the build-tree export set
-export( TARGETS IlmCtl IlmCtlMath IlmCtlSimd FILE "${PROJECT_BINARY_DIR}/CTLLibraryDepends.cmake" )
-export(PACKAGE CTL)
- 
-# Create a CTLBuildTreeSettings.cmake file for the use from the build tree
-file(RELATIVE_PATH CONF_REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}" "${INSTALL_INCLUDE_DIR}")
-configure_file(config/CTLBuildTreeSettings.cmake.in "${PROJECT_BINARY_DIR}/CTLBuildTreeSettings.cmake" @ONLY)
-configure_file(config/CTLConfig.cmake.in "${PROJECT_BINARY_DIR}/CTLConfig.cmake" @ONLY)
-configure_file(config/CTLConfigVersion.cmake.in "${PROJECT_BINARY_DIR}/CTLConfigVersion.cmake" @ONLY)
-
-if ( PKG_CONFIG_FOUND )
-configure_file(config/CTL.pc.in "${PROJECT_BINARY_DIR}/CTL.pc" @ONLY)
-install( FILES "${PROJECT_BINARY_DIR}/CTL.pc" DESTINATION lib/pkgconfig COMPONENT dev )
+add_subdirectory(doc)
+if (CTL_BUILD_TOOLS)
+	add_subdirectory(ctlrender)
+  add_subdirectory(OpenEXR_CTL)
 endif()
 
-install( FILES
-  "${PROJECT_BINARY_DIR}/CTLConfig.cmake"
-  "${PROJECT_BINARY_DIR}/CTLConfigVersion.cmake"
-  DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
-install(FILES "${PROJECT_BINARY_DIR}/CTLLibraryDepends.cmake" DESTINATION
-  "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+if (CTL_BUILD_TESTS)
+	add_subdirectory(unittest)
+endif()
 

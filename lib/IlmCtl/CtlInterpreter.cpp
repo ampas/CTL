@@ -413,8 +413,9 @@ void Interpreter::loadFile(const std::string &fileName,
 	if(_moduleName.size()==0) {
 		// This might have unintended consequences...
 		memset(random, 0, sizeof(random));
+		long r = static_cast<long>(rand()) << (sizeof(int)*8) | rand();
 		snprintf(random, sizeof(random)-1, "module.%08x",
-		         (unsigned int)(time(NULL)+lrand48()));
+		         (unsigned int)(time(NULL)+r));
 		moduleName=random;
 	} else {
 		moduleName=_moduleName;
