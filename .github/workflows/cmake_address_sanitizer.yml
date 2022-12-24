@@ -15,7 +15,7 @@ env:
   BUILD_TYPE: asan
 
 jobs:
-  test-openexr2:
+  openexr2:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
@@ -58,13 +58,16 @@ jobs:
   
   
   
-  test-openexr3:
+  openexr3:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: remove openexr
+      run: sudo apt-get --purge remove libopenexr-dev -y
 
     - name: install dependencies - imath
       run:  |
@@ -86,7 +89,7 @@ jobs:
         git checkout RB-3.1 &&
         mkdir build &&
         cd build &&
-        cmake .. &&
+        cmake .. -DBUILD_TESTING=OFF -DOPENEXR_BUILD_TOOLS=OFF -DOPENEXR_INSTALL_EXAMPLES=OFF &&
         make &&
         sudo make install
 
