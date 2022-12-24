@@ -1,0 +1,4 @@
+# use linux line-endings for everything except BAT and CMD files
+* text=auto eol=lf
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf

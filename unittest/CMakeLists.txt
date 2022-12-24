@@ -1,10 +1,7 @@
-
-enable_testing()
-
-add_custom_target( check COMMAND ${CMAKE_CTEST_COMMAND} --verbose )
-
-add_subdirectory( IlmCtl )
-add_subdirectory( IlmCtlMath )
-add_subdirectory( IlmImfCtl )
-add_subdirectory( ctlrender )
+add_subdirectory(IlmCtl)
+add_subdirectory(IlmCtlMath)
+add_subdirectory(IlmImfCtl)
+if (CTL_BUILD_TOOLS)
+    add_subdirectory(ctlrender)
+endif()
 
