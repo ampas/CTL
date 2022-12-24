@@ -1,4 +1,4 @@
-name: CMake - No LibTIFF
+name: Ubuntu-No LibTIFF
 
 on:
   push:
