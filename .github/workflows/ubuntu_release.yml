@@ -189,7 +189,7 @@ jobs:
       # Run valgrind using a bash script  
       run: pwd && ls && bash ../resources/test/scripts/run_valgrind.sh    
 
-valgrind-openexr3:
+  valgrind-openexr3:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
