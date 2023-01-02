@@ -568,6 +568,8 @@ void tiff_write(const char *name, float scale,
 	uint8_t channel;
 	const float *row;
 
+	channel = 0;
+
 	TIFFSetErrorHandler(ErrorHandler);
 	TIFFSetWarningHandler(WarningHandler);
 
