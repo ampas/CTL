@@ -83,7 +83,7 @@ Type::~Type ()
     // empty
 }
 
-void Type::childElement(size_t *offset, TypePtr *type, const std::string &path,
+void Type::childElement(size_t *offset, TypePtr *type, const std::string path,
                         ...) {
 	va_list ap;
 
@@ -92,7 +92,7 @@ void Type::childElement(size_t *offset, TypePtr *type, const std::string &path,
 	va_end(ap);
 }
 
-void Type::childElementV(size_t *offset, TypePtr *type, const std::string &path,
+void Type::childElementV(size_t *offset, TypePtr *type, const std::string path,
                          va_list ap) {
 	std::string segment;
 	std::string remainder;
