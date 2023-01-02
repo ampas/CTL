@@ -62,7 +62,6 @@
 #include <Iex.h>
 #include <typeinfo>
 
-using namespace IlmThread;
 using namespace Iex;
 using namespace std;
 
@@ -70,7 +69,7 @@ namespace Ctl {
 namespace {
 
 const int NUM_MUTEXES = 37;
-Mutex mutexes[NUM_MUTEXES];
+std::mutex mutexes[NUM_MUTEXES];
 
 } // namespace
 
@@ -93,7 +92,7 @@ throwRcPtrExc (const RcObject *lhs, const RcObject *rhs)
 }
 
 
-Mutex &
+std::mutex &
 rcPtrMutex (RcObject *ptr)
 {
     return mutexes[(unsigned long)ptr % NUM_MUTEXES];

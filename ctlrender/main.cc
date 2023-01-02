@@ -56,13 +56,33 @@
 #include <exception>
 #include <list>
 #include <sys/stat.h>
-#include <sys/param.h>
+#ifndef _WIN32
+	#include <sys/param.h>
+#endif
 #include <errno.h>
 #include "transform.hh"
 #include <Iex.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+
+#ifdef __linux__
+#include <linux/limits.h>
+#elif _WIN32
+#include <windows.h>
+#include <io.h>
+#define PATH_MAX MAX_PATH
+#ifndef S_ISDIR
+#define S_ISDIR(mode)  (((mode) & S_IFMT) == S_IFDIR)
+#endif
+
+#ifndef S_ISREG
+#define S_ISREG(mode)  (((mode) & S_IFMT) == S_IFREG)
+#endif
+#define F_OK 0
+
+#else
+#endif
 
 #if !defined(TRUE)
 #define TRUE 1
@@ -180,7 +200,7 @@ int main(int argc, const char **argv)
 
 		// list of input images on which to operate
 		std::list<const char *> input_image_files;
-		char output_path[MAXPATHLEN + 1];
+		char output_path[PATH_MAX];
 
         Compression compression = Compression::compressionNamed("PIZ");
 		format_t desired_format;
@@ -466,7 +486,7 @@ int main(int argc, const char **argv)
 			if (S_ISDIR(file_status.st_mode))
 			{
 				memset(output_path, 0, sizeof(output_path));
-				strncpy(output_path, outputFile, MAXPATHLEN);
+				strncpy(output_path, outputFile, PATH_MAX -1);
 				outputFile = output_path;
 				output_slash = output_path + strlen(output_path);
 				if (*output_slash != '/')

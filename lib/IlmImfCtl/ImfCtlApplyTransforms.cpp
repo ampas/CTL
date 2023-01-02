@@ -66,8 +66,8 @@
 #include <ImfFrameBuffer.h>
 #include <CtlInterpreter.h>
 #include <IlmThreadPool.h>
-#include <IlmThreadMutex.h>
 #include <Iex.h>
+#include <mutex>
 
 using namespace std;
 using namespace Iex;
@@ -353,7 +353,7 @@ class CallFunctionsTask: public Task
 	 const FrameBuffer &inFb,
 	 Header &outHeader,
 	 const FrameBuffer &outFb,
-	 Mutex &exceptionMutex,
+	 std::mutex &exceptionMutex,
 	 string &exceptionWhat);
 
     virtual void	execute();
@@ -370,7 +370,7 @@ class CallFunctionsTask: public Task
     const FrameBuffer &	_inFb;
     Header &		_outHeader;
     const FrameBuffer &	_outFb;
-    Mutex &		_exceptionMutex;
+    std::mutex &		_exceptionMutex;
     string &		_exceptionWhat;
 };
 
@@ -387,7 +387,7 @@ CallFunctionsTask::CallFunctionsTask
      const FrameBuffer &inFb,
      Header &outHeader,
      const FrameBuffer &outFb,
-     Mutex &exceptionMutex,
+     std::mutex &exceptionMutex,
      string &exceptionWhat)
 :
     Task (group),
@@ -450,12 +450,12 @@ CallFunctionsTask::execute()
     }
     catch (const std::exception &exc)
     {
-	Lock lock (_exceptionMutex);
+	std::lock_guard<std::mutex> lock(_exceptionMutex);
 	_exceptionWhat = exc.what();
     }
     catch (...)
     {
-	Lock lock (_exceptionMutex);
+	std::lock_guard<std::mutex> lock(_exceptionMutex);
 	_exceptionWhat = "unrecognized exception";
     }
 }
@@ -506,7 +506,7 @@ applyTransforms
     // and releases the mutex.
     //
 
-    Mutex exceptionMutex;
+    std::mutex exceptionMutex;
     string exceptionWhat;
 
     {
