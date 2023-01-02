@@ -274,10 +274,10 @@ class Type: public RcObject
 	//      identify an element in a matrix.
 	//
 	static void         childElement(size_t *offset, TypePtr *type,
-	                                 const std::string &path, ...);
+	                                 const std::string path, ...);
 
 	static void         childElementV(size_t *offset, TypePtr *type,
-	                                  const std::string &path, va_list ap);
+	                                  const std::string path, va_list ap);
 };
 
 

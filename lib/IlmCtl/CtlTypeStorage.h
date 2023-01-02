@@ -149,82 +149,82 @@ class TypeStorage: public RcObject {
 	// of *varying types*. If you are setting a value in a complex/array type
 	// you use the path mechanism described in CtlType.h
 	void         set(const bool *src, size_t src_stride=0, size_t dst_offset=0,
-	                 size_t count=1, const std::string &path=std::string(),
+	                 size_t count=1, const std::string path=std::string(),
 	                 ...);
 	void         setv(const bool *src, size_t src_stride, size_t dst_offset,
-	                  size_t count, const std::string &path, va_list ap);
+	                  size_t count, const std::string path, va_list ap);
 
 	void         set(const int *src, size_t src_stride=0, size_t dst_offset=0,
-	                 size_t count=1, const std::string &path=std::string(),
+	                 size_t count=1, const std::string path=std::string(),
 	                 ...);
 	void         setv(const int *src, size_t src_stride, size_t dst_offset,
-	                  size_t count, const std::string &path, va_list ap);
+	                  size_t count, const std::string path, va_list ap);
 
 	void         set(const unsigned int *src, size_t src_stride=0,
 	                 size_t dst_offset=0, size_t count=1,
-	                 const std::string &path=std::string(), ...);
+	                 const std::string path=std::string(), ...);
 	void         setv(const unsigned int *src, size_t src_stride,
 	                  size_t dst_offset, size_t count,
-	                  const std::string &path, va_list ap);
+	                  const std::string path, va_list ap);
 
 	void         set(const half *src, size_t src_stride=0, size_t dst_offset=0,
-	                 size_t count=1, const std::string &path=std::string(),
+	                 size_t count=1, const std::string path=std::string(),
 	                 ...);
 	void         setv(const half *src, size_t src_stride, size_t dst_offset,
-	                  size_t count, const std::string &path, va_list ap);
+	                  size_t count, const std::string path, va_list ap);
 
 	void         set(const float *src, size_t src_stride=0,
 	                 size_t dst_offset=0, size_t count=1,
-	                 const std::string &path=std::string(), ...);
+	                 const std::string path=std::string(), ...);
 	void         setv(const float *src, size_t src_stride, size_t dst_offset,
-	                  size_t count, const std::string &path, va_list ap);
+	                  size_t count, const std::string path, va_list ap);
 
 	void         set(const std::string *, size_t src_stride=0,
 	                 size_t dst_offset=0, size_t count=1,
-	                 const std::string &path=std::string(), ...);
+	                 const std::string path=std::string(), ...);
 	void         setv(const std::string *src, size_t src_stride,
 	                  size_t dst_offset, size_t count,
-	                  const std::string &path, va_list ap);
+	                  const std::string path, va_list ap);
 
 
 	void         get(const bool *dst, size_t dst_stride=0, size_t src_offset=0,
-	                 size_t count=1, const std::string &path=std::string(),
+	                 size_t count=1, const std::string path=std::string(),
 	                 ...);
 	void         getv(const bool *dst, size_t dst_stride, size_t src_offset,
-	                  size_t count, const std::string &path, va_list ap);
+	                  size_t count, const std::string path, va_list ap);
 
 	void         get(const int *dst, size_t dst_stride=0, size_t src_offset=0,
-	                 size_t count=1, const std::string &path=std::string(),
+	                 size_t count=1, const std::string path=std::string(),
 	                 ...);
 	void         getv(const int *dst, size_t dst_stride, size_t src_offset,
-	                  size_t count, const std::string &path, va_list ap);
+	                  size_t count, const std::string path, va_list ap);
 
 	void         get(const unsigned int *dst, size_t dst_stride=0,
 	                 size_t src_offset=0, size_t count=1,
-	                 const std::string &path=std::string(), ...);
+	                 const std::string path=std::string(), ...);
 	void         getv(const unsigned int *dst, size_t dst_stride,
 	                  size_t src_offset, size_t count,
-	                  const std::string &path, va_list ap);
+	                  const std::string path, va_list ap);
 
 	void         get(const half *dst, size_t dst_stride=0, size_t src_offset=0,
-	                 size_t count=1, const std::string &path=std::string(),
+	                 size_t count=1, const std::string path=std::string(),
 	                 ...);
 	void         getv(const half *dst, size_t dst_stride, size_t src_offset,
-	                  size_t count, const std::string &path, va_list ap);
+	                  size_t count, const std::string path, va_list ap);
 
 	void         get(const float *dst, size_t dst_stride=0,
 	                 size_t src_offset=0, size_t count=1,
-	                 const std::string &path=std::string(), ...);
+	                 const std::string path=std::string(), ...);
 	void         getv(const float *dst, size_t dst_stride,
 	                  size_t src_offset, size_t count,
-	                  const std::string &path, va_list ap);
+	                  const std::string path, va_list ap);
 
 	void         get(const std::string *, size_t dst_stride=0,
 	                 size_t src_offset=0, size_t count=1,
-	                 const std::string &path=std::string(), ...);
+	                 const std::string path=std::string(), ...);
 	void         getv(const std::string *dst, size_t dst_stride,
 	                  size_t src_offset, size_t count,
-	                  const std::string &path, va_list ap);
+	                  const std::string path, va_list ap);
 
   private:
     std::string 		_name;
@@ -232,10 +232,10 @@ class TypeStorage: public RcObject {
 
 	// Does heavy lifting of set / copy functions above.
 	void         _set(const char *src, CDataType_e src_type, size_t stride,
-	                  size_t dst_offset, size_t count, const std::string &,
+	                  size_t dst_offset, size_t count, const std::string ,
 	                  va_list ap);
 	void         _get(char *dst, CDataType_e dst_type, size_t stride,
-	                  size_t src_offset, size_t count, const std::string &,
+	                  size_t src_offset, size_t count, const std::string ,
 	                  va_list ap);
 };
 
