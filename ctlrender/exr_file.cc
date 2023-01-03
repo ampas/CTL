@@ -53,6 +53,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "exr_file.hh"
+#include <fstream>
 
 #if defined(HAVE_OPENEXR)
 #include <ImfInputFile.h>
