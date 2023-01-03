@@ -3,7 +3,14 @@ CTLRENDER=$1
 
 mkdir output
 
+printf 'printing environment variables...\n' 
 printenv
+
+printf 'printing current path...\n' 
+pwd
+
+printf 'printing directory contents...\n' 
+dir
 
 set -e
 
