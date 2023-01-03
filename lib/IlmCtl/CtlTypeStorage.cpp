@@ -656,7 +656,7 @@ void TypeStorage::copy(const TypeStoragePtr &src, size_t src_offset,
 	    src->type()->cDataType()==UIntTypeEnum ||
 	    src->type()->cDataType()==HalfTypeEnum ||
 	    src->type()->cDataType()==StringTypeEnum)) {
-        va_list empty;
+	  va_list empty = {};
 //		fprintf(stderr, "_set %p %d %d %d %d %d\n", out, src->type()->cDataType(), type()->cDataType(), type()->objectSize(), dst_offset, count);
 		_set(in, src->type()->cDataType(), src->type()->objectSize(),
 		     dst_offset, count, "", empty);
