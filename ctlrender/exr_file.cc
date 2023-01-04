@@ -53,6 +53,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "exr_file.hh"
+#include <fstream>
 
 #if defined(HAVE_OPENEXR)
 #include <ImfInputFile.h>
@@ -69,6 +70,13 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
 	unsigned int magic, endian;
 
 	ins.open(name);
+
+    if (!ins.good())
+    {
+      fprintf(stderr, "WARNING on line %d of file %s in function %s(): unable to open file %s\n",
+        __LINE__, __FILE__, __FUNCTION__, name);
+      return false;
+    }
 
 	ins.read((char *)&magic, sizeof(magic));
 	endian=0x01020304;

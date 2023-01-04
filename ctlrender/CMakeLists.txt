@@ -26,6 +26,15 @@ target_link_libraries(ctlrender
           $<$<TARGET_EXISTS:OpenEXR::IlmImf>:OpenEXR::IlmImf>
 )
 
+if( OpenEXR_FOUND )
+	target_compile_definitions(ctlrender
+	PRIVATE
+		-DHAVE_OPENEXR=1
+	)
+else()
+	message( STATUS "OPENEXR not found, ctlrender will not support EXR files" )
+endif()
+
 find_package(TIFF)
 if(TARGET TIFF::TIFF)
 	message( STATUS "found TIFF, TIFF_LIBRARIES : ${TIFF_LIBRARIES}" )
@@ -38,7 +47,7 @@ if(TARGET TIFF::TIFF)
 			TIFF::TIFF
 	)
 else()
-	message( STATUS "TIFF not found" )
+	message( STATUS "TIFF not found, ctlrender will not support TIF files" )
 endif()
 
 find_package(AcesContainer)
