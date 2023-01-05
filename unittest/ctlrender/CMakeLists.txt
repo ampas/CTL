@@ -1,5 +1,5 @@
-if(!CTLRENDER_PATH)
-    set(CTLRENDER_PATH, $<TARGET_FILE:ctlrender>)
+if(NOT DEFINED CTLRENDER_PATH)
+    set(CTLRENDER_PATH "${CMAKE_BINARY_DIR}/ctlrender/ctlrender")
 endif()
 
 find_package(TIFF)
