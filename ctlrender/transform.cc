@@ -344,7 +344,9 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
 		strcpy(name, ctl_operation.filename);
 
 #ifdef WIN32
-		slash = strrchr(name, '\\');
+		char *backslash = strrchr(name, '\\');
+		char *forwardslash = strrchr(name, '/');
+		slash = backslash != NULL ? backslash : forwardslash;
 #else
 		slash = strrchr(name, '/');
 #endif
@@ -391,7 +393,9 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
                 fn = interpreter.newFunctionCall(std::string(module));
             }
         } catch (...) {
-            THROW(Iex::ArgExc, "CTL file must contain either a main or <module_name> function");
+			char message_text[512] = {'\0'};
+			sprintf( message_text, "CTL file must contain either a main or <module_name> (%s) function", module);
+            THROW(Iex::ArgExc, message_text);
         }		
 
 		if (fn->returnValue()->type().cast<Ctl::VoidType>().refcount() == 0)
