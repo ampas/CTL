@@ -346,7 +346,7 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
 #ifdef WIN32
 		char *backslash = strrchr(name, '\\');
 		char *forwardslash = strrchr(name, '/');
-		slash = backslash > forwardslash ? backslash : forwardslash;
+		slash = backslash != NULL ? backslash : forwardslash;
 #else
 		slash = strrchr(name, '/');
 #endif
