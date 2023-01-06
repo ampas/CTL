@@ -29,4 +29,7 @@ elseif( NOT TARGET TIFF::TIFF AND NOT OpenEXR_FOUND )
     set_property(TEST ctlrender PROPERTY ENVIRONMENT "IS_TIFF_FOUND=0;IS_OPENEXR_FOUND=0")
 endif()
 
+add_test(NAME "ctlrender-ctl-function-name-is-filename" COMMAND ctlrender -force -format exr32 -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/functionname_is_filename.ctl" "${PROJECT_SOURCE_DIR}/unittest/ctlrender/bars_photoshop.exr" out.exr)
 
+add_test(NAME "ctlrender-ctl-function-name-is-incorrect" COMMAND ctlrender -force -format exr32 -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/incorrect_function_name.ctl" "${PROJECT_SOURCE_DIR}/unittest/ctlrender/bars_photoshop.exr" out.exr)
+set_tests_properties("ctlrender-ctl-function-name-is-incorrect" PROPERTIES WILL_FAIL TRUE)
