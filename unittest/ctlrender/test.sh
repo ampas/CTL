@@ -48,6 +48,27 @@ if [[ $IS_OPENEXR_FOUND == 1 ]] ; then
 	$CTLRENDER -ctl unity.ctl -format exr16 -force bars_photoshop.exr output/bars_exr_exr16.exr
 	printf 'bars_photoshop.exr -> output/bars_exr_exr32.exr \n'
 	$CTLRENDER -ctl unity.ctl -format exr32 -force bars_photoshop.exr output/bars_exr_exr32.exr
+
+	# RGB tests
+	printf 'colorbars_nuke_rgb_exr16.exr -> output/bars_rgb_exr16_to_exr16.exr \n'
+	$CTLRENDER -force -format exr16 -ctl unity.ctl colorbars_nuke_rgb_exr16.exr output/bars_rgb_exr16_to_exr16.exr
+	printf 'colorbars_nuke_rgb_exr16.exr -> output/bars_rgb_exr16_to_exr32.exr \n'
+	$CTLRENDER -force -format exr32 -ctl unity.ctl colorbars_nuke_rgb_exr16.exr output/bars_rgb_exr16_to_exr32.exr
+	printf 'colorbars_nuke_rgb_exr32.exr -> output/bars_rgb_exr32_to_exr16.exr \n'
+	$CTLRENDER -force -format exr16 -ctl unity.ctl colorbars_nuke_rgb_exr32.exr output/bars_rgb_exr32_to_exr16.exr
+	printf 'colorbars_nuke_rgb_exr32.exr -> output/bars_rgb_exr32_to_exr32.exr \n'
+	$CTLRENDER -force -format exr32 -ctl unity.ctl colorbars_nuke_rgb_exr32.exr output/bars_rgb_exr32_to_exr32.exr
+
+	# RGBA tests
+	printf 'colorbars_nuke_rgba_exr16.exr -> output/bars_rgba_exr16_to_exr16.exr \n'
+	$CTLRENDER -force -format exr16 -ctl unity_with_alpha.ctl colorbars_nuke_rgba_exr16.exr output/bars_rgba_exr16_to_exr16.exr
+	printf 'colorbars_nuke_rgba_exr16.exr -> output/bars_rgba_exr16_to_exr32.exr \n'
+	$CTLRENDER -force -format exr32 -ctl unity_with_alpha.ctl colorbars_nuke_rgba_exr16.exr output/bars_rgba_exr16_to_exr32.exr
+	printf 'colorbars_nuke_rgba_exr32.exr -> output/bars_rgba_exr32_to_exr16.exr \n'
+	$CTLRENDER -force -format exr16 -ctl unity_with_alpha.ctl colorbars_nuke_rgba_exr32.exr output/bars_rgba_exr32_to_exr16.exr
+	printf 'colorbars_nuke_rgba_exr32.exr -> output/bars_rgba_exr32_to_exr32.exr \n'
+	$CTLRENDER -force -format exr32 -ctl unity_with_alpha.ctl colorbars_nuke_rgba_exr32.exr output/bars_rgba_exr32_to_exr32.exr
+
 fi
 
 # test TIFF32 to EXR and EXR to TIFF32 support
