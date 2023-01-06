@@ -8,12 +8,12 @@ SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 cd ./unittest/IlmCtl/
 valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ./IlmCtlTest
-test_01_status=0 #$? 
+test_01_status=$? 
 test_01_label="IlmCtlTest"
 
 cd ../IlmCtlMath/
 valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ./IlmCtlMathTest 
-test_02_status=0 #$? 
+test_02_status=$? 
 test_02_label="IlmCtlMathTest"
 
 cd ../IlmImfCtl/

@@ -221,6 +221,76 @@ void exr_write32(const char *name, float scale, const ctl::dpx::fb<float> &pixel
     file.writePixels (height);
 }
 
+void exr_write16(const char* name, float scale, const ctl::dpx::fb<float>& pixels, Compression* compression)
+{
+  int depth = pixels.depth();
+  float width = pixels.width();
+  float height = pixels.height();
+  float const* pixelPtr = pixels.ptr();
+
+  ctl::dpx::fb<float> scaled_pixels;
+  if (scale != 0.0 && scale != 1.0) {
+    scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
+    scaled_pixels.alpha(1.0);
+
+    const float* fIn = pixels.ptr();
+    float* out = scaled_pixels.ptr();
+
+    for (uint64_t i = 0; i < pixels.count(); i++) {
+      *(out++) = *(fIn++) / scale;
+    }
+
+    depth = scaled_pixels.depth();
+    width = scaled_pixels.width();
+    height = scaled_pixels.height();
+    pixelPtr = scaled_pixels.ptr();
+  }
+
+  Imf::PixelType pixelType = Imf::HALF;
+
+  Imf::Header header(width, height);
+  header.compression() = (Imf::Compression)compression->exrCompressionScheme;
+
+  header.channels().insert("R", Imf::Channel(pixelType));
+  header.channels().insert("G", Imf::Channel(pixelType));
+  header.channels().insert("B", Imf::Channel(pixelType));
+
+  if (depth == 4)
+    header.channels().insert("A", Imf::Channel(pixelType));
+
+  Imf::OutputFile file(name, header);
+
+  Imf::FrameBuffer frameBuffer;
+
+  int xstride = sizeof(*pixelPtr) * depth;
+  int ystride = sizeof(*pixelPtr) * depth * width;
+
+  frameBuffer.insert("R",
+    Imf::Slice(pixelType,
+      (char*)pixelPtr,
+      xstride, ystride));
+
+  frameBuffer.insert("G",
+    Imf::Slice(pixelType,
+      (char*)(pixelPtr + 1),
+      xstride, ystride));
+
+  frameBuffer.insert("B",
+    Imf::Slice(pixelType,
+      (char*)(pixelPtr + 2),
+      xstride, ystride));
+
+  if (depth == 4)
+    frameBuffer.insert("A",
+      Imf::Slice(pixelType,
+        (char*)(pixelPtr + 3),
+        xstride, ystride));
+
+  file.setFrameBuffer(frameBuffer);
+  file.writePixels(height);
+}
+
+# if 0
 void exr_write16(const char *name, float scale, const ctl::dpx::fb<float> &pixels, Compression *compression) {
 	if (scale == 0.0) scale = 1.0;
 
@@ -246,6 +316,7 @@ void exr_write16(const char *name, float scale, const ctl::dpx::fb<float> &pixel
 	file.setFrameBuffer((Imf::Rgba *)in, 1, pixels.width());
 	file.writePixels(pixels.height());
 }
+#endif
 
 void exr_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
                format_t *format, Compression *compression)
