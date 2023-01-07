@@ -226,23 +226,32 @@ void exr_write16(const char* name, float scale, const ctl::dpx::fb<float>& pixel
   int depth = pixels.depth();
   float width = pixels.width();
   float height = pixels.height();
-  float const* pixelPtr = pixels.ptr();
+  half const* pixelPtr;
 
-  ctl::dpx::fb<float> scaled_pixels;
+  ctl::dpx::fb<half> scaled_pixels;
+  scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
+  scaled_pixels.alpha(1.0);
+
   if (scale != 0.0 && scale != 1.0) {
-    scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
-    scaled_pixels.alpha(1.0);
-
     const float* fIn = pixels.ptr();
-    float* out = scaled_pixels.ptr();
+    half* out = scaled_pixels.ptr();
 
     for (uint64_t i = 0; i < pixels.count(); i++) {
-      *(out++) = *(fIn++) / scale;
+      *(out++) = half(*(fIn++) / scale);
     }
 
     depth = scaled_pixels.depth();
     width = scaled_pixels.width();
     height = scaled_pixels.height();
+    pixelPtr = scaled_pixels.ptr();
+  }
+  else
+  {
+    const float* fIn = pixels.ptr();
+    half* out = scaled_pixels.ptr();
+    for (uint64_t i = 0; i < pixels.count(); i++) {
+      *(out++) = half(*(fIn++));
+    }
     pixelPtr = scaled_pixels.ptr();
   }
 
@@ -289,34 +298,6 @@ void exr_write16(const char* name, float scale, const ctl::dpx::fb<float>& pixel
   file.setFrameBuffer(frameBuffer);
   file.writePixels(height);
 }
-
-# if 0
-void exr_write16(const char *name, float scale, const ctl::dpx::fb<float> &pixels, Compression *compression) {
-	if (scale == 0.0) scale = 1.0;
-
-    ctl::dpx::fb<half> scaled_pixels;
-    scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
-    scaled_pixels.alpha(1.0);
-    
-    const float *fIn=pixels.ptr();
-    half *out=scaled_pixels.ptr();
-    
-    // Yes... I should lookup table this. I *know*!
-    for(uint64_t i=0; i<pixels.count(); i++) {
-        *(out++)=*(fIn++)/scale;
-    }
-    
-	uint8_t channels=scaled_pixels.depth();
-    const half *in=scaled_pixels.ptr();
-    
-	Imf::RgbaOutputFile file(name, pixels.width(), pixels.height(),
-	                         channels==4 ? Imf::WRITE_RGBA : Imf::WRITE_RGB, 1, Imath::V2f (0, 0), 1,
-	                         Imf::INCREASING_Y, (Imf::Compression)compression->exrCompressionScheme);
-    
-	file.setFrameBuffer((Imf::Rgba *)in, 1, pixels.width());
-	file.writePixels(pixels.height());
-}
-#endif
 
 void exr_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
                format_t *format, Compression *compression)
