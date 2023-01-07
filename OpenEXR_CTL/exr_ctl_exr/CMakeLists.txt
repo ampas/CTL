@@ -37,6 +37,6 @@ target_link_libraries (exr_ctl_exr
 #target_link_libraries( exr_ctl_exr ${IlmBase_LIBRARIES} ${IlmBase_LDFLAGS_OTHER} )
 #target_link_libraries( exr_ctl_exr ${OpenEXR_LIBRARIES} ${OpenEXR_LDFLAGS_OTHER} )
 
-install( TARGETS exr_ctl_exr DESTINATION ${INSTALL_BIN_DIR} )
+install( TARGETS exr_ctl_exr DESTINATION ${CMAKE_INSTALL_BINDIR} )
 
-install( FILES change_saturation.ctl DESTINATION ${INSTALL_LIB_DIR}/CTL )
+install( FILES change_saturation.ctl DESTINATION ${CMAKE_INSTALL_DATADIR}/CTL )
