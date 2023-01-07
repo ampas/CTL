@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
 project(CTL VERSION 1.5.2)
-enable_testing()
 include(GNUInstallDirs)
 
 set(CMAKE_MODULE_PATH
@@ -37,11 +36,12 @@ endif()
 add_subdirectory(lib)
 add_subdirectory(doc)
 if (CTL_BUILD_TOOLS)
-	add_subdirectory(ctlrender)
+  add_subdirectory(ctlrender)
   add_subdirectory(OpenEXR_CTL)
 endif()
 
 if (CTL_BUILD_TESTS)
-	add_subdirectory(unittest)
+  enable_testing()
+  add_subdirectory(unittest)
 endif()
 
