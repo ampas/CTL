@@ -23,9 +23,9 @@ foreach(J tiff8 tiff16 tiff32 dpx8 dpx10 dpx12 dpx16)
 
     # Test tiff32 conversions
     if(TARGET TIFF::TIFF)
-        add_test(NAME "tiff32->${J}" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format ${J} -force ${PROJECT_SOURCE_DIR}/unittest/ctlrender/bars_photoshop_32_be_planar.tif "${PROJECT_SOURCE_DIR}/unittest/ctlrender/output/bars_tiff32_${J}.${ext}")
+        add_test(NAME "tiff32->${J}" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format ${J} -force ${PROJECT_SOURCE_DIR}/unittest/ctlrender/bars_photoshop_32_be_planar.tif "${PROJECT_SOURCE_DIR}/unittest/ctlrender/output/bars_tiff32_${J}.${EXTENSION}")
         if(NOT ${J} STREQUAL "tiff32")
-            add_test(NAME "${J}->tiff32" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format tiff32 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/output/bars_tiff32_${J}.${ext}" "${PROJECT_SOURCE_DIR}/unittest/ctlrender/output/bars_tiff32_${J}_tiff32.tiff")
+            add_test(NAME "${J}->tiff32" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format tiff32 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/output/bars_tiff32_${J}.${EXTENSION}" "${PROJECT_SOURCE_DIR}/unittest/ctlrender/output/bars_tiff32_${J}_tiff32.tiff")
         endif()
     endif()
 endforeach(J)
