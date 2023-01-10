@@ -226,34 +226,32 @@ void exr_write16(const char* name, float scale, const ctl::dpx::fb<float>& pixel
   int depth = pixels.depth();
   float width = pixels.width();
   float height = pixels.height();
-  half const* pixelPtr;
 
   ctl::dpx::fb<half> scaled_pixels;
   scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
   scaled_pixels.alpha(1.0);
 
-  if (scale != 0.0 && scale != 1.0) {
-    const float* fIn = pixels.ptr();
-    half* out = scaled_pixels.ptr();
+  const float* fIn = pixels.ptr();
+  half* out = scaled_pixels.ptr();
 
+  if (scale != 0.0 && scale != 1.0) {
     for (uint64_t i = 0; i < pixels.count(); i++) {
       *(out++) = half(*(fIn++) / scale);
-    }
-
-    depth = scaled_pixels.depth();
-    width = scaled_pixels.width();
-    height = scaled_pixels.height();
-    pixelPtr = scaled_pixels.ptr();
+    } 
   }
   else
   {
-    const float* fIn = pixels.ptr();
-    half* out = scaled_pixels.ptr();
     for (uint64_t i = 0; i < pixels.count(); i++) {
       *(out++) = half(*(fIn++));
     }
-    pixelPtr = scaled_pixels.ptr();
   }
+
+  half const* pixelPtr = scaled_pixels.ptr();
+
+  depth = scaled_pixels.depth();
+  width = scaled_pixels.width();
+  height = scaled_pixels.height();
+  pixelPtr = scaled_pixels.ptr();
 
   Imf::PixelType pixelType = Imf::HALF;
 
