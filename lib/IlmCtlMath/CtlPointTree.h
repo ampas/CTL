@@ -70,6 +70,7 @@
 #include <ImathBox.h>
 #include <vector>
 #include <algorithm>
+#include <limits> // std::numeric_limits
 
 namespace Ctl {
 
