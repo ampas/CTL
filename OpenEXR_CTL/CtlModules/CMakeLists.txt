@@ -1,7 +1,7 @@
-install( 
+install(
     FILES
         utilities.ctl
-    DESTINATION 
-        ${INSTALL_LIB_DIR}/CTL
+    DESTINATION
+        ${CMAKE_INSTALL_DATADIR}/CTL
 )
 
