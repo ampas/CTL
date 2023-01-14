@@ -12,6 +12,18 @@ on:
 
 jobs:
 
+  ubuntu-18-04:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_18.04 -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
+
   ubuntu-20-04:
 
     runs-on: ubuntu-latest
@@ -19,7 +31,31 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build --nocache --rm -f ./docker/Dockerfile_ubuntu_20.04 -t ctl:latest .
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_20.04 -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
+  
+  ubuntu-22-04:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_22.04 -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
+
+  ubuntu-22-10:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_22.10 -t ctl:latest .
 
     - name: Run the Docker image
       run: docker run ctl:latest
