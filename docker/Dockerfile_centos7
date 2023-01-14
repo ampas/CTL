@@ -1,14 +1,10 @@
-FROM ubuntu:18.04
+FROM centos:7
 
-RUN apt-get update
+RUN yum -y update
 
-# disable interactive install 
-ENV DEBIAN_FRONTEND noninteractive
-
-# install development tools
-
-# install cmake 3.12
-RUN apt-get -y install wget
+# install developement tools
+# setup cmake 3.12
+RUN yum -y install wget
 RUN wget https://github.com/Kitware/CMake/releases/download/v3.12.4/cmake-3.12.4-Linux-x86_64.sh -q -O /tmp/cmake-install.sh
 RUN chmod u+x /tmp/cmake-install.sh
 RUN mkdir /opt/cmake-3.12.4
@@ -16,12 +12,27 @@ RUN /tmp/cmake-install.sh --skip-license --prefix=/opt/cmake-3.12.4
 RUN rm /tmp/cmake-install.sh 
 RUN ln -s /opt/cmake-3.12.4/bin/* /usr/local/bin
 
-RUN apt-get -y install g++
+RUN yum -y install make
+RUN yum -y install gcc-c++
 
 # install CTL dependencies
-RUN apt-get -y install libilmbase-dev
-RUN apt-get -y install libopenexr-dev
-RUN apt-get -y install libtiff-dev
+#RUN yum -y install ilmbase-devel
+#RUN yum -y install OpenEXR-devel
+
+RUN yum -y install git
+
+RUN yum -y install zlib-devel
+WORKDIR /usr/src/
+RUN git clone https://github.com/AcademySoftwareFoundation/openexr.git
+WORKDIR /usr/src/openexr
+RUN git checkout RB-2.5 
+WORKDIR /usr/src/openexr/build
+RUN cmake ..
+RUN make
+RUN make install
+
+
+RUN yum -y install libtiff-devel
 
 # build CTL
 WORKDIR /usr/src/CTL
