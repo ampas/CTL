@@ -1,0 +1,35 @@
+name: Docker-Linuxes
+
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+      - 'doc/**'
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'doc/**'
+
+jobs:
+
+  runs-on: ubuntu-latest
+
+  ubuntu-20.04:
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --nocache --rm -f ./docker/Dockerfile_ubuntu_20.04 -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
+
+  ubuntu-22.04:
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --nocache --rm -f ./docker/Dockerfile_ubuntu_22.04 -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
