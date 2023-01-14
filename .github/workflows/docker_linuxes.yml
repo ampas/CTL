@@ -60,3 +60,39 @@ jobs:
     - name: Run the Docker image
       run: docker run ctl:latest
 
+  centos7:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_centos7 -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
+
+  redhat-ubi8:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_redhat_ubi8 -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
+
+  redhat-ubi9:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_redhat_ubi9 -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
+      

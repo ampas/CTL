@@ -18,9 +18,7 @@ RUN yum -y install gcc-c++
 # install CTL dependencies
 #RUN yum -y install ilmbase-devel
 #RUN yum -y install OpenEXR-devel
-
 RUN yum -y install git
-
 RUN yum -y install zlib-devel
 WORKDIR /usr/src/
 RUN git clone https://github.com/AcademySoftwareFoundation/openexr.git
@@ -30,7 +28,6 @@ WORKDIR /usr/src/openexr/build
 RUN cmake ..
 RUN make
 RUN make install
-
 
 RUN yum -y install libtiff-devel
 
