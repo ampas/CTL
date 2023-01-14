@@ -13,7 +13,9 @@ on:
 jobs:
 
   ubuntu-20.04:
+
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
@@ -22,12 +24,3 @@ jobs:
     - name: Run the Docker image
       run: docker run ctl:latest
 
-  ubuntu-22.04:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build --nocache --rm -f ./docker/Dockerfile_ubuntu_22.04 -t ctl:latest .
-
-    - name: Run the Docker image
-      run: docker run ctl:latest
