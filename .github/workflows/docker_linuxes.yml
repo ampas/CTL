@@ -60,6 +60,18 @@ jobs:
     - name: Run the Docker image
       run: docker run ctl:latest
 
+  ubuntu-latest:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_latest -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
+
   centos7:
 
     runs-on: ubuntu-latest
@@ -67,7 +79,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build --no-cache --rm -f ./docker/Dockerfile_centos7 -t ctl:latest .
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_centos_7 -t ctl:latest .
 
     - name: Run the Docker image
       run: docker run ctl:latest
@@ -95,4 +107,63 @@ jobs:
 
     - name: Run the Docker image
       run: docker run ctl:latest
+
+  fedora-35:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_fedora_35 -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
+
+  fedora-36:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_fedora_36 -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
       
+  fedora-37:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_fedora_37 -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
+
+  fedora-38:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_fedora_38 -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
+
+  fedora-latest:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_fedora_latest -t ctl:latest .
+
+    - name: Run the Docker image
+      run: docker run ctl:latest
