@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.12)
 project(CTL VERSION 1.5.2)
 include(GNUInstallDirs)
 
@@ -32,7 +32,8 @@ find_package(OpenEXR 3 CONFIG QUIET)
 if(OpenEXR_FOUND)
   message(STATUS "Found OpenEXR ${OpenEXR_VERSION}")
 else()
-  find_package(OpenEXR 2 CONFIG REQUIRED)
+  find_package(IlmBase REQUIRED)
+  find_package(OpenEXR 2 REQUIRED)
 endif()
 
 add_subdirectory(lib)

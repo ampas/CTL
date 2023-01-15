@@ -1,0 +1,27 @@
+FROM fedora:37
+
+RUN yum -y update
+
+# install developement tools
+RUN yum -y install cmake
+RUN yum -y install make
+RUN yum -y install gcc-c++
+RUN yum -y install git
+
+# install CTL dependencies
+RUN yum -y install libtiff-devel
+# install openexr 
+RUN yum -y install zlib-devel
+RUN yum -y install OpenEXR-devel
+
+# build CTL
+WORKDIR /usr/src/CTL
+COPY . .
+WORKDIR /usr/src/CTL/build
+RUN cmake ..
+RUN make
+RUN make install
+
+# finalize docker environment
+WORKDIR /usr/src/CTL
+

@@ -1,0 +1,35 @@
+FROM ubuntu:18.04
+
+RUN apt-get update
+
+# disable interactive install 
+ENV DEBIAN_FRONTEND noninteractive
+
+# install development tools
+
+# install cmake 3.12
+RUN apt-get -y install wget
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.12.4/cmake-3.12.4-Linux-x86_64.sh -q -O /tmp/cmake-install.sh
+RUN chmod u+x /tmp/cmake-install.sh
+RUN mkdir /opt/cmake-3.12.4
+RUN /tmp/cmake-install.sh --skip-license --prefix=/opt/cmake-3.12.4
+RUN rm /tmp/cmake-install.sh 
+RUN ln -s /opt/cmake-3.12.4/bin/* /usr/local/bin
+
+RUN apt-get -y install g++
+
+# install CTL dependencies
+RUN apt-get -y install libopenexr-dev
+RUN apt-get -y install libtiff-dev
+
+# build CTL
+WORKDIR /usr/src/CTL
+COPY . .
+WORKDIR /usr/src/CTL/build
+RUN cmake ..
+RUN make
+RUN make install
+
+# finalize docker environment
+WORKDIR /usr/src/CTL
+
