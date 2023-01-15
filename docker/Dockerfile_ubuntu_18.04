@@ -19,7 +19,6 @@ RUN ln -s /opt/cmake-3.12.4/bin/* /usr/local/bin
 RUN apt-get -y install g++
 
 # install CTL dependencies
-RUN apt-get -y install libilmbase-dev
 RUN apt-get -y install libopenexr-dev
 RUN apt-get -y install libtiff-dev
 
