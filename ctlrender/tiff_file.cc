@@ -89,7 +89,7 @@ void tiff_interleave_float(float *row, float scale,
                            uint32_t width);
 
 void ErrorHandler(const char *module, const char *fmt, va_list ap) {
-	fprintf(stderr, "Unable to read tiff file: ");
+	fprintf(stderr, "Unable to open tiff file: ");
 	vfprintf(stderr, fmt, ap);
 }
 
@@ -586,6 +586,9 @@ void tiff_write(const char *name, float scale,
 	t=TIFFOpen(name, "w");
 	if(t==NULL) {
 		// What went wrong
+		//fprintf(stderr, "WARNING on line %d of file %s in function %s(): tiff_write() cannot open output file %s\n", __LINE__, __FILE__, __FUNCTION__, name);
+		THROW(Iex::ArgExc, "tiff_write() cannot open output file " << std::string(name) );
+		return;
 	}
 
 	TIFFSetField(t, TIFFTAG_SAMPLESPERPIXEL, pixels.depth());
