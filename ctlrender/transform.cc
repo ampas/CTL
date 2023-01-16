@@ -343,8 +343,13 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
 		memset(name, 0, strlen(ctl_operation.filename) + 1);
 		strcpy(name, ctl_operation.filename);
 
-		// XXX probably not windows friendly
+#ifdef WIN32
+		char *backslash = strrchr(name, '\\');
+		char *forwardslash = strrchr(name, '/');
+		slash = backslash != NULL ? backslash : forwardslash;
+#else
 		slash = strrchr(name, '/');
+#endif
 		if (slash == NULL)
 		{
 			module = name;
@@ -377,6 +382,9 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
         {
             // XXX CTL library needs to be changed so that we have a better
             // XXX 'function not exists' exception.
+            if (verbosity > 1) {
+                fprintf(stderr, "No function named main() found, trying <module_name> (%s) instead\n", module);
+            }
         }
         
         try {
@@ -385,7 +393,9 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
                 fn = interpreter.newFunctionCall(std::string(module));
             }
         } catch (...) {
-            
+			char message_text[512] = {'\0'};
+			sprintf( message_text, "CTL file must contain either a main or <module_name> (%s) function", module);
+            THROW(Iex::ArgExc, message_text);
         }		
 
 		if (fn->returnValue()->type().cast<Ctl::VoidType>().refcount() == 0)

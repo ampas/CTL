@@ -62,4 +62,4 @@ if (TARGET AcesContainer::AcesContainer)
 	)
 endif()
 
-install(TARGETS ctlrender DESTINATION ${CMAKE_INSTALL_BINDDIR})
+install(TARGETS ctlrender DESTINATION ${CMAKE_INSTALL_BINDIR})

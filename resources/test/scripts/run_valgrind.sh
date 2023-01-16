@@ -50,11 +50,43 @@ valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak
 test_10_status=$? 
 test_10_label="ctlrender-exr-to-exr32"
 
+valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ../../ctlrender/ctlrender -force -format exr16 -ctl ../../../unittest/ctlrender/unity.ctl ../../../unittest/ctlrender/colorbars_nuke_rgb_exr16.exr out.exr
+test_11_status=$? 
+test_11_label="ctlrender-rgb-exr16-to-exr16"
+
+valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ../../ctlrender/ctlrender -force -format exr32 -ctl ../../../unittest/ctlrender/unity.ctl ../../../unittest/ctlrender/colorbars_nuke_rgb_exr16.exr out.exr
+test_12_status=$? 
+test_12_label="ctlrender-rgb-exr16-to-exr32"
+
+valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ../../ctlrender/ctlrender -force -format exr16 -ctl ../../../unittest/ctlrender/unity.ctl ../../../unittest/ctlrender/colorbars_nuke_rgb_exr32.exr out.exr
+test_13_status=$? 
+test_13_label="ctlrender-rgb-exr32-to-exr16"
+
+valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ../../ctlrender/ctlrender -force -format exr32 -ctl ../../../unittest/ctlrender/unity.ctl ../../../unittest/ctlrender/colorbars_nuke_rgb_exr32.exr out.exr
+test_14_status=$? 
+test_14_label="ctlrender-rgb-exr32-to-exr32"
+
+valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ../../ctlrender/ctlrender -force -format exr16 -ctl ../../../unittest/ctlrender/unity_with_alpha.ctl ../../../unittest/ctlrender/colorbars_nuke_rgba_exr16.exr out.exr
+test_15_status=$? 
+test_15_label="ctlrender-rgba-exr16-to-exr16"
+
+valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ../../ctlrender/ctlrender -force -format exr32 -ctl ../../../unittest/ctlrender/unity_with_alpha.ctl ../../../unittest/ctlrender/colorbars_nuke_rgba_exr16.exr out.exr
+test_16_status=$? 
+test_16_label="ctlrender-rgba-exr16-to-exr32"
+
+valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ../../ctlrender/ctlrender -force -format exr16 -ctl ../../../unittest/ctlrender/unity_with_alpha.ctl ../../../unittest/ctlrender/colorbars_nuke_rgba_exr32.exr out.exr
+test_17_status=$? 
+test_17_label="ctlrender-rgba-exr32-to-exr16"
+
+valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ../../ctlrender/ctlrender -force -format exr32 -ctl ../../../unittest/ctlrender/unity_with_alpha.ctl ../../../unittest/ctlrender/colorbars_nuke_rgba_exr32.exr out.exr
+test_18_status=$? 
+test_18_label="ctlrender-rgba-exr32-to-exr32"
+
 # go back to initial path
 cd $SCRIPTPATH
 
 # return valgrind exit codes
-if [ $test_01_status -eq 0 ] && [ $test_02_status -eq 0 ] && [ $test_03_status -eq 0 ] && [ $test_04_status -eq 0 ] && [ $test_05_status -eq 0 ] && [ $test_06_status -eq 0 ] && [ $test_07_status -eq 0 ] && [ $test_08_status -eq 0 ] && [ $test_09_status -eq 0 ] && [ $test_10_status -eq 0 ]
+if [ $test_01_status -eq 0 ] && [ $test_02_status -eq 0 ] && [ $test_03_status -eq 0 ] && [ $test_04_status -eq 0 ] && [ $test_05_status -eq 0 ] && [ $test_06_status -eq 0 ] && [ $test_07_status -eq 0 ] && [ $test_08_status -eq 0 ] && [ $test_09_status -eq 0 ] && [ $test_10_status -eq 0 ] && [ $test_11_status -eq 0 ] && [ $test_12_status -eq 0 ] && [ $test_13_status -eq 0 ] && [ $test_14_status -eq 0 ] && [ $test_15_status -eq 0 ] && [ $test_16_status -eq 0 ] && [ $test_17_status -eq 0 ] && [ $test_18_status -eq 0 ]
 then
   echo "Success: valgrind detected no errors"
   exit 0
@@ -109,6 +141,46 @@ else
   if [ $test_10_status -ne 0 ]
   then 
     echo "$test_10_label: valgrind detected errors" 
+  fi
+
+  if [ $test_11_status -ne 0 ] 
+  then 
+    echo "$test_11_label: valgrind detected errors" 
+  fi
+
+  if [ $test_12_status -ne 0 ] 
+  then 
+    echo "$test_12_label: valgrind detected errors" 
+  fi
+
+  if [ $test_13_status -ne 0 ] 
+  then 
+    echo "$test_13_label: valgrind detected errors" 
+  fi
+
+  if [ $test_14_status -ne 0 ] 
+  then 
+    echo "$test_14_label: valgrind detected errors" 
+  fi
+
+  if [ $test_15_status -ne 0 ] 
+  then 
+    echo "$test_15_label: valgrind detected errors" 
+  fi
+
+  if [ $test_16_status -ne 0 ] 
+  then 
+    echo "$test_16_label: valgrind detected errors" 
+  fi
+
+  if [ $test_17_status -ne 0 ] 
+  then 
+    echo "$test_17_label: valgrind detected errors" 
+  fi
+
+  if [ $test_18_status -ne 0 ] 
+  then 
+    echo "$test_18_label: valgrind detected errors" 
   fi
 
   exit 1

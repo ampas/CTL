@@ -1,0 +1,44 @@
+FROM centos:7
+
+RUN yum -y update
+
+# install developement tools
+# setup cmake 3.12
+RUN yum -y install wget
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.12.4/cmake-3.12.4-Linux-x86_64.sh -q -O /tmp/cmake-install.sh
+RUN chmod u+x /tmp/cmake-install.sh
+RUN mkdir /opt/cmake-3.12.4
+RUN /tmp/cmake-install.sh --skip-license --prefix=/opt/cmake-3.12.4
+RUN rm /tmp/cmake-install.sh 
+RUN ln -s /opt/cmake-3.12.4/bin/* /usr/local/bin
+
+RUN yum -y install make
+RUN yum -y install gcc-c++
+
+# install CTL dependencies
+#RUN yum -y install ilmbase-devel
+#RUN yum -y install OpenEXR-devel
+RUN yum -y install git
+RUN yum -y install zlib-devel
+WORKDIR /usr/src/
+RUN git clone https://github.com/AcademySoftwareFoundation/openexr.git
+WORKDIR /usr/src/openexr
+RUN git checkout RB-2.5 
+WORKDIR /usr/src/openexr/build
+RUN cmake ..
+RUN make
+RUN make install
+
+RUN yum -y install libtiff-devel
+
+# build CTL
+WORKDIR /usr/src/CTL
+COPY . .
+WORKDIR /usr/src/CTL/build
+RUN cmake ..
+RUN make
+RUN make install
+
+# finalize docker environment
+WORKDIR /usr/src/CTL
+

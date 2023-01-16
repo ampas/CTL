@@ -38,7 +38,7 @@ target_link_libraries (IlmImfCtl
 install(FILES
 	ImfCtlApplyTransforms.h
 DESTINATION
-	${CMAKE_INSTALL_LIBDIR}/OpenEXR
+	${CMAKE_INSTALL_INCLUDEDIR}/OpenEXR
 )
 
 install(TARGETS IlmImfCtl DESTINATION ${CMAKE_INSTALL_LIBDIR})
