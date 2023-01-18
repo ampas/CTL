@@ -35,6 +35,12 @@ foreach(J tiff8 tiff16 tiff32 dpx8 dpx10 dpx12 dpx16)
     endif()
 endforeach(J)
 
+if(OpenEXR_FOUND)
+    # Test EXR->EXR conversions
+    add_test(NAME "EXR->EXR" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format exr -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/bars_photoshop.exr" "${OUTPUT_FOLDER}/bars_exr_exr.exr")
+    add_test(NAME "EXR->EXR16" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format exr16 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/bars_photoshop.exr" "${OUTPUT_FOLDER}/bars_exr_exr16.exr")
+endif()
+
 #find_program(BASH_PROGRAM bash)
 #if (BASH_PROGRAM)
 #  MESSAGE( STATUS "BASH found, able to run ctlrender unit test" )
