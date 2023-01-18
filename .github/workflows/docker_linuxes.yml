@@ -108,18 +108,6 @@ jobs:
     - name: Run unit tests (ctest) within the Docker image
       run: docker run ctl:latest sh -c "cd ./build && ctest"
 
-  fedora-35:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build --no-cache --rm -f ./docker/Dockerfile_fedora_35 -t ctl:latest .
-
-    - name: Run unit tests (ctest) within the Docker image
-      run: docker run ctl:latest sh -c "cd ./build && ctest"
-
   fedora-36:
 
     runs-on: ubuntu-latest
