@@ -39,6 +39,19 @@ if(OpenEXR_FOUND)
     # Test EXR->EXR conversions
     add_test(NAME "EXR->EXR" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format exr -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/bars_photoshop.exr" "${OUTPUT_FOLDER}/bars_exr_exr.exr")
     add_test(NAME "EXR->EXR16" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format exr16 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/bars_photoshop.exr" "${OUTPUT_FOLDER}/bars_exr_exr16.exr")
+    add_test(NAME "EXR->EXR32" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format exr32 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/bars_photoshop.exr" "${OUTPUT_FOLDER}/bars_exr_exr32.exr")
+
+    # RGB Tests
+    add_test(NAME "EXR16->EXR16" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format exr16 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/colorbars_nuke_rgb_exr16.exr" "${OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16.exr")
+    add_test(NAME "EXR16->EXR32" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format exr32 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/colorbars_nuke_rgb_exr16.exr" "${OUTPUT_FOLDER}/bars_rgb_exr16_to_exr32.exr")
+    add_test(NAME "EXR32->EXR16" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format exr16 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/colorbars_nuke_rgb_exr32.exr" "${OUTPUT_FOLDER}/bars_rgb_exr32_to_exr16.exr")
+    add_test(NAME "EXR32->EXR32" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity.ctl" -format exr32 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/colorbars_nuke_rgb_exr32.exr" "${OUTPUT_FOLDER}/bars_rgb_exr32_to_exr32.exr")
+
+    # RGBA Tests
+    add_test(NAME "EXR_RGBA16->EXR_RGBA_16" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity_with_alpha.ctl" -format exr16 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/colorbars_nuke_rgba_exr16.exr" "${OUTPUT_FOLDER}/bars_rgba_exr16_to_exr16.exr")
+    add_test(NAME "EXR_RGBA16->EXR_RGBA_32" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity_with_alpha.ctl" -format exr32 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/colorbars_nuke_rgba_exr16.exr" "${OUTPUT_FOLDER}/bars_rgba_exr16_to_exr32.exr")
+    add_test(NAME "EXR_RGBA32->EXR_RGBA_16" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity_with_alpha.ctl" -format exr16 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/colorbars_nuke_rgba_exr32.exr" "${OUTPUT_FOLDER}/bars_rgba_exr16_to_exr16.exr")
+    add_test(NAME "EXR_RGBA32->EXR_RGBA_32" COMMAND ${CTLRENDER_PATH} -ctl "${PROJECT_SOURCE_DIR}/unittest/ctlrender/unity_with_alpha.ctl" -format exr32 -force "${PROJECT_SOURCE_DIR}/unittest/ctlrender/colorbars_nuke_rgba_exr32.exr" "${OUTPUT_FOLDER}/bars_rgba_exr16_to_exr32.exr")
 endif()
 
 #find_program(BASH_PROGRAM bash)
