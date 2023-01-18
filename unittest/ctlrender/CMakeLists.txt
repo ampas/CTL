@@ -66,7 +66,12 @@ if (OpenEXR_FOUND AND TARGET TIFF::TIFF)
             string(REGEX REPLACE "\\..+" "" FILE_NAME "${I}")
             # Get file extension from ${I}
             string(REGEX REPLACE ".+\\." "" FILE_NAME_EXTENSION "${I}")
-
+            if(${J} MATCHES "exr.*" AND FILE_NAME_EXTENSION STREQUAL "exr")
+                continue()
+            endif()
+            if(${J} MATCHES "tif.*" AND FILE_NAME_EXTENSION STREQUAL "tif")
+                continue()
+            endif()
             add_test(NAME "EXR<->TIF_${I}->${J}" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format ${J} -force "${TEST_FILES}/${I}" "${OUTPUT_FOLDER}/${FILE_NAME}_${J}_exr_tif_conversion_test.${EXTENSION}")
         endforeach()
     endforeach()
