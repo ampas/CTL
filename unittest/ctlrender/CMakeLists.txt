@@ -56,6 +56,22 @@ if(OpenEXR_FOUND)
     add_test(NAME "EXR_RGBA32->EXR_RGBA_32" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity_with_alpha.ctl" -format exr32 -force "${TEST_FILES}/colorbars_nuke_rgba_exr32.exr" "${OUTPUT_FOLDER}/bars_rgba_exr32_to_exr32.exr")
 endif()
 
+# test TIFF32 to EXR and EXR to TIFF32 support
+if (OpenEXR_FOUND AND TARGET TIFF::TIFF)
+    foreach(J exr exr16 exr32 tiff32)
+        foreach(I bars_photoshop_32_be_interleaved.tif bars_photoshop_32_be_planar.tif bars_photoshop_32_le_interleaved.tif bars_photoshop_32_le_planar.tif bars_photoshop.exr)
+             # Get extension from ${J}
+            string(REGEX REPLACE "[0-9]+" "" EXTENSION "${J}")
+            # Get filename from ${I}
+            string(REGEX REPLACE "\\..+" "" FILE_NAME "${I}")
+            # Get file extension from ${I}
+            string(REGEX REPLACE ".+\\." "" FILE_NAME_EXTENSION "${I}")
+
+            add_test(NAME "EXR<->TIF_${I}->${J}" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format ${J} -force "${TEST_FILES}/${I}" "${OUTPUT_FOLDER}/${FILE_NAME}_${J}_exr_tif_conversion_test.${EXTENSION}")
+        endforeach()
+    endforeach()
+endif()
+
 #find_program(BASH_PROGRAM bash)
 #if (BASH_PROGRAM)
 #  MESSAGE( STATUS "BASH found, able to run ctlrender unit test" )
