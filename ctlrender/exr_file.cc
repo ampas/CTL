@@ -101,8 +101,10 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
         
     int width = dw.max.x - dw.min.x + 1;
     int height = dw.max.y - dw.min.y + 1;
-    
-    pixels->init(width, height, 4);
+
+    bool has_alpha = file.header().channels().findChannel("A");
+
+    pixels->init(width, height, has_alpha ? 4 : 3);
     Imf::PixelType pixelType = Imf::FLOAT;
     
     int xstride = sizeof (*pixels->ptr()) * pixels->depth();
@@ -130,12 +132,14 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
                                     1, 1,
                                     0.0));
     
-    frameBuffer.insert ("A",
-                        Imf::Slice (pixelType,
-                                    (char *) (pixels->ptr()+3),
-                                    xstride, ystride,
-                                    1, 1,
-                                    1.0));
+    if (has_alpha){
+        frameBuffer.insert ("A",
+                            Imf::Slice (pixelType,
+                                        (char *) (pixels->ptr()+3),
+                                        xstride, ystride,
+                                        1, 1,
+                                        1.0));
+    }
     
     file.setFrameBuffer(frameBuffer);
     file.readPixels(dw.min.y, dw.max.y);
@@ -161,7 +165,7 @@ void exr_write32(const char *name, float scale, const ctl::dpx::fb<float> &pixel
     
 	ctl::dpx::fb<float> scaled_pixels;
     if (scale != 0.0 && scale != 1.0) {
-        scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
+        scaled_pixels.init(pixels.width(), pixels.height(), pixels.depth());
         scaled_pixels.alpha(1.0);
         
         const float *fIn=pixels.ptr();
@@ -228,7 +232,7 @@ void exr_write16(const char* name, float scale, const ctl::dpx::fb<float>& pixel
   float height = pixels.height();
 
   ctl::dpx::fb<half> scaled_pixels;
-  scaled_pixels.init(pixels.height(), pixels.width(), pixels.depth());
+  scaled_pixels.init(pixels.width(), pixels.height(), pixels.depth());
   scaled_pixels.alpha(1.0);
 
   const float* fIn = pixels.ptr();
