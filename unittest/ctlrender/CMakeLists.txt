@@ -3,6 +3,15 @@ if(NOT DEFINED CTLRENDER_PATH)
 endif()
 
 find_package(TIFF)
+if ( TARGET TIFF::TIFF AND OpenEXR_FOUND )
+    message(STATUS "LibTIFF found, OpenEXR found, including TIF and EXR files in ctlrender unit tests")
+elseif( TARGET TIFF::TIFF AND NOT OpenEXR_FOUND )
+    message(WARNING "LibTIFF found, OpenEXR not found, including TIF files in ctlrender unit tests")
+elseif( NOT TARGET TIFF::TIFF AND OpenEXR_FOUND )
+    message(WARNING "LibTIFF not found, OpenEXR found, including EXR files in ctlrender unit tests")
+elseif( NOT TARGET TIFF::TIFF AND NOT OpenEXR_FOUND )
+    message(WARNING "LibTIFF not found, OpenEXR not found, not including TIF or EXR files in ctlrender unit tests")
+endif()
 
 set(OUTPUT_FOLDER "${CMAKE_BINARY_DIR}/unittest/ctlrender/output")
 message("Test output folder will be created at: ${OUTPUT_FOLDER}")
@@ -75,33 +84,6 @@ if (OpenEXR_FOUND AND TARGET TIFF::TIFF)
             add_test(NAME "EXR<->TIF_${I}->${J}" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format ${J} -force "${TEST_FILES}/${I}" "${OUTPUT_FOLDER}/${FILE_NAME}_${J}_exr_tif_conversion_test.${EXTENSION}")
         endforeach()
     endforeach()
-endif()
-
-#find_program(BASH_PROGRAM bash)
-#if (BASH_PROGRAM)
-#  MESSAGE( STATUS "BASH found, able to run ctlrender unit test" )
-#  add_test(
-#        NAME ctlrender
-#        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-#        COMMAND ${BASH_PROGRAM} ./test.sh ${CTLRENDER_PATH}
-#    )
-#else()
-#    MESSAGE( STATUS "BASH not found, not able to run ctlrender unit test" )
-#endif (BASH_PROGRAM)
-
-
-if ( TARGET TIFF::TIFF AND OpenEXR_FOUND )
-    message(STATUS "LibTIFF found, OpenEXR found, including TIF and EXR files in ctlrender unit tests")
-#    set_property(TEST ctlrender PROPERTY ENVIRONMENT "IS_TIFF_FOUND=1;IS_OPENEXR_FOUND=1")
-elseif( TARGET TIFF::TIFF AND NOT OpenEXR_FOUND )
-    message(WARNING "LibTIFF found, OpenEXR not found, including TIF files in ctlrender unit tests")
-#    set_property(TEST ctlrender PROPERTY ENVIRONMENT "IS_TIFF_FOUND=1;IS_OPENEXR_FOUND=0")
-elseif( NOT TARGET TIFF::TIFF AND OpenEXR_FOUND )
-    message(WARNING "LibTIFF not found, OpenEXR found, including EXR files in ctlrender unit tests")
-#    set_property(TEST ctlrender PROPERTY ENVIRONMENT "IS_TIFF_FOUND=0;IS_OPENEXR_FOUND=1")
-elseif( NOT TARGET TIFF::TIFF AND NOT OpenEXR_FOUND )
-    message(WARNING "LibTIFF not found, OpenEXR not found, not including TIF or EXR files in ctlrender unit tests")
-#    set_property(TEST ctlrender PROPERTY ENVIRONMENT "IS_TIFF_FOUND=0;IS_OPENEXR_FOUND=0")
 endif()
 
 add_test(NAME "ctlrender-ctl-function-name-is-filename" COMMAND ctlrender -force -format exr32 -ctl "${TEST_FILES}/functionname_is_filename.ctl" "${TEST_FILES}/bars_photoshop.exr" out.exr)
