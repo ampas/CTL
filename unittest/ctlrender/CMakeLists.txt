@@ -108,3 +108,15 @@ add_test(NAME "ctlrender-ctl-function-name-is-filename" COMMAND ctlrender -force
 
 add_test(NAME "ctlrender-ctl-function-name-is-incorrect" COMMAND ctlrender -force -format exr32 -ctl "${TEST_FILES}/incorrect_function_name.ctl" "${TEST_FILES}/bars_photoshop.exr" out.exr)
 set_tests_properties("ctlrender-ctl-function-name-is-incorrect" PROPERTIES WILL_FAIL TRUE)
+
+# Test for invalid input file names
+add_test(NAME "ctlrender-invalid-input-filename-dpx" COMMAND ctlrender -force -format dpx -ctl "${TEST_FILES}/unity.ctl" "${TEST_FILES}/invalid_filename.dpx" "${TEST_FILES}/invalid_filename_out.dpx")
+set_tests_properties("ctlrender-invalid-input-filename-dpx" PROPERTIES WILL_FAIL TRUE)
+if(TARGET TIFF::TIFF)
+    add_test(NAME "ctlrender-invalid-input-filename-tiff" COMMAND ctlrender -force -format tiff -ctl "${TEST_FILES}/unity.ctl" "${TEST_FILES}/invalid_filename.tif" "${TEST_FILES}/invalid_filename_out.tif")
+    set_tests_properties("ctlrender-invalid-input-filename-tiff" PROPERTIES WILL_FAIL TRUE)
+endif()
+if(OpenEXR_FOUND)
+    add_test(NAME "ctlrender-invalid-input-filename-exr" COMMAND ctlrender -force -format exr -ctl "${TEST_FILES}/unity.ctl" "${TEST_FILES}/invalid_filename.exr" "${TEST_FILES}/invalid_filename_out.exr")
+    set_tests_properties("ctlrender-invalid-input-filename-exr" PROPERTIES WILL_FAIL TRUE)
+endif()
