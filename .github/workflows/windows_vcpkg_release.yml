@@ -25,13 +25,13 @@ jobs:
     steps:
     
     - name: install dependencies - imath
-      run:  vcpkg install imath 
+      run:  vcpkg install imath:x64-windows
 
     - name: install dependencies - openexr
-      run:  vcpkg install openexr 
+      run:  vcpkg install openexr:x64-windows
 
     - name: install dependencies - tiff
-      run:  vcpkg install tiff 
+      run:  vcpkg install tiff:x64-windows
 
     - name: check vcpkg install status
       run: vcpkg list
@@ -61,13 +61,13 @@ jobs:
     steps:
     
     - name: install dependencies - imath
-      run:  vcpkg install imath 
+      run:  vcpkg install imath:x64-windows
 
     - name: install dependencies - openexr
-      run:  vcpkg install openexr 
+      run:  vcpkg install openexr:x64-windows
 
     - name: install dependencies - tiff
-      run:  vcpkg install tiff 
+      run:  vcpkg install tiff:x64-windows
 
     - name: check vcpkg install status
       run: vcpkg list
