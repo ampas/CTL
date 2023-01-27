@@ -65,6 +65,12 @@ bool dpx_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
 
 	file.open(name);
 
+	if (file.fail())
+	{
+		THROW(Iex::ArgExc, "dpx_read() cannot open input file " << std::string(name));
+		return 0;
+	}
+
 	if(!ctl::dpx::check_magic(&file)) {
 		return 0;
 	}
