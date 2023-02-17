@@ -156,163 +156,90 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
 	return 1;
 }
 
-void exr_write32(const char *name, float scale, const ctl::dpx::fb<float> &pixels, Compression *compression)
-{
-    int depth = pixels.depth();
-    float width = pixels.width();
-    float height = pixels.height();
-    float const *pixelPtr = pixels.ptr();
-    
-	ctl::dpx::fb<float> scaled_pixels;
-    if (scale != 0.0 && scale != 1.0) {
-        scaled_pixels.init(pixels.width(), pixels.height(), pixels.depth());
-        scaled_pixels.alpha(1.0);
-        
-        const float *fIn=pixels.ptr();
-        float *out=scaled_pixels.ptr();
-        
-        for(uint64_t i=0; i<pixels.count(); i++) {
-            *(out++)=*(fIn++)/scale;
-        }
-        
-        depth = scaled_pixels.depth();
-        width = scaled_pixels.width();
-        height = scaled_pixels.height();
-        pixelPtr = scaled_pixels.ptr();
-    }
-    
-    Imf::PixelType pixelType = Imf::FLOAT;
-    
-    Imf::Header header(width, height);
-    header.compression() = (Imf::Compression)compression->exrCompressionScheme;
-    
-    header.channels().insert("R", Imf::Channel(pixelType));
-    header.channels().insert("G", Imf::Channel(pixelType));
-    header.channels().insert("B", Imf::Channel(pixelType));
-    
-    if (depth == 4)
-        header.channels().insert("A", Imf::Channel(pixelType));
-    
-    Imf::OutputFile file (name, header);
-    
-    Imf::FrameBuffer frameBuffer;
-    
-    int xstride = sizeof (*pixelPtr) * depth;
-    int ystride = sizeof (*pixelPtr) * depth * width;
-    
-    frameBuffer.insert ("R",
-                        Imf::Slice (pixelType,
-                                    (char *) pixelPtr,
-                                    xstride, ystride));
-    
-    frameBuffer.insert ("G",
-                        Imf::Slice (pixelType,
-                                    (char *) (pixelPtr+1),
-                                    xstride, ystride));
-    
-    frameBuffer.insert ("B",
-                        Imf::Slice (pixelType,
-                                    (char *) (pixelPtr+2),
-                                    xstride, ystride));
-    
-    if (depth == 4)
-        frameBuffer.insert ("A",
-                            Imf::Slice (pixelType,
-                                        (char *) (pixelPtr+3),
-                                        xstride, ystride));
-    
-    file.setFrameBuffer (frameBuffer);
-    file.writePixels (height);
-}
-
-void exr_write16(const char* name, float scale, const ctl::dpx::fb<float>& pixels, Compression* compression)
-{
-  int depth = pixels.depth();
-  float width = pixels.width();
-  float height = pixels.height();
-
-  ctl::dpx::fb<half> scaled_pixels;
-  scaled_pixels.init(pixels.width(), pixels.height(), pixels.depth());
-  scaled_pixels.alpha(1.0);
-
-  const float* fIn = pixels.ptr();
-  half* out = scaled_pixels.ptr();
-
-  if (scale != 0.0 && scale != 1.0) {
-    for (uint64_t i = 0; i < pixels.count(); i++) {
-      *(out++) = half(*(fIn++) / scale);
-    } 
-  }
-  else
-  {
-    for (uint64_t i = 0; i < pixels.count(); i++) {
-      *(out++) = half(*(fIn++));
-    }
-  }
-
-  half const* pixelPtr = scaled_pixels.ptr();
-
-  depth = scaled_pixels.depth();
-  width = scaled_pixels.width();
-  height = scaled_pixels.height();
-  pixelPtr = scaled_pixels.ptr();
-
-  Imf::PixelType pixelType = Imf::HALF;
-
-  Imf::Header header(width, height);
-  header.compression() = (Imf::Compression)compression->exrCompressionScheme;
-
-  header.channels().insert("R", Imf::Channel(pixelType));
-  header.channels().insert("G", Imf::Channel(pixelType));
-  header.channels().insert("B", Imf::Channel(pixelType));
-
-  if (depth == 4)
-    header.channels().insert("A", Imf::Channel(pixelType));
-
-  Imf::OutputFile file(name, header);
-
-  Imf::FrameBuffer frameBuffer;
-
-  int xstride = sizeof(*pixelPtr) * depth;
-  int ystride = sizeof(*pixelPtr) * depth * width;
-
-  frameBuffer.insert("R",
-    Imf::Slice(pixelType,
-      (char*)pixelPtr,
-      xstride, ystride));
-
-  frameBuffer.insert("G",
-    Imf::Slice(pixelType,
-      (char*)(pixelPtr + 1),
-      xstride, ystride));
-
-  frameBuffer.insert("B",
-    Imf::Slice(pixelType,
-      (char*)(pixelPtr + 2),
-      xstride, ystride));
-
-  if (depth == 4)
-    frameBuffer.insert("A",
-      Imf::Slice(pixelType,
-        (char*)(pixelPtr + 3),
-        xstride, ystride));
-
-  file.setFrameBuffer(frameBuffer);
-  file.writePixels(height);
-}
-
 void exr_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
                format_t *format, Compression *compression)
 {
-    if(format->bps == 32) {
-        exr_write32(name, scale, pixels, compression);
-    }
-    else if(format->bps == 16) {
-        exr_write16(name, scale, pixels, compression);
-    }
-    else {
+    if (format->bps != 32 && format->bps != 16) {
         THROW(Iex::ArgExc, "EXR files only support 16 or 32 bps at the moment.");
     }
+
+    bool is_half = format->bps == 16 ? true : false;
+
+    int depth = pixels.depth();
+    float width = pixels.width();
+    float height = pixels.height();
+    float const* pixelPtr = pixels.ptr();
+
+    // Do any scaling on a full float buffer
+    ctl::dpx::fb<float> scaled_pixels;
+    if (scale != 0.0 && scale != 1.0) {
+        scaled_pixels.init(width, height, depth);
+        scaled_pixels.alpha(1.0);
+
+        const float* fIn = pixels.ptr();
+        float* out = scaled_pixels.ptr();
+
+        for (uint64_t i = 0; i < pixels.count(); i++) {
+            *(out++) = *(fIn++) / scale;
+        }
+        pixelPtr = scaled_pixels.ptr();
+    }
+
+    // Generate header
+    Imf::PixelType pixelType = is_half ? Imf::HALF : Imf::FLOAT;
+
+    Imf::Header header(width, height);
+    header.compression() = (Imf::Compression)compression->exrCompressionScheme;
+
+    header.channels().insert("R", Imf::Channel(pixelType));
+    header.channels().insert("G", Imf::Channel(pixelType));
+    header.channels().insert("B", Imf::Channel(pixelType));
+    if (depth == 4)
+        header.channels().insert("A", Imf::Channel(pixelType));
+
+    Imf::OutputFile file(name, header);
+    Imf::FrameBuffer frameBuffer;
+
+    ctl::dpx::fb<half> half_pixels;
+    if (is_half) {
+        // Create new half buffer
+        half_pixels.init(pixels.width(), pixels.height(), pixels.depth());
+        half_pixels.alpha(1.0);
+
+        // convert from float buffer to half buffer
+        const float* fIn = pixelPtr;
+        half* out = half_pixels.ptr();
+        for (uint64_t i = 0; i < pixels.count(); i++) {
+           *(out++) = half(*(fIn++));
+        }
+
+        half const* halfPixelPtr = half_pixels.ptr();
+
+        int xstride = sizeof(*halfPixelPtr) * depth;
+        int ystride = sizeof(*halfPixelPtr) * depth * width;
+
+        // Insert the half buffer into the framebuffer
+        frameBuffer.insert("R", Imf::Slice(pixelType, (char*)halfPixelPtr, xstride, ystride));
+        frameBuffer.insert("G", Imf::Slice(pixelType, (char*)(halfPixelPtr + 1), xstride, ystride));
+        frameBuffer.insert("B", Imf::Slice(pixelType, (char*)(halfPixelPtr + 2), xstride, ystride));
+        if (depth == 4)
+            frameBuffer.insert("A", Imf::Slice(pixelType, (char*)(halfPixelPtr + 3), xstride, ystride));
+    }
+    else {
+        // No conversion needed so insert the float buffer into the frambuffer
+        int xstride = sizeof(*pixelPtr) * depth;
+        int ystride = sizeof(*pixelPtr) * depth * width;
+
+        frameBuffer.insert("R", Imf::Slice(pixelType, (char*)pixelPtr, xstride, ystride));
+        frameBuffer.insert("G", Imf::Slice(pixelType, (char*)(pixelPtr + 1), xstride, ystride));
+        frameBuffer.insert("B", Imf::Slice(pixelType, (char*)(pixelPtr + 2), xstride, ystride));
+        if (depth == 4)
+            frameBuffer.insert("A", Imf::Slice(pixelType, (char*)(pixelPtr + 3), xstride, ystride));
+    }
+
+    file.setFrameBuffer(frameBuffer);
+    file.writePixels(height);
+
 }
 
 #else
