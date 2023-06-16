@@ -3,5 +3,6 @@ add_subdirectory(IlmCtlMath)
 add_subdirectory(IlmImfCtl)
 if (CTL_BUILD_TOOLS)
     add_subdirectory(ctlrender)
+    add_subdirectory(exrdpx)
 endif()
 
