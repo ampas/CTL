@@ -17,14 +17,28 @@ set(TEST_FILES "${PROJECT_SOURCE_DIR}/unittest/exrdpx")
 
 # copy CTL files to build folder
 add_custom_target(
-  exrdpx-build-time-copy-CTL-files ALL
+  exrdpx-build-time-copy-CTL-file1 ALL
   COMMAND ${CMAKE_COMMAND} -E copy 
-    ${TEST_FILES}/*.ctl 
+    ${TEST_FILES}/transform_DPX_EXR.ctl 
+    "${EXRDPX_BUILD_DIR}")
+add_custom_target(
+    exrdpx-build-time-copy-CTL-file2 ALL
+    COMMAND ${CMAKE_COMMAND} -E copy 
+    ${TEST_FILES}/transform_EXR_DPX.ctl 
+    "${EXRDPX_BUILD_DIR}")
+add_custom_target(
+    exrdpx-build-time-copy-CTL-file3 ALL
+    COMMAND ${CMAKE_COMMAND} -E copy 
+    ${TEST_FILES}/utilities.ctl 
     "${EXRDPX_BUILD_DIR}")
 
 if(OpenEXR_FOUND)
     # Test EXR->DPX conversions
     add_test(NAME "exrdpx-DPX-to-EXR-noargs" COMMAND ${EXRDPX_EXECUTABLE_PATH} "${TEST_FILES}/marci-512.dpx" "${EXRDPX_OUTPUT_FOLDER}/exrdpx-DPX-to-EXR-noargs.exr" WORKING_DIRECTORY "${EXRDPX_BUILD_DIR}")
+
+    add_test(NAME "exrdpx-DPX-to-EXR-xyz" COMMAND ${EXRDPX_EXECUTABLE_PATH} "${TEST_FILES}/marci-512.dpx" -xyz "${EXRDPX_OUTPUT_FOLDER}/exrdpx-DPX-to-EXR-xyz.exr" WORKING_DIRECTORY "${EXRDPX_BUILD_DIR}")
+
+    add_test(NAME "exrdpx-DPX-to-EXR-yc" COMMAND ${EXRDPX_EXECUTABLE_PATH} "${TEST_FILES}/marci-512.dpx" -yc "${EXRDPX_OUTPUT_FOLDER}/exrdpx-DPX-to-EXR-yc.exr" WORKING_DIRECTORY "${EXRDPX_BUILD_DIR}")
 
     # Test DPX->EXR conversions
     add_test(NAME "exrdpx-EXR-to-DPX-noargs" COMMAND ${EXRDPX_EXECUTABLE_PATH} "${TEST_FILES}/marci-512.exr" "${EXRDPX_OUTPUT_FOLDER}/exrdpx-EXR-to-DPX-noargs.dpx" WORKING_DIRECTORY "${EXRDPX_BUILD_DIR}")
