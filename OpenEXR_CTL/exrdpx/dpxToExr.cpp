@@ -235,7 +235,7 @@ dpxToExr (const char dpxFileName[],
 
     if (verbose)
     {
-	cout << "applyging CTL transforms:";
+	cout << "applying CTL transforms:";
 
 	for (int i = 0; i < transformNames.size(); ++i)
 	    cout << " " << transformNames[i];
