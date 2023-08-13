@@ -92,11 +92,21 @@ valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak
 test_20_status=$? 
 test_20_label="exrdpx-exr-to-dpx"
 
+cd ../exr_ctl_exr
+cp ../../OpenEXR_CTL/exr_ctl_exr/*.ctl .
+valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ../../OpenEXR_CTL/exr_ctl_exr/exr_ctl_exr -C change_saturation ../../../unittest/exr_ctl_exr/marci-512.exr ./output/exr_ctl_exr-no-args.exr
+test_21_status=$? 
+test_21_label="exr_ctl_exr"
+
+valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ../../OpenEXR_CTL/exr_ctl_exr/exr_ctl_exr -C change_saturation -float sScale 1.2 ../../../unittest/exr_ctl_exr/marci-512.exr ./output/exr_ctl_exr-sScale-1.2.exr
+test_22_status=$? 
+test_22_label="exr_ctl_exr"
+
 # go back to initial path
 cd $SCRIPTPATH
 
 # return valgrind exit codes
-if [ $test_01_status -eq 0 ] && [ $test_02_status -eq 0 ] && [ $test_03_status -eq 0 ] && [ $test_04_status -eq 0 ] && [ $test_05_status -eq 0 ] && [ $test_06_status -eq 0 ] && [ $test_07_status -eq 0 ] && [ $test_08_status -eq 0 ] && [ $test_09_status -eq 0 ] && [ $test_10_status -eq 0 ] && [ $test_11_status -eq 0 ] && [ $test_12_status -eq 0 ] && [ $test_13_status -eq 0 ] && [ $test_14_status -eq 0 ] && [ $test_15_status -eq 0 ] && [ $test_16_status -eq 0 ] && [ $test_17_status -eq 0 ] && [ $test_18_status -eq 0 ] && [ $test_19_status -eq 0 ] && [ $test_20_status -eq 0 ]
+if [ $test_01_status -eq 0 ] && [ $test_02_status -eq 0 ] && [ $test_03_status -eq 0 ] && [ $test_04_status -eq 0 ] && [ $test_05_status -eq 0 ] && [ $test_06_status -eq 0 ] && [ $test_07_status -eq 0 ] && [ $test_08_status -eq 0 ] && [ $test_09_status -eq 0 ] && [ $test_10_status -eq 0 ] && [ $test_11_status -eq 0 ] && [ $test_12_status -eq 0 ] && [ $test_13_status -eq 0 ] && [ $test_14_status -eq 0 ] && [ $test_15_status -eq 0 ] && [ $test_16_status -eq 0 ] && [ $test_17_status -eq 0 ] && [ $test_18_status -eq 0 ] && [ $test_19_status -eq 0 ] && [ $test_20_status -eq 0 ] && [ $test_21_status -eq 0 ] && [ $test_22_status -eq 0 ]
 then
   echo "Success: valgrind detected no errors"
   exit 0
@@ -201,6 +211,16 @@ else
   if [ $test_20_status -ne 0 ] 
   then 
     echo "$test_20_label: valgrind detected errors" 
+  fi
+
+  if [ $test_21_status -ne 0 ] 
+  then 
+    echo "$test_21_label: valgrind detected errors" 
+  fi
+
+  if [ $test_22_status -ne 0 ] 
+  then 
+    echo "$test_22_label: valgrind detected errors" 
   fi
 
   exit 1
