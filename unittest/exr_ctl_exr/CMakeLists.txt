@@ -25,7 +25,19 @@ add_custom_target(
 if(OpenEXR_FOUND)
 
     add_test(NAME "exr-ctl-exr-noargs" COMMAND ${EXR_CTL_EXR_EXECUTABLE_PATH} -C change_saturation "${TEST_FILES}/marci-512.exr" "${EXR_CTL_EXR_OUTPUT_FOLDER}/exr-ctl-exr-noargs.exr" WORKING_DIRECTORY "${EXR_CTL_EXR_BUILD_DIR}")
-    # set CTL_MODULE_PATH environment variable before running exr_ctl_exr
-    #set_property(TEST "exr-ctl-exr-noargs" PROPERTY ENVIRONMENT_MODIFICATION "CTL_MODULE_PATH=./")
+
+    add_test(NAME "exr-ctl-exr-t-3" COMMAND ${EXR_CTL_EXR_EXECUTABLE_PATH} -C change_saturation -t 3 "${TEST_FILES}/marci-512.exr" "${EXR_CTL_EXR_OUTPUT_FOLDER}/exr-ctl-exr-t-3.exr" WORKING_DIRECTORY "${EXR_CTL_EXR_BUILD_DIR}")
+
+    add_test(NAME "exr-ctl-exr-t-4" COMMAND ${EXR_CTL_EXR_EXECUTABLE_PATH} -C change_saturation -t 4 "${TEST_FILES}/marci-512.exr" "${EXR_CTL_EXR_OUTPUT_FOLDER}/exr-ctl-exr-t-4.exr" WORKING_DIRECTORY "${EXR_CTL_EXR_BUILD_DIR}")
+
+    add_test(NAME "exr-ctl-exr-sScale-1.0" COMMAND ${EXR_CTL_EXR_EXECUTABLE_PATH} -C change_saturation -float sScale 1.0 "${TEST_FILES}/marci-512.exr" "${EXR_CTL_EXR_OUTPUT_FOLDER}/exr-ctl-exr-sScale-1.0.exr" WORKING_DIRECTORY "${EXR_CTL_EXR_BUILD_DIR}")
+
+    add_test(NAME "exr-ctl-exr-sScale-1.2" COMMAND ${EXR_CTL_EXR_EXECUTABLE_PATH} -C change_saturation -float sScale 1.2 "${TEST_FILES}/marci-512.exr" "${EXR_CTL_EXR_OUTPUT_FOLDER}/exr-ctl-exr-sScale-1.2.exr" WORKING_DIRECTORY "${EXR_CTL_EXR_BUILD_DIR}")
+
+    add_test(NAME "exr-ctl-exr-sScale-0.8" COMMAND ${EXR_CTL_EXR_EXECUTABLE_PATH} -C change_saturation -float sScale 0.8 "${TEST_FILES}/marci-512.exr" "${EXR_CTL_EXR_OUTPUT_FOLDER}/exr-ctl-exr-sScale-0.8.exr" WORKING_DIRECTORY "${EXR_CTL_EXR_BUILD_DIR}")
+
+    add_test(NAME "exr-ctl-exr-sScale-1.2-adoptedNeutral-D65" COMMAND ${EXR_CTL_EXR_EXECUTABLE_PATH} -C change_saturation -float sScale 1.2 -float2 adoptedNeutral 0.31271 0.32902 "${TEST_FILES}/marci-512.exr" "${EXR_CTL_EXR_OUTPUT_FOLDER}/exr-ctl-exr-sScale-1.2-adoptedNeutral-D65.exr" WORKING_DIRECTORY "${EXR_CTL_EXR_BUILD_DIR}")
+
+    add_test(NAME "exr-ctl-exr-sScale-1.2-adoptedNeutral-D93" COMMAND ${EXR_CTL_EXR_EXECUTABLE_PATH} -C change_saturation -float sScale 1.2 -float2 adoptedNeutral 0.28315 0.29711 "${TEST_FILES}/marci-512.exr" "${EXR_CTL_EXR_OUTPUT_FOLDER}/exr-ctl-exr-sScale-1.2-adoptedNeutral-D93.exr" WORKING_DIRECTORY "${EXR_CTL_EXR_BUILD_DIR}")
 
 endif()
