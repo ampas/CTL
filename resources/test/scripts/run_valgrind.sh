@@ -100,7 +100,7 @@ test_21_label="exr_ctl_exr"
 
 valgrind -s --error-exitcode=1 --leak-check=full --track-origins=yes --show-leak-kinds=all ../../OpenEXR_CTL/exr_ctl_exr/exr_ctl_exr -C change_saturation -float sScale 1.2 ../../../unittest/exr_ctl_exr/marci-512.exr ./output/exr_ctl_exr-sScale-1.2.exr
 test_22_status=$? 
-test_22_label="exr_ctl_exr"
+test_22_label="exr_ctl_exr-float"
 
 # go back to initial path
 cd $SCRIPTPATH

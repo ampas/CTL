@@ -351,5 +351,15 @@ main(int argc, char **argv)
 	exitStatus = 1;
     }
 
+		// clean up dynamically allocated memory
+		if(extraAttrs.size() > 0)
+		{
+    	for(AttrMap::iterator it=extraAttrs.begin() ; it!=extraAttrs.end() ; it++)
+    	{
+        delete it->second;
+    	}
+		}
+		extraAttrs.clear();
+
     return exitStatus;
 }
