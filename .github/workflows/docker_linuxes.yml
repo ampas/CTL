@@ -12,6 +12,30 @@ on:
 
 jobs:
 
+  Dockerfile-repo-root:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./Dockerfile -t ctl:latest .
+
+    - name: Run unit tests (ctest) within the Docker image
+      run: docker run ctl:latest sh -c "cd ./build && ctest"
+
+  Dockerfile_openexr3-repo-root:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: docker build --no-cache --rm -f ./Dockerfile_openexr3 -t ctl:latest .
+
+      - name: Run unit tests (ctest) within the Docker image
+        run: docker run ctl:latest sh -c "cd ./build && ctest"
+
   ubuntu-18-04:
 
     runs-on: ubuntu-latest
@@ -48,14 +72,14 @@ jobs:
     - name: Run unit tests (ctest) within the Docker image
       run: docker run ctl:latest sh -c "cd ./build && ctest"
 
-  ubuntu-22-10:
+  ubuntu-23-10:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_22.10 -t ctl:latest .
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_23.10 -t ctl:latest .
 
     - name: Run unit tests (ctest) within the Docker image
       run: docker run ctl:latest sh -c "cd ./build && ctest"
