@@ -28,7 +28,7 @@ RUN apt-get -y install pkg-config
 WORKDIR /usr/src/CTL
 COPY . .
 WORKDIR /usr/src/CTL/build
-RUN cmake ..
+RUN cmake -D CMAKE_PREFIX_PATH=/usr/local/lib/CMake/AcesContainer ..
 RUN make
 RUN make install
 
