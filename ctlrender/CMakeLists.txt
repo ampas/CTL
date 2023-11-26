@@ -50,8 +50,40 @@ else()
 	message( STATUS "TIFF not found, ctlrender will not support TIF files" )
 endif()
 
+#set(AcesContainer_DIR "/usr/local/lib/CMake/AcesContainer")
+#25 0.685 CMake Warning at ctlrender/CMakeLists.txt:53 (find_package):
+#25 0.685   By not providing "FindAcesContainer.cmake" in CMAKE_MODULE_PATH this
+#25 0.685   project has asked CMake to find a package configuration file provided by
+#25 0.685   "AcesContainer", but CMake did not find one.
+#25 0.685 
+#25 0.685   Could not find a package configuration file provided by "AcesContainer"
+#25 0.685   with any of the following names:
+#25 0.685 
+#25 0.685     AcesContainerConfig.cmake
+#25 0.685     acescontainer-config.cmake
+#25 0.685 
+#25 0.685   Add the installation prefix of "AcesContainer" to CMAKE_PREFIX_PATH or set
+#25 0.685   "AcesContainer_DIR" to a directory containing one of the above files.  If
+#25 0.685   "AcesContainer" provides a separate development package or SDK, be sure it
+#25 0.685   has been installed.
+#set(CMAKE_MODULE_PATH "/usr/local/lib/CMake/AcesContainer;${CMAKE_MODULE_PATH}")
+#set(AcesContainer_DIR "/usr/local/lib/CMake/AcesContainer")
 find_package(AcesContainer)
+if( AcesContainer_FOUND )
+	message( STATUS "DEBUG: find_package(AcesContainer) AcesContainer_FOUND is true")
+	
+else()
+	message( STATUS "DEBUG: find_package(AcesContainer) AcesContainer_FOUND is false")
+endif()
+
 if (TARGET AcesContainer::AcesContainer)
+	message( STATUS "found AcesContainer:" )
+	message( STATUS "	AcesContainer_VERSION : ${AcesContainer_VERSION}" )
+	message( STATUS "	AcesContainer_INCLUDE_DIRS : ${AcesContainer_INCLUDE_DIRS}" )
+	message( STATUS "	AcesContainer_LIBRARIES : ${AcesContainer_LIBRARIES}" )
+	message( STATUS "	AcesContainer_INCLUDE_DIR : ${AcesContainer_INCLUDE_DIR}" )
+	message( STATUS "	AcesContainer_LIBRARY : ${AcesContainer_LIBRARY}" )
+	
 	target_compile_definitions(ctlrender
 		PRIVATE
 			-DHAVE_ACESFILE=1
@@ -60,6 +92,8 @@ if (TARGET AcesContainer::AcesContainer)
 		PRIVATE
 			AcesContainer::AcesContainer
 	)
+else()
+	message( STATUS "AcesContainer not found, ctlrender will not support AcesContainer files" )
 endif()
 
 install(TARGETS ctlrender DESTINATION ${CMAKE_INSTALL_BINDIR})

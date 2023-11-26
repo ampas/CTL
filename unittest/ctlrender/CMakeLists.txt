@@ -14,6 +14,12 @@ elseif( NOT TARGET TIFF::TIFF AND NOT OpenEXR_FOUND )
     message(WARNING "LibTIFF not found, OpenEXR not found, not including TIF or EXR files in ctlrender unit tests")
 endif()
 
+find_package(AcesContainer)
+if( AcesContainer_FOUND )
+	message( STATUS "DEBUG: find_package(AcesContainer) AcesContainer_FOUND is true")
+    message( STATUS "DEBUG: including ACES ctlrender unit tests")
+endif()
+
 set(CTLRENDER_OUTPUT_FOLDER "${CMAKE_BINARY_DIR}/unittest/ctlrender/output")
 message("ctlrender test output folder will be created at: ${CTLRENDER_OUTPUT_FOLDER}")
 add_custom_target(ctlrender-build-time-make-directory ALL
@@ -64,6 +70,11 @@ if(OpenEXR_FOUND)
     add_test(NAME "ctlrender-EXR_RGBA16->EXR_RGBA_32" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity_with_alpha.ctl" -format exr32 -force "${TEST_FILES}/colorbars_nuke_rgba_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgba_exr16_to_exr32.exr")
     add_test(NAME "ctlrender-EXR_RGBA32->EXR_RGBA_16" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity_with_alpha.ctl" -format exr16 -force "${TEST_FILES}/colorbars_nuke_rgba_exr32.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgba_exr32_to_exr16.exr")
     add_test(NAME "ctlrender-EXR_RGBA32->EXR_RGBA_32" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity_with_alpha.ctl" -format exr32 -force "${TEST_FILES}/colorbars_nuke_rgba_exr32.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgba_exr32_to_exr32.exr")
+endif()
+
+#ACES tests
+if (OpenEXR_FOUND AND AcesContainer_FOUND)
+    add_test(NAME "ctlrender-EXR16->ACES" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format aces -force "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_aces.aces")
 endif()
 
 # test TIFF32 to EXR and EXR to TIFF32 support

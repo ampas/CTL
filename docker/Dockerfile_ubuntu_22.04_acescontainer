@@ -1,0 +1,37 @@
+FROM ubuntu:22.04
+
+RUN apt-get update
+
+# disable interactive install 
+ENV DEBIAN_FRONTEND noninteractive
+
+# install developement tools
+RUN apt-get -y install cmake
+RUN apt-get -y install g++
+RUN apt-get -y install git
+
+# install CTL dependencies
+RUN apt-get -y install libopenexr-dev
+RUN apt-get -y install libtiff-dev
+
+# install aces_container
+WORKDIR /usr/src/
+RUN git clone https://github.com/ampas/aces_container.git
+WORKDIR /usr/src/aces_container/build
+RUN cmake ..
+RUN make
+RUN make install
+
+RUN apt-get -y install pkg-config
+
+# build CTL
+WORKDIR /usr/src/CTL
+COPY . .
+WORKDIR /usr/src/CTL/build
+RUN cmake ..
+RUN make
+RUN make install
+
+# finalize docker environment
+WORKDIR /usr/src/CTL
+
