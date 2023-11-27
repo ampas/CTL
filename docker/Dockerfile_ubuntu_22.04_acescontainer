@@ -15,22 +15,35 @@ RUN apt-get -y install libopenexr-dev
 RUN apt-get -y install libtiff-dev
 
 # install aces_container
+#WORKDIR /usr/src/
+#RUN git clone https://github.com/ampas/aces_container.git
+#WORKDIR /usr/src/aces_container/build
+#RUN cmake ..
+#RUN make
+#RUN make install
+
+RUN apt-get -y install pkg-config
+
+# Make sudo dummy replacement, so we don't weaken docker security
+RUN echo "#!/bin/bash\n\$@" > /usr/bin/sudo
+RUN chmod +x /usr/bin/sudo
+
+# copy CTL repo into docker
+WORKDIR /usr/src/CTL
+COPY . .
+
+# install ACES AcesContainer using install script
 WORKDIR /usr/src/
-RUN git clone https://github.com/ampas/aces_container.git
-WORKDIR /usr/src/aces_container/build
+RUN bash ./CTL/resources/scripts/install_aces_container.bash
+
+# build CTL
+WORKDIR /usr/src/CTL/build
+#RUN cmake -D CMAKE_PREFIX_PATH=/usr/local/lib/CMake/AcesContainer ..
 RUN cmake ..
 RUN make
 RUN make install
 
-RUN apt-get -y install pkg-config
 
-# build CTL
-WORKDIR /usr/src/CTL
-COPY . .
-WORKDIR /usr/src/CTL/build
-RUN cmake -D CMAKE_PREFIX_PATH=/usr/local/lib/CMake/AcesContainer ..
-RUN make
-RUN make install
 
 # finalize docker environment
 WORKDIR /usr/src/CTL

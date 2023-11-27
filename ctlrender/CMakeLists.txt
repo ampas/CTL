@@ -72,7 +72,7 @@ endif()
 
 find_package(AcesContainer)
 if( AcesContainer_FOUND )
-	message( STATUS "DEBUG: find_package(AcesContainer) AcesContainer_FOUND is true")
+	message( STATUS "find_package(AcesContainer) - AcesContainer_FOUND is true")
 	message( STATUS "	AcesContainer_VERSION : ${AcesContainer_VERSION}" )
 	message( STATUS "	AcesContainer_INCLUDE_DIRS : ${AcesContainer_INCLUDE_DIRS}" )
 	message( STATUS "	AcesContainer_LIBRARIES : ${AcesContainer_LIBRARIES}" )
@@ -84,13 +84,17 @@ else()
 endif()
 
 if (TARGET AcesContainer::AcesContainer)
-	message( STATUS "found AcesContainer - TARGET AcesContainer::AcesContainer is true:" )
+	message( STATUS "find_package(AcesContainer) - TARGET AcesContainer::AcesContainer is true:" )
 	message( STATUS "	AcesContainer_VERSION : ${AcesContainer_VERSION}" )
 	message( STATUS "	AcesContainer_INCLUDE_DIRS : ${AcesContainer_INCLUDE_DIRS}" )
 	message( STATUS "	AcesContainer_LIBRARIES : ${AcesContainer_LIBRARIES}" )
 	message( STATUS "	AcesContainer_INCLUDE_DIR : ${AcesContainer_INCLUDE_DIR}" )
 	message( STATUS "	AcesContainer_LIBRARY : ${AcesContainer_LIBRARY}" )
-	
+else()
+	message( STATUS "AcesContainer not found - TARGET AcesContainer::AcesContainer is false")
+endif()
+
+if( AcesContainer_FOUND OR TARGET AcesContainer::AcesContainer)
 	target_compile_definitions(ctlrender
 		PRIVATE
 			-DHAVE_ACESFILE=1
@@ -99,9 +103,11 @@ if (TARGET AcesContainer::AcesContainer)
 		PRIVATE
 			AcesContainer::AcesContainer
 	)
+	message( STATUS "AcesContainer found")
+	message( STATUS "  ctlrender will support writing AcesContainer files" )
 else()
-	message( STATUS "AcesContainer not found - TARGET AcesContainer::AcesContainer is false")
-	message( STATUS "  ctlrender will not support AcesContainer files" )
+	message( STATUS "AcesContainer not found - TARGET AcesContainer::AcesContainer is false and AcesContainer_FOUND is false")
+	message( STATUS "  ctlrender will not support writing AcesContainer files" )
 endif()
 
 install(TARGETS ctlrender DESTINATION ${CMAKE_INSTALL_BINDIR})
