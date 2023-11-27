@@ -68,6 +68,8 @@ endif()
 #25 0.685   has been installed.
 #set(CMAKE_MODULE_PATH "/usr/local/lib/CMake/AcesContainer;${CMAKE_MODULE_PATH}")
 #set(AcesContainer_DIR "/usr/local/lib/CMake/AcesContainer")
+#set(CMAKE_PREFIX_PATH "/usr/local/lib/CMake/AcesContainer;C:/Program Files (x86)/AcesContainer/CMake/;${CMAKE_PREFIX_PATH}")
+
 find_package(AcesContainer)
 if( AcesContainer_FOUND )
 	message( STATUS "DEBUG: find_package(AcesContainer) AcesContainer_FOUND is true")

@@ -28,6 +28,9 @@ jobs:
     - name: install openexr 
       run:  brew install openexr 
 
+    - name: install aces_container
+      run:  brew install aces_container 
+
     - uses: actions/checkout@v3
 
     - name: Configure CMake
@@ -202,6 +205,9 @@ jobs:
 
     - name: install openexr 
       run:  brew install openexr 
+
+    - name: install aces_container
+      run:  brew install aces_container
 
     - uses: actions/checkout@v3
 
