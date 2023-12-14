@@ -82,7 +82,7 @@ jobs:
       run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_22.04_brew -t ctl:latest .
 
     - name: Run ctlrender within the Docker image
-      run: docker run ctl:latest sh -c "RUN ctlrender -ctl /usr/src/aces-dev/transforms/ctl/utilities/ACESutil.Unity.ctl /usr/src/aces-dev/images/ACES/SonyF35.StillLife.exr /tmp/testout.exr"
+      run: docker run ctl:latest sh -c "ctlrender -ctl /usr/src/aces-dev/transforms/ctl/utilities/ACESutil.Unity.ctl /usr/src/aces-dev/images/ACES/SonyF35.StillLife.exr /tmp/testout.exr"
 
   ubuntu-23-10:
 
