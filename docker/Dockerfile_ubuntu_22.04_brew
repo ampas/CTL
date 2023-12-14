@@ -1,0 +1,37 @@
+FROM ubuntu:22.04
+
+RUN apt-get update
+
+# disable interactive install 
+ENV DEBIAN_FRONTEND noninteractive
+
+# install tools
+RUN apt-get -y install curl
+RUN apt-get -y install git
+RUN apt-get -y install build-essential
+
+# install brew
+RUN NONINTERACTIVE=1 bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+RUN (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /root/.bashrc
+RUN eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# add brew to PATH environment variable
+ENV PATH="/home/linuxbrew/.linuxbrew/bin:${PATH}"
+
+# install CTL using brew 
+RUN brew install --head ctl
+
+# download AMPAS ACES CTL reference code
+WORKDIR /usr/src/
+RUN git clone https://github.com/ampas/aces-dev.git
+
+# download AMPAS ACES reference images
+WORKDIR /usr/src/aces-dev/images/ACES
+RUN curl -L -o SonyF35.StillLife.exr https://www.dropbox.com/sh/9xcfbespknayuft/AAA04zUZyBYeHRHLaFry2XfDa/ACES/SonyF35.StillLife.exr
+
+# run ctlrender to test
+#RUN ctlrender -ctl /usr/src/aces-dev/transforms/ctl/utilities/ACESutil.Unity.ctl /usr/src/aces-dev/images/ACES/SonyF35.StillLife.exr /tmp/testout.exr
+
+# finalize docker environment
+WORKDIR /home
+
