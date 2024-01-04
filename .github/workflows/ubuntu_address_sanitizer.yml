@@ -99,6 +99,18 @@ jobs:
     - name: install libtiff
       run: sudo apt-get install libtiff-dev -y 
 
+    - name: install aces_container
+      run: |
+        cd ..
+        git clone https://github.com/ampas/aces_container.git &&
+        cmake -S aces_container -B aces_container/build -DCMAKE_CXX_FLAGS="-Wno-c++11-narrowing" &&
+        cmake --build aces_container/build  &&
+        sudo cmake --install aces_container/build
+      
+    - name: install pkg-config to help find aces_container
+      run: |
+        sudo apt-get -y install pkg-config
+
     - uses: actions/checkout@v3
 
     - name: Configure CMake
