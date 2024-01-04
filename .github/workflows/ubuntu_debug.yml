@@ -130,7 +130,7 @@ jobs:
         git clone https://github.com/ampas/aces_container.git &&
         cmake -S aces_container -B aces_container/build -DCMAKE_CXX_FLAGS="-Wno-c++11-narrowing" &&
         cmake --build aces_container/build  &&
-        cmake --install aces_container/build
+        sudo cmake --install aces_container/build
     
     - name: install pkg-config to help find aces_container
       run: |
