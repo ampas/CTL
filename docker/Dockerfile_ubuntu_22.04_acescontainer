@@ -1,0 +1,55 @@
+FROM ubuntu:22.04
+
+RUN apt-get update
+
+# disable interactive install 
+ENV DEBIAN_FRONTEND noninteractive
+
+# install developement tools
+RUN apt-get -y install cmake
+RUN apt-get -y install g++
+RUN apt-get -y install git
+
+RUN apt-get -y install valgrind
+
+# install CTL dependencies
+RUN apt-get -y install libopenexr-dev
+RUN apt-get -y install libtiff-dev
+
+# install aces_container
+WORKDIR /usr/src/
+RUN git clone https://github.com/ampas/aces_container.git
+#WORKDIR /usr/src/aces_container/build
+#RUN cmake ..
+#RUN make
+#RUN make install
+RUN cmake -S aces_container -B aces_container/build -DCMAKE_CXX_FLAGS="-Wno-c++11-narrowing"
+RUN cmake --build aces_container/build
+RUN cmake --install aces_container/build
+
+RUN apt-get -y install pkg-config
+
+# Make sudo dummy replacement, so we don't weaken docker security
+#RUN echo "#!/bin/bash\n\$@" > /usr/bin/sudo
+#RUN chmod +x /usr/bin/sudo
+
+# copy CTL repo into docker
+WORKDIR /usr/src/CTL
+COPY . .
+
+# install ACES AcesContainer using install script
+#WORKDIR /usr/src/
+#RUN bash ./CTL/resources/scripts/install_aces_container.bash
+
+# build CTL
+WORKDIR /usr/src/CTL/build
+#RUN cmake -D CMAKE_PREFIX_PATH=/usr/local/lib/CMake/AcesContainer ..
+RUN cmake ..
+RUN make
+RUN make install
+
+
+
+# finalize docker environment
+WORKDIR /usr/src/CTL
+
