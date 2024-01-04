@@ -99,7 +99,6 @@ downloaded from http://www.openexr.com or use one of the commands below.
     
             $ brew install ilmBase
 
-
 ### Suggested ###
 
 __OpenEXR__
@@ -152,7 +151,7 @@ If you want to use CTL together with the TIFF image file format, you should down
 
 __ACES Container__
 
-ctlrender is able to write files compliant with SMPTE S2065-4. This
+ctlrender is able to write files compliant with SMPTE ST2065-4. This
 functionality requires the aces_container library, the latest version of which 
 can be downloaded from https://github.com/ampas/aces_container
 
@@ -180,7 +179,6 @@ can be downloaded from https://github.com/ampas/aces_container
     
             $ brew install --head ctl
 
-
 * Redhat, Ubuntu
 
     from the root source directory:
@@ -192,7 +190,7 @@ can be downloaded from https://github.com/ampas/aces_container
 
     to run the optional unit tests:
 
-        $ sudo make check
+        $ ctest
 
 * Docker
 
