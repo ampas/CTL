@@ -1,3 +1,14 @@
+Version 1.5.3:
+  * Fix compile bug preventing compilation on Ubuntu Focal and later
+  * Fix valgrind and address santizer errors that caused runtime crashes and CI failures
+  * Transition unit tests to use CMake's ctest
+  * Refactor exr_write() function in ctlrender 
+  * Add support for OpenEXR 3 while retaining support for OpenEXR 2
+  * Add unit tests for ctlrender, exr_ctl_exr and exrdpx executables
+  * Modernize the CMake build process to support more platforms (Mac, Linux and Windows) 
+  * Add CI to build and test on many platforms
+  * Add docker containers
+
 Version 1.5:
   * added OpenEXR_CTL, ctlrender
   * changed build system to Cmake
