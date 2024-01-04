@@ -69,6 +69,18 @@ jobs:
         make  &&
         sudo make install
 
+    - name: install aces_container
+      run: |
+        cd ..
+        git clone https://github.com/ampas/aces_container.git &&
+        cmake -S aces_container -B aces_container/build -DCMAKE_CXX_FLAGS="-Wno-c++11-narrowing" &&
+        cmake --build aces_container/build  &&
+        sudo cmake --install aces_container/build
+      
+    - name: install pkg-config to help find aces_container
+      run: |
+        sudo apt-get -y install pkg-config
+
     - uses: actions/checkout@v3
 
     - name: Configure CMake
@@ -183,6 +195,18 @@ jobs:
         make  &&
         sudo make install
 
+    - name: install aces_container
+      run: |
+        cd ..
+        git clone https://github.com/ampas/aces_container.git &&
+        cmake -S aces_container -B aces_container/build -DCMAKE_CXX_FLAGS="-Wno-c++11-narrowing" &&
+        cmake --build aces_container/build  &&
+        sudo cmake --install aces_container/build
+      
+    - name: install pkg-config to help find aces_container
+      run: |
+        sudo apt-get -y install pkg-config
+
     - uses: actions/checkout@v3
 
     - name: Configure CMake
@@ -200,6 +224,11 @@ jobs:
       working-directory: ${{github.workspace}}/build
       # Run valgrind using a bash script  
       run: pwd && ls && bash ../resources/test/scripts/run_valgrind.sh    
+
+    - name: Run Valgrind on aces container unit tests
+      working-directory: ${{github.workspace}}/build
+      # Run valgrind using a bash script  
+      run: pwd && ls && bash ../resources/test/scripts/run_valgrind_aces_container.sh
 
   valgrind-openexr3:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
@@ -245,6 +274,18 @@ jobs:
         make  &&
         sudo make install
 
+    - name: install aces_container
+      run: |
+        cd ..
+        git clone https://github.com/ampas/aces_container.git &&
+        cmake -S aces_container -B aces_container/build -DCMAKE_CXX_FLAGS="-Wno-c++11-narrowing" &&
+        cmake --build aces_container/build  &&
+        sudo cmake --install aces_container/build
+      
+    - name: install pkg-config to help find aces_container
+      run: |
+        sudo apt-get -y install pkg-config
+
     - uses: actions/checkout@v3
 
     - name: Configure CMake
@@ -258,13 +299,14 @@ jobs:
         cd ${{ github.workspace }}
         cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    #- name: Make unit tests
-    #  working-directory: ${{github.workspace}}/build
-    #  run: make check 
-    
     - name: Run Valgrind on unit tests
       working-directory: ${{github.workspace}}/build
       # Run valgrind using a bash script  
       run: pwd && ls && bash ../resources/test/scripts/run_valgrind.sh
+
+    - name: Run Valgrind on aces container unit tests
+      working-directory: ${{github.workspace}}/build
+      # Run valgrind using a bash script  
+      run: pwd && ls && bash ../resources/test/scripts/run_valgrind_aces_container.sh
 
   

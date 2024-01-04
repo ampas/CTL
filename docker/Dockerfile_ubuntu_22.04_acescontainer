@@ -10,6 +10,8 @@ RUN apt-get -y install cmake
 RUN apt-get -y install g++
 RUN apt-get -y install git
 
+RUN apt-get -y install valgrind
+
 # install CTL dependencies
 RUN apt-get -y install libopenexr-dev
 RUN apt-get -y install libtiff-dev
