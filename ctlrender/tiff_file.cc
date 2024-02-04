@@ -65,6 +65,8 @@
 #include <Iex.h>
 #ifdef _WIN32
   #include <malloc.h>
+#elif defined(__FreeBSD__)
+  #include <stdlib.h>
 #else
   #include <alloca.h>
 #endif
