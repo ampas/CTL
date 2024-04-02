@@ -17,13 +17,8 @@ RUN apt-get -y install libtiff-dev
 WORKDIR /usr/src/CTL
 COPY . .
 WORKDIR /usr/src/CTL/build
-RUN rm -R *
+RUN rm -R * || true
 RUN cmake .. -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=TRUE -DCMAKE_VERBOSE_MAKEFILE=on -DCMAKE_CXX_FLAGS="-Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
-#RUN cmake .. -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing
-#RUN cmake ..
-#RUN make CXXFLAGS="-flto=4 -Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
-#RUN make CXXFLAGS="-flto=4 -fno-fat-lto-objects"
-#RUN make CXXFLAGS="-Werror=odr -Werror=lto-type-mismatch -Werror=strict-aliasing"
 RUN make 
 RUN make install
 
