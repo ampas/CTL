@@ -206,7 +206,10 @@ bool dpx::isnull(uint8_t v) {
 }
 
 bool dpx::isnull(float32_t v) {
-	return *((uint32_t *)&v)==(uint32_t)-1;
+	uint32_t  u;
+    memcpy(&u, &v, sizeof(v));
+	return (u == (uint32_t)-1) ? true : false;
+	//return *((uint32_t *)&v)==(uint32_t)-1;
 }
 
 }

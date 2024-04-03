@@ -3,6 +3,7 @@
 // Do not edit.
 //
 
+#include <string.h>
 
 extern const unsigned int log10Table[];
 extern const unsigned int logTable[];
@@ -12,14 +13,22 @@ extern const unsigned short expTable[];
 inline float
 log10_h (half x)
 {
-    return *(float *)(&log10Table[x.bits()]);
+    int i = log10Table[x.bits()];
+    float f;
+    memcpy(&f, &i, sizeof(i));
+    return f;
+    //return *(float *)(&log10Table[x.bits()]);
 }
 
 
 inline float
 log_h (half x)
 {
-    return *(float *)(&logTable[x.bits()]);
+    int i = logTable[x.bits()];
+    float f;
+    memcpy(&f, &i, sizeof(i));
+    return f;
+    //return *(float *)(&logTable[x.bits()]);
 }
 
 
