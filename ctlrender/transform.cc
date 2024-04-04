@@ -394,7 +394,7 @@ void run_ctl_transform(const ctl_operation_t &ctl_operation, CTLResults *ctl_res
             }
         } catch (...) {
 			char message_text[512] = {'\0'};
-			sprintf( message_text, "CTL file must contain either a main or <module_name> (%s) function", module);
+			snprintf( message_text, 512, "CTL file must contain either a main or <module_name> (%s) function", module);
             THROW(Iex::ArgExc, message_text);
         }		
 
