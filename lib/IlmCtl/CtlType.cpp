@@ -204,8 +204,10 @@ VoidType::VoidType (): DataType ()
 bool
 VoidType::isSameTypeAs (const TypePtr &t) const
 {
-	const type_info& ti1 = typeid(*this);
-	const type_info& ti2 = typeid(*t);
+	auto& t1 = *this;
+	const type_info& ti1 = typeid(t1);
+	auto& t2 = *t;
+	const type_info& ti2 = typeid(t2);
 	return t && ti1 == ti2;
     //return t && typeid (*this) == typeid (*t);
 }
@@ -285,8 +287,10 @@ BoolType::BoolType () : DataType ()
 bool
 BoolType::isSameTypeAs (const TypePtr &t) const
 {
-    const type_info& ti1 = typeid(*this);
-	const type_info& ti2 = typeid(*t);
+    auto& t1 = *this;
+	const type_info& ti1 = typeid(t1);
+	auto& t2 = *t;
+	const type_info& ti2 = typeid(t2);
 	return t && ti1 == ti2;
 	//return t && typeid (*this) == typeid (*t);
 }
@@ -469,8 +473,10 @@ IntType::IntType () : DataType ()
 bool
 IntType::isSameTypeAs (const TypePtr &t) const
 {
-    const type_info& ti1 = typeid(*this);
-	const type_info& ti2 = typeid(*t);
+    auto& t1 = *this;
+	const type_info& ti1 = typeid(t1);
+	auto& t2 = *t;
+	const type_info& ti2 = typeid(t2);
 	return t && ti1 == ti2;
 	//return t && typeid (*this) == typeid (*t);
 }
@@ -687,8 +693,10 @@ UIntType::UIntType () : DataType ()
 bool
 UIntType::isSameTypeAs (const TypePtr &t) const
 {
-    const type_info& ti1 = typeid(*this);
-	const type_info& ti2 = typeid(*t);
+    auto& t1 = *this;
+	const type_info& ti1 = typeid(t1);
+	auto& t2 = *t;
+	const type_info& ti2 = typeid(t2);
 	return t && ti1 == ti2;
 	//return t && typeid (*this) == typeid (*t);
 }
@@ -904,8 +912,10 @@ HalfType::HalfType (): DataType ()
 bool
 HalfType::isSameTypeAs (const TypePtr &t) const
 {
-    const type_info& ti1 = typeid(*this);
-	const type_info& ti2 = typeid(*t);
+    auto& t1 = *this;
+	const type_info& ti1 = typeid(t1);
+	auto& t2 = *t;
+	const type_info& ti2 = typeid(t2);
 	return t && ti1 == ti2;
 	//return t && typeid (*this) == typeid (*t);
 }
@@ -1091,8 +1101,10 @@ FloatType::FloatType (): DataType ()
 bool
 FloatType::isSameTypeAs (const TypePtr &t) const
 {
-    const type_info& ti1 = typeid(*this);
-	const type_info& ti2 = typeid(*t);
+    auto& t1 = *this;
+	const type_info& ti1 = typeid(t1);
+	auto& t2 = *t;
+	const type_info& ti2 = typeid(t2);
 	return t && ti1 == ti2;
 	//return t && typeid (*this) == typeid (*t);
 }
@@ -1279,8 +1291,10 @@ StringType::StringType (): DataType ()
 bool
 StringType::isSameTypeAs (const TypePtr &t) const
 {
-    const type_info& ti1 = typeid(*this);
-	const type_info& ti2 = typeid(*t);
+    auto& t1 = *this;
+	const type_info& ti1 = typeid(t1);
+	auto& t2 = *t;
+	const type_info& ti2 = typeid(t2);
 	return t && ti1 == ti2;
 	//return t && typeid (*this) == typeid (*t);
 }
