@@ -126,3 +126,7 @@ if(OpenEXR_FOUND)
     add_test(NAME "ctlrender-invalid-output-filename-exr" COMMAND ctlrender -force -format exr -ctl "${TEST_FILES}/unity.ctl" "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/missing_folder/invalid_filename_out.exr")
     set_tests_properties("ctlrender-invalid-output-filename-exr" PROPERTIES WILL_FAIL TRUE)
 endif()
+
+# test for maxInstCount exception
+add_test(NAME "ctlrender-maxInstCount-exception" COMMAND ctlrender -force -ctl "${PROJECT_SOURCE_DIR}/resources/test/ctl/throw_maxInstCount_exception.ctl" "${PROJECT_SOURCE_DIR}/resources/test/exr/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/maxInstCount_exception.exr")
+

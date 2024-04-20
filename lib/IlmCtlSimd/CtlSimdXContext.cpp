@@ -240,7 +240,11 @@ SimdXContext::countInstruction ()
     if ((++_instCount & 0x01fff) == 0)
     {
 	if (_maxInstCount && _instCount > _maxInstCount)
-	    throw Ctl::MaxInstExc ("Maximum CTL instruction count exceeded.");
+      THROW(Ctl::MaxInstExc, "\nException Ctl::MaxInstExc thrown\n" <<
+        "Maximum CTL instruction count _maxInstCount=" << _maxInstCount <<
+        " exceeded, _instCount=" << _instCount << "\n" <<
+        "Try increasing SimdInterpreter::Data->maxInstCount\n");
+//	    throw Ctl::MaxInstExc ("Maximum CTL instruction count exceeded.");
 
 	if (_abortCount != _interpreter.abortCount())
 	    throw Ctl::AbortExc ("CTL program aborted.");
