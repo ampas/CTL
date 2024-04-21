@@ -86,7 +86,7 @@ SimdInterpreter::SimdInterpreter():
     Interpreter(),
     _data (new Data)
 {
-    _data->maxInstCount = 10000000;
+    _data->maxInstCount = 100000000;
     _data->abortCount = 0;
 
     //

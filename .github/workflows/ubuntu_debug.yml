@@ -170,6 +170,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: run apt-get update
+      run: sudo apt-get -y update
 
     - name: install test tool - valgrind
       run: sudo apt-get -y install valgrind
@@ -237,7 +239,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
+    - name: run apt-get update
+      run: sudo apt-get -y update
+      
     - name: install test tool - valgrind
       run: sudo apt-get -y install valgrind
 
