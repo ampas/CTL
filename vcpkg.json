@@ -3,6 +3,7 @@
     "version": "1.5.3",
     "dependencies": [
         "imath",
-        "openexr"
+        "openexr",
+        "tiff"
     ]
 }

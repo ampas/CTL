@@ -30,11 +30,8 @@ jobs:
     - name: install dependencies - openexr
       run:  vcpkg install openexr:x64-windows
 
-    # disabling tiff due to security issue
-    # https://github.com/microsoft/vcpkg/issues/37871
-    # https://github.com/microsoft/vcpkg/issues/37839
-    #- name: install dependencies - tiff
-    #  run:  vcpkg install tiff:x64-windows
+    - name: install dependencies - tiff
+      run:  vcpkg install tiff:x64-windows
 
     - name: check vcpkg install status
       run: vcpkg list
@@ -69,11 +66,8 @@ jobs:
     - name: install dependencies - openexr
       run:  vcpkg install openexr:x64-windows
 
-    # disabling tiff due to security issue
-    # https://github.com/microsoft/vcpkg/issues/37871
-    # https://github.com/microsoft/vcpkg/issues/37839
-    #- name: install dependencies - tiff
-    #  run:  vcpkg install tiff:x64-windows
+    - name: install dependencies - tiff
+      run:  vcpkg install tiff:x64-windows
 
     - name: check vcpkg install status
       run: vcpkg list
