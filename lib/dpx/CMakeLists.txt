@@ -35,7 +35,7 @@ target_link_libraries(ctldpx
 #          $<$<TARGET_EXISTS:IlmBase::Iex>:IlmBase::Iex>
 #    )
 
-set_target_properties(IlmCtlSimd
+set_target_properties(ctldpx
 	PROPERTIES
 		VERSION ${CTL_VERSION}
 		SOVERSION ${CTL_VERSION}
