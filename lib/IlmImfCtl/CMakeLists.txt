@@ -35,6 +35,12 @@ target_link_libraries (IlmImfCtl
           $<$<TARGET_EXISTS:IlmBase::Iex>:IlmBase::Iex>
     )
 
+set_target_properties(IlmImfCtl
+       PROPERTIES
+               VERSION ${CTL_VERSION}
+               SOVERSION ${CTL_VERSION}
+)
+
 install(FILES
 	ImfCtlApplyTransforms.h
 DESTINATION
