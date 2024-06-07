@@ -1,0 +1,76 @@
+name: FreeBSD
+
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+      - 'doc/**'
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'doc/**'
+
+env:
+    # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+    BUILD_TYPE: Debug
+
+jobs:
+
+  setup-freeBSD:
+
+    runs-on: ubuntu-latest
+    # based on example from https://github.com/marketplace/actions/freebsd-vm
+    steps:
+    - uses: actions/checkout@v4
+    - name: setup FreeBSD on github runner
+      id: test
+      uses: vmactions/freebsd-vm@v1
+      with:
+        usesh: true
+        prepare: |
+          pkg install -y curl
+
+        run: |
+          pwd
+          ls -lah
+          whoami
+          env
+          freebsd-version
+          
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: do CI on FreeBSD VM on github runner
+      id: test
+      uses: vmactions/freebsd-vm@v1
+      with:
+        usesh: true
+        prepare: |
+          pkg install -y cmake
+          pkg install -y openexr
+          pkg install -y tiff
+        run:  |
+            mkdir build &&
+            cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} &&
+            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+            
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: do CI on FreeBSD VM on github runner
+      id: test
+      uses: vmactions/freebsd-vm@v1
+      with:
+        usesh: true
+        prepare: |
+          pkg install -y cmake
+          pkg install -y openexr
+          pkg install -y tiff
+        run:  |
+            mkdir build &&
+            cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} &&
+            cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} &&
+            cd build &&
+            ctest -V --output-on-failure
