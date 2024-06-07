@@ -387,10 +387,11 @@ void dpx::write(std::ostream *os)
 		cpu_is_little_endian=TRUE;
 	}
 
-	_need_byteswap=FALSE;
-	if(cpu_is_little_endian!=little_endian) {
-		_need_byteswap=TRUE;
-	}
+	//_need_byteswap=FALSE;
+	//if(cpu_is_little_endian!=little_endian) {
+	//	_need_byteswap=TRUE;
+	//}
+	_need_byteswap=TRUE;
 
 	// struct tm source_creation_time_tm;
 	// time_t source_creation_time_time;

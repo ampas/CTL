@@ -261,7 +261,8 @@ void rwinfo::write_init(std::ostream *o, dpx *h) {
 	if(h->current_compliance!=h->compliance) {
 		// XXX changed validation level... This will probably end in tears...
 	}
-	if(h->current_endian_mode!=h->current_endian_mode) {
+	//if(h->current_endian_mode!=h->current_endian_mode) {
+	if(h->current_endian_mode!=h->endian_mode) {
 		// XXX byteswap changed. this will probably end in tears...
 	}
 }

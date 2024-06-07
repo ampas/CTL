@@ -48,11 +48,11 @@ jobs:
 
     steps:
 
-    - name: uninstall openexr 
-      run:  brew uninstall --ignore-dependencies openexr 
+    # - name: uninstall openexr 
+    #   run:  brew uninstall --ignore-dependencies openexr 
 
-    - name: uninstall imath 
-      run:  brew uninstall --ignore-dependencies imath
+    # - name: uninstall imath 
+    #   run:  brew uninstall --ignore-dependencies imath
 
     - name: install dependencies - openexr v2.5
       run:  |
@@ -64,7 +64,7 @@ jobs:
         cd build &&
         cmake .. &&
         make &&
-        make install
+        sudo make install
 
     - uses: actions/checkout@v3
 
@@ -91,7 +91,7 @@ jobs:
         cd build &&
         cmake .. &&
         make &&
-        make install
+        sudo make install
 
     - name: install dependencies - openexr v3.1
       run:  |
@@ -103,7 +103,7 @@ jobs:
         cd build &&
         cmake .. &&
         make &&
-        make install
+        sudo make install
 
     - uses: actions/checkout@v3
 
@@ -130,7 +130,7 @@ jobs:
         cd build &&
         cmake -DBUILD_SHARED_LIBS=OFF .. &&
         make &&
-        make install
+        sudo make install
 
     - name: install dependencies - openexr v3.1
       run:  |
@@ -142,7 +142,7 @@ jobs:
         cd build &&
         cmake -DBUILD_SHARED_LIBS=OFF .. &&
         make &&
-        make install
+        sudo make install
 
     - uses: actions/checkout@v3
 
@@ -169,7 +169,7 @@ jobs:
           cd build &&
           cmake -DBUILD_SHARED_LIBS=ON .. &&
           make &&
-          make install
+          sudo make install
   
       - name: install dependencies - openexr v3.1
         run:  |
@@ -181,7 +181,7 @@ jobs:
           cd build &&
           cmake -DBUILD_SHARED_LIBS=ON .. &&
           make &&
-          make install
+          sudo make install
   
       - uses: actions/checkout@v3
   
@@ -232,11 +232,11 @@ jobs:
 
     steps:
 
-    - name: uninstall openexr 
-      run:  brew uninstall --ignore-dependencies openexr 
+    # - name: uninstall openexr 
+    #   run:  brew uninstall --ignore-dependencies openexr 
 
-    - name: uninstall imath 
-      run:  brew uninstall --ignore-dependencies imath
+    # - name: uninstall imath 
+    #   run:  brew uninstall --ignore-dependencies imath
 
     - name: install dependencies - openexr v2.5
       run:  |
@@ -248,7 +248,7 @@ jobs:
         cd build &&
         cmake .. &&
         make &&
-        make install
+        sudo make install
 
     - uses: actions/checkout@v3
 
@@ -281,7 +281,7 @@ jobs:
         cd build &&
         cmake .. &&
         make &&
-        make install
+        sudo make install
 
     - name: install dependencies - openexr v3.1
       run:  |
@@ -293,7 +293,7 @@ jobs:
         cd build &&
         cmake .. &&
         make &&
-        make install
+        sudo make install
 
     - uses: actions/checkout@v3
 
@@ -326,7 +326,7 @@ jobs:
         cd build &&
         cmake -DBUILD_SHARED_LIBS=OFF .. &&
         make &&
-        make install
+        sudo make install
 
     - name: install dependencies - openexr v3.1
       run:  |
@@ -338,7 +338,7 @@ jobs:
         cd build &&
         cmake -DBUILD_SHARED_LIBS=OFF .. &&
         make &&
-        make install
+        sudo make install
 
     - uses: actions/checkout@v3
 
@@ -371,7 +371,7 @@ jobs:
         cd build &&
         cmake -DBUILD_SHARED_LIBS=ON .. &&
         make &&
-        make install
+        sudo make install
 
     - name: install dependencies - openexr v3.1
       run:  |
@@ -383,7 +383,7 @@ jobs:
         cd build &&
         cmake -DBUILD_SHARED_LIBS=ON .. &&
         make &&
-        make install
+        sudo make install
 
     - uses: actions/checkout@v3
 

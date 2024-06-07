@@ -486,7 +486,7 @@ void tiff_read_failsafe(TIFF *t, float scale, ctl::dpx::fb<float> *pixels) {
 	pixels->init(w, h, 4);
 
 	temp_buffer=(uint8_t *)alloca(w*h*4);
-	TIFFReadRGBAImage(t, w, h, (uint32 *)temp_buffer, 0);
+	TIFFReadRGBAImage(t, w, h, (uint32_t *)temp_buffer, 0);
 
 	for(i=0; i<h; i++) {
 		flip=temp_buffer+sizeof(uint32_t)*w*(h-i-1);
