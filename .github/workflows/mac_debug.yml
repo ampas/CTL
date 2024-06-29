@@ -40,7 +40,7 @@ jobs:
         make &&
         sudo make install
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -79,7 +79,7 @@ jobs:
         make &&
         sudo make install
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -114,7 +114,7 @@ jobs:
         make &&
         sudo make install
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -159,7 +159,7 @@ jobs:
         make &&
         sudo make install
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
