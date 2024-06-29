@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./Dockerfile -t ctl:latest .
 
@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout
+      - uses: actions/checkout@v4
       - name: Build the Docker image
         run: docker build --no-cache --rm -f ./Dockerfile_openexr3 -t ctl:latest .
 
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_18.04 -t ctl:latest .
 
@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_20.04 -t ctl:latest .
 
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_22.04 -t ctl:latest .
 
@@ -77,7 +77,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_22.04_brew -t ctl:latest .
 
@@ -89,7 +89,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_22.04_LTO -t ctl:latest .
 
@@ -101,7 +101,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_23.10 -t ctl:latest .
 
@@ -113,7 +113,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_latest -t ctl:latest .
 
@@ -125,7 +125,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_centos_7 -t ctl:latest .
 
@@ -137,7 +137,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_redhat_ubi8 -t ctl:latest .
 
@@ -149,7 +149,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_redhat_ubi9 -t ctl:latest .
 
@@ -161,7 +161,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_fedora_36 -t ctl:latest .
 
@@ -173,7 +173,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_fedora_37 -t ctl:latest .
 
@@ -185,7 +185,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_fedora_38 -t ctl:latest .
 
@@ -197,7 +197,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout
+    - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build --no-cache --rm -f ./docker/Dockerfile_fedora_latest -t ctl:latest .
 
