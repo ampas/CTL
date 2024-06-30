@@ -15,28 +15,7 @@ env:
     BUILD_TYPE: Debug
 
 jobs:
-
-  setup-freeBSD:
-
-    runs-on: ubuntu-latest
-    # based on example from https://github.com/marketplace/actions/freebsd-vm
-    steps:
-    - uses: actions/checkout@v4
-    - name: setup FreeBSD on github runner
-      id: test
-      uses: vmactions/freebsd-vm@v1
-      with:
-        usesh: true
-        prepare: |
-          pkg install -y curl
-
-        run: |
-          pwd
-          ls -lah
-          whoami
-          env
-          freebsd-version
-          
+ 
   build:
     runs-on: ubuntu-latest
     steps:
