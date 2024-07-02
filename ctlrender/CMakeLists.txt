@@ -30,6 +30,8 @@ target_link_libraries(ctlrender
 		$<$<TARGET_EXISTS:IlmBase::Half>:IlmBase::Half>
 		$<$<TARGET_EXISTS:IlmBase::IlmThread>:IlmBase::IlmThread>
 		$<$<TARGET_EXISTS:IlmBase::Iex>:IlmBase::Iex>
+	  # ZLIB for OpenEXR 2.x:
+	  	$<$<TARGET_EXISTS:ZLIB::ZLIB>:ZLIB::ZLIB>
 )
 
 if( OpenEXR_FOUND )

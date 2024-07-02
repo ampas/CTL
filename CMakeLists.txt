@@ -44,6 +44,17 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
+# ZLIB is automatically added by OpenEXR 3.x but needs to be added for OpenEXR 2.x
+find_package(ZLIB)
+if(TARGET ZLIB::ZLIB)
+	message( STATUS "found ZLIB" )
+	message( STATUS "	ZLIB_VERSION : ${ZLIB_VERSION}" )
+	message( STATUS "	ZLIB_INCLUDE_DIRS : ${ZLIB_INCLUDE_DIRS}" )
+	message( STATUS "	ZLIB_LIBRARIES : ${ZLIB_LIBRARIES}" )
+	message( STATUS "	ZLIB_INCLUDE_DIR : ${ZLIB_INCLUDE_DIR}" )
+	message( STATUS "	ZLIB_LIBRARY : ${ZLIB_LIBRARY}" )
+endif()
+
 find_package(OpenEXR 3 CONFIG QUIET)
 if(OpenEXR_FOUND)
   message(STATUS "Found OpenEXR ${OpenEXR_VERSION}")
