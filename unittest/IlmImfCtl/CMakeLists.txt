@@ -28,6 +28,8 @@ target_link_libraries( IlmImfCtlTest
       $<$<TARGET_EXISTS:IlmBase::Half>:IlmBase::Half>
       $<$<TARGET_EXISTS:IlmBase::IlmThread>:IlmBase::IlmThread>
       $<$<TARGET_EXISTS:IlmBase::Iex>:IlmBase::Iex>
+    # ZLIB for OpenEXR 2.x:
+      $<$<TARGET_EXISTS:ZLIB::ZLIB>:ZLIB::ZLIB>
 )
 
 add_test( IlmImfCtl IlmImfCtlTest )

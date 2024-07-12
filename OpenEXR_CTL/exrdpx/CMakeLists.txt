@@ -33,6 +33,8 @@ target_link_libraries (exrdpx
           $<$<TARGET_EXISTS:IlmBase::Half>:IlmBase::Half>
           $<$<TARGET_EXISTS:IlmBase::IlmThread>:IlmBase::IlmThread>
           $<$<TARGET_EXISTS:IlmBase::Iex>:IlmBase::Iex>
+        # ZLIB for OpenEXR 2.x:
+	  	    $<$<TARGET_EXISTS:ZLIB::ZLIB>:ZLIB::ZLIB>
     )
 #target_link_libraries( exrdpx ${IlmBase_LIBRARIES} ${IlmBase_LDFLAGS_OTHER} )
 #target_link_libraries( exrdpx ${OpenEXR_LIBRARIES} ${OpenEXR_LDFLAGS_OTHER} )
