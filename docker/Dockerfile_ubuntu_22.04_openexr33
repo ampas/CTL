@@ -1,0 +1,37 @@
+FROM ubuntu:22.04
+
+RUN apt-get update
+
+# disable interactive install 
+ENV DEBIAN_FRONTEND noninteractive
+
+# install developement tools
+RUN apt-get -y install cmake
+RUN apt-get -y install g++
+RUN apt-get -y install git
+
+# install CTL dependencies
+RUN apt-get -y install libtiff-dev
+
+# install CTL dependecies - openexr
+WORKDIR /usr/src/
+RUN git clone https://github.com/AcademySoftwareFoundation/openexr.git
+WORKDIR /usr/src/openexr
+RUN git checkout RB-3.3 
+WORKDIR /usr/src/openexr/build
+RUN cmake .. -DBUILD_TESTING=OFF -DOPENEXR_BUILD_TOOLS=OFF -DOPENEXR_INSTALL_EXAMPLES=OFF
+RUN make
+RUN make install
+
+# build CTL
+WORKDIR /usr/src/CTL
+COPY . .
+WORKDIR /usr/src/CTL/build
+RUN rm -R * || true
+RUN cmake ..
+RUN make
+RUN make install
+
+# finalize docker environment
+WORKDIR /usr/src/CTL
+
