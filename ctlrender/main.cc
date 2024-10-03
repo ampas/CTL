@@ -468,11 +468,8 @@ int main(int argc, const char **argv)
 
 		if (input_image_files.size() < 2)
 		{
-			fprintf(stderr,
-					"one or more source filenames and a destination "
-					"file or directory must be\nprovided. if more than one "
-					"source filenames is provided then the last argument\nmust "
-					"be a directory. see -help for more details.\n");
+			usage(NULL);
+			
 			exit(1);
 		}
 
@@ -509,9 +506,9 @@ int main(int argc, const char **argv)
 					if (!force_overwrite_output_file)
 					{
 						fprintf(stderr,
-								"The destination file %s already exists.\n"
-								"Cravenly refusing to overwrite unless you supply "
-								"the -force option.\n", outputFile);
+								"The destination file %s already exists. Refusing to overwrite the existing file.\n"
+								"To overwrite the existing file use the -force option.\n"
+								, outputFile);
 						exit(1);
 					}
 					else
@@ -588,8 +585,8 @@ int main(int argc, const char **argv)
 								"You have specified a destination file "
 								"type with the -format option, but the\noutput "
 								"file extension does not match the format "
-								"specified by the -format option.\nCravenly "
-								"refusing to do this unless you specify the "
+								"specified by the -format option.\nThis behavior "
+								"can be overridden by specifing the "
 								"-force option (which\nwill make the -format "
 								"option take priority).\n");
 						exit(1);
@@ -671,7 +668,7 @@ int main(int argc, const char **argv)
 			}
 			if (access(outputFile, F_OK) >= 0)
 			{
-				fprintf(stderr, "Cravenly refusing to overwrite the file '%s'.\n", outputFile);
+				fprintf(stderr, "Can not overwrite the file '%s'.\n", outputFile);
 				exit(1);
 			}
 			actual_format.squish = noalpha;
@@ -683,7 +680,7 @@ int main(int argc, const char **argv)
 
 	} catch (std::exception &e)
 	{
-		fprintf(stderr, "exception thrown (oops...): %s\n", e.what());
+		fprintf(stderr, "\nexception thrown (oops...): %s\n", e.what());
 		return 1;
 	}
 }
