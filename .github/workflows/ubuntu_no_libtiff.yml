@@ -26,6 +26,9 @@ jobs:
     - name: remove libtiff
       run: sudo apt-get --purge remove libtiff-dev -y 
 
+    - name: install openexr
+      run: sudo apt-get -y install libopenexr-dev
+
     - uses: actions/checkout@v4
 
     - name: Configure CMake
@@ -47,6 +50,9 @@ jobs:
 
     - name: remove libtiff-dev
       run: sudo apt-get --purge remove libtiff-dev -y 
+
+    - name: install openexr
+      run: sudo apt-get -y install libopenexr-dev
 
     - uses: actions/checkout@v4
 
