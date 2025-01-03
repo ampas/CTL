@@ -91,7 +91,7 @@ void CtlExc::_explain(const char *text, va_list _ap) {
 	}
 
 	operator=(ptr);
-	
+	va_end(ap);
 }
 
 CtlExc::CtlExc(const char *format, ...) throw() {
