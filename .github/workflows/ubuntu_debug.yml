@@ -182,6 +182,9 @@ jobs:
     - name: remove openexr
       run: sudo apt-get --purge remove libopenexr-dev -y
 
+    - name: install libtiff
+      run: sudo apt-get -y install libtiff-dev
+
     - name: install openexr dependency - zlib
       run: sudo apt-get -y install zlib1g-dev
 
@@ -250,6 +253,9 @@ jobs:
 
     - name: remove openexr
       run: sudo apt-get --purge remove libopenexr-dev -y
+
+    - name: install libtiff
+      run: sudo apt-get -y install libtiff-dev
 
     - name: install openexr dependency - zlib
       run: sudo apt-get -y install zlib1g-dev
