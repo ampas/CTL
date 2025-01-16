@@ -595,77 +595,85 @@ testDefaults(Interpreter &interp)
 
 void
 testHodgeGen(Interpreter &interp,
-	  const int dataSize,
-	  Hodgepodge aOrig[],
-	  Hodgepodge bOrig[])
+             const int dataSize,
+             Hodgepodge aOrig[],
+             Hodgepodge bOrig[])
 {
     FunctionCallPtr func;
     FunctionArgPtr ret;
 
     // boolean operators on varying data
     {
-	func = interp.newFunctionCall("testVarying::structVary");
-	
-	assert(func->numInputArgs() == 2);
-	assert(func->numOutputArgs() == 5);
+        func = interp.newFunctionCall("testVarying::structVary");
 
-	FunctionArgPtr aHoArg = func->inputArg(0);
-	FunctionArgPtr bHoArg = func->inputArg(1);
+        assert(func->numInputArgs() == 2);
+        assert(func->numOutputArgs() == 5);
 
-	assert( aHoArg->isVarying());
-	
-	Hodgepodge * aHo  = (Hodgepodge*)(aHoArg->data());
-	Hodgepodge * bHo  = (Hodgepodge*)(bHoArg->data());
+        FunctionArgPtr aHoArg = func->inputArg(0);
+        FunctionArgPtr bHoArg = func->inputArg(1);
 
-	memcpy(aHo, aOrig, sizeof (Hodgepodge) * dataSize);
-	memcpy(bHo, bOrig, sizeof (Hodgepodge) * dataSize);
+        assert(aHoArg->isVarying());
+        assert(bHoArg->isVarying());
 
-	func->callFunction(dataSize);
+        Hodgepodge *aHo = (Hodgepodge *)(aHoArg->data());
+        Hodgepodge *bHo = (Hodgepodge *)(bHoArg->data());
 
-	FunctionArgPtr hoArg = func->outputArg(0);
-	FunctionArgPtr fArg = func->outputArg(1);
-	FunctionArgPtr iArg = func->outputArg(2);
-	FunctionArgPtr bArg = func->outputArg(3);
-	FunctionArgPtr hArg = func->outputArg(4);
+        // Initialize input arguments
+        memcpy(aHo, aOrig, sizeof(Hodgepodge) * dataSize);
+        memcpy(bHo, bOrig, sizeof(Hodgepodge) * dataSize);
 
-	Hodgepodge *ho = (Hodgepodge*)(hoArg->data());
-	float *f = (float *)(fArg->data());
-	int *i = (int *)(iArg->data());
-	bool *b = (bool *)(bArg->data());
-	
+        func->callFunction(dataSize);
 
-	for(int j = 0; j < dataSize; j++)
-	{
-    	    assert(ho[j].f == aOrig[j].f);
-	    assert(ho[j].i == aOrig[j].i);
-  	    assert(ho[j].b == aOrig[j].b);
-  	    assert(ho[j].h == aOrig[j].h);
+        FunctionArgPtr hoArg = func->outputArg(0);
+        FunctionArgPtr fArg = func->outputArg(1);
+        FunctionArgPtr iArg = func->outputArg(2);
+        FunctionArgPtr bArg = func->outputArg(3);
+        FunctionArgPtr hArg = func->outputArg(4);
 
-	    assert(f[j] == aOrig[j].f);
-	    assert(i[j] == aOrig[j].i);
-	    assert(b[j] == aOrig[j].b);
-	}
+        // Ensure the output pointers are valid before use
+        assert(hoArg && fArg && iArg && bArg && hArg);
+
+        Hodgepodge *ho = (Hodgepodge *)(hoArg->data());
+        float *f = (float *)(fArg->data());
+        int *i = (int *)(iArg->data());
+        bool *b = (bool *)(bArg->data());
+
+        // Initialize arrays to avoid uninitialized memory reads
+        memset(ho, 0, sizeof(Hodgepodge) * dataSize);
+        memset(f, 0, sizeof(float) * dataSize);
+        memset(i, 0, sizeof(int) * dataSize);
+        memset(b, 0, sizeof(bool) * dataSize);
+
+        for (int j = 0; j < dataSize; j++)
+        {
+            assert(ho[j].f == aOrig[j].f);
+            assert(ho[j].i == aOrig[j].i);
+            assert(ho[j].b == aOrig[j].b);
+            assert(ho[j].h == aOrig[j].h);
+
+            assert(f[j] == aOrig[j].f);
+            assert(i[j] == aOrig[j].i);
+            assert(b[j] == aOrig[j].b);
+        }
     }
 }
-
-
 
 void
 testStruct(Interpreter &interp)
 {
     const int dataSize = 30;
 
-    int ai[dataSize];
-    int bi[dataSize];
+    int ai[dataSize] = {0};
+    int bi[dataSize] = {0};
 
-    float af[dataSize];
-    float bf[dataSize];
+    float af[dataSize] = {0.0f};
+    float bf[dataSize] = {0.0f};
 
-    bool ab[dataSize];
-    bool bb[dataSize];
+    bool ab[dataSize] = {false};
+    bool bb[dataSize] = {false};
 
-    half ah[dataSize];
-    half bh[dataSize];
+    half ah[dataSize] = {0};
+    half bh[dataSize] = {0};
 
     getRange(ai, dataSize, 1);
     getRange(bi, dataSize, 7);
@@ -681,16 +689,25 @@ testStruct(Interpreter &interp)
     Hodgepodge aHo[dataSize];
     Hodgepodge bHo[dataSize];
 
-    for( int i = 0; i < dataSize; i++)
+    // Initialize `bHo` to prevent uninitialized memory access
+    memset(bHo, 0, sizeof(Hodgepodge) * dataSize);
+
+    for (int i = 0; i < dataSize; i++)
     {
-	aHo[i].f = af[i];
-	aHo[i].i = ai[i];
-	aHo[i].b = ab[i];
-	aHo[i].h = ah[i];
+        aHo[i].f = af[i];
+        aHo[i].i = ai[i];
+        aHo[i].b = ab[i];
+        aHo[i].h = ah[i];
+
+        bHo[i].f = bf[i];  // Explicitly initialize
+        bHo[i].i = bi[i];
+        bHo[i].b = bb[i];
+        bHo[i].h = bh[i];
     }
 
     testHodgeGen(interp, dataSize, aHo, bHo);
 }
+
 
 
 void
