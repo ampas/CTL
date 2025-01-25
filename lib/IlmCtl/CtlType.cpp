@@ -132,10 +132,10 @@ void Type::childElementV(size_t *offset, TypePtr *type, const std::string path,
 			offsets=((SizeVector *)va_arg(ap, SizeVector *));
 			while(offsets->size()!=0) {
 				if(sizes.size()==0) {
-					throw(DatatypeExc("too many dimensions specified for matrix (or array) vector element (at least %d too many)", offsets->size()));
+					throw(DatatypeExc("too many dimensions specified for matrix (or array) vector element (at least %zu too many)", offsets->size()));
 				}
 				if(offset[0]>=sizes[0]) {
-					throw(DatatypeExc("out of range matrix (or array) vector element (%u>=%u)", offset[0], sizes[0]));
+					throw(DatatypeExc("out of range matrix (or array) vector element (%zu>=%zu)", offset[0], sizes[0]));
 				}
 				*offset=*offset+array_type->elementType()->objectSize()*((*offsets)[0]);
 				*type=array_type->elementType();
@@ -150,7 +150,7 @@ void Type::childElementV(size_t *offset, TypePtr *type, const std::string path,
 		}
 
 		if(u>=sizes[0]) {
-			throw(DatatypeExc("out of range matrix (or array) element specification (%u>=%u)", u, sizes[0]));
+			throw(DatatypeExc("out of range matrix (or array) element specification (%u>=%zu)", u, sizes[0]));
 		}
 
 		*offset=*offset+u*array_type->elementType()->objectSize();
