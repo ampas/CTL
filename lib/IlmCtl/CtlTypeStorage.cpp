@@ -463,7 +463,7 @@ void TypeStorage::_set(const char *src, CDataType_e src_type,
 				out=out+type()->objectSize();
 			}
 		} else {
-			throw(DatatypeExc("unexpected data objectSize (%d)", data_type->objectSize()));
+			throw(DatatypeExc("unexpected data objectSize (%zu)", data_type->objectSize()));
 		}
 		return;
 	}
@@ -547,7 +547,7 @@ void TypeStorage::_get(char *dst, CDataType_e dst_type,
 				in=in+type()->objectSize();
 			}
 		} else {
-			throw(DatatypeExc("unexpected data objectSize (%d)", data_type->objectSize()));
+			throw(DatatypeExc("unexpected data objectSize (%zu)", data_type->objectSize()));
 		}
 		return;
 	}
