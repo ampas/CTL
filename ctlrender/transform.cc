@@ -699,6 +699,7 @@ void transform(const char *inputFile, const char *outputFile,
 	ctl_operation_t ctl_operation;
 	CTLParameters::const_iterator parameters_iter;
 	uint8_t i;
+	uint32_t j;
 	std::string error;
 	ctl::dpx::fb<float> image_buffer;
 
@@ -807,11 +808,11 @@ void transform(const char *inputFile, const char *outputFile,
 
 	char name[16];
 
-	for (i = 4; i < image_buffer.depth(); i++)
+	for (j = 4; j < image_buffer.depth(); j++)
 	{
 		memset(name, 0, sizeof(name));
-		snprintf(name, sizeof(name) - 1, "c%02dIn", i);
-		ctl_results.push_back(mkresult(name, NULL, image_buffer, i));
+		snprintf(name, sizeof(name) - 1, "c%02dIn", j);
+		ctl_results.push_back(mkresult(name, NULL, image_buffer, j));
 	}
 
 	for (operations_iter = ctl_operations.begin(); operations_iter != ctl_operations.end(); operations_iter++)

@@ -268,7 +268,7 @@ void rwinfo::write_init(std::ostream *o, dpx *h) {
 }
 
 void rwinfo::find_home(dpx *h, uint8_t element, uint64_t size) {
-	uint8_t i;
+	uint16_t i;
 	rwinfo info;
 	uint64_t eof;
 	uint64_t actual_eof;
