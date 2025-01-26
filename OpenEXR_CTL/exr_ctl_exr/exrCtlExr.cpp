@@ -139,7 +139,7 @@ exrCtlExr (const char inFileName[],
     {
 	const Rgba *inPtr = &inPixels[0][0];
 	Rgba *outPtr = &outPixels[0][0];
-	size_t numPixels = w * h;
+	size_t numPixels = static_cast<size_t>(w) * h;
 
 	for (size_t i = 0; i < numPixels; ++i)
 	    (outPtr++)->a = (inPtr++)->a;

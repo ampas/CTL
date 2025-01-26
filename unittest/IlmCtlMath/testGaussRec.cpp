@@ -82,9 +82,9 @@ runTestGaussian(int numSamples, int numTests)
 	p[s][0][1] = (float) rand() / (float) RAND_MAX;
 	p[s][0][2] = (float) rand() / (float) RAND_MAX;
 	
-	p[s][1][0] = exp( -p[s][0][0]*p[s][0][0] * var);
-	p[s][1][1] = exp( -p[s][0][1]*p[s][0][1] * var);
-	p[s][1][2] = exp( -p[s][0][2]*p[s][0][2] * var);
+	p[s][1][0] = exp( -static_cast<double>(p[s][0][0])*static_cast<double>(p[s][0][0]) * var);
+	p[s][1][1] = exp( -static_cast<double>(p[s][0][1])*static_cast<double>(p[s][0][1]) * var);
+	p[s][1][2] = exp( -static_cast<double>(p[s][0][2])*static_cast<double>(p[s][0][2]) * var);
     }
     
     Ctl::RbfInterpolator rbfItp(numSamples, p);

@@ -80,7 +80,7 @@ void dpx::fb<T>::init(uint32_t width, uint32_t height, uint32_t depth) {
 
 	delete [] _data;
 
-	_length=_width*_height*_depth*sizeof(T);
+	_length=static_cast<uint64_t>(_width)*_height*_depth*sizeof(T);
 
 	_data=new T[width*height*depth];
 }
@@ -107,12 +107,12 @@ uint64_t dpx::fb<T>::length(void) const {
 
 template <class T>
 uint64_t dpx::fb<T>::count(void) const {
-	return _width*_height*_depth;
+	return static_cast<uint64_t>(_width)*static_cast<uint64_t>(_height)*static_cast<uint64_t>(_depth);
 }
 
 template <class T>
 uint64_t dpx::fb<T>::pixels(void) const {
-	return _width*_height;
+	return static_cast<uint64_t>(_width)*_height;
 }
 
 template <class T>
@@ -141,7 +141,7 @@ void dpx::fb<T>::swizzle(uint8_t descriptor, bool squish_alpha) {
 	T *i, *o;
 	T t;
 
-	count=width()*height();
+	count=static_cast<uint64_t>(width())*height();
 
 	i=_data;
 	o=_data;

@@ -105,7 +105,7 @@ writeHeader
     setU32 (sizeof (header), header.fileInfo.offsetToImageData, BO_BIG);
     strcpy (header.fileInfo.versionNumber, "V2.0");
 
-    setU32 (sizeof (header) + 4 * width * height,
+    setU32 (sizeof (header) + 4 * static_cast<unsigned long>(width) * height,
 	    header.fileInfo.fileSize,
 	    BO_BIG);
 
