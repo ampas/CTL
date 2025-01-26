@@ -66,7 +66,7 @@ if(IlmBase_FOUND)
 endif()
   
 if(NOT OpenEXR_FOUND)
-  find_package(OpenEXR CONFIG REQUIRED)
+  find_package(OpenEXR CONFIG 3 REQUIRED)
   if(OpenEXR_FOUND)
     set(OpenEXR_FOUND_WITH_CONFIG TRUE BOOL "found OpenEXR with Config")
   endif()
