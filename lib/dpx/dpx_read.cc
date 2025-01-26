@@ -135,7 +135,7 @@ void unpack(dpx::fb<O> *out, const I *i, const rwinfo &ri) {
 		// XXX not supported
 	}
 
-	count=out->width()*out->depth();
+	count= static_cast<uint64_t>(out->width())*out->depth();
 	for(u=0; u<out->height(); u++) {
 		onbit=0;
 		for(v=0; v<count; v++) {

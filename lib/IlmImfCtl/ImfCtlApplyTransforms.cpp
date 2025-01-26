@@ -487,8 +487,8 @@ applyTransforms
     // Determine how many samples we will process.
     //
 
-    size_t totalSamples = (transformWindow.max.x - transformWindow.min.x + 1) *
-			  (transformWindow.max.y - transformWindow.min.y + 1);
+    size_t totalSamples = (static_cast<size_t>(transformWindow.max.x) - static_cast<size_t>(transformWindow.min.x + 1)) *
+			  (static_cast<size_t>(transformWindow.max.y) - static_cast<size_t>(transformWindow.min.y + 1));
 
     if (totalSamples <= 0)
 	return;
