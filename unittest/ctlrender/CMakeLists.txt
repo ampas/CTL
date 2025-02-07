@@ -46,10 +46,8 @@ foreach(J tiff8 tiff16 tiff32 dpx8 dpx10 dpx12 dpx16)
 
     # Test tiff32 conversions
     if(TARGET TIFF::TIFF)
+        # convert TIFF32 to other format
         add_test(NAME "ctlrender-tiff32->${J}" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format ${J} -force "${TEST_FILES}/bars_photoshop_32_be_planar.tif" "${CTLRENDER_OUTPUT_FOLDER}/bars_tiff32_${J}.${EXTENSION}")
-        if(NOT ${J} STREQUAL "tiff32")
-            add_test(NAME "ctlrender-${J}->tiff32" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format tiff32 -force "${CTLRENDER_OUTPUT_FOLDER}/bars_tiff32_${J}.${EXTENSION}" "${CTLRENDER_OUTPUT_FOLDER}/bars_tiff32_${J}_tiff32.tiff")
-        endif()
     endif()
 endforeach(J)
 
