@@ -1,0 +1,326 @@
+name: Ubuntu-ARM-Debug
+
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  push:
+    paths-ignore:
+      - 'README.md'
+      - 'doc/**'
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'doc/**'
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Debug
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+
+    - name: install ilmbase
+      run: sudo apt-get -y install libilmbase-dev
+    
+    - name: install openexr
+      run: sudo apt-get -y install libopenexr-dev
+
+    - uses: actions/checkout@v4
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      # Build your program with the given configuration
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      
+  test-openexr2:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+
+    - name: remove ilmbase
+      run: sudo apt-get --purge remove libilmbase-dev -y
+
+    - name: remove openexr
+      run: sudo apt-get --purge remove libopenexr-dev -y
+
+    - name: install openexr dependency - zlib
+      run: sudo apt-get -y install zlib1g-dev
+
+    - name: install CTL dependency - openexr/ilmbase v2.5
+      run:  |
+        cd ..
+        git clone https://github.com/AcademySoftwareFoundation/openexr.git &&
+        cd openexr &&
+        git checkout RB-2.5 &&
+        mkdir build &&
+        cd build &&
+        cmake .. &&
+        make  &&
+        sudo make install
+
+    - name: install aces_container
+      run: |
+        cd ..
+        git clone https://github.com/ampas/aces_container.git &&
+        cmake -S aces_container -B aces_container/build -DCMAKE_CXX_FLAGS="-Wno-c++11-narrowing" &&
+        cmake --build aces_container/build  &&
+        sudo cmake --install aces_container/build
+      
+    - name: install pkg-config to help find aces_container
+      run: |
+        sudo apt-get -y install pkg-config
+
+    - uses: actions/checkout@v4
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      # Build your program with the given configuration
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -V --output-on-failure
+
+  test-openexr3:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+
+    - name: remove ilmbase
+      run: sudo apt-get --purge remove libilmbase-dev -y
+
+    - name: remove openexr
+      run: sudo apt-get --purge remove libopenexr-dev -y
+
+    - name: install dependencies - imath
+      run:  |
+        cd ..
+        git clone https://github.com/AcademySoftwareFoundation/Imath.git &&
+        cd Imath &&
+        mkdir build &&
+        cd build &&
+        cmake .. &&
+        make &&
+        sudo make install
+
+    - name: install dependencies - zlib
+      run: sudo apt-get -y install zlib1g-dev
+
+    - name: install dependencies - openexr v3.1
+      run:  |
+        cd ..
+        git clone https://github.com/AcademySoftwareFoundation/openexr.git &&
+        cd openexr &&
+        git checkout RB-3.1 &&
+        mkdir build &&
+        cd build &&
+        cmake .. -DBUILD_TESTING=OFF -DOPENEXR_BUILD_TOOLS=OFF -DOPENEXR_INSTALL_EXAMPLES=OFF &&
+        make  &&
+        sudo make install
+
+    - name: install aces_container
+      run: |
+        cd ..
+        git clone https://github.com/ampas/aces_container.git &&
+        cmake -S aces_container -B aces_container/build -DCMAKE_CXX_FLAGS="-Wno-c++11-narrowing" &&
+        cmake --build aces_container/build  &&
+        sudo cmake --install aces_container/build
+    
+    - name: install pkg-config to help find aces_container
+      run: |
+         sudo apt-get -y install pkg-config
+
+    - uses: actions/checkout@v4
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      # Build your program with the given configuration
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -V --output-on-failure
+
+  valgrind-openexr2:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+    - name: run apt-get update
+      run: sudo apt-get -y update
+
+    - name: install test tool - valgrind
+      run: sudo apt-get -y install valgrind
+
+    - name: remove ilmbase
+      run: sudo apt-get --purge remove libilmbase-dev -y
+
+    - name: remove openexr
+      run: sudo apt-get --purge remove libopenexr-dev -y
+
+    - name: install libtiff
+      run: sudo apt-get -y install libtiff-dev
+
+    - name: install openexr dependency - zlib
+      run: sudo apt-get -y install zlib1g-dev
+
+    - name: install CTL dependency - openexr/ilmbase v2.5
+      run:  |
+        cd ..
+        git clone https://github.com/AcademySoftwareFoundation/openexr.git &&
+        cd openexr &&
+        git checkout RB-2.5 &&
+        mkdir build &&
+        cd build &&
+        cmake .. &&
+        make  &&
+        sudo make install
+
+    - name: install aces_container
+      run: |
+        cd ..
+        git clone https://github.com/ampas/aces_container.git &&
+        cmake -S aces_container -B aces_container/build -DCMAKE_CXX_FLAGS="-Wno-c++11-narrowing" &&
+        cmake --build aces_container/build  &&
+        sudo cmake --install aces_container/build
+      
+    - name: install pkg-config to help find aces_container
+      run: |
+        sudo apt-get -y install pkg-config
+
+    - uses: actions/checkout@v4
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      # Build your program with the given configuration
+      run: | 
+        cd ${{ github.workspace }}
+        cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+    
+    - name: Run Valgrind on unit tests
+      working-directory: ${{github.workspace}}/build
+      # Run valgrind using a bash script  
+      run: pwd && ls && bash ../resources/test/scripts/run_valgrind.sh    
+
+    - name: Run Valgrind on aces container unit tests
+      working-directory: ${{github.workspace}}/build
+      # Run valgrind using a bash script  
+      run: pwd && ls && bash ../resources/test/scripts/run_valgrind_aces_container.sh
+
+  valgrind-openexr3:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+    - name: run apt-get update
+      run: sudo apt-get -y update
+      
+    - name: install test tool - valgrind
+      run: sudo apt-get -y install valgrind
+
+    - name: remove ilmbase
+      run: sudo apt-get --purge remove libilmbase-dev -y
+
+    - name: remove openexr
+      run: sudo apt-get --purge remove libopenexr-dev -y
+
+    - name: install libtiff
+      run: sudo apt-get -y install libtiff-dev
+
+    - name: install openexr dependency - zlib
+      run: sudo apt-get -y install zlib1g-dev
+
+    - name: install openexr + CTL dependency - imath
+      run:  |
+        cd ..
+        git clone https://github.com/AcademySoftwareFoundation/Imath.git &&
+        cd Imath &&
+        mkdir build &&
+        cd build &&
+        cmake .. &&
+        make &&
+        sudo make install
+
+    - name: install CTL dependency - openexr v3.1
+      run:  |
+        cd ..
+        sudo apt-get -y install zlib1g-dev &&
+        git clone https://github.com/AcademySoftwareFoundation/openexr.git &&
+        cd openexr &&
+        git checkout RB-3.1 &&
+        mkdir build &&
+        cd build &&
+        cmake .. -DBUILD_TESTING=OFF -DOPENEXR_BUILD_TOOLS=OFF -DOPENEXR_INSTALL_EXAMPLES=OFF &&
+        make  &&
+        sudo make install
+
+    - name: install aces_container
+      run: |
+        cd ..
+        git clone https://github.com/ampas/aces_container.git &&
+        cmake -S aces_container -B aces_container/build -DCMAKE_CXX_FLAGS="-Wno-c++11-narrowing" &&
+        cmake --build aces_container/build  &&
+        sudo cmake --install aces_container/build
+      
+    - name: install pkg-config to help find aces_container
+      run: |
+        sudo apt-get -y install pkg-config
+
+    - uses: actions/checkout@v4
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      # Build your program with the given configuration
+      run: | 
+        cd ${{ github.workspace }}
+        cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Run Valgrind on unit tests
+      working-directory: ${{github.workspace}}/build
+      # Run valgrind using a bash script  
+      run: pwd && ls && bash ../resources/test/scripts/run_valgrind.sh
+
+    - name: Run Valgrind on aces container unit tests
+      working-directory: ${{github.workspace}}/build
+      # Run valgrind using a bash script  
+      run: pwd && ls && bash ../resources/test/scripts/run_valgrind_aces_container.sh
+
+  
