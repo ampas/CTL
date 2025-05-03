@@ -27,6 +27,9 @@ jobs:
 
     steps:
 
+    - name: run apt-get update
+      run: sudo apt-get -y update
+
     - name: install libtiff
       run: sudo apt-get -y install libtiff-dev
 
