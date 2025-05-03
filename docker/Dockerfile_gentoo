@@ -1,0 +1,25 @@
+FROM gentoo/stage3
+
+# update packages
+RUN emaint --auto sync
+
+# install development tools
+RUN emerge cmake
+
+# install CTL required dependencies
+RUN emerge openexr
+
+# install CTL optional dependencies
+RUN emerge tiff
+
+# build CTL
+WORKDIR /usr/src/CTL
+COPY . .
+WORKDIR /usr/src/CTL/build
+RUN rm -R * || true
+RUN cmake ..
+RUN make
+RUN make install
+
+# finalize docker environment
+WORKDIR /usr/src/CTL

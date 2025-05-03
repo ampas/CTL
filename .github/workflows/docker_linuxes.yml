@@ -235,4 +235,16 @@ jobs:
 
       - name: Run the docker that runs valgrind
         run: docker run ctl:latest 
-          
+
+  gentoo:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_gentoo -t ctl:latest .
+    
+    - name: Run unit tests (ctest) within the Docker image
+      run: docker run ctl:latest sh -c "cd ./build && ctest"
+
