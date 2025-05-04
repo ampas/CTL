@@ -1,0 +1,44 @@
+FROM gentoo/stage3
+
+# update packages
+RUN emaint --auto sync
+
+# install development tools
+RUN emerge cmake
+RUN emerge llvm-core/clang
+
+# install CTL required dependencies
+RUN emerge openexr
+
+# install CTL optional dependencies
+RUN emerge tiff
+
+# switch to clang system wide
+# based on https://wiki.gentoo.org/wiki/LLVM/Clang
+# RUN printf "CC=clang\n" >> /etc/portage/make.conf
+# RUN printf "CPP=clang-cpp\n" >> /etc/portage/make.conf
+# RUN printf "CXX=clang++\n" >> /etc/portage/make.conf
+# RUN printf "AR=llvm-ar\n" >> /etc/portage/make.conf
+# RUN printf "NM=llvm-nm\n" >> /etc/portage/make.conf
+# RUN printf "RANLIB=llvm-ranlib\n" >> /etc/portage/make.conf
+
+# switch to the make.profile symlink
+#RUN eselect profile set 39
+
+# update path
+# RUN env-update && . /etc/profile
+#RUN source /etc/profile && env-update
+#RUN source /etc/profile
+ENV PATH=$PATH:/usr/lib/llvm/19/bin
+
+# build CTL
+WORKDIR /usr/src/CTL
+COPY . .
+WORKDIR /usr/src/CTL/build
+RUN rm -R * || true
+RUN cmake .. -DCMAKE_CXX_COMPILER=clang++
+RUN make
+RUN make install
+
+# finalize docker environment
+WORKDIR /usr/src/CTL
