@@ -112,6 +112,18 @@ jobs:
     - name: Run unit tests (ctest) within the Docker image
       run: docker run ctl:latest sh -c "cd ./build && ctest"
 
+  ubuntu-latest-clang:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_latest_clang -t ctl:latest .
+    
+    - name: Run unit tests (ctest) within the Docker image
+      run: docker run ctl:latest sh -c "cd ./build && ctest"
+
   redhat-ubi8:
 
     runs-on: ubuntu-latest
@@ -223,4 +235,24 @@ jobs:
 
       - name: Run the docker that runs valgrind
         run: docker run ctl:latest 
-          
+
+  gentoo:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_gentoo -t ctl:latest .
+
+    - name: Run unit tests (ctest) within the Docker image
+      run: docker run ctl:latest sh -c "cd ./build && ctest"
+
+  gentoo-clang:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build --no-cache --rm -f ./docker/Dockerfile_gentoo_clang -t ctl:latest .
+
+    - name: Run unit tests (ctest) within the Docker image
+      run: docker run ctl:latest sh -c "cd ./build && ctest"
+
