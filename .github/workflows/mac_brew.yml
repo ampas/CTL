@@ -1,4 +1,4 @@
-name: macOS-Release
+name: macOS-brew
 
 permissions:
   contents: read
