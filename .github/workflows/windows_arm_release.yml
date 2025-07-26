@@ -20,59 +20,6 @@ env:
 
 jobs:
 
-  build-openexr2:
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: windows-11-arm
-
-    steps:
-    
-    - name: install dependencies - zlib
-      run:  |
-        cd ..
-        git clone https://github.com/madler/zlib.git &&
-        cd zlib &&
-        mkdir build &&
-        mkdir install &&
-        cd build &&
-        cmake .. -D"CMAKE_INSTALL_PREFIX=../install" -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} &&
-        cmake --build . --config ${{env.BUILD_TYPE}} && 
-        cmake --build . --target install --config ${{env.BUILD_TYPE}}
-
-    - name: install dependencies - openexr
-      run:  |
-        cd ..
-        git clone https://github.com/AcademySoftwareFoundation/openexr.git &&
-        cd openexr &&
-        git checkout RB-2.5 &&
-        mkdir build &&
-        mkdir install &&
-        cd build &&
-        cmake .. -D"CMAKE_INSTALL_PREFIX=../install" -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_TESTING=OFF -DOPENEXR_BUILD_TOOLS=OFF -DOPENEXR_INSTALL_EXAMPLES=OFF -D "CMAKE_PREFIX_PATH=${{github.workspace}}/../zlib/install/" &&
-        cmake --build . --config ${{env.BUILD_TYPE}} && 
-        cmake --build . --target install --config ${{env.BUILD_TYPE}} 
-
-    - uses: actions/checkout@v4
-
-    - name: Configure CMake
-    #  # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-    #  # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -D "CMAKE_PREFIX_PATH=${{github.workspace}}/../openexr/install/;${{github.workspace}}/../zlib/install/" 
-
-    - name: Build
-      # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-
-    - name: Install
-      # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --target install --config ${{env.BUILD_TYPE}} 
-      working-directory: ${{github.workspace}}
-
-  #  - name: Test
-  #    working-directory: ${{github.workspace}}/build
-  #    run: ctest -V --output-on-failure -C ${{env.BUILD_TYPE}}
-
   build-openexr3:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
@@ -134,6 +81,6 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --target install --config ${{env.BUILD_TYPE}} 
       working-directory: ${{github.workspace}}
 
-  #  - name: Test
-  #    working-directory: ${{github.workspace}}/build
-  #    run: ctest -V --output-on-failure -C ${{env.BUILD_TYPE}}
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -V --output-on-failure -C ${{env.BUILD_TYPE}}

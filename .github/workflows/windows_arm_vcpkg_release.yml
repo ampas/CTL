@@ -29,13 +29,13 @@ jobs:
     steps:
     
     - name: install dependencies - imath
-      run:  vcpkg install imath:x64-windows
+      run:  vcpkg install imath
 
     - name: install dependencies - openexr
-      run:  vcpkg install openexr:x64-windows
+      run:  vcpkg install openexr
 
     - name: install dependencies - tiff
-      run:  vcpkg install tiff:x64-windows
+      run:  vcpkg install tiff
 
     - name: check vcpkg install status
       run: vcpkg list
@@ -56,6 +56,6 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --target install --config ${{env.BUILD_TYPE}} 
       working-directory: ${{github.workspace}}
 
-    # - name: Test
-    #   working-directory: ${{github.workspace}}/build
-    #   run: ctest -V --output-on-failure -C ${{env.BUILD_TYPE}}
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -V --output-on-failure -C ${{env.BUILD_TYPE}}
