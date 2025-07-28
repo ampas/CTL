@@ -36,9 +36,9 @@ target_link_libraries (IlmImfCtl
     )
 
 set_target_properties(IlmImfCtl
-       PROPERTIES
-               VERSION ${CTL_VERSION}
-               SOVERSION ${CTL_VERSION}
+  PROPERTIES
+    VERSION "${CTL_VERSION}"
+    SOVERSION "${CTL_VERSION_MAJOR}.${CTL_VERSION_MINOR}"
 )
 
 install(FILES

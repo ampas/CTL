@@ -88,8 +88,8 @@ target_link_libraries(IlmCtlSimd
 
 set_target_properties(IlmCtlSimd
 	PROPERTIES
-		VERSION ${CTL_VERSION}
-		SOVERSION ${CTL_VERSION}
+		VERSION "${CTL_VERSION}"
+		SOVERSION "${CTL_VERSION_MAJOR}.${CTL_VERSION_MINOR}"
 )
 
 install(FILES CtlSimdInterpreter.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/CTL)

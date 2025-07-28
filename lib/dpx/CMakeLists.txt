@@ -37,6 +37,6 @@ target_link_libraries(ctldpx
 
 set_target_properties(ctldpx
 	PROPERTIES
-		VERSION ${CTL_VERSION}
-		SOVERSION ${CTL_VERSION}
+		VERSION "${CTL_VERSION}"
+		SOVERSION "${CTL_VERSION_MAJOR}.${CTL_VERSION_MINOR}"
 )
