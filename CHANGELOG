@@ -1,3 +1,13 @@
+Version 1.5.4:
+  * add CI for various platforms
+  * add support for FreeBSD
+  * fix strict aliasing violations
+  * fix compile warning and deprecations on MacOS
+  * fix build using openexr2 static
+  * fix build using openexr2 shared (iex_debug trap issue)
+  * Disambiguate clamp() calls
+  * change SOVERSION to use MAJOR.MINOR format instead of MAJOR.MINOR.PATCH
+
 Version 1.5.3:
   * Fix compile bug preventing compilation on Ubuntu Focal and later
   * Fix valgrind and address santizer errors that caused runtime crashes and CI failures

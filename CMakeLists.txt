@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(CTL VERSION 1.5.3)
+project(CTL VERSION 1.5.4)
 include(GNUInstallDirs)
 
 set(CMAKE_CXX_STANDARD 11)
