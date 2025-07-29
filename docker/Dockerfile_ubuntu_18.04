@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 RUN apt-get update
 
 # disable interactive install 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 # install development tools
 
