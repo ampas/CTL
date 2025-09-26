@@ -59,19 +59,15 @@ else()
 endif()
 
 # find OpenEXR
-find_package(IlmBase QUIET)
-if(IlmBase_FOUND)
-  message(STATUS "Found IlmBase ${IlmBase_VERSION}")
-  find_package(OpenEXR 2 QUIET)
+find_package(OpenEXR 3 CONFIG QUIET)
+if(OpenEXR_FOUND)
+  set(OpenEXR_FOUND_WITH_CONFIG TRUE BOOL "found OpenEXR with Config")
+else()
+  message(STATUS "OpenEXR v3 not found, looking for IlmBase and OpenEXR v2")
+  find_package(IlmBase REQUIRED)
+  find_package(OpenEXR 2 REQUIRED)
 endif()
-  
-if(NOT OpenEXR_FOUND)
-  find_package(OpenEXR CONFIG 3 REQUIRED)
-  if(OpenEXR_FOUND)
-    set(OpenEXR_FOUND_WITH_CONFIG TRUE BOOL "found OpenEXR with Config")
-  endif()
-endif()
-
+ 
 if(OpenEXR_FOUND)
   message(STATUS "Found OpenEXR ${OpenEXR_VERSION}")
   set(USE_OPENEXR TRUE CACHE BOOL "Add OpenEXR support")
