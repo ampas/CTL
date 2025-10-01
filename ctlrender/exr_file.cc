@@ -112,30 +112,34 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
     
     Imf::FrameBuffer frameBuffer;
     frameBuffer.insert ("R",
-                        Imf::Slice (pixelType,
+                        Imf::Slice::Make (pixelType,
                                     (char *) pixels->ptr(),
+                                    dw,
                                     xstride, ystride,
                                     1, 1,
                                     0.0));
     
     frameBuffer.insert ("G",
-                        Imf::Slice (pixelType,
+                        Imf::Slice::Make (pixelType,
                                     (char *) (pixels->ptr()+1),
+                                    dw,
                                     xstride, ystride,
                                     1, 1,
                                     0.0));
     
     frameBuffer.insert ("B",
-                        Imf::Slice (pixelType,
+                        Imf::Slice::Make (pixelType,
                                     (char *) (pixels->ptr()+2),
+                                    dw,
                                     xstride, ystride,
                                     1, 1,
                                     0.0));
     
     if (has_alpha){
         frameBuffer.insert ("A",
-                            Imf::Slice (pixelType,
+                            Imf::Slice::Make (pixelType,
                                         (char *) (pixels->ptr()+3),
+                                        dw,
                                         xstride, ystride,
                                         1, 1,
                                         1.0));
