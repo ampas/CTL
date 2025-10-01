@@ -58,6 +58,9 @@ jobs:
 
     steps:
 
+    - name: run apt-get update
+      run: sudo apt-get -y update
+
     - name: remove ilmbase
       run: sudo apt-get --purge remove libilmbase-dev -y
 
@@ -101,6 +104,9 @@ jobs:
     runs-on:  ubuntu-24.04-arm
 
     steps:
+
+    - name: run apt-get update
+      run: sudo apt-get -y update
 
     - name: remove ilmbase
       run: sudo apt-get --purge remove libilmbase-dev -y
@@ -157,6 +163,9 @@ jobs:
 
     steps:
 
+    - name: run apt-get update
+      run: sudo apt-get -y update
+
     - name: remove ilmbase
       run: sudo apt-get --purge remove libilmbase-dev -y
 
@@ -211,6 +220,9 @@ jobs:
     runs-on: ubuntu-24.04-arm
 
     steps:
+
+    - name: run apt-get update
+      run: sudo apt-get -y update
 
     - name: remove ilmbase
       run: sudo apt-get --purge remove libilmbase-dev -y

@@ -27,6 +27,9 @@ jobs:
 
     steps:
 
+    - name: run apt-get update
+      run: sudo apt-get -y update
+
     - name: remove libtiff
       run: sudo apt-get --purge remove libtiff-dev -y 
 
@@ -51,6 +54,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: run apt-get update
+      run: sudo apt-get -y update
 
     - name: remove libtiff-dev
       run: sudo apt-get --purge remove libtiff-dev -y 
