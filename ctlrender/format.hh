@@ -57,6 +57,10 @@
 
 #include <stdint.h>
 
+#if defined(HAVE_OPENEXR)
+  #include <ImathBox.h>
+#endif
+
 // Used to pass in parameters through the transform function (see transform.hh)
 // into the file writers.
 struct format_t {
@@ -75,6 +79,12 @@ struct format_t {
 	                    // 160 - RA
 	                    // 161 - GA
 	                    // 162 - BA
+#if defined(HAVE_OPENEXR)
+	bool is_exr_metadata_set;
+	Imath::Box2i dataWindow;
+	Imath::Box2i displayWindow;
+	float pixelAspectRatio;
+#endif
 };
 
 #endif
