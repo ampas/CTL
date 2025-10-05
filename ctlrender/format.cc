@@ -59,8 +59,9 @@ format_t::format_t() {
 	bps=0;
 	squish=0;
 	descriptor=0;
+	is_compression_set = false;
 #if defined(HAVE_OPENEXR)
-	is_exr_metadata_set = false;
+	is_exr_standard_attributes_set = false;
 #endif
 };
 
@@ -69,7 +70,8 @@ format_t::format_t(const char *_ext, uint8_t _bps) {
 	bps=_bps;
 	squish=0;
 	descriptor=0;
+	is_compression_set = false;
 #if defined(HAVE_OPENEXR)
-	is_exr_metadata_set = false;
+	is_exr_standard_attributes_set = false;
 #endif
 };

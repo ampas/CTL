@@ -340,6 +340,7 @@ int main(int argc, const char **argv)
                 if (!strcmp(compression.name, Compression::no_compression.name)) {
                     fprintf(stderr, "Unrecognized compression scheme '%s'. Turning off compression.\n", scheme);
                 }
+				desired_format.is_compression_set = true;
                 argv++;
                 argc--;
             }
@@ -672,6 +673,9 @@ int main(int argc, const char **argv)
 				exit(1);
 			}
 			actual_format.squish = noalpha;
+			if (true == desired_format.is_compression_set) {
+			  actual_format.is_compression_set = true;
+			}
 			transform(inputFile, outputFile, input_scale, output_scale, &actual_format, &compression, ctl_operations, global_ctl_parameters);
 			input_image_files.pop_front();
 		}

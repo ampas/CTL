@@ -64,6 +64,20 @@
 #include <ImfChannelList.h>
 #include <Iex.h>
 
+void exr_read_standard_attributes(Imf::InputFile file, format_t *format)
+{
+  format->exr_standard_attributes.dataWindow = file.header().dataWindow();
+  format->exr_standard_attributes.displayWindow = file.header().displayWindow();
+  format->exr_standard_attributes.pixelAspectRatio = file.header().pixelAspectRatio();
+  format->exr_standard_attributes.screenWindowCenter = file.header().screenWindowCenter();
+  format->exr_standard_attributes.screenWindowWidth = file.header().screenWindowWidth();
+  format->exr_standard_attributes.lineOrder = file.header().lineOrder();
+  format->exr_standard_attributes.compression = file.header().compression();
+
+  format->is_exr_standard_attributes_set = true;
+  return;
+}
+
 bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
               format_t *format) {
 	std::ifstream ins;
@@ -92,12 +106,9 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
 	//////////////////////////
     
     Imf::InputFile file(name);
-    Imath::Box2i dw = file.header().dataWindow();
-    // save the dataWindow and displayWindow for potential later use in exr_write()
-    format->dataWindow = dw;
-    format->displayWindow = file.header().displayWindow();
-    format->pixelAspectRatio = file.header().pixelAspectRatio();
-    format->is_exr_metadata_set = true;
+    // read the exr standard attributes for potential later use in exr_write()
+    exr_read_standard_attributes(file, format);
+    Imath::Box2i dw = format->exr_standard_attributes.dataWindow;
     
     if (file.header().channels().begin().channel().type == Imf::HALF)
         format->src_bps=16;
@@ -198,21 +209,33 @@ void exr_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
     Imf::PixelType pixelType = is_half ? Imf::HALF : Imf::FLOAT;
 
     Imf::Header header(width, height);
-    header.compression() = (Imf::Compression)compression->exrCompressionScheme;
 
-    if (format->is_exr_metadata_set)
-    {
-      header.dataWindow() = format->dataWindow;
-      header.displayWindow() = format->displayWindow;
-      header.pixelAspectRatio() = format->pixelAspectRatio;
+    if (format->is_exr_standard_attributes_set) {
+      header.dataWindow() = format->exr_standard_attributes.dataWindow;
+      header.displayWindow() = format->exr_standard_attributes.displayWindow;
+      header.pixelAspectRatio() = format->exr_standard_attributes.pixelAspectRatio;
+      header.screenWindowCenter() = format->exr_standard_attributes.screenWindowCenter;
+      header.screenWindowWidth() = format->exr_standard_attributes.screenWindowWidth;
+      header.lineOrder() = format->exr_standard_attributes.lineOrder;
+      if (true == format->is_compression_set) {
+        // the user specified a specific compression type
+        header.compression() = (Imf::Compression)compression->exrCompressionScheme;
+      }
+      else {
+        header.compression() = format->exr_standard_attributes.compression;
+      }
+    }     
+    else {
+      header.compression() = (Imf::Compression)compression->exrCompressionScheme;
     }
     Imath::Box2i dataWindow = header.dataWindow();
 
     header.channels().insert("R", Imf::Channel(pixelType));
     header.channels().insert("G", Imf::Channel(pixelType));
     header.channels().insert("B", Imf::Channel(pixelType));
-    if (depth == 4)
-        header.channels().insert("A", Imf::Channel(pixelType));
+    if (depth == 4) {
+      header.channels().insert("A", Imf::Channel(pixelType));
+    }
 
     Imf::OutputFile file(name, header);
     Imf::FrameBuffer frameBuffer;
