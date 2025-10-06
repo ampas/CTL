@@ -64,15 +64,15 @@
 #include <ImfChannelList.h>
 #include <Iex.h>
 
-void exr_read_standard_attributes(Imf::InputFile file, format_t *format)
+void exr_read_standard_attributes(Imf::InputFile *file, format_t *format)
 {
-  format->exr_standard_attributes.dataWindow = file.header().dataWindow();
-  format->exr_standard_attributes.displayWindow = file.header().displayWindow();
-  format->exr_standard_attributes.pixelAspectRatio = file.header().pixelAspectRatio();
-  format->exr_standard_attributes.screenWindowCenter = file.header().screenWindowCenter();
-  format->exr_standard_attributes.screenWindowWidth = file.header().screenWindowWidth();
-  format->exr_standard_attributes.lineOrder = file.header().lineOrder();
-  format->exr_standard_attributes.compression = file.header().compression();
+  format->exr_standard_attributes.dataWindow = file->header().dataWindow();
+  format->exr_standard_attributes.displayWindow = file->header().displayWindow();
+  format->exr_standard_attributes.pixelAspectRatio = file->header().pixelAspectRatio();
+  format->exr_standard_attributes.screenWindowCenter = file->header().screenWindowCenter();
+  format->exr_standard_attributes.screenWindowWidth = file->header().screenWindowWidth();
+  format->exr_standard_attributes.lineOrder = file->header().lineOrder();
+  format->exr_standard_attributes.compression = file->header().compression();
 
   format->is_exr_standard_attributes_set = true;
   return;
@@ -107,7 +107,7 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
     
     Imf::InputFile file(name);
     // read the exr standard attributes for potential later use in exr_write()
-    exr_read_standard_attributes(file, format);
+    exr_read_standard_attributes(&file, format);
     Imath::Box2i dw = format->exr_standard_attributes.dataWindow;
     
     if (file.header().channels().begin().channel().type == Imf::HALF)
