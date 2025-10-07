@@ -57,6 +57,22 @@
 
 #include <stdint.h>
 
+#if defined(HAVE_OPENEXR)
+  #include <ImathBox.h>
+  #include <ImfLineOrder.h>
+  #include <ImfCompression.h>
+
+struct exr_standard_attributes_t {
+  Imath::Box2i dataWindow;
+  Imath::Box2i displayWindow;
+  float pixelAspectRatio;
+  Imath::V2f screenWindowCenter;
+  float screenWindowWidth;
+  Imf::LineOrder lineOrder;
+  Imf::Compression compression;
+};
+#endif
+
 // Used to pass in parameters through the transform function (see transform.hh)
 // into the file writers.
 struct format_t {
@@ -75,6 +91,11 @@ struct format_t {
 	                    // 160 - RA
 	                    // 161 - GA
 	                    // 162 - BA
+	bool is_compression_set;
+#if defined(HAVE_OPENEXR)
+	bool is_exr_standard_attributes_set;
+	exr_standard_attributes_t exr_standard_attributes;
+#endif
 };
 
 #endif

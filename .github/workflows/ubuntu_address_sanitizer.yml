@@ -27,6 +27,9 @@ jobs:
 
     steps:
 
+    - name: run apt-get update
+      run: sudo apt-get -y update
+
     - name: remove openexr
       run: sudo apt-get --purge remove libopenexr-dev -y
 
@@ -69,6 +72,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: run apt-get update
+      run: sudo apt-get -y update
 
     - name: remove openexr
       run: sudo apt-get --purge remove libopenexr-dev -y

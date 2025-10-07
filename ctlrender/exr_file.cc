@@ -64,6 +64,20 @@
 #include <ImfChannelList.h>
 #include <Iex.h>
 
+void exr_read_standard_attributes(Imf::InputFile *file, format_t *format)
+{
+  format->exr_standard_attributes.dataWindow = file->header().dataWindow();
+  format->exr_standard_attributes.displayWindow = file->header().displayWindow();
+  format->exr_standard_attributes.pixelAspectRatio = file->header().pixelAspectRatio();
+  format->exr_standard_attributes.screenWindowCenter = file->header().screenWindowCenter();
+  format->exr_standard_attributes.screenWindowWidth = file->header().screenWindowWidth();
+  format->exr_standard_attributes.lineOrder = file->header().lineOrder();
+  format->exr_standard_attributes.compression = file->header().compression();
+
+  format->is_exr_standard_attributes_set = true;
+  return;
+}
+
 bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
               format_t *format) {
 	std::ifstream ins;
@@ -92,7 +106,9 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
 	//////////////////////////
     
     Imf::InputFile file(name);
-    Imath::Box2i dw = file.header().dataWindow();
+    // read the exr standard attributes for potential later use in exr_write()
+    exr_read_standard_attributes(&file, format);
+    Imath::Box2i dw = format->exr_standard_attributes.dataWindow;
     
     if (file.header().channels().begin().channel().type == Imf::HALF)
         format->src_bps=16;
@@ -112,30 +128,34 @@ bool exr_read(const char *name, float scale, ctl::dpx::fb<float> *pixels,
     
     Imf::FrameBuffer frameBuffer;
     frameBuffer.insert ("R",
-                        Imf::Slice (pixelType,
+                        Imf::Slice::Make (pixelType,
                                     (char *) pixels->ptr(),
+                                    dw,
                                     xstride, ystride,
                                     1, 1,
                                     0.0));
     
     frameBuffer.insert ("G",
-                        Imf::Slice (pixelType,
+                        Imf::Slice::Make (pixelType,
                                     (char *) (pixels->ptr()+1),
+                                    dw,
                                     xstride, ystride,
                                     1, 1,
                                     0.0));
     
     frameBuffer.insert ("B",
-                        Imf::Slice (pixelType,
+                        Imf::Slice::Make (pixelType,
                                     (char *) (pixels->ptr()+2),
+                                    dw,
                                     xstride, ystride,
                                     1, 1,
                                     0.0));
     
     if (has_alpha){
         frameBuffer.insert ("A",
-                            Imf::Slice (pixelType,
+                            Imf::Slice::Make (pixelType,
                                         (char *) (pixels->ptr()+3),
+                                        dw,
                                         xstride, ystride,
                                         1, 1,
                                         1.0));
@@ -166,8 +186,8 @@ void exr_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
     bool is_half = format->bps == 16 ? true : false;
 
     int depth = pixels.depth();
-    float width = pixels.width();
-    float height = pixels.height();
+    int width = pixels.width();
+    int height = pixels.height();
     float const* pixelPtr = pixels.ptr();
 
     // Do any scaling on a full float buffer
@@ -189,13 +209,33 @@ void exr_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
     Imf::PixelType pixelType = is_half ? Imf::HALF : Imf::FLOAT;
 
     Imf::Header header(width, height);
-    header.compression() = (Imf::Compression)compression->exrCompressionScheme;
+
+    if (format->is_exr_standard_attributes_set) {
+      header.dataWindow() = format->exr_standard_attributes.dataWindow;
+      header.displayWindow() = format->exr_standard_attributes.displayWindow;
+      header.pixelAspectRatio() = format->exr_standard_attributes.pixelAspectRatio;
+      header.screenWindowCenter() = format->exr_standard_attributes.screenWindowCenter;
+      header.screenWindowWidth() = format->exr_standard_attributes.screenWindowWidth;
+      header.lineOrder() = format->exr_standard_attributes.lineOrder;
+      if (true == format->is_compression_set) {
+        // the user specified a specific compression type
+        header.compression() = (Imf::Compression)compression->exrCompressionScheme;
+      }
+      else {
+        header.compression() = format->exr_standard_attributes.compression;
+      }
+    }     
+    else {
+      header.compression() = (Imf::Compression)compression->exrCompressionScheme;
+    }
+    Imath::Box2i dataWindow = header.dataWindow();
 
     header.channels().insert("R", Imf::Channel(pixelType));
     header.channels().insert("G", Imf::Channel(pixelType));
     header.channels().insert("B", Imf::Channel(pixelType));
-    if (depth == 4)
-        header.channels().insert("A", Imf::Channel(pixelType));
+    if (depth == 4) {
+      header.channels().insert("A", Imf::Channel(pixelType));
+    }
 
     Imf::OutputFile file(name, header);
     Imf::FrameBuffer frameBuffer;
@@ -219,27 +259,32 @@ void exr_write(const char *name, float scale, const ctl::dpx::fb<float> &pixels,
         int ystride = sizeof(*halfPixelPtr) * depth * width;
 
         // Insert the half buffer into the framebuffer
-        frameBuffer.insert("R", Imf::Slice(pixelType, (char*)halfPixelPtr, xstride, ystride));
-        frameBuffer.insert("G", Imf::Slice(pixelType, (char*)(halfPixelPtr + 1), xstride, ystride));
-        frameBuffer.insert("B", Imf::Slice(pixelType, (char*)(halfPixelPtr + 2), xstride, ystride));
-        if (depth == 4)
-            frameBuffer.insert("A", Imf::Slice(pixelType, (char*)(halfPixelPtr + 3), xstride, ystride));
+        frameBuffer.insert("R", Imf::Slice::Make(pixelType, (char*)(halfPixelPtr + 0), dataWindow, xstride, ystride));
+        frameBuffer.insert("G", Imf::Slice::Make(pixelType, (char*)(halfPixelPtr + 1), dataWindow, xstride, ystride));
+        frameBuffer.insert("B", Imf::Slice::Make(pixelType, (char*)(halfPixelPtr + 2), dataWindow, xstride, ystride));
+        if (depth == 4) {
+          frameBuffer.insert("A", Imf::Slice::Make(pixelType, (char*)(halfPixelPtr + 3), dataWindow, xstride, ystride));
+        }
+            
     }
     else {
         // No conversion needed so insert the float buffer into the frambuffer
         int xstride = sizeof(*pixelPtr) * depth;
         int ystride = sizeof(*pixelPtr) * depth * width;
 
-        frameBuffer.insert("R", Imf::Slice(pixelType, (char*)pixelPtr, xstride, ystride));
-        frameBuffer.insert("G", Imf::Slice(pixelType, (char*)(pixelPtr + 1), xstride, ystride));
-        frameBuffer.insert("B", Imf::Slice(pixelType, (char*)(pixelPtr + 2), xstride, ystride));
-        if (depth == 4)
-            frameBuffer.insert("A", Imf::Slice(pixelType, (char*)(pixelPtr + 3), xstride, ystride));
+        frameBuffer.insert("R", Imf::Slice::Make(pixelType, (char*)(pixelPtr + 0), dataWindow, xstride, ystride));
+        frameBuffer.insert("G", Imf::Slice::Make(pixelType, (char*)(pixelPtr + 1), dataWindow, xstride, ystride));
+        frameBuffer.insert("B", Imf::Slice::Make(pixelType, (char*)(pixelPtr + 2), dataWindow, xstride, ystride));
+        if (depth == 4) {
+          frameBuffer.insert("A", Imf::Slice::Make(pixelType, (char*)(pixelPtr + 3), dataWindow, xstride, ystride));
+        }
+            
     }
 
     file.setFrameBuffer(frameBuffer);
-    file.writePixels(height);
+    file.writePixels(dataWindow.max.y - dataWindow.min.y + 1);
 
+    return;
 }
 
 #else

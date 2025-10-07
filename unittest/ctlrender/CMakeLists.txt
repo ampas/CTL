@@ -68,6 +68,17 @@ if(OpenEXR_FOUND)
     add_test(NAME "ctlrender-EXR_RGBA16->EXR_RGBA_32" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity_with_alpha.ctl" -format exr32 -force "${TEST_FILES}/colorbars_nuke_rgba_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgba_exr16_to_exr32.exr")
     add_test(NAME "ctlrender-EXR_RGBA32->EXR_RGBA_16" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity_with_alpha.ctl" -format exr16 -force "${TEST_FILES}/colorbars_nuke_rgba_exr32.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgba_exr32_to_exr16.exr")
     add_test(NAME "ctlrender-EXR_RGBA32->EXR_RGBA_32" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity_with_alpha.ctl" -format exr32 -force "${TEST_FILES}/colorbars_nuke_rgba_exr32.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgba_exr32_to_exr32.exr")
+
+    # EXR compression tests
+    add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-NONE" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression none "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_none.exr")
+    add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-RLE" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression rle "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_rle.exr")
+    add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-ZIPS" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression zips "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_zips.exr")
+    add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-ZIP" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression zip "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_zip.exr")
+    add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-PIZ" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression piz "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_piz.exr")
+    add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-PXR24" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression pxr24 "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_pxr24.exr")
+    add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-B44" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression b44 "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_b44.exr")
+    add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-B44A" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression b44a "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_b44a.exr")
+
 endif()
 
 #ACES tests
