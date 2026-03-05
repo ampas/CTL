@@ -67,7 +67,7 @@
 namespace Ctl {
 
 void CtlExc::_explain(const char *text, va_list _ap) {
-	char *ptr;
+	char *ptr = NULL;
 	int length=1024;
 	int need_len;
 	va_list ap;
@@ -77,7 +77,16 @@ void CtlExc::_explain(const char *text, va_list _ap) {
 	}
 	while(1) {
 		va_copy(ap, _ap);
-		ptr=(char *)alloca(length);
+		if (ptr) {
+			free(ptr);
+		}
+		ptr = (char *)malloc(length);
+		if (!ptr) {
+			// Out of memory; set empty string and return
+			operator=("allocation failed.");
+			va_end(ap);
+			return;
+		}
 		memset(ptr, 0, length);
 		need_len=vsnprintf(ptr, length, text, ap);
 		if(need_len<length && need_len!=-1) {
@@ -91,6 +100,7 @@ void CtlExc::_explain(const char *text, va_list _ap) {
 	}
 
 	operator=(ptr);
+	free(ptr);
 	va_end(ap);
 }
 
