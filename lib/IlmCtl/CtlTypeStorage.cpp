@@ -87,14 +87,21 @@ TypeStorage::~TypeStorage() {
 }
 
 static std::string strprintf(const char *fmt, ...) {
-	char *ptr;
+	char *ptr = NULL;
 	int length=1024;
 	int need_len;
 	va_list ap;
 
 	while(1) {
+		if (ptr) {
+			free(ptr);
+		}
 		va_start(ap, fmt);
-		ptr=(char *)alloca(length);
+		ptr=(char *)malloc(length);
+		if (!ptr) {
+			va_end(ap);
+			throw std::bad_alloc();
+		}
 		memset(ptr, 0, length);
 		need_len=vsnprintf(ptr, length, fmt, ap);
 		va_end(ap);
@@ -108,7 +115,9 @@ static std::string strprintf(const char *fmt, ...) {
 		}
 	}
 
-	return std::string(ptr);
+	std::string result(ptr);
+	free(ptr);
+	return result;
 }
 
 void _copy(char *out, const char *in, const DataTypePtr &out_type,
