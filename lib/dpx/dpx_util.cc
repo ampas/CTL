@@ -76,13 +76,14 @@ std::string strprintf(const char *fmt, ...) {
 
 	while(1) {
 		va_start(ap, fmt);
-		ptr=(char *)alloca(length);
+		ptr=(char *)malloc(length);
 		memset(ptr, 0, length);
 		need_len=vsnprintf(ptr, length, fmt, ap);
 		va_end(ap);
 		if(need_len<length && need_len!=-1) {
 			break;
 		}
+		free(ptr);
 		if(need_len==-1) {
 			length=length*2;
 		} else {
@@ -90,7 +91,9 @@ std::string strprintf(const char *fmt, ...) {
 		}
 	}
 
-	return std::string(ptr);
+	std::string result(ptr);
+	free(ptr);
+	return result;
 }
 
 }
