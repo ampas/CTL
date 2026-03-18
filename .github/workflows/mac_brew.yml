@@ -25,6 +25,12 @@ jobs:
     runs-on: macos-latest
 
     steps:
+    
+    - name: update homebrew
+      run:  brew update
+
+    - name: clean homebrew cache
+      run:  brew cleanup --prune=all
 
     - name: install libtiff 
       run:  brew install libtiff 
@@ -51,6 +57,12 @@ jobs:
     runs-on: macos-latest
 
     steps:
+
+    - name: update homebrew
+      run:  brew update
+
+    - name: clean homebrew cache
+      run:  brew cleanup --prune=all
 
     - name: install libtiff 
       run:  brew install libtiff 
@@ -83,6 +95,12 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      
+    - name: update homebrew
+      run:  brew update
+
+    - name: clean homebrew cache
+      run:  brew cleanup --prune=all
 
     - name: install ctl 
       run:  brew install ctl --head 
