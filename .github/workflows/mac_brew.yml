@@ -103,4 +103,4 @@ jobs:
       run:  brew cleanup --prune=all
 
     - name: install ctl 
-      run:  brew install ctl --head 
+      run:  brew install ctl 

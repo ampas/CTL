@@ -149,9 +149,9 @@ can be downloaded from https://github.com/ampas/aces_container
             
     * Install CTL
     
-        Homebrew will install all dependancies (cmake, ilmbase, opener, aces_container, libtiff) automatically by default.  No need to install each manually.
+        Homebrew will install all dependancies automatically by default.  No need to install each manually.
     
-            $ brew install --head ctl
+            $ brew install ctl
 
 * Redhat, Ubuntu
 
