@@ -28,7 +28,7 @@ jobs:
     - uses: uraimo/run-on-arch-action@v2
       with:
         arch: armv7
-        distro: ubuntu22.04
+        distro: ubuntu24.04
         githubToken: ${{ github.token }}
         install: |
           apt-get update -q -y
@@ -37,4 +37,3 @@ jobs:
           cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
           cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
           ctest -V --test-dir ${{github.workspace}}/build --output-on-failure
-          
