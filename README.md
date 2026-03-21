@@ -1,51 +1,67 @@
-# The Color Transformation Language #
- 
-The Color Transformation Language, or CTL, is a programming language for digital
-color management.
- 
-Digital color management requires translating digital images between different
-representations or color spaces.  For example, the pixels in an image may encode
-the colors that should be seen when the image is displayed on a video monitor. 
-Printing this image on paper, or recording it on motion picture film requires
-transforming the pixels to an appropriate representation: Video, inks on paper
-and film all have different color gamuts and dynamic ranges.  Color mixing is
-additive for video, but subtractive for inks and film.  Video and film typically
-use three color channels, while four or more inks are used for printing on
-paper. A color management system must transform each pixel in the original image
-to corresponding amounts of ink or film density values.
- 
-The details of how each pixel is transformed can be fairly complex, and they are
-often subject to artistic decisions.  When images are exchanged between 
-different parties, it is desirable to exchange exact descriptions of appropriate
-color transforms along with the digital image files.  Two people in different
-geographical locations may each have a copy of the same digital image file. 
-When one of them prints the image on paper, he or she wants to be sure that the
-result is the same as as for the other person.  In order to achieve identical
-results, the two must agree on details of the printing process (for example,
-inks and paper), and they must agree on the transform that converts pixels in
-the file into amounts of ink on paper.  Of course, this requires a description
-of the transform.
- 
-The Color Transformation Language, or CTL, is a small programming language that
-was designed to serve as a building block for digital color management systems. 
-CTL allows users to describe color transforms in a concise and unambiguous way
-by expressing them as programs.  In order to apply a given transform to an
-image, the color management system instructs a CTL interpreter to load and run
-the CTL program that describes the transform.  The original and the transformed
-image constitute the CTL program's input and output.
- 
-Color transforms can be shared by distributing CTL programs. Two parties with
-the same CTL program can apply the same transform to an image.
+# Color Transformation Language (CTL)
 
+## What is CTL?
+The Color Transformation Language, or CTL, is a small programming language
+designed to serve as a building block for digital color management systems. It
+allows users to describe color transforms in a concise and unambiguous way by
+expressing them as programs. 
 
-## Package Contents ##
-The CTL source code contains the following:
+### How it Works
+A color management system that supports CTL includes an "interpreter", a
+software program that performs the operations described in a CTL program on the
+pixels of an image. To apply a transform, the system instructs the interpreter
+to load and run the specific CTL program. The original and the transformed
+images constitute the program's input and output. 
 
-* `.github/` - github CI workflow files
+**Interchange:** Color transforms can be easly shared by distributing CTL
+programs. Two parties using the same CTL program can apply the identical
+transform to an image.
+
+**Parameters:** CTL programs can include input parameters (such as "exposure")
+that adjust the transformation. To guarantee identical results, parties must
+agree on both the CTL program and the settings for the transform's parameters.
+
+### Why A Domain-Specific Language?
+While general-purpose programming languages like C, C++ or Python can describe
+color transforms, they are often unsuitable for transform interchange due to
+several factors:
+
+* Some languages require the recipient to explicitly compile and link source
+  code before it can be executed. 
+* Code must be carefully written to ensure it behaves identially and remains
+  portable across different operating systems.
+* If general purpose code is executed inside a larger application, bugs can
+  cause the entire application to malfunction or crash. 
+* Providing reliable protection against viruses and Trojan horses is difficult
+  with most general-purpose programming languages.
+
+By contrast, CTL is designed to allow only the kinds of operations that are
+needed to describe color transforms. This focused approach improves program
+portability, protects users against application software crashes and malicious
+code, and allows for efficient interpreter implementations.
+
+### Scope and Constraints
+CTL is a specialized tool and not intended for general-purpose image processing.
+
+* CTL is restricted to color space transforms and other single-pixel operations.
+* CTL cannot express operations that require surrounding pixel data, such as
+convolving an image with a filter kernel (blurs/sharpens) or calculatating
+global image statistics (like a sum of all pixels in an image).
+
+> [!IMPORTANT] 
+> While the source code for CTL is maintained within the ACES project ecosystem,
+> CTL is very much its own standalone project. It is important to distinguish
+> the language from its usage:
+>
+> * CTL is a color transformation language, and can be used to express any color transform.
+> * ACES makes use of CTL as language to provide its reference transforms.
+> * CTL ≠ ACES - CTL's utility extends far beyond its usage in the ACES framework.
+
+## Respository Contents
+
+* `.github/` - Github CI workflow files
 * `cmake/` - cmake support files
-* `ctlrender/` - an application that allows for application of CTL transforms to
-  an image using one or more CTL scripts, potentially converting the file format
-  in the process.
+* `ctlrender/` - a command-line tool to apply CTL transforms to images
 * `doc/` - CTL documentation
 * `docker/` - dockerfiles that compile CTL on various platforms 
 * `lib/` - CTL libraries and the CTL interpreter 
