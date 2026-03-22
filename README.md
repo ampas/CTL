@@ -69,140 +69,21 @@ global image statistics (like a sum of all pixels in an image).
 * `resources/` - scripts and support files for unit tests
 * `unittest/` - unit test files
 
-## Installation Prerequisites ##
-### Required ###
+## Installation
+### Quick Start (macOS)
 
-__CMake__
+For most users on macOS, the fastest way to install CTL is with Homebrew:
 
-CMake can be downloaded directly from www.cmake.org or use one of the commands 
-below.
+```
+brew install ctl
+```
 
-* Ubuntu
+This will install CTL along with all required dependencies.
 
-        $ sudo apt-get install cmake
+### Build from Source
+CTL can also be installed from source (Linux or macOS) or be run in a Docker container.
 
-* Redhat
-
-        $ yum install cmake
-
-* OS X
-    
-    * Install homebrew if not already installed
-
-            $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-            
-    * Install cmake
-            
-            $ brew install cmake
-
-__OpenEXR__
-
-* Ubuntu
-
-        $ sudo apt-get install libopenexr-dev
-
-* Redhat
-
-        $ yum install OpenEXR-devel
-
-* OS X
-
-    * Install homebrew if not already installed
-
-            $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-            
-    * Install OpenEXR
-    
-            $ brew install openexr                        
-
-### Suggested ###
-
-__TIFF__
-
-If you want to use CTL together with the TIFF image file format, you should download libTiff. libTiff can be downloaded from [http://www.remotesensing.org/libtiff/](https://libtiff.gitlab.io/libtiff/) or using one of the commands below.
-
-* Ubuntu
-
-        $ sudo apt-get install libtiff-dev
-
-* Redhat
-
-        $ yum install libtiff-devel
-
-* OS X
-
-    * Install homebrew if not already installed
-
-            $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-            
-    * Install TIFF
-    
-            $ brew install libtiff                        
-
-__ACES Container__
-
-ctlrender is able to write files compliant with SMPTE ST2065-4. This
-functionality requires the aces_container library, the latest version of which 
-can be downloaded from https://github.com/ampas/aces_container
-
-* OS X
-
-    * Install homebrew if not already installed
-
-            $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-            
-    * Install ACES Container
-    
-            $ brew install aces_container
-
-## Installation ##
-
-* OS X
-
-    * Install homebrew if not already installed
-
-            $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-            
-    * Install CTL
-    
-        Homebrew will install all dependancies automatically by default.  No need to install each manually.
-    
-            $ brew install ctl
-
-* Redhat, Ubuntu
-
-    from the root source directory:
-
-        $ mkdir build && cd build
-        $ cmake ..
-        $ make
-        $ sudo make install
-
-    to run the optional unit tests:
-
-        $ ctest
-
-* Docker
-
-    build docker
-
-        $ docker build --rm -f Dockerfile -t ctl:latest .
-        
-    run docker image (in isolated container)
-
-        $ docker run -it --rm ctl:latest
-
-    run docker image (mapping C:\temp on Windows host to /tmp in container)
-
-        $ docker run -it --rm -v C:\\temp:/tmp/ ctl:latest
-
-    run docker image (mapping /mnt/c/temp on Linux host to /tmp in container)
-
-        $ docker run -it --rm -v /mnt/c/temp:/tmp/ ctl:latest
-
-    run ctlrender
-        
-        $ ctlrender -help 
+See [INSTALL.md](./INSTALL.md) for details.
 
 ## License ##
  
