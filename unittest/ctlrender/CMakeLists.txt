@@ -78,6 +78,12 @@ if(OpenEXR_FOUND)
     add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-PXR24" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression pxr24 "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_pxr24.exr")
     add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-B44" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression b44 "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_b44.exr")
     add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-B44A" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression b44a "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_b44a.exr")
+    add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-DWAA" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression dwaa "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_dwaa.exr")
+    add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-DWAB" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression dwab "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_dwab.exr")
+    if((OPENEXR_VERSION_MAJOR GREATER_EQUAL 3 AND OPENEXR_VERSION_MINOR GREATER_EQUAL 4) OR (OPENEXR_VERSION_MAJOR GREATER_EQUAL 4))
+        add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-HTJ2K256" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression htj2k256 "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_htj2k256.exr")
+        add_test(NAME "ctlrender-EXR16->EXR16-COMPRESSION-HTJ2K32" COMMAND ${CTLRENDER_PATH} -ctl "${TEST_FILES}/unity.ctl" -format exr16 -force -compression htj2k32 "${TEST_FILES}/colorbars_nuke_rgb_exr16.exr" "${CTLRENDER_OUTPUT_FOLDER}/bars_rgb_exr16_to_exr16_compression_htj2k32.exr")
+    endif()
 
 endif()
 

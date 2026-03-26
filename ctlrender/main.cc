@@ -331,9 +331,9 @@ int main(int argc, const char **argv)
                             "used.\n See '-help compression' for more details.\n");
                     exit(1);
                 }
-                char scheme[8];
-                memset(scheme, '\0', 8);
-                for(int i = 0; i < 8 && argv[1][i]; ++i) {
+                char scheme[9];
+                memset(scheme, '\0', 9);
+                for(int i = 0; i < 9 && argv[1][i]; ++i) {
                     scheme[i] = toupper(argv[1][i]);
                 }
                 compression = Compression::compressionNamed(scheme);

@@ -194,7 +194,25 @@ void usage(const char *section) {
 "\n"
 "        B44A    (lossy) Like B44 but smaller for images containing large\n"
 "                uniform areas.\n"
+"\n"
+"        DWAA    (lossy) Lossy compression of RGB data by quantizing discrete cosine transform (DCT) components,\n"
+"                in blocks of 32 scanlines.More efficient for partial buffer access.\n"
+"\n"
+"        DWAB    (lossy) Lossy compression of RGB data by quantizing discrete cosine transform (DCT) components,\n"
+"                in blocks of 256 scanlines. More efficient space wise and faster to decode full frames than DWAA access.\n"
+
+#if (defined(OPENEXR_VERSION_MAJOR) && (OPENEXR_VERSION_MAJOR >= 3) && defined(OPENEXR_VERSION_MAJOR) && (OPENEXR_VERSION_MINOR >= 4)) || (defined(OPENEXR_VERSION_MAJOR) && (OPENEXR_VERSION_MAJOR >= 4))
+
+"\n"
+"        HTJ2K256 (lossless) High Throughput JPEG 2000 compression.\n" 
+"                 Compression is performed on blocks of 256 scanlines.\n"
+"\n"
+"        HTJ2K32  (lossless) High Throughput JPEG 2000 compression.\n"
+"                 Compression is performed on blocks of 32 scanlines.\n"
 "\n");
+#else
+	);
+#endif
 #else
         fprintf(stdout, "\n"
 "exr compression:\n"

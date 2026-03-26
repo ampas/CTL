@@ -244,3 +244,12 @@ jobs:
   #   - name: Run unit tests (ctest) within the Docker image
   #     run: docker run ctl:latest sh -c "cd ./build && ctest"
 
+  ubuntu-24-04-openexr34:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the Docker image
+        run: docker build --no-cache --rm -f ./docker/Dockerfile_ubuntu_24.04_openexr34 -t ctl:latest .
+  
+      - name: Run unit tests (ctest) within the Docker image
+        run: docker run ctl:latest sh -c "cd ./build && ctest" 
