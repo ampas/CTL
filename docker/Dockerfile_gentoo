@@ -1,7 +1,8 @@
 FROM gentoo/stage3
 
 # update packages
-RUN emaint --auto sync
+#RUN emaint --auto sync
+RUN emerge-webrsync
 
 # install development tools
 RUN emerge cmake
