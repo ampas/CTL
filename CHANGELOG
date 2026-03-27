@@ -1,3 +1,10 @@
+Version 1.5.5:
+  * update Cmake to prioritze OpenEXR v3 over OpenEXR v2
+  * add support to ctlrender for non-trival EXR data awindow
+  * add support to ctlrender to preserve standard EXR attributes (data window, display windows, etc.)
+  * add new compression schemes to ctlrender from OpenEXR v2.2 (DWA) and OpenEXR v3.4 (HTJ2K)
+  * add CI for arm32 platform
+
 Version 1.5.4:
   * add CI for various platforms
   * add support for FreeBSD
