@@ -38,6 +38,8 @@ if( OpenEXR_FOUND )
 	target_compile_definitions(ctlrender
 	PRIVATE
 		-DHAVE_OPENEXR=1
+		OPENEXR_VERSION_MAJOR=${OpenEXR_VERSION_MAJOR}
+		OPENEXR_VERSION_MINOR=${OpenEXR_VERSION_MINOR}
 	)
 else()
 	message( STATUS "OPENEXR not found, ctlrender will not support EXR files" )

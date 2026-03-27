@@ -69,7 +69,14 @@ const Compression Compression::supported_compression_schemes[] =
     { "PIZ",    Imf::PIZ_COMPRESSION     },
     { "PXR24",  Imf::PXR24_COMPRESSION   },
     { "B44",    Imf::B44_COMPRESSION     },
-    { "B44A",   Imf::B44A_COMPRESSION    }
+    { "B44A",   Imf::B44A_COMPRESSION    },
+    { "DWAA",   Imf::DWAA_COMPRESSION    },
+    { "DWAB",   Imf::DWAB_COMPRESSION    }
+ #if (defined(OPENEXR_VERSION_MAJOR) && (OPENEXR_VERSION_MAJOR >= 3) && defined(OPENEXR_VERSION_MAJOR) && (OPENEXR_VERSION_MINOR >= 4)) || (defined(OPENEXR_VERSION_MAJOR) && (OPENEXR_VERSION_MAJOR >= 4))
+    ,
+    { "HTJ2K256",   Imf::HTJ2K256_COMPRESSION    },
+    { "HTJ2K32",    Imf::HTJ2K32_COMPRESSION    }
+    #endif
 };
 
 #else
