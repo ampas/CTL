@@ -327,7 +327,7 @@ int main(int argc, const char **argv)
                 {
                     fprintf(stderr,
                             "the -compression option requires an additional "
-                            "argument specifying a compression name to be "
+                            "argument specifying a compression scheme to be "
                             "used.\n See '-help compression' for more details.\n");
                     exit(1);
                 }
