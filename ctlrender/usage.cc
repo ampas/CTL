@@ -196,7 +196,7 @@ void usage(const char *section) {
 "                uniform areas.\n"
 "\n"
 "        DWAA    (lossy) Lossy compression of RGB data by quantizing discrete cosine transform (DCT) components,\n"
-"                in blocks of 32 scanlines.More efficient for partial buffer access.\n"
+"                in blocks of 32 scanlines. More efficient for partial buffer access.\n"
 "\n"
 "        DWAB    (lossy) Lossy compression of RGB data by quantizing discrete cosine transform (DCT) components,\n"
 "                in blocks of 256 scanlines. More efficient space wise and faster to decode full frames than DWAA access.\n"

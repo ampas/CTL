@@ -327,18 +327,18 @@ int main(int argc, const char **argv)
                 {
                     fprintf(stderr,
                             "the -compression option requires an additional "
-                            "argument specifying a compression scheme to be "
+                            "argument specifying a compression name to be "
                             "used.\n See '-help compression' for more details.\n");
                     exit(1);
                 }
-                char scheme[9];
-                memset(scheme, '\0', 9);
-                for(int i = 0; i < 9 && argv[1][i]; ++i) {
-                    scheme[i] = toupper(argv[1][i]);
+				const int compression_name_max_length = 9; // length of longest supported compression name plus null terminator
+				char compression_name[compression_name_max_length] = { '\0' };
+                for(int i = 0; i < compression_name_max_length && argv[1][i]; ++i) {
+                    compression_name[i] = toupper(argv[1][i]);
                 }
-                compression = Compression::compressionNamed(scheme);
+                compression = Compression::compressionNamed(compression_name);
                 if (!strcmp(compression.name, Compression::no_compression.name)) {
-                    fprintf(stderr, "Unrecognized compression scheme '%s'. Turning off compression.\n", scheme);
+                    fprintf(stderr, "Unrecognized compression scheme '%s'. Turning off compression.\n", compression_name);
                 }
 				desired_format.is_compression_set = true;
                 argv++;
