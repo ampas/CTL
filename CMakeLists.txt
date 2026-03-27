@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
-project(CTL VERSION 1.5.4)
+project(CTL VERSION 1.5.5 
+  DESCRIPTION "Color Transformation Language (CTL) reference implementation"
+  LANGUAGES CXX)
 include(GNUInstallDirs)
 
 set(CMAKE_CXX_STANDARD 11)
