@@ -1,51 +1,69 @@
-# The Color Transformation Language #
- 
-The Color Transformation Language, or CTL, is a programming language for digital
-color management.
- 
-Digital color management requires translating digital images between different
-representations or color spaces.  For example, the pixels in an image may encode
-the colors that should be seen when the image is displayed on a video monitor. 
-Printing this image on paper, or recording it on motion picture film requires
-transforming the pixels to an appropriate representation: Video, inks on paper
-and film all have different color gamuts and dynamic ranges.  Color mixing is
-additive for video, but subtractive for inks and film.  Video and film typically
-use three color channels, while four or more inks are used for printing on
-paper. A color management system must transform each pixel in the original image
-to corresponding amounts of ink or film density values.
- 
-The details of how each pixel is transformed can be fairly complex, and they are
-often subject to artistic decisions.  When images are exchanged between 
-different parties, it is desirable to exchange exact descriptions of appropriate
-color transforms along with the digital image files.  Two people in different
-geographical locations may each have a copy of the same digital image file. 
-When one of them prints the image on paper, he or she wants to be sure that the
-result is the same as as for the other person.  In order to achieve identical
-results, the two must agree on details of the printing process (for example,
-inks and paper), and they must agree on the transform that converts pixels in
-the file into amounts of ink on paper.  Of course, this requires a description
-of the transform.
- 
-The Color Transformation Language, or CTL, is a small programming language that
-was designed to serve as a building block for digital color management systems. 
-CTL allows users to describe color transforms in a concise and unambiguous way
-by expressing them as programs.  In order to apply a given transform to an
-image, the color management system instructs a CTL interpreter to load and run
-the CTL program that describes the transform.  The original and the transformed
-image constitute the CTL program's input and output.
- 
-Color transforms can be shared by distributing CTL programs. Two parties with
-the same CTL program can apply the same transform to an image.
+# Color Transformation Language (CTL)
 
+## What is CTL?
+The Color Transformation Language, or CTL, is a small programming language
+designed to serve as a building block for digital color management systems. It
+allows users to describe color transforms in a concise and unambiguous way by
+expressing them as programs. 
 
-## Package Contents ##
-The CTL source code contains the following:
+### How it Works
+A color management system that supports CTL includes an "interpreter", a
+software program that performs the operations described in a CTL program on the
+pixels of an image. To apply a transform, the system instructs the interpreter
+to load and run the specific CTL program. The original and the transformed
+images constitute the program's input and output. 
 
-* `.github/` - github CI workflow files
+**Interchange:** Color transforms can be easily shared by distributing CTL
+programs. Two parties using the same CTL program can apply the identical
+transform to an image.
+
+**Parameters:** CTL programs can include input parameters (such as "exposure")
+that adjust the transformation. To guarantee identical results, parties must
+agree on both the CTL program and the settings for the transform's parameters.
+
+### Why A Domain-Specific Language?
+While general-purpose programming languages like C, C++ or Python can describe
+color transforms, they are often unsuitable for transform interchange due to
+several factors:
+
+* Some languages require the recipient to explicitly compile and link source
+  code before it can be executed. 
+* Code must be carefully written to ensure it behaves identially and remains
+  portable across different operating systems.
+* If general purpose code is executed inside a larger application, bugs can
+  cause the entire application to malfunction or crash. 
+* Providing reliable protection against viruses and Trojan horses is difficult
+  with most general-purpose programming languages.
+
+By contrast, CTL is designed to allow only the kinds of operations that are
+needed to describe color transforms. This focused approach improves program
+portability, protects users against application software crashes and malicious
+code, and allows for efficient interpreter implementations.
+
+### Scope and Constraints
+CTL is a specialized tool and not intended for general-purpose image processing.
+
+* CTL is restricted to color space transforms and other single-pixel operations.
+  * CTL's syntax, concepts, and functions are documented in [SMPTE RDD 15](https://pub.smpte.org/doc/rdd15/20070924-pub/)
+    and the documentation in this repo  
+* CTL cannot express operations that require surrounding pixel data, such as
+convolving an image with a filter kernel (blurs/sharpens) or calculatating
+global image statistics (like a sum of all pixels in an image).
+
+> [!IMPORTANT] 
+> While the source code for CTL is maintained within the ACES project ecosystem,
+> CTL is very much its own standalone project. It is important to distinguish
+> the language from its usage:
+>
+> * CTL is a color transformation language, and can be used to express any color transform.
+> * ACES makes use of CTL as language to provide its reference transforms.
+> * CTL ≠ ACES - CTL's utility extends far beyond its usage in the ACES framework.
+
+## Respository Contents
+
+* `.github/` - Github CI workflow files
 * `cmake/` - cmake support files
-* `ctlrender/` - an application that allows for application of CTL transforms to
-  an image using one or more CTL scripts, potentially converting the file format
-  in the process.
+* `ctlrender/` - a command-line tool to apply CTL transforms to images
 * `doc/` - CTL documentation
 * `docker/` - dockerfiles that compile CTL on various platforms 
 * `lib/` - CTL libraries and the CTL interpreter 
@@ -53,187 +71,22 @@ The CTL source code contains the following:
 * `resources/` - scripts and support files for unit tests
 * `unittest/` - unit test files
 
-## Installation Prerequisites ##
-### Required ###
+## Installation
+### Quick Start (macOS)
 
-__CMake__
+For most users on macOS, the fastest way to install CTL is with Homebrew:
 
-CMake can be downloaded directly from www.cmake.org or use one of the commands 
-below.
+```
+brew install ctl
+```
 
-* Ubuntu
+This will install CTL along with all required dependencies.
 
-        $ sudo apt-get install cmake
+### Build from Source
+CTL can also be installed from source (Linux, macOS or Windows) or be run in a Docker container.
 
-* Redhat
-
-        $ yum install cmake
-
-* OS X
-    
-    * Install homebrew if not already installed
-
-            $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-            
-    * Install cmake
-            
-            $ brew install cmake
-
-__OpenEXR__
-
-* Ubuntu
-
-        $ sudo apt-get install libopenexr-dev
-
-* Redhat
-
-        $ yum install OpenEXR-devel
-
-* OS X
-
-    * Install homebrew if not already installed
-
-            $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-            
-    * Install OpenEXR
-    
-            $ brew install openexr                        
-
-### Suggested ###
-
-__TIFF__
-
-If you want to use CTL together with the TIFF image file format, you should download libTiff. libTiff can be downloaded from [http://www.remotesensing.org/libtiff/](https://libtiff.gitlab.io/libtiff/) or using one of the commands below.
-
-* Ubuntu
-
-        $ sudo apt-get install libtiff-dev
-
-* Redhat
-
-        $ yum install libtiff-devel
-
-* OS X
-
-    * Install homebrew if not already installed
-
-            $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-            
-    * Install TIFF
-    
-            $ brew install libtiff                        
-
-__ACES Container__
-
-ctlrender is able to write files compliant with SMPTE ST2065-4. This
-functionality requires the aces_container library, the latest version of which 
-can be downloaded from https://github.com/ampas/aces_container
-
-* OS X
-
-    * Install homebrew if not already installed
-
-            $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-            
-    * Install ACES Container
-    
-            $ brew install aces_container
-
-## Installation ##
-
-* OS X
-
-    * Install homebrew if not already installed
-
-            $ ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-            
-    * Install CTL
-    
-        Homebrew will install all dependancies automatically by default.  No need to install each manually.
-    
-            $ brew install ctl
-
-* Redhat, Ubuntu
-
-    from the root source directory:
-
-        $ mkdir build && cd build
-        $ cmake ..
-        $ make
-        $ sudo make install
-
-    to run the optional unit tests:
-
-        $ ctest
-
-* Docker
-
-    build docker
-
-        $ docker build --rm -f Dockerfile -t ctl:latest .
-        
-    run docker image (in isolated container)
-
-        $ docker run -it --rm ctl:latest
-
-    run docker image (mapping C:\temp on Windows host to /tmp in container)
-
-        $ docker run -it --rm -v C:\\temp:/tmp/ ctl:latest
-
-    run docker image (mapping /mnt/c/temp on Linux host to /tmp in container)
-
-        $ docker run -it --rm -v /mnt/c/temp:/tmp/ ctl:latest
-
-    run ctlrender
-        
-        $ ctlrender -help 
+See [INSTALL.md](./INSTALL.md) for details.
 
 ## License ##
  
-Color Transformation Language is distributed under the following license:
-
-Copyright © 2013 Academy of Motion Picture Arts and Sciences ("A.M.P.A.S.").
-Portions contributed by others as indicated. All rights reserved.
-
-A worldwide, royalty-free, non-exclusive right to copy, modify, create
-derivatives, and use, in source and binary forms, is hereby granted, subject to
-acceptance of this license. Performance of any of the aforementioned acts
-indicates acceptance to be bound by the following terms and conditions:
-
-* Copies of source code, in whole or in part, must retain the above copyright
-notice, this list of conditions and the Disclaimer of Warranty.
-
-* Use in binary form must retain the above copyright notice, this list of
-conditions and the Disclaimer of Warranty in the documentation and/or other
-materials provided with the distribution.
-
-* Nothing in this license shall be deemed to grant any rights to trademarks,
-copyrights, patents, trade secrets or any other intellectual property of
-A.M.P.A.S. or any contributors, except as expressly stated herein.
-
-* Neither the name "A.M.P.A.S." nor the name of any other contributors to this
-software may be used to endorse or promote products derivative of or based on
-this software without express prior written permission of A.M.P.A.S. or the
-contributors, as appropriate.
-
-This license shall be construed pursuant to the laws of the State of California, 
-and any disputes related thereto shall be subject to the jurisdiction of the 
-courts therein.
-
-Disclaimer of Warranty: THIS SOFTWARE IS PROVIDED BY A.M.P.A.S. AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND
-NON-INFRINGEMENT ARE DISCLAIMED. IN NO EVENT SHALL A.M.P.A.S., OR ANY
-CONTRIBUTORS OR DISTRIBUTORS, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, RESITUTIONARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, THE ACADEMY SPECIFICALLY
-DISCLAIMS ANY REPRESENTATIONS OR WARRANTIES WHATSOEVER RELATED TO PATENT OR
-OTHER INTELLECTUAL PROPERTY RIGHTS IN THE ACADEMY COLOR ENCODING SYSTEM, OR
-APPLICATIONS THEREOF, HELD BY PARTIES OTHER THAN A.M.P.A.S.,WHETHER DISCLOSED OR
-UNDISCLOSED.
+CTL is licensed under the [Apache 2.0 license](./LICENSE).
