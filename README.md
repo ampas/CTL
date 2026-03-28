@@ -13,7 +13,7 @@ pixels of an image. To apply a transform, the system instructs the interpreter
 to load and run the specific CTL program. The original and the transformed
 images constitute the program's input and output. 
 
-**Interchange:** Color transforms can be easly shared by distributing CTL
+**Interchange:** Color transforms can be easily shared by distributing CTL
 programs. Two parties using the same CTL program can apply the identical
 transform to an image.
 
@@ -44,6 +44,8 @@ code, and allows for efficient interpreter implementations.
 CTL is a specialized tool and not intended for general-purpose image processing.
 
 * CTL is restricted to color space transforms and other single-pixel operations.
+  * CTL's syntax, concepts, and functions are documented in [SMPTE RDD 15](https://pub.smpte.org/doc/rdd15/20070924-pub/)
+    and the documentation in this repo  
 * CTL cannot express operations that require surrounding pixel data, such as
 convolving an image with a filter kernel (blurs/sharpens) or calculatating
 global image statistics (like a sum of all pixels in an image).
@@ -81,7 +83,7 @@ brew install ctl
 This will install CTL along with all required dependencies.
 
 ### Build from Source
-CTL can also be installed from source (Linux or macOS) or be run in a Docker container.
+CTL can also be installed from source (Linux, macOS or Windows) or be run in a Docker container.
 
 See [INSTALL.md](./INSTALL.md) for details.
 
