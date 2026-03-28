@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
-project(CTL VERSION 1.5.4)
+project(CTL VERSION 1.5.5 
+  DESCRIPTION "Color Transformation Language (CTL) reference implementation"
+  LANGUAGES CXX)
 include(GNUInstallDirs)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -71,7 +73,9 @@ endif()
 if(OpenEXR_FOUND)
   message(STATUS "Found OpenEXR ${OpenEXR_VERSION}")
   set(USE_OPENEXR TRUE CACHE BOOL "Add OpenEXR support")
-  add_definitions(-DOJPH_ENABLE_OPENEXR_SUPPORT)
+  set(OPENEXR_VERSION_MAJOR ${OpenEXR_VERSION_MAJOR} CACHE STRING "OpenEXR major version")
+  set(OPENEXR_VERSION_MINOR ${OpenEXR_VERSION_MINOR} CACHE STRING "OpenEXR minor version")
+  set(OPENEXR_VERSION_PATCH ${OpenEXR_VERSION_PATCH} CACHE STRING "OpenEXR patch version")
   if(OpenEXR_FOUND_WITH_CONFIG)
     message(STATUS " found OpenEXR with Config")
   else(OpenEXR_FOUND_WITH_CONFIG)
