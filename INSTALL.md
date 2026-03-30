@@ -14,21 +14,31 @@ Use this method for Linux (Ubuntu/Debian/Red Hat) or if you need a custom build 
 ### Prerequisites
 You will need a C++ compiler and the following libraries. Use these commands to install them:
 
-| Dependency | Ubuntu / Debian | Red Hat / CentOS | macOS |
-| :- | :- | :- | :- | 
-| CMake (3.12+) | `sudo apt install cmake` | `sudo yum install cmake` | `brew install cmake` |
-| OpenEXR | `sudo apt install libopenexr-dev` | `sudo yum install OpenEXR-devel` | `brew install openexr` |
-| libTIFF (optional) | `sudo apt install libtiff-dev` | `sudo yum install libtiff-devel` | `brew install libtiff` |
-| ACES Container (optional) | [Build from source](https://github.com/aces-aswf/aces_container) | [Build from source](https://github.com/aces-aswf/aces_container) | `brew install aces_container` |
+| Dependency | Ubuntu / Debian | Red Hat / CentOS | macOS | Windows |
+| :- | :- | :- | :- | :- | 
+| CMake (3.12+) | `sudo apt install cmake` | `sudo yum install cmake` | `brew install cmake` | download/install [CMake](https://cmake.org/download/) |
+| OpenEXR | `sudo apt install libopenexr-dev` | `sudo yum install OpenEXR-devel` | `brew install openexr` | `vcpkg install openexr` |
+| libTIFF (optional) | `sudo apt install libtiff-dev` | `sudo yum install libtiff-devel` | `brew install libtiff` | `vcpkg install tiff` |
+| ACES Container (optional) | [Build from source](https://github.com/aces-aswf/aces_container) | [Build from source](https://github.com/aces-aswf/aces_container) | `brew install aces_container` | [Build from source](https://github.com/aces-aswf/aces_container) |
 
 ### Build steps
 From the root of the CTL source directory:
 
+Linux or macOS
 ```
 mkdir build && cd build
 cmake ..
 make
 sudo make install
+```
+
+Windows
+```
+mkdir build
+cd build
+cmake .. -D "CMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
+cmake --build .
+cmake --build . --target install
 ```
 
 ## 3. Running in Docker
@@ -40,7 +50,7 @@ $ docker build --rm -f Dockerfile -t ctl:latest .
 ```
 
 ### Run the Container
-To actually process files, you should "mount" a folder from your computer into the container so the files can be shared. This will allow you to use CTL in the container to process files stored on your machine.
+To actually process files, you should "mount" a folder from your host operating system into the container so the files can be shared. This will allow you to use CTL in the container to process files stored on host operating system.
 
 * On Windows (PowerShell):
 
@@ -113,3 +123,15 @@ CMake can be downloaded directly from www.cmake.org or by using one of the comma
 * Ubuntu
 
         $ sudo apt-get install cmake
+
+* Windows - download and run the [CMake installer for Windows](https://cmake.org/download/)
+
+### Required for Windows
+#### vcpkg 
+[vcpkg](https://learn.microsoft.com/en-us/vcpkg/) is a software package manager from Microsoft for C++ developers
+```
+cd c:
+git clone https://github.com/Microsoft/vcpkg.git
+cd vcpkg
+.\bootstrap-vcpkg.bat
+```
